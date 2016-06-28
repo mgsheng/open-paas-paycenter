@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	<root>
+        <level value="INFO"/>
+        <appender-ref ref="dailyRollingFile" />    
+        <appender-ref ref="Console"/>
+    </root>
+    
+	<!--spring logger-->
+    <logger name="org.springframework" additivity="false">
+        <level value="WARN"/>
+        <appender-ref ref="Console"/>
+        <appender-ref ref="dailyRollingFile" />    
+    </logger>
+    
+    <!-- spring页面异常只有DEBUG才会输出 -->
+    <logger name="org.springframework.web.servlet.DispatcherServlet" additivity="false">
+        <level value="info" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="dailyRollingFile" />    
+    </logger>
+    
+    <!-- OauthControllerLog -->
+    <logger name="cn.com.open.openpaas.payservice.app.log.AlipayControllerLog" additivity="false">
+        <level value="info" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="dailyRollingFileAlipayControllerLog" />    
+    </logger>
+    
+    <!-- UserResetPwdControllerLog -->
+    <logger name="cn.com.open.openpaas.userservice.app.log.UserResetPwdControllerLog" additivity="false">
+        <level value="info" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="dailyRollingFileUserResetPwdControllerLog" />    
+    </logger>
+
+	 <!-- UnifyPayControllerLog -->
+    <logger name="cn.com.open.openpaas.payservice.app.log" additivity="false">
+        <level value="info" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="dailyRollingFileUnifyPayControllerLog" />    
+    </logger>
+
+    <!-- 输出日志到控制台  ConsoleAppender -->   
+    <appender name="Console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
+        </layout>
+    </appender>
+  
+    <!-- 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFile"  
+        class="org.apache.log4j.DailyRollingFileAppender"> 
+        <param name="ImmediateFlush" value="true"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_server.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss\} %-5p] [%t] {%c:%L}-%m%n"></param>  
+        </layout>  
+    </appender>
+    
+    <!-- OauthControllerLog 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFileAlipayControllerLog"  
+        class="org.apache.log4j.DailyRollingFileAppender"> 
+        <param name="ImmediateFlush" value="true"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_alipay_controller.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="%m%n"></param>  
+        </layout>  
+    </appender>
+    
+    <!-- UserResetPwdControllerLog 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFileUserResetPwdControllerLog"  
+        class="org.apache.log4j.DailyRollingFileAppender"> 
+        <param name="ImmediateFlush" value="true"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_server_user_reset_pwd_controller.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="%m%n"></param>  
+        </layout>  
+    </appender>
+    
+    <!-- UnifyPayControllerLog 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFileUnifyPayControllerLog"  
+        class="org.apache.log4j.DailyRollingFileAppender"> 
+        <param name="ImmediateFlush" value="true"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_server_unify_pay_controller.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="%m%n"></param>  
+        </layout>  
+    </appender>
+    
+</log4j:configuration>

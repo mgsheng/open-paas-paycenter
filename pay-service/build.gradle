@@ -1,0 +1,32 @@
+
+ext {
+    //模块名
+    moduleName = "user-service";
+    version "${parent.version}"
+
+}
+dependencies {
+    compile(
+            project(':openpaas-common'),
+            project(':openpaas-appcore'),
+
+
+            lib.'jsmth-common',
+            lib.'jsmth-data',
+
+
+            lib.'commons-lang',
+            lib.'commons-dbcp',
+            lib.'commons-io',
+            lib.'thrift-lib',
+            lib.'hessian',
+
+
+
+
+
+    )
+    testCompile (
+            lib.'spring-test'
+    )
+}

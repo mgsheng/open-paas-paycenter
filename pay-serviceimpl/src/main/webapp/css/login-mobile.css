@@ -1,0 +1,69 @@
+.nbar {
+    position: relative;
+    min-height: 4.5rem;
+    margin-bottom: 0.2rem;
+    border:1px solid transparent;
+    background-color:#BED9EB;
+    border-color:#3C8DC4
+border-bottom: 1px
+border-bottom-color: #3C8DC4
+}
+.nbar-default{
+    background-color:#BED9EB;
+    border-color:#3C8DC4
+}
+@media (min-width: 7.68rem) {
+    .nbar {
+        border-radius: 0.04rem;
+    }
+}
+.ch-container {
+    padding: 0 0.15rem;
+}
+@media only screen and (min-width: 9.8rem) {
+    a, button, input[type=submit], input[type=button], .product-img {
+        -webkit-transition: .5s;
+        -moz-transition: .5s;
+        -ms-transition: .5s;
+        -o-transition: .5s;
+        transition: .5s;
+    }
+    .ch-container {
+        padding: 0 0.2rem;
+    }
+}
+.row {
+    margin-right: -0.15rem;
+    margin-left: -0.15rem;
+}
+.login-header {
+    padding-top: 0.3rem;
+    height: 1.2rem;
+    color:#fff;
+}
+.col-md-12 {
+    position: relative;
+    min-height: 0.1rem;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+.well {
+    min-height: 2rem;
+    padding: 1.9rem;
+    margin-bottom: 2rem;
+    background-color: #f5f5f5;
+    border: .1rem solid #e3e3e3;
+    border-radius: .4rem;
+    -webkit-box-shadow: inset 0 .1rem .1rem rgba(0, 0, 0, .05);
+    box-shadow: inset 0 .1rem .1rem rgba(0, 0, 0, .05);
+}
+.input-group-lg > .form-control,
+.input-group-lg > .input-group-addon,
+.input-group-lg > .input-group-btn > .btn {
+    height: 4.6rem;
+    padding: 1rem 1.6rem;
+    font-size: 1.8rem;
+    line-height: 1.33;
+    border-radius: .6rem;
+}
+.textlinks{padding:0.18rem 0 0 0.8rem;}

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.LogMonitorRepositoryMyBatis">
+	<resultMap type="LogMonitor" id="logMonitorMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="INTEGER" />
+		<result column="exec_time" property="execTime" jdbcType="BIGINT" />
+		<result column="error_code" property="errorCode" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="log_time" property="logTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+		name,
+		username,
+		password,
+		app_id,
+		exec_time,
+		error_code,
+		status,
+		create_time,
+		log_time
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.log.model.LogMonitor">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into log_monitor 
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{name, jdbcType=VARCHAR},
+			#{username, jdbcType=VARCHAR},
+			#{password,jdbcType=VARCHAR},
+			#{appId,jdbcType=INTEGER},
+			#{execTime,jdbcType=BIGINT},
+			#{errorCode,jdbcType=INTEGER},
+			#{status,jdbcType=INTEGER},
+			#{createTime,jdbcType=TIMESTAMP},
+			#{logTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+</mapper>

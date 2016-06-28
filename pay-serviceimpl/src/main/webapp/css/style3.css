@@ -1,0 +1,383 @@
+/* CSS Document */
+body {background: #fff;color:#505050;font-family: Microsoft YaHei,微软雅黑;font-size:14px;}
+body,p,ul,li{margin:0;padding:0; list-style:none;}
+h1,h2,h3,h4,h5,h6{margin:0;padding:0;font-size:14px;font-weight:normal;}
+img{border:none;}
+.clearfix:after {content:"."; display:block; height:0; visibility:hidden; clear:both;}
+.clearfix {*zoom:1; }
+.fl{float:left;}
+.fr{float:right;}
+.mt20{margin-top:20px;}
+.mt35{margin-top:35px;}
+.ml5{margin-left:5px;}
+.mr5{margin-right:5px;}
+.mlr10{margin-left:10px;margin-right:10px;}
+.iconbg{background: url(../images/icon1.png) no-repeat 0px 0px;display:inline-block; vertical-align:middle}
+.w_1200{width:1200px;margin:0 auto;overflow: hidden;}
+
+/*顶部样式*/
+.top_banner{height:80px;line-height:80px;color:#fff;background:#13b5b1;}
+.top_banner a{color:#fff; text-decoration:none;}
+.bg_f6{background:#f6f6f6;}
+.logo{color:#fff;font-size:18px;}
+.logo img{width:183px;height:40px; vertical-align:middle;float:left;margin:16px 0 0 6px;}
+.usercent-bt{float:left;margin:0 0 0 12px;}
+.nav{margin:0px 0 0 75px;}
+.nav li{float:left;	line-height:80px;margin-right:25px;}
+.nav li a{color:#fff;padding:0 12px;text-decoration:none;font-size:16px;display:block;}
+.nav li a:hover{border-bottom:3px solid #fff;height:77px;}
+.nav li a.active{border-bottom:3px solid #fff;height:77px;}
+.loginbar{color:#fff;line-height:80px;}
+.loginbar span{padding:0;}
+.useravatar{width:24px;height:24px;background-position:0px -17px;margin-right:10px;}
+
+/*个人信息*/
+.userinfo_safety{width:176px;height:300px;background:#cdefee;color:#7d7d7d;padding:0 22px;}
+.userface{width:100px;margin:26px auto 10px;text-align:center;}
+.userface .avatar{width:100px;height:100px;}
+.userface .name{width:100px;height:40px;line-height:40px;display:inline-block;}
+.usertext li{line-height:26px;}
+.safety_title{border-bottom:1px solid #bbcccb;margin:0 4px 10px;line-height:55px;text-align:center;font-size:14px;}
+
+/*焦点图*/
+.focus{width:700px;margin:0 20px;height:300px;}
+
+/*安全级别*/
+.safety{width:27px;height:27px;background-position:0px -43px;margin-right:10px;}
+
+/*我的应用*/
+.page-title{width:1200px;font-size:20px;color:#13b5b1;line-height:45px;}
+.bg_e6f7f6{background: #e6f7f6;}
+.applist{min-height:215px;padding:54px 0;border-bottom:1px solid #c8c8c8;margin-bottom: -1px;}
+.app_img{border:solid 6px #13b5b1;width:277px;height:203px;}
+.app_img img{width:277px;height:203px;}
+.app_info{margin-left:50px;width:620px;}
+.app_info_title{font-size:24px;color:#009490;margin-bottom: 15px;width:620px;height:32px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.app_info_text{line-height:21px;color:#595959;font-size:12px;height:168px;overflow: hidden;}
+.app_info_text p{ text-indent: 25px;}
+.app_btn{margin:95px 0 0 62px;}
+.goplatforms{width:122px;height:36px;background:#13b5b1;font-size:18px;color:#fff;text-align: center;line-height:34px;display: inline-block;border-radius:18px;text-decoration: none;}
+.goplatforms:hover{background:#189b97;}
+
+/* 找回密码开始 */
+.getbackpwd {
+    width:910px;
+    margin:60px auto 0;
+    min-height:390px;
+}
+    .getbackpwd .stepbar {
+    width:100%;height:55px;overflow:hidden
+    }
+.stepbar .first,
+.stepbar .second, 
+.stepbar .third {
+    width:301px;height:55px;background:url(../images/icon1.png) no-repeat;float:left;display:inline;
+    line-height: 55px;
+    display: inline;
+    color: #fff;
+    font-size: 14pt;
+    text-indent: 10px;
+    margin-left:-12px;
+}
+.stepbar .num {
+    font-size: 30pt;
+    float: left;
+    padding-right: 30px;
+    padding-left:30px
+}
+.stepbar .first {
+background-position:left -138px;
+}
+.stepbar .first.curr {
+background-position:left -83px;
+}
+.stepbar .second {
+background-position:left -248px;
+}
+.stepbar .second.curr {
+background-position:left -193px;
+}
+.stepbar .third {
+background-position:left -358px;
+}
+.stepbar .third.curr {
+background-position:left -303px;
+}
+.getbackchoice {
+width:450px;margin:137px auto 0px;
+}
+    .getbackchoice .phone, .getbackchoice .email {
+    width:132px;float:left;height:179px;overflow:hidden
+    }
+    .getbackchoice .email {
+    margin-left:130px;
+    }
+    .getbackchoice .phone a,.getbackchoice .email a {
+        background:url(../images/icon1.png) no-repeat left -420px;
+        height: 200px;
+        float: left;
+        display: inline-block;
+        width: 130px;
+        font-size: 17px;
+        padding-top:146px;
+        text-align: center;
+        color:#31c8c4;
+        text-decoration:none;
+    }
+    
+    .getbackchoice a:hover .txtchoice {
+    background:#31c8c4;color:#fff;display:inline-block;width:100%;line-height:30px;cursor:pointer
+    }
+        .getbackchoice .email a {
+        background-position:-133px -420px;
+        }
+
+.input-len {
+    width:306px;padding:10px;border:1px solid #cfcfcf;border-radius:3px;font-size:14px;
+}
+.input-short {
+    width:182px;padding:10px;border:1px solid #cfcfcf;border-radius:3px;font-size:14px;
+}
+.btn-short {
+width:102px;background:#13b5b1;height:40px;line-height:40px;border:0px;cursor:pointer;font-size:16px;color:#fff;border-radius:3px;
+}
+.btn-len {
+width:336px;background:#13b5b1;height:40px;line-height:40px;border:0px;cursor:pointer;font-size:16px;color:#fff;border-radius:3px;padding:0px
+}
+.tbl-findpwd {
+width:339px;margin:87px auto 0;
+}
+.tbl-findpwd td{
+    padding:15px 10px;
+}
+    .tbl-findpwd a {
+    color:#13b5b1
+    }
+.fts-1 {
+font-size:20px;color:#13b5b1
+}
+.fts-2 {
+font-size:15px;
+}
+.verification {
+height:20px;border-collapse:collapse
+}
+.verification td {
+border:1px solid #ddd;height:18px;border-collapse:collapse;padding:8px 10px;
+}
+/* 找回密码结束 */
+
+/*底部*/
+.foot{width:1200px;margin:0 auto;background:#e6f7f6;height:68px;color:#9d9d9d;line-height: 68px;}
+.foot a{color:#9d9d9d;text-decoration: none;}
+.foot a:visited{color:#9d9d9d;text-decoration: none;}
+.foot a:hover{color:#9d9d9d;text-decoration:underline;}
+
+.basic_info{border:solid 1px #E9E7EA}
+.basic_info_tab{width:239px;float:left;}
+.basic_info_tab li a{width:207px;height:40px;color:#333;line-height:40px;padding-left:32px;display:block;text-decoration:none;margin-bottom:1px;}
+.basic_info_tab li a:hover{background:#34C2B5;color:#fff;}
+.basic_info_tab li a.cur{background:#34C2B5;color:#fff;}
+.basic_info_cont{margin-left:239px;padding:40px 50px;border-left:1px solid #E9E7EA;}
+.basic_info_title{line-height:40px;border-bottom:solid 1px #E5E6EB;font-size:16px;color:#333;}
+.revise_info{float:right;width:74px;height:26px;border:solid 1px #E5E6EB;background:#F1F1F1;color:#333;border-radius:2px;line-height:26px;text-align:center;font-size:14px; text-decoration:none;margin-top:6px;}
+.basic_info_text{margin-bottom:50px;}
+.basic_info_text li{border-bottom:1px solid #F5F5F5;padding:10px 0;line-height:40px;width:33.3%;min-height:40px;float:left;}
+.basic_info_pic{width:100%;float:left;padding:10px 0;}
+.basic_info_pic img{vertical-align:middle;}
+
+/* 手机自适应iphone6/6plus */
+@media screen and (max-width:414px){
+    .loginbar {
+display:none
+}
+.w_1200 {
+    width: 100%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.logo {
+    width: 100%;
+}
+    .logo a {
+    width: 37%;
+    float: left;
+    display: inline-block;
+    }
+    .logo img {
+    width: 100%;
+    height:auto;
+    vertical-align: middle;
+    float: left;
+    margin: 20px 0 0 6px;
+}
+    .getbackpwd {
+    width: 100%;
+    margin: 35px auto 0;
+    min-height: 0px;
+}
+    .usercent-bt {
+    font-size:14px;
+}
+
+   .stepbar .first, .stepbar .second, .stepbar .third {
+    width: 33%;
+    height: 29px;
+    background: url(../images/icon1.png) no-repeat;
+    float: left;
+    display: inline;
+    line-height: 29px;
+    display: inline;
+    color: #fff;
+    font-size: 12px;
+    text-indent: 0px;
+}
+   .stepbar .first {
+    background-size: 119% 529px;
+    background-position: left -74px;
+    width:36%;
+}
+    .stepbar .first.curr {
+    background-position: left -44px;
+    background-size: 119% 529px;
+    width: 36%;
+}
+    .stepbar .second {
+    background-position: left -133px;
+    background-size: 119% 529px;
+    margin-left: -2px;
+}
+    .stepbar .second.curr {
+    background-position: left -104px;
+}
+    .stepbar .third {
+    background-position: left -192px;
+    background-size: 119% 529px;
+    margin-left: -2px;
+}
+    .stepbar .third.curr {
+    background-position: left -163px;
+}
+    .stepbar .num {
+    font-size: 12px;
+    float: left;
+    padding-right: 3px;
+    padding-left: 20px;
+}
+    .getbackpwd .stepbar {
+    width: 100%;
+    height: 55px;
+    overflow: hidden;
+    margin-left: 1%;
+}
+    .getbackchoice {
+    width: 100%;
+    margin: 72px auto 0px;
+}
+    .getbackchoice .phone, .getbackchoice .email {
+    width: 50%;
+    float: left;
+    height: 179px;
+    text-align: center;
+    overflow: hidden;
+}
+    .getbackchoice .phone a, .getbackchoice .email a {
+    background: url(../images/icon1.png) no-repeat left -420px;
+    height: 200px;
+     float:none; 
+    display: inline-block;
+    width: 130px;
+    font-size: 17px;
+    padding-top: 146px;
+    text-align: center;
+    color: #31c8c4;
+    text-decoration: none;
+}
+    .getbackchoice .email {
+     margin-left: 0px; 
+}
+    .getbackchoice .email a {
+    background-position: -133px -420px;
+}
+    .foot {
+    width: 93%;
+    margin: 0 auto;
+    background: #e6f7f6;
+    height: 68px;
+    color: #9d9d9d;
+    line-height: 20px;
+    font-size: 12px;
+    margin-top: 80px;
+    padding: 0px 10px;
+    padding-top: 10px;
+    height:auto;
+    padding-bottom:10px;
+}
+        .foot .fl {
+        float:none;
+        }
+        .foot .fr {
+        float:none;
+        }
+
+        .tbl-findpwd {
+    width: 100%;
+    margin: -1px auto 0;
+}
+    .input-mobile {
+    width:206px;
+    }
+    .btn-len {
+    width: 100%;
+}
+}
+
+/* 手机自适应iphone5 */
+@media screen and (max-width:320px) {
+     .btn-len {
+    width: 100%;
+}
+    .input-short {
+    width: 91%;
+    padding: 10px 3px;
+    border: 1px solid #cfcfcf;
+    border-radius: 3px;
+    font-size: 14px;
+}
+    .input-len {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #cfcfcf;
+    border-radius: 3px;
+    font-size: 14px;
+}
+    .btn-len {
+    width: 98%;
+    background: #13b5b1;
+    height: 40px;
+    line-height: 40px;
+    border: 0px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #fff;
+    border-radius: 3px;
+    padding: 0px;
+}
+    .stepbar .first, .stepbar .first.curr {
+    width: 41%;
+    background-size: 106% 529px;
+    background-position: 13px -74px;
+}
+        .stepbar .first.curr {
+        background-position: 13px -45px;
+        }
+    .stepbar .second,.stepbar .second.curr {
+    width:30%;
+}
+    .stepbar .num {
+    font-size: 12px;
+    float: left;
+    padding-right: 3px;
+    padding-left: 13px;
+}
+}

@@ -1,0 +1,59 @@
+/* CSS Document */
+form{display:inline;}
+.nbar {
+    position: relative;
+    min-height: 4.5rem;
+    margin-bottom: 0.2rem;
+    border:1px solid transparent;
+    background-color:#BED9EB;
+    border-color:#3C8DC4
+border-bottom: 1px
+border-bottom-color: #3C8DC4
+}
+.nbar-default{
+    background-color:#BED9EB;
+    border-color:#3C8DC4
+}
+@media (min-width: 7.68rem) {
+    .nbar {
+        border-radius: 0.04rem;
+    }
+}
+.logo {
+    float: left;
+}
+.menu {
+    border-top: .1rem ;
+    font-size: 1.4rem;
+    float: right;
+}
+.navg ul.res li a {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    color: #fff;
+    font-size: 1.4rem;
+    background: #85C6F2;
+}
+.open_main{
+    border-top:.1rem solid #f3f3f3;
+}
+.ch-container {
+    padding: 0 0.2rem;
+}
+.row {
+    margin-right: -0.15rem;
+    margin-left: -0.15rem;
+}
+.col-md-12 {
+    position: relative;
+    min-height: 0.1rem;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+}
+.licenslist1{margin:0 0 0px 0px;}
+.licenslist1 li{line-height:28px;font-size:14px;color:#444;}
+.licenslist1 li i{background:url(../images/icon.png) no-repeat 0px 0px;display:inline-block;width:28px;height:28px; vertical-align:middle;margin-right:5px;}
+.licenslist1 li .arr01{background:url(../images/icon.png) no-repeat 0px 0px;}
+.licenslist1 li .arr02{background:url(../images/icon.png) no-repeat 0px -28px;}
+.licenslist1 li .arr03{background:url(../images/icon.png) no-repeat 0px -56px;}

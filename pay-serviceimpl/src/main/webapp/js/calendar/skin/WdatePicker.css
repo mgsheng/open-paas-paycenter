@@ -1,0 +1,67 @@
+.Wdate{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 200px;
+	padding-left: 3px;
+}
+
+.Wdate_100{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 100px;
+	padding-left: 3px;
+}
+
+.Wdate_150{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 150px;
+	padding-left: 3px;
+}
+
+.Wdate_180{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 180px;
+	padding-left: 3px;
+}
+
+.Wdate_200{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 200px;
+	padding-left: 3px;
+}
+
+.Wdate_300{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 300px;
+	padding-left: 3px;
+}
+
+.WdateSearch{
+	border:#c6c6c6 1px solid;
+	height:20px;
+	line-height:20px;
+	background:#fff url(datePicker.gif) no-repeat right;
+	width: 96px;
+	padding-left: 3px;
+}
+
+.WdateFmtErr{
+	font-weight:bold;
+	color:red;
+}

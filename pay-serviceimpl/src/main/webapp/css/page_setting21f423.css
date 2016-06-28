@@ -1,0 +1,119 @@
+body.page_setting,body.page_account {
+	overflow-y: scroll
+}
+
+.page_setting.pwd .page_msg {
+	margin-bottom: 32px
+}
+
+.page_setting.pwd .frm_label {
+	width: 7em
+}
+
+.page_setting.pwd .pwd_input_area .tool_bar {
+	padding-left: 112px
+}
+
+.page_setting.dev .meta_content .frm_label {
+	width: 5em
+}
+
+.page_setting.dev .meta_content .tool_bar {
+	padding-left: 70px
+}
+
+.page_setting.dev .meta_input .frm_label {
+	width: 5em
+}
+
+.page_setting.dev .meta_input .tool_bar {
+	padding-left: 84px
+}
+
+.page_setting.pay .frm_label {
+	width: 9em
+}
+
+.page_setting .btn.btn_vcode {
+	height: 35px;
+	line-height: 36px
+}
+
+.frm_vm_pt {
+	padding-top: 3px
+}
+
+.main_hd {
+	height: auto
+}
+
+.main_hd .main_hd_exp {
+	padding-bottom: 10px;
+	font-size: 16px;
+	overflow: hidden
+}
+
+.main_hd .main_hd_exp .l_tit {
+	float: left;
+	width: 12%
+}
+
+.main_hd .main_hd_exp .wrp_status {
+	width: 88%;
+	float: left
+}
+
+.main_hd .main_hd_exp .status .btn_l {
+	margin-right: 10px
+}
+
+.main_hd .main_hd_exp .status i { *
+	margin-top: 10px; *
+	float: left
+}
+
+.main_hd .main_hd_exp .status span { *
+	float: left
+}
+
+.main_hd .main_hd_exp .status span {
+	font-size: 16px;
+	margin-right: 5px
+}
+
+.main_hd .main_hd_exp .btn {
+	float: right
+}
+
+.verify_page .intro dd {
+	font-size: 14px;
+	line-height: 1.8em;
+	color: #7b7b7b
+}
+
+.verify_page .intro dd ul {
+	padding-left: 20px;
+	list-style-type: disc
+}
+
+.verify_page .intro dd ul li {
+	display: list-item;
+	text-align: -webkit-match-parent
+}
+
+.time_exp {
+	margin-bottom: 25px
+}
+
+.time_exp p .tit {
+	display: inline-block; *
+	display: inline; *
+	zoom: 1
+}
+
+.time_exp p .con {
+	display: inline-block; *
+	display: inline; *
+	zoom: 1;
+	margin-left: 10px
+}

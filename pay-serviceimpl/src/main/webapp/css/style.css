@@ -1,0 +1,99 @@
+/* CSS Document */
+body, h1, h2, h3, h4, h5, h6, dl, dt, dd, ul, ol, li, th, p, blockquote, pre, form, fieldset, legend, input, button, textarea, hr,table,input{padding:0;margin:0;font: 12px/1.5 'Microsoft Yahei';outline: 0;}
+ol,ul,li{list-style:none;}
+img {border: 0 none}
+.clearfix::before, .clearfix::after {content: "";display:table;}
+.clearfix::after{clear:both;}
+.clearfix {clear:both;}
+
+.w_382{width:382px;}
+.w_248{width:248px;}
+.w_173{width:173px;}
+
+a{color:#000;text-decoration:none}
+a:visited{color:#000;text-decoration:none}
+a:hover{color:#454040;text-decoration:none}
+
+/*header*/
+.open_header{border-top:4px solid #55acee;border-bottom:1px solid #dcdcdc;}
+.open_header_inner{width:811px;height:109px;margin:0 auto;padding:24px 40px 0 49px;}
+.open_logo{float:left;}
+.open_login_text{float:right;font-size:14px;color:#444;margin:70px 0 0 0;}
+.open_header_inner .open_login_btn{color:#55acee;}
+.open_header_inner .open_login_btn:hover{color:#3f9fe7;}
+.header_regbtn{border-bottom:4px solid #55acee;padding:0 24px;line-height:32px;font-size:18px;color:#444;float:right;margin-top:74px;}
+.nav{float:right}
+
+.open_main{border-top:1px solid #f3f3f3;}
+.open_content{width:900px;margin:10px auto 0;padding-bottom:11px;border-bottom:1px solid #d4d4d4;}
+.open_main .linkcolors{color:#55acee;}
+.open_main .linkcolors:hover{color:#3f9fe7;}
+
+/*绑定页*/
+.reg_form{float:left;width:555px;padding:0 0 25px 42px;border-right:1px solid #d4d4d4;}
+.reg_form_title{font-size:18px;line-height:75px;}
+.infolist{height:79px;}
+.infolist .tit{width:70px;float: left;line-height:46px;font-size:14px;color:#000;text-align:right;padding-right:10px;}
+.infolist .inp{margin-left:80px;}
+.infolist .tips{width:508px;color:#666;text-align:right;display:block;line-height:22px;padding-right:8px;}
+.infolist .inp .winput{width:424px;height:44px;line-height:44px;border:solid 1px #d4d4d4;border-radius:4px;padding-left:10px;color:#666;}
+.btnbox{padding-left:50px;}
+.btnbox .btn{line-height:48px;color:#fff;border-radius:2px;display:inline-block;text-align:center;font-size:18px;margin-right:8px;}
+.btnbox .btn_submit{background:#55acee;border:none;}
+.btnbox .btn_submit:hover{background:#80c1f2;border:none;}
+.btnbox .btn_cancel{background:#80c1f2;}
+.btnbox .btn_cancel:hover{background:#55acee;}
+.textlinks{padding:18px 0 0 80px;}
+.textlinks a{margin-right:40px;}
+.agreement_checkb{margin-right:15px;vertical-align:middle;}
+.applicationlink{padding-left:50px;margin-top:20px;}
+
+/*.reg_sidebar{float:right;width:293px;padding:4px 0 4px 9px;}*/
+.reg_sidebar{float:right;width:293px;}
+
+/*注册页*/
+.reg_help{font-size:14px;}
+.reg_help_title{margin:30px 0 20px 0;color:#444;text-align:center;font-size:14px;font-weight:bold;}
+.reg_help li{margin-top: 5px;overflow: hidden;line-height:28px;}
+.reg_help li .arrow{width:28px;height: 28px;background:url(../images/icon.png) no-repeat 0px -112px;float:left;}
+.reg_help li .link{display: block;float: left;overflow: hidden;width:255px;padding-right:10px;}
+.reg_help li:hover .arrow{width:28px;height: 28px;background:url(../images/icon.png) no-repeat 0px -84px;float:left;}
+.reg_help li:hover .link{display: block;float: left;overflow: hidden;width:255px;padding-right:10px;color:#55acee;}
+.reg_help .help_more {display:inline-block;margin: 16px 0 0 25px;float:right;}
+
+/*登录页*/
+.login_form{padding-bottom:80px;}
+.login_form_title{font-size:14px;line-height:102px;padding-left:52px;}
+.login_form .infolist{padding-left:182px;}
+.login_form .infolist .tit{font-size:18px;}
+.login_form .infolist .inp .winput{width:412px;height:44px;line-height:44px;border:solid 1px #d4d4d4;border-radius:4px;padding-left:22px;color:#666;}
+.login_form .btnbox{padding-left:200px;}
+.login_form .textlinks{padding-left:200px;font-size:14px;color:#666;}
+
+/*法律声明*/
+.protocol{color:#666;}
+.protocol h3{font-size:14px;font-weight:bold;line-height:100px;text-align:center;}
+.protocol p{font-size:12px;line-height:20px;}
+.lawstatement_top{height:62px;border-bottom:1px solid #dcdcdc;}
+.lawstatement_top .tabs{width:800px;margin:0 auto;}
+.lawstatement_top .tabs li a{height:58px;padding:0 20px;line-height:58px;float:left;color:#444;font-size:18px;margin-right:1px;}
+.lawstatement_top .tabs li a:hover{height:58px;border-bottom:4px solid #55acee;color:#55acee;}
+.lawstatement_top .tabs .cur a{height:58px;border-bottom:4px solid #55acee;color:#55acee;}
+.lawstatement_text{width:800px;margin:0 auto;color:#666;}
+.lawstatement_text h3{line-height:100px;font-size:16px;text-align:center;}
+.lawstatement_text p {color: #666;margin: 10px 0;   text-indent: 2em;}
+
+
+/*授权页*/
+.licensnav{float:right;margin-top:55px;}
+.licensnav li{line-height:48px;float:right;padding:0 15px;font-size:18px;}
+.licensnav li a{color:#444;}
+.licensbox{width:500px;margin:0 auto;}
+.licenspic{width:128px;height:128px;margin:40px auto;}
+.licenslist{width:235px;margin:0 0 30px 155px;}
+.licenslist li{line-height:28px;font-size:14px;color:#444;}
+.licenslist li i{background:url(../images/icon.png) no-repeat 0px 0px;display:inline-block;width:28px;height:28px; vertical-align:middle;margin-right:5px;}
+.licenslist li .arr01{background:url(../images/icon.png) no-repeat 0px 0px;}
+.licenslist li .arr02{background:url(../images/icon.png) no-repeat 0px -28px;}
+.licenslist li .arr03{background:url(../images/icon.png) no-repeat 0px -56px;}
+.licensbox .textlinks{font-size:14px;color:#444;padding:20px 0 30px 0;}

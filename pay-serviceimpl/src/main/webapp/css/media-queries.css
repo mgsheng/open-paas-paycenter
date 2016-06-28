@@ -1,0 +1,29 @@
+@media screen and (max-width: 1000px) {
+
+#pagewrap {width: 100%;}
+#content {width: 60%;padding: 3% 4%;}
+
+}
+
+@media screen and (max-width: 850px) {
+
+#pagewrap {width: 100%;}
+#register {position: absolute;top: 5px;right: 0;}
+#username{width:80%}
+#password{width:80%}
+#form{position: absolute;left: 50;}
+
+}
+
+@media screen and (max-width: 480px) {
+
+.html {-webkit-text-size-adjust: none;}
+#content {width: auto;float: none;margin: 20px 0;}
+#username{width:60%}
+#password{width:60%}
+#form{position: absolute;left: 20;}
+}
+
+.body { font: normal 100% Helvetica, Arial, sans-serif; }
+.h1 { font-size: 1.5em; } 
+.small { font-size: 0.875em; } 

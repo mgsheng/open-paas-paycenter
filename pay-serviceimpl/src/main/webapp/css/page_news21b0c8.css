@@ -1,0 +1,35 @@
+.container_hd {
+	display: none
+}
+
+.article_box h3 {
+	padding-bottom: 40px;
+	font-weight: 400;
+	font-style: normal
+}
+
+.article_box .media.small img {
+	width: 300px
+}
+
+.tool_bar {
+	margin-left: 50px;
+	margin-right: 50px
+}
+
+.article_box .inner {
+	padding-top: 40px
+}
+
+.tool_bar {
+	display: none
+}
+
+#content {
+	width: 900px;
+	overflow-x: hidden
+}
+
+#content img {
+	max-width: 900px
+}

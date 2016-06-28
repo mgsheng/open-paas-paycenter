@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.OrderRefundRepositoryMyBatis">
+	<resultMap type="OrderRefund" id="orderRefundInfoMap">
+		<id column="Id" property="id" jdbcType="INTEGER" />
+		<result column="MERCHANT_ORDERID" property="merchantOrderId" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ID" property="merchantId" jdbcType="INTEGER" />
+		<result column="REFUND_MONEY" property="refundMoney" jdbcType="DECIMAL" />
+		<result column="APPID" property="appId" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="SOURCE_UID" property="sourceUid" jdbcType="VARCHAR" />
+		<result column="SOURCE_USERNAME" property="sourceUsername" jdbcType="VARCHAR" />
+		<result column="REAL_NAME" property="realName" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="GOODS_ID" property="goodsId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  MERCHANT_ORDERID,
+	  MERCHANT_ID,
+	  REFUND_MONEY,
+	  APPID,
+	  REMARK,
+	  CREATE_TIME,
+	  SOURCE_UID,
+	  SOURCE_USERNAME,
+	  REAL_NAME,
+	  PHONE,
+	  GOODS_ID
+	</sql>
+	<sql id="Base_Column_List">
+		Id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.refund.model.OrderRefund">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into MECHANT_ORDER_REFUND
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{merchantOrderId, jdbcType=VARCHAR},
+			#{merchantId, jdbcType=INTEGER},
+			#{refundMoney, jdbcType=DECIMAL},
+			#{appId, jdbcType=VARCHAR},
+			#{remark, jdbcType=VARCHAR},
+			#{createTime, jdbcType=TIMESTAMP},
+			#{sourceUid, jdbcType=VARCHAR},
+			#{sourceUsername, jdbcType=VARCHAR},
+			#{realName, jdbcType=VARCHAR},
+			#{phone, jdbcType=VARCHAR},
+			#{goodsId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="saveOrderRefundInfo" parameterType="OrderRefund" useGeneratedKeys="true" keyProperty="id">
+        insert into MECHANT_ORDER_REFUND(ID,MERCHANT_ORDERID,MERCHANT_ID,REFUND_MONEY,APPID,REMARK,CREATE_TIME,SOURCE_UID,SOURCE_USERNAME,REAL_NAME,PHONE,GOODS_ID)
+        values
+        (#{id},#{merchantOrderId},#{merchantId},#{refundMoney},#{appId},#{remark},#{createTime},#{sourceUid},#{sourceUsername},#{realName},#{phone},#{goodsId})
+    </insert>
+    <select id="findByMidAndAppId" resultMap="orderRefundInfoMap">
+         select * from MECHANT_ORDER_REFUND
+         where  MERCHANT_ORDERID = #{merchantOrderId}
+         and APPID=#{appId}
+	</select>	
+	<update id="updateOrderRefund" parameterType="OrderRefund">
+        update MECHANT_ORDER_REFUND set
+        <if test="merchantOrderId != null" >
+        MERCHANT_ORDERID = #{merchantOrderId},
+        </if>
+        <if test="merchantId != null" >
+        MERCHANT_ID = #{merchantId},
+        </if>
+        <if test="refundMoney != null " >
+        REFUND_MONEY = #{refundMoney},
+        </if>
+        <if test="remark != null and remark !=''" >
+        REMARK = #{remark},
+        </if>
+        <if test="createTime != null" >
+        CREATE_TIME = #{createTime},
+        </if>
+        <if test="sourceUid != null ">
+        SOURCE_UID = #{sourceUid},
+        </if>
+        <if test="sourceUsername != null and sourceUsername !=''" >
+        SOURCE_USERNAME = #{sourceUsername},
+        </if>
+        <if test="realName != null and realName !=''" >
+        REAL_NAME = #{realName},
+        </if>
+        <if test="phone != null and phone !=''" >
+        PHONE = #{phone},
+        </if>
+        <if test="goodsId != null and goodsId !=''" >
+        GOODS_ID = #{goodsId},
+        </if>
+        <if test="appId != null and appId !=''" >
+        APPID = #{appId}
+        </if>
+        where Id = #{id}
+    </update>
+</mapper>

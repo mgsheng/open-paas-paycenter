@@ -1,0 +1,122 @@
+package cn.com.open.openpaas.payservice.app.channel.alipay;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.dom4j.DocumentException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.com.open.openpaas.payservice.app.log.AlipayControllerLog;
+import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
+import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
+import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
+import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+
+
+/**
+ * 
+ */
+@Controller
+@RequestMapping("/alipay/order/")
+public class AliOrderCallbackController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(AliOrderCallbackController.class);
+	 @Autowired
+	 private MerchantOrderInfoService merchantOrderInfoService;
+	 @Autowired
+	 private MerchantInfoService merchantInfoService;
+	/**
+	 * 支付宝订单回调接口
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 * @throws DocumentException 
+	 * @throws MalformedURLException 
+	 */
+	@RequestMapping("callBack")
+	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+		//获取支付宝GET过来反馈信息
+		long startTime = System.currentTimeMillis();
+		Map<String,String> params = new HashMap<String,String>();
+		Map requestParams = request.getParameterMap();
+		String backMsg="";
+		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = "";
+			for (int i = 0; i < values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i]
+						: valueStr + values[i] + ",";
+			}
+			//乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+			valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+			params.put(name, valueStr);
+		}
+		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+		//商户订单号
+		String out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
+		//支付宝交易号
+		String trade_no = new String(request.getParameter("trade_no").getBytes("ISO-8859-1"),"UTF-8");
+        Double total_fee=Double .valueOf(request.getParameter("total_fee"));
+		//交易状态
+		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+		Map<String, Object> map=new HashMap<String, Object>();
+
+		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
+		
+		//计算得出通知验证结果
+		boolean verify_result = AlipayNotify.verify(params);
+		if(verify_result){//验证成功
+			//////////////////////////////////////////////////////////////////////////////////////////
+			//请在这里加上商户的业务逻辑程序代码
+
+			//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+			if(trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")){
+				//判断该笔订单是否在商户网站中已经做过处理
+					//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				backMsg="success";
+				MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
+				int notifyStatus=merchantOrderInfo.getNotifyStatus();
+				int payStatus=merchantOrderInfo.getPayStatus();
+				Double payCharge=0.0;
+				if(payStatus!=1){
+					merchantOrderInfo.setPayStatus(1);
+					merchantOrderInfo.setPayAmount(total_fee-payCharge);
+					merchantOrderInfo.setAmount(total_fee);
+					merchantOrderInfo.setPayCharge(0.0);
+					merchantOrderInfo.setDealDate(new Date());
+					merchantOrderInfo.setPayOrderId(trade_no);
+					merchantOrderInfoService.updateOrder(merchantOrderInfo);
+				}
+				if(notifyStatus!=1){
+					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService));
+					   thread.run();	
+				}
+					//如果有做过处理，不执行商户的业务程序
+			}
+			//该页面可做页面美工编辑
+			
+			 
+			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;
+			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+			//////////////////////////////////////////////////////////////////////////////////////////
+		}else{
+			//该页面可做页面美工编辑
+			backMsg="error";
+		}
+		AlipayControllerLog.log(startTime,params, map);
+		WebUtils.writeJson(response, backMsg);
+	  } 
+}

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.DictTradeChannelRepositoryMyBatis">
+	<resultMap type="DictTradeChannel" id="DictTradeChannelMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+		<result column="CHANNEL_STATUS" property="channelStatus" jdbcType="DECIMAL" />
+		<result column="PRIORITY" property="priority" jdbcType="DECIMAL" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="MERID" property="merid" jdbcType="VARCHAR" />
+		<result column="KEYVALUE" property="keyValue" jdbcType="VARCHAR" />
+		<result column="OTHER" property="other" jdbcType="VARCHAR" />
+		<result column="BACKURL" property="backurl" jdbcType="VARCHAR" />
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+		<result column="SIGN_TYPE" property="signType" jdbcType="VARCHAR" />
+		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />   
+		<result column="input_charset" property="inputCharset" jdbcType="VARCHAR" />
+		
+
+	</resultMap>
+	<sql id="Insert_Column_List">
+		CHANNELNAME,
+		CHANNEL_STATUS,
+		PRIORITY,
+		CREATE_DATE,
+		MEMO,
+		MERID,
+		KEYVALUE,
+		OTHER,
+		BACKURL,
+		SIGN_TYPE,
+		PAYMENT_TYPE,
+		NOTIFY_URL,
+		input_charset,
+		type
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into DICT_TRADE_CHANNEL
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{channelName, jdbcType=VARCHAR},
+			#{channelStatus, jdbcType=DECIMAL},
+			#{priority,jdbcType=DECIMAL},
+			#{createDate,jdbcType=TIMESTAMP},
+			#{memo,jdbcType=VARCHAR},
+			#{merid,jdbcType=VARCHAR},
+			#{keyValue,jdbcType=VARCHAR},
+			#{notifyUrl,jdbcType=VARCHAR},
+			#{other,jdbcType=VARCHAR},
+			#{backurl,jdbcType=VARCHAR},
+			#{paymentType,jdbcType=INTEGER},
+			#{signType,jdbcType=VARCHAR},
+			#{inputCharset,jdbcType=VARCHAR},
+			#{type,jdbcType=INTEGER}
+		)
+	</insert>
+	
+	<select id="findByMerId" resultMap="DictTradeChannelMap">
+         select * from DICT_TRADE_CHANNEL
+         where  MERID = #{merid}
+	</select>
+	<select id="findByMAI" resultMap="DictTradeChannelMap">
+         select * from DICT_TRADE_CHANNEL
+         where  MERID = #{merid}
+         and ID=#{id}
+	</select>
+</mapper>
