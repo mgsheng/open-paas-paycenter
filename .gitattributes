@@ -90,6 +90,7 @@ pay-service/lib/QRCode.jar -text
 pay-service/lib/alipay-sdk-java20151021120052-source.jar -text
 pay-service/lib/alipay-sdk-java20151021120052.jar -text
 pay-service/lib/alipay-trade-sdk.jar -text
+pay-service/lib/bcprov-jdk16-1.45.jar -text
 pay-service/lib/commons-beanutils-1.8.0.jar -text
 pay-service/lib/commons-codec-1.3.jar -text
 pay-service/lib/commons-codec-1.6.jar -text
