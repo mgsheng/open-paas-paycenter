@@ -3,10 +3,10 @@ package cn.com.open.openpaas.payservice.app.tools;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.bouncycastle.util.encoders.Base64;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
   
 public class HMacSha1 {  
   
