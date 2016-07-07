@@ -34,7 +34,7 @@ public class HytUtils {
 	}
 
 	public static String getCurCertPath() {
-		return System.getProperty("user.dir") + File.separator
+		return  HytUtils.class.getClassLoader().getResource("").getPath()+ File.separator
 				+ HytConstants.CERT + File.separator;
 	}
 
