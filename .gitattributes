@@ -285,12 +285,14 @@ pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderI
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/OrderRefundMapper.xml -text
 pay-serviceimpl/src/main/resources/cert/800075500030008.p12 -text
 pay-serviceimpl/src/main/resources/cert/hytrootca.cer -text
+pay-serviceimpl/src/main/resources/disconf.properties -text
 pay-serviceimpl/src/main/resources/emailtemplate/activation.html -text
 pay-serviceimpl/src/main/resources/emailtemplate/resetpassword.html -text
 pay-serviceimpl/src/main/resources/log4j.properties -text
 pay-serviceimpl/src/main/resources/logging.properties -text
 pay-serviceimpl/src/main/resources/mybatis.xml -text
 pay-serviceimpl/src/main/resources/spring-oauth-server.properties -text
+pay-serviceimpl/src/main/resources/spring/appCtx-disconf.xml -text
 pay-serviceimpl/src/main/resources/spring/context.xml -text
 pay-serviceimpl/src/main/resources/spring/job.xml -text
 pay-serviceimpl/src/main/resources/spring/transaction.xml -text
