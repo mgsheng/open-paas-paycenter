@@ -177,6 +177,7 @@
 
                         <div class="col-sm-10">
                            <select name="paymentType" id="paymentType" class="form-control" ng-mode="paymentType">
+                                <option value=""></option>
 								<option value="10001">支付宝-即时到账</option>
 								<option value="10003">支付宝-当面付</option>
 								<option value="10002">微信-扫码支付</option>
@@ -191,8 +192,10 @@
                             <!-- <input type="text" name="paymentChannel" id="paymentChannel" size="50" class="form-control"
                                    ng-model="paymentChannel"/> -->
 							<select name="paymentChannel" id="paymentChannel" class="form-control" ng-mode="paymentChannel">
+							     <option value=""></option>
 								<option value="10001">支付宝</option>
 								<option value="10002">微信</option>
+								<option value="10004">TCL</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>

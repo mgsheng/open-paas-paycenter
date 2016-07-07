@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -108,7 +109,7 @@ public class UserInterfaceController {
      * Redirect to oauth-server bind page:   step-2
      * */
      @RequestMapping(value = "unifyPay", method = RequestMethod.POST)
-     public String unifyPay(UnifyPayDto unifyPayDto) throws Exception {
+     public String unifyPay(UnifyPayDto unifyPayDto,HttpServletRequest request,HttpServletResponse response) throws Exception {
     	 String key=map.get(unifyPayDto.getAppId());
    	  	 String result="";
    	  	 String timestamp="";
@@ -127,7 +128,7 @@ public class UserInterfaceController {
 	   	 }
     	 final String fullUri =unifyPayDto.getFullUri()+"&signature="+result+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
-         return "redirect:" + fullUri;
+         return "redirect:" +  fullUri;
      }
      
      /*
