@@ -582,6 +582,16 @@
     <artifactId>bcprov-jdk16</artifactId>
     <version>1.45</version>
 </dependency>
+<dependency>
+    <groupId>com.baidu.disconf</groupId>
+    <artifactId>disconf-core</artifactId>
+    <version>2.6.33</version>
+</dependency>
+<dependency>
+    <groupId>com.baidu.disconf</groupId>
+    <artifactId>disconf-client</artifactId>
+    <version>2.6.33</version>
+</dependency>
     </dependencies>
 
 
