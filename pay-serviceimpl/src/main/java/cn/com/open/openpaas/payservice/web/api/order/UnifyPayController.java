@@ -77,7 +77,7 @@ import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandl
  * 
  */
 @Controller
-@RequestMapping("/alipay/test2")
+@RequestMapping("/alipay/")
 public class UnifyPayController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(UnifyPayController.class);
 	
