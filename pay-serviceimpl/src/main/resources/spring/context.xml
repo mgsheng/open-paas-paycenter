@@ -176,6 +176,7 @@
             <property name="wx_ufdooer_url" value="${wx_ufdooer_url}"></property>
             <property name="wx_trade_type" value="${wx_trade_type}"></property>
             <property name="server_host" value="${server_host}"></property>
+            <property name="tcl_pay_version" value="${tcl_pay_version}"></property>
             
         </bean>
 </beans>

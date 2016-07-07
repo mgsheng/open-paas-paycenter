@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -81,6 +82,7 @@ public class AlipayController {
 		sParaTemp.put("anti_phishing_key",AlipaySubmit.query_timestamp());
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
 		sParaTemp.put("out_trade_no", out_trade_no);
+		//subject = URLEncoder.encode(subject,"UTF-8");
 		sParaTemp.put("subject", subject);
 		sParaTemp.put("total_fee",total_fee);
 		sParaTemp.put("body", body);
@@ -98,7 +100,8 @@ public class AlipayController {
                 } else {  
                     for (String name : parameters.keySet()) {  
                         sb.append(name).append("=").append(  
-                               parameters.get(name)).append("&");  
+                        		java.net.URLEncoder.encode(parameters.get(name),  
+                                        "UTF-8")).append("&");  
                     }  
                     String temp_params = sb.toString();  
                     params = temp_params.substring(0, temp_params.length() - 1);  

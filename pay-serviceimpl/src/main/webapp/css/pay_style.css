@@ -1,0 +1,274 @@
+*, body, html, ul, ol, li {
+	margin:0;
+	padding:0;
+	list-style: none;
+}
+.wrap{
+	width:100%;
+	min-height:100%;
+	background: #f5f5f5;
+}
+/*==============================header start==================================*/
+.header{
+	width:100%;
+	height:101px;
+	background:#FFF;
+	border-bottom: 2px solid #eb6100;
+}
+.header-box{
+	width:1227px;
+	margin:0 auto;
+}
+.header-box .logo{
+	display: inline-block;
+	float: left;
+}
+.header-box .logo img{
+	margin-top: 24px;
+	margin-left: 5px;
+}
+.header-box .logo h3{
+	display: inline-block;
+	font-size: 32px;
+	color:#4e4646;
+	margin-left: 8px;
+}
+.header-box .info{
+	float: right;
+	line-height: 101px;
+	font-size: 12px;
+	color:#757575;
+    margin-right: 5px;
+}
+.header-box .info li{
+	float: left;
+	cursor: pointer;
+}
+/*==============================content start==================================*/
+.content{
+	display: block;
+	width:1227px;
+	height:auto;
+	margin:0 auto;
+}
+.pay-tips{
+	height:162px;
+	background: #fff;
+	margin-top: 38px;
+}
+.pay-tips dl dt{
+	float: left;
+	margin:34px 49px 0 49px;
+}
+.pay-tips dl dd{
+	float: left;
+}
+.pay-tips dl dd:last-child{
+	float: right;
+	margin-right: 50px;
+    text-align: right;
+}
+.form-info1 h3{
+	font-size: 24px;
+	color: #424242;
+	margin-bottom:10px;
+}
+.form-info1{
+	margin-top: 37px;
+}
+.form-info2{
+	margin-top: 39px;
+}
+.form-info1 p, .form-info2 p{
+	font-size: 14px;
+	color:#999;
+	line-height: 24px;
+}
+.form-info2 h3{
+	font-size: 14px;
+	color:#999;
+	margin-bottom:11px;
+	font-weight: normal;
+}
+.form-info2 h3 .color{
+	font-size: 23px;
+	color:#ff6801;
+	font-weight: bold;
+}
+/*支付方式*/
+.pay-method{
+	min-height:567px;
+	background: #fff;
+	margin-top: 30px;
+	padding:0 49px;
+}
+.pay-method .title{
+	font-size: 18px;
+	color:#424242;
+	padding: 33px 0 25px;
+	border-bottom: 1px solid #e0e0e0;
+	clear: both;
+}
+.pay-method .tit{
+	font-size: 18px;
+	color:#424242;
+    padding: 31px 0 17px;
+    clear: both;
+}
+.pay-method .tit span{
+	font-size: 12px;
+}
+.pay-method .title span{
+	font-size: 12px;
+	color:#b0b0b0;
+}
+.pay-method li{
+	float: left;
+	width:174px;
+	height:60px;
+	line-height: 60px;
+	text-align: center;
+	border:1px solid #e0e0e0;
+	margin-right: 14px;
+	margin-bottom: 14px;
+	cursor: pointer;
+}
+.pay-method li:hover,.pay-method li.active {
+border:1px solid #eb6100 ;
+}
+.pay-method li:nth-child(6n){
+	margin-right: 0;
+}
+.pay-method li img{
+	max-width: 89%;
+}
+.btn{
+	clear: both;
+	padding-top: 32px;
+	width: 300px;
+    margin: 0 auto;
+}
+.btn span{
+	display: inline-block;
+	width: 121px;
+	height: 46px;
+	line-height: 46px;
+	float: center;
+	text-align: center;
+	cursor: pointer;
+}
+.btn .confirm{
+	background: #eb6100;
+	color:#fff;
+}
+.btn .cancel{
+	background: #efefef;
+	color:#919191;
+	margin-left: 32px;
+}
+/*==============================footer start==================================*/
+.footer{
+	width:100%;
+	height:85px;
+	background:#FFF;
+	font-size: 14px;
+	color: #999;
+	text-align: center;
+	padding-top: 100px;
+	margin-top:44px;
+}
+/*==============================弹窗 start==================================*/
+.mask{
+	width:100%;
+	height:100%;
+	background: rgba(0,0,0,0.2);
+	position: fixed;
+	top:0;
+	left: 0;
+	display: none;
+}
+.payLayer{
+	width:890px;
+	height: 624px;
+	background: #FFF;
+	border-radius: 3px;
+	position: fixed;
+	top:50%;
+	left: 50%;
+	margin-left: -445px;
+	margin-top: -312px;
+	display: none;
+}
+.payLayer .hd{
+	padding:30px 35px;
+}
+.payLayer .hd img{
+	
+}
+.payLayer .hd .close{
+	width: 19px;
+	height: 19px;
+	float: right;
+	cursor: pointer;
+}
+.erweimaBox{
+	width: 289px;
+	height: 373px;
+	float: right;
+	margin-right: 27px;
+    margin-top: 80px;
+}
+.erweimaBox .erweima{
+	width: 261px;
+	height: 245px;
+	padding: 21px 14px;
+	border-radius: 3px;
+	border:1px solid #efefef;
+}
+.erweimaBox p{
+	text-align: center;
+	margin-top: 50px;
+	font-size: 18px;
+	color: #a3a3a3;
+}
+.phone{
+	width: 249px;
+	height: 352px;
+	float: right;
+    margin-right: 33px;
+    margin-top: 48px;
+}
+/*==============================屏幕适配===================================*/
+
+@media screen and (max-width: 1152px) {/*宽度小于 XXXpx时*/   /*  1280 * 0.9 = 1152  */
+	.header-box, .content{
+		width:1104px;
+	}
+	.pay-method li{
+		width:154px;
+	}
+	.payLayer{
+		width: 801px;
+    	height: 561px;
+		margin-left: -400px;
+		margin-top: -280px;
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	.header-box, .content{
+		width:981px;
+	}
+	.pay-method li{
+		width:133px;
+	}
+	.payLayer{
+		width: 712px;
+    	height: 499px;
+    	margin-left: -356px;
+    	margin-top: -249px;
+	}
+	.erweimaBox{
+		margin-top: 50px;
+	}
+}
