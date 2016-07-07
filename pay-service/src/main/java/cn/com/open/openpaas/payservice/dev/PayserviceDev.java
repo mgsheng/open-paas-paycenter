@@ -15,9 +15,16 @@ public class PayserviceDev {
 	public String wx_trade_type;
 	public String wx_urlCode_path;
 	public String server_host;
+	public String tcl_pay_version;
 	
 	
 	
+	public String getTcl_pay_version() {
+		return tcl_pay_version;
+	}
+	public void setTcl_pay_version(String tcl_pay_version) {
+		this.tcl_pay_version = tcl_pay_version;
+	}
 	public String getServer_host() {
 		return server_host;
 	}
