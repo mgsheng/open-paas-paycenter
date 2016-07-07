@@ -162,6 +162,7 @@ pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/Help_Encrypt
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/MD5.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/PropertiesTool.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/QRCodeEncoderHandler.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/SendPostMethod.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/SerializeUtil.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/SettingEntiry.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/StringTool.java -text
