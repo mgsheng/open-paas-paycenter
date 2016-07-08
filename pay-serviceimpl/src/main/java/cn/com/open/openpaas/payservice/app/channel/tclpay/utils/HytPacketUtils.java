@@ -1,6 +1,7 @@
 package cn.com.open.openpaas.payservice.app.channel.tclpay.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -35,7 +36,34 @@ public class HytPacketUtils {
 			if (HytStringUtils.isEmpty(value)) {
 				continue;
 			} else {
-						strBuf.append(key + HytConstants.SYMBOL_EQUAL +value+HytConstants.SYMBOL_AND);
+					strBuf.append(key + HytConstants.SYMBOL_EQUAL +value+HytConstants.SYMBOL_AND);
+			}
+		}
+		return strBuf.substring(0, strBuf.length() - 1);
+	}
+	@SuppressWarnings("rawtypes")
+	public static String map2StrRealURL(Map<String, String> dataMap) {
+		StringBuffer strBuf = new StringBuffer();
+		SortedMap<String, String> sortedDataMap = new TreeMap<String, String>(
+				dataMap);
+		Set<Entry<String, String>> es = sortedDataMap.entrySet();
+		Iterator<Entry<String, String>> it = es.iterator();
+		while (it.hasNext()) {
+			Map.Entry entry = (Map.Entry) it.next();
+			String key = (String) entry.getKey();
+			String value = (String) entry.getValue();
+			if (HytStringUtils.isEmpty(value)) {
+				continue;
+			} else {
+				if(key.equals("product_desc")||key.equals("product_name"))
+				{
+					try {
+						strBuf.append(key + HytConstants.SYMBOL_EQUAL +URLEncoder.encode(value, "GBK")+HytConstants.SYMBOL_AND);
+					} catch (UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+				} else
+					strBuf.append(key + HytConstants.SYMBOL_EQUAL +value+HytConstants.SYMBOL_AND);
 			}
 		}
 		return strBuf.substring(0, strBuf.length() - 1);
