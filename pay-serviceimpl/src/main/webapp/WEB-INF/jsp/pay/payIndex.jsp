@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<form id="inputForm" action="${pageContext.request.contextPath}/alipay/selectChannelPay" method="post">
+<form id="inputForm" action="${pageContext.request.contextPath}/alipay/selectChannelPay" method="post" target="_blank">
 <input type="hidden"  name="outTradeNo" value="${outTradeNo}" id="outTradeNo"/>
 <input type="hidden" name="areaCode" value="" id="areaCode"/>
 <input type="hidden" name="appId" value="${appId}" id="appId"/>
@@ -67,7 +67,7 @@
 				<li>查看更多</li>
 			</ul>
 			<div class="btn" style="padding-left: 35%">
-				<span class="confirm" onclick="aa();">确认</span>
+				<span class="confirm" onclick="submitCheck();">确认</span>
 				<span class="cancel">取消</span>
 			</div>
 		</div>
@@ -98,7 +98,7 @@
      var areaCode ;
      var outTradeNo="${outTradeNo}";
      var urlCode="";
-	
+	 var appId=$("#appId").val();
 
 	$(".pay-method li").click(function(){
 	    
@@ -110,17 +110,13 @@
 	});
 	$("#weixinPay").bind("click",function(){
 	       var appId=$("#appId").val();
-	       $.ajax({
+	     /*   $.ajax({
 			 type: 'post',
 			 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId,
 			 success: function(date){
-			   urlCode=date;
-			   console.log(date);
-			   $(".mask").show();
-		       $(".payLayer").show();
-		       $('#payCode').qrcode(urlCode);// 生成二维码
+			 
 			   }
-			});
+			}); */
 		
 	});
 
@@ -130,14 +126,24 @@
 		$(".payLayer").hide();
 	});
 	function submitCheck(){
-	
-	
-			 $.ajax({
+	         if(areaCode=="3"){
+	          $.ajax({
 			 type: 'post',
-			 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo,
+			 dataType:'text',
+			 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId,
 			 success: function(date){
+			   urlCode=date;
+			   console.log(urlCode+"==urlCode");
+			   $(".mask").show();
+		       $(".payLayer").show();
+		       $("#payCode").empty();
+		       $('#payCode').qrcode(urlCode);// 生成二维码
 			   }
-			});
+			   });
+	         }else{
+	         	$("form").submit();
+	         }
+			
 			
 	}
 	function aa(){

@@ -148,5 +148,27 @@ public class HytUtils {
          
          return wsign;
 	}
+	   /*
+			 * 组织待验签字符串
+			 */
+		 public static String  getVertifyFromStr(Map<String,String> retMap){
+	         String wsign="";
+	         Map responseMap = new HashMap();
+			 responseMap.putAll(retMap);
+			   Set set1 = retMap.keySet();
+			    Iterator iterator1 = set1.iterator();
+			    while (iterator1.hasNext()) {
+			      String key0 = (String)iterator1.next();
+			      String tmp = retMap.get(key0);
+			      if (HytStringUtils.equals(tmp, "null")||HytStringUtils.isBlank(tmp)||HytStringUtils.equals(key0,HytParamKeys.SERVER_SIGN)||HytStringUtils.equals(key0,HytParamKeys.SERVER_CERT)) {
+			    	  responseMap.remove(key0);
+			      }
+
+			    }
+			    
+	         wsign=	coverMap2String(responseMap);
+	         
+	         return wsign;
+		}
 	 
 }

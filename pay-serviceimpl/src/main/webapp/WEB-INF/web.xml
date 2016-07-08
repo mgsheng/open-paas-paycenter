@@ -132,18 +132,18 @@
     <!--<error-code>404</error-code>-->
     <!--<location>/index.jsp</location>-->
     <!--</error-page>-->
-   <filter>      <!--注意这里是filter，不要配置成servlet-->
-    <filter-name>CharactorFilter</filter-name>    <!--过滤器名称-->
-   <filter-class>cn.com.open.openpaas.payservice.app.thread.CharactorFilter</filter-class>  <!--过滤器的完整类名--> 
-     <init-param>   <!--初始化参数--> 
-         <param-name>encoding</param-name>  <!--参数名称--> 
-         <param-value>utf-8</param-value>   <!--参数值--> 
+ <!--   <filter>      注意这里是filter，不要配置成servlet
+    <filter-name>CharactorFilter</filter-name>    过滤器名称
+   <filter-class>cn.com.open.openpaas.payservice.app.thread.CharactorFilter</filter-class>  过滤器的完整类名 
+     <init-param>   初始化参数 
+         <param-name>encoding</param-name>  参数名称 
+         <param-value>utf-8</param-value>   参数值 
      </init-param>
   </filter>
-   <filter-mapping> <!--过滤器映射-->
-      <filter-name>CharactorFilter</filter-name><!--过滤器名称-->  
-      <url-pattern>/*</url-pattern><!--URL映射，给所有页面处理乱码--> 
-      </filter-mapping>
+   <filter-mapping> 过滤器映射
+      <filter-name>CharactorFilter</filter-name>过滤器名称  
+      <url-pattern>/*</url-pattern>URL映射，给所有页面处理乱码 
+      </filter-mapping> -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

@@ -15,7 +15,8 @@
     <!-- <context:component-scan base-package="cc.wdcy.web"/> -->
     <context:component-scan base-package="cn.com.open.openpaas.payservice.web"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.alipay"/>
-    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.wxunifiedpay"/>
+    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.wxpay"/>
+    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.tclpay"/>
     <!--static resource-->
     <mvc:resources mapping="/index.jsp*" location="/index.jsp"/>
 

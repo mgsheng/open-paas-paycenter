@@ -227,6 +227,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/utils/HytPacketUtils.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/utils/HytStringUtils.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/utils/HytUtils.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TCLOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TestScanCodeOrder.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxConfigure.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxHttpUtil.java -text
