@@ -135,23 +135,19 @@ public class ScanCodeOrderService {
 	 */
 	public String Aliorder1(Map<String, String> dataMap) {
 		RSASign util = HytUtils.getRSASignObject();
-		String url = CommonConfig.HYT_SERVICE_URL;
 		String reqData = HytPacketUtils.map2Str(dataMap);
-		String qr_code_url="";
-		String response = "";
+		String reqData2 = HytPacketUtils.map2StrRealURL(dataMap);
 		String buf ="";
 		try {
-			String merchant_sign = util.sign(reqData, "UTF-8");
+			String merchant_sign = util.sign(reqData, "GBK");
 			String merchant_cert = util.getCertInfo();
-			buf = reqData + HytConstants.SYMBOL_AND
+			buf = reqData2 + HytConstants.SYMBOL_AND
 					+ HytParamKeys.MERCHANT_SIGN + HytConstants.SYMBOL_EQUAL
 					+ merchant_sign + HytConstants.SYMBOL_AND
 					+ HytParamKeys.MERCHANT_CERT + HytConstants.SYMBOL_EQUAL
 					+ merchant_cert;
 			System.out.println("==================request===============>>>>"
 					+ buf);
-		
-				
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
