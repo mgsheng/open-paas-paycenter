@@ -162,7 +162,7 @@
             </list>
         </constructor-arg>
     </bean>
-       <bean id="PayserviceDev" class="cn.com.open.openpaas.payservice.dev.PayserviceDev">
+       <bean id="payserviceDev" class="cn.com.open.openpaas.payservice.dev.PayserviceDev">
             <property name="notify_times" value="${notify_times}"></property>
             <property name="ali_key" value="${ali_key}"></property>
             <property name="ali_sign_type" value="${ali_sign_type}"></property>
