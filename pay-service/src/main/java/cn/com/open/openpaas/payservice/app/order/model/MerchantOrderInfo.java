@@ -98,6 +98,16 @@ public class MerchantOrderInfo implements Serializable {
 	private String appId;
 	
 	private String statusMessage;
+	private Integer businessType;
+	
+
+	public Integer getBusinessType() {
+		return businessType;
+	}
+
+	public void setBusinessType(Integer businessType) {
+		this.businessType = businessType;
+	}
 
 	public MerchantOrderInfo(){
 		

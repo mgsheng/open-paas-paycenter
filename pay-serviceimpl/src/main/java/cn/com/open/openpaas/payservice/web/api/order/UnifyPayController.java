@@ -235,6 +235,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setMerchantProductDesc(goodsDesc);//商品描述
 			merchantOrderInfo.setMerchantProductId(goodsId);
 			merchantOrderInfo.setParameter1(parameter);
+			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
 	/*	SortedMap<Object,Object> params = new TreeMap<Object,Object>();

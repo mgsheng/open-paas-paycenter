@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +60,9 @@ public class OrderRefundController extends BaseControllerUtil{
 			String realname=request.getParameter("realName");
 			String phone=request.getParameter("phone");
 			String goodsId=request.getParameter("goodsId");
-			
+			String signature=request.getParameter("signature");
+			String timestamp=request.getParameter("timestamp");
+			String signatureNonce=request.getParameter("signatureNonce");
 			
 			log.info("~~~~~~~传入的业务订单号："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	    	//获取当前订单
@@ -73,7 +77,16 @@ public class OrderRefundController extends BaseControllerUtil{
 			}
 			MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
 			//认证
-	        Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+			SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	    	sParaTemp.put("appId",appId);
+	    	sParaTemp.put("outTradeNo",outTradeNo);
+	    	sParaTemp.put("refundMoney",refundMoney);
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		String param=createSign(sParaTemp);
+	   		
+	   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,param,merchantInfo.getPayKey());
+	        //Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
 			if(!hmacSHA1Verification){
 				paraMandaChkAndReturn(1, response,"认证失败");
 				return;

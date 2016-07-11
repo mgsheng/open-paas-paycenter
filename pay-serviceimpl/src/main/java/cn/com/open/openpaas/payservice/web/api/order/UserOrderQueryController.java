@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,6 +61,9 @@ public class UserOrderQueryController extends BaseControllerUtil{
     public void unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	String outTradeNo=request.getParameter("outTradeNo");
         String appId = request.getParameter("appId");
+        String signature=request.getParameter("signature");
+	    String timestamp=request.getParameter("timestamp");
+	    String signatureNonce=request.getParameter("signatureNonce");
       //获取当前订单
       		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
       		if(!paraMandatoryCheck(Arrays.asList(outTradeNo,appId))){
@@ -72,7 +77,17 @@ public class UserOrderQueryController extends BaseControllerUtil{
       		
       	MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
         //认证
-        Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+      	
+      	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+    	sParaTemp.put("appId",appId);
+   		sParaTemp.put("timestamp", timestamp);
+   		sParaTemp.put("signatureNonce", signatureNonce);
+   		sParaTemp.put("outTradeNo",outTradeNo);
+   		String params=createSign(sParaTemp);
+   		
+   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+        
 		if(!hmacSHA1Verification){
 			writeMsgToClient("error",3,response,"认证失败");
             return;

@@ -45,6 +45,7 @@
 		<result column="IMEI" property="imei" jdbcType="VARCHAR" />
 		<result column="MAC" property="mac" jdbcType="VARCHAR" />
 		<result column="APPID" property="appId" jdbcType="VARCHAR" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="INTEGER" />
 		<result column="STATUS_MESSAGE" property="statusMessage" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Insert_Column_List">
@@ -90,7 +91,8 @@
 	  IMEI,
 	  MAC,
 	  APPID,
-	  STATUS_MESSAGE
+	  STATUS_MESSAGE,
+	  BUSINESS_TYPE
 	</sql>
 	<sql id="Base_Column_List">
 		ID,
@@ -147,7 +149,8 @@
 			#{ip, jdbcType=VARCHAR},			
 			#{imei, jdbcType=VARCHAR},			
 			#{mac, jdbcType=VARCHAR},			
-			#{appId, jdbcType=VARCHAR},			
+			#{appId, jdbcType=VARCHAR},	
+			#{businessType, jdbcType=INTEGER},			
 			#{statusMessage, jdbcType=VARCHAR}
 		)
 	</insert>
@@ -209,8 +212,8 @@
         where MERCHANT_ORDERID = #{merchantOrderId}
     </update>
 	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1)
+        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE)
         values
-        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1})
+        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType})
     </insert>
 </mapper>

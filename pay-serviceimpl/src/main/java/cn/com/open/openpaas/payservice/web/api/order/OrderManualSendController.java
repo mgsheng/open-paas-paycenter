@@ -60,6 +60,9 @@ public class OrderManualSendController extends BaseControllerUtil{
 		 
 		String outTradeNo=request.getParameter("orderId");//业务方订单唯一ID
 		String appId=request.getParameter("appId");
+		String signature=request.getParameter("signature");
+		String timestamp=request.getParameter("timestamp");
+		String signatureNonce=request.getParameter("signatureNonce");
 		
 		log.info("~~~~~~~传入的业务订单号："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		
@@ -77,7 +80,15 @@ public class OrderManualSendController extends BaseControllerUtil{
 		
 		MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
 		//认证
-        Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+	 	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+    	sParaTemp.put("appId",appId);
+   		sParaTemp.put("timestamp", timestamp);
+   		sParaTemp.put("signatureNonce", signatureNonce);
+   		sParaTemp.put("outTradeNo",outTradeNo);
+   		String param=createSign(sParaTemp);
+   		
+   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,param,merchantInfo.getPayKey());
+        //Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
 		if(!hmacSHA1Verification){
 			paraMandaChkAndReturn(1, response,"认证失败");
 			return;
