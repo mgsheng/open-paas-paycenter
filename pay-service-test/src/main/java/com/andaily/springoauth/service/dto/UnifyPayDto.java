@@ -42,7 +42,19 @@ public class UnifyPayDto implements Serializable {
 	private String feeType;
 	private String clientIp;
 	private String parameter;
+	private String businessType;
 	
+	
+	public String getBusinessType() {
+		return businessType;
+	}
+
+
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+
+
 	public String getUnifyPayUri() {
 		return unifyPayUri;
 	}
@@ -249,8 +261,8 @@ public class UnifyPayDto implements Serializable {
 	}
 	
 	public String getFullUri() throws UnsupportedEncodingException {
-        return String.format("%s?outTradeNo=%s&userName=%s&userId=%s&appId=%s&merchantId=%s&goodsId=%s&goodsName=%s&goodsDesc=%s&goodsTag=%s&showUrl=%s&buyerRealName=%s&buyerCertNo=%s&inputCharset=%s&paymentOutTime=%s&paymentType=%s&paymentChannel=%s&totalFee=%s&feeType=%s&clientIp=%s&parameter=%s",
-        		unifyPayUri,outTradeNo,userName,userId,appId,merchantId,goodsId,URLEncoder.encode(goodsName, "UTF-8"),goodsDesc,goodsTag,showUrl,buyerRealName,buyerCertNo,inputCharset,paymentOutTime,paymentType,paymentChannel,totalFee,feeType,clientIp,parameter);  
+        return String.format("%s?outTradeNo=%s&userName=%s&userId=%s&appId=%s&merchantId=%s&goodsId=%s&goodsName=%s&goodsDesc=%s&goodsTag=%s&showUrl=%s&buyerRealName=%s&buyerCertNo=%s&inputCharset=%s&paymentOutTime=%s&paymentType=%s&paymentChannel=%s&totalFee=%s&feeType=%s&clientIp=%s&parameter=%s&businessType=%s",
+        		unifyPayUri,outTradeNo,userName,userId,appId,merchantId,goodsId,URLEncoder.encode(goodsName, "UTF-8"),goodsDesc,goodsTag,showUrl,buyerRealName,buyerCertNo,inputCharset,paymentOutTime,paymentType,paymentChannel,totalFee,feeType,clientIp,parameter,businessType);  
     }
 	
 

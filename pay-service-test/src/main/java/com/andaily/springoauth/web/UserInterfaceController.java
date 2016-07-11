@@ -10,7 +10,11 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +27,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+
+
 import com.andaily.springoauth.service.dto.DirctPayDto;
 import com.andaily.springoauth.service.dto.OrderRefund;
 import com.andaily.springoauth.service.dto.UnifyPayDto;
@@ -32,6 +38,7 @@ import com.andaily.springoauth.tools.DESUtil;
 import com.andaily.springoauth.tools.DateTools;
 import com.andaily.springoauth.tools.HMacSha1;
 import com.andaily.springoauth.tools.LoadPopertiesFile;
+import com.andaily.springoauth.tools.PayUtil;
 import com.andaily.springoauth.tools.WebUtils;
 
 /**
@@ -111,10 +118,30 @@ public class UserInterfaceController {
      @RequestMapping(value = "unifyPay", method = RequestMethod.POST)
      public String unifyPay(UnifyPayDto unifyPayDto,HttpServletRequest request,HttpServletResponse response) throws Exception {
     	 String key=map.get(unifyPayDto.getAppId());
-   	  	 String result="";
+   	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
-	   	 if(key!=null){
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",unifyPayDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",unifyPayDto.getOutTradeNo() );
+	   		sParaTemp.put("userId", unifyPayDto.getUserId());
+	   		sParaTemp.put("goodsName", unifyPayDto.getGoodsName());
+	   		sParaTemp.put("totalFee", unifyPayDto.getTotalFee());
+	   		sParaTemp.put("merchantId", unifyPayDto.getMerchantId());
+	   		sParaTemp.put("businessType", unifyPayDto.getBusinessType());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =unifyPayDto.getFullUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+	   /*	 if(key!=null){
 	   		timestamp=DateTools.getSolrDate(new Date());
 			 	StringBuilder encryptText = new StringBuilder();
 			 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
@@ -124,11 +151,14 @@ public class UserInterfaceController {
 			 	encryptText.append(SEPARATOR);
 			 	encryptText.append(signatureNonce);
 				result=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+				
+				
+				
 				result=HMacSha1.getNewResult(result);
 	   	 }
     	 final String fullUri =unifyPayDto.getFullUri()+"&signature="+result+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
-         return "redirect:" +  fullUri;
+         return "redirect:" +  fullUri;*/
      }
      
      /*
@@ -365,4 +395,26 @@ public class UserInterfaceController {
 	     returnMap.put("fullUri",fullUri);
          WebUtils.writeJsonToMap(response, returnMap);
       }
+      /**
+		 * 生成加密串
+		 * @param characterEncoding
+		 * @param parameters
+		 * @return
+		 */
+		public static String createSign(SortedMap<Object,Object> parameters){
+			StringBuffer sb = new StringBuffer();
+			Set es = parameters.entrySet();//所有参与传参的参数按照accsii排序（升序）
+			Iterator it = es.iterator();
+			while(it.hasNext()) {
+				Map.Entry entry = (Map.Entry)it.next();
+				String k = (String)entry.getKey();
+				Object v = entry.getValue();
+				if(null != v && !"".equals(v)&& !"null".equals(v) 
+						&& !"sign".equals(k) && !"key".equals(k)) {
+					sb.append(k + "=" + v + "&");
+				}
+			}
+			 String temp_params = sb.toString();  
+			return sb.toString().substring(0, temp_params.length()-1);
+		}
 }

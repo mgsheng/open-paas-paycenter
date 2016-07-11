@@ -200,6 +200,20 @@
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>
                     </div> 
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">businessType</label>
+
+                        <div class="col-sm-10">
+                            <!-- <input type="text" name="paymentChannel" id="paymentChannel" size="50" class="form-control"
+                                   ng-model="paymentChannel"/> -->
+							<select name="businessType" id="businessType" class="form-control" ng-mode="businessType">
+							     <option value=""></option>
+								<option value="1">直消</option>
+								<option value="2">充值</option>
+							</select>
+                            <p class="help-block">业务类型（1：直消2:充值）</p>
+                        </div>
+                    </div> 
                     
                     <div class="form-group">
                         <label class="col-sm-2 control-label">totalFee</label>

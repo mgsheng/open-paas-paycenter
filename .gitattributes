@@ -36,6 +36,8 @@ pay-service-test/src/main/java/com/andaily/springoauth/tools/DESUtil.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/DateTools.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/HMacSha1.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/LoadPopertiesFile.java -text
+pay-service-test/src/main/java/com/andaily/springoauth/tools/MD5.java -text
+pay-service-test/src/main/java/com/andaily/springoauth/tools/PayUtil.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/PropertiesTool.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/StringTools.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/WebUtils.java -text
