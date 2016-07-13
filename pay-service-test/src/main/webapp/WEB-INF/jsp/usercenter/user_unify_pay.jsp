@@ -282,6 +282,7 @@
 		$scope.merchantId="10001";
 		$scope.appId="23";
 		$scope.goodsId="1";
+		$scope.businessType="1";
 		$scope.goodsName="testGoodsName";
 		$scope.goodsDesc="testGoodsDesc";
 		$scope.paymentType="10001";
