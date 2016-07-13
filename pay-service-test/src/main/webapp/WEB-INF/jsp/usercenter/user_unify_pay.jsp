@@ -207,7 +207,6 @@
                             <!-- <input type="text" name="paymentChannel" id="paymentChannel" size="50" class="form-control"
                                    ng-model="paymentChannel"/> -->
 							<select name="businessType" id="businessType" class="form-control" ng-mode="businessType">
-							     <option value=""></option>
 								<option value="1">直消</option>
 								<option value="2">充值</option>
 							</select>
@@ -278,9 +277,9 @@
 <script>
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
 		$scope.outTradeNo="test20160517";
-		$scope.userId="1001";
+		$scope.userId="36133476-3827-4188-AE4A-0B9DBFC6AC64";
 		$scope.merchantId="10001";
-		$scope.appId="23";
+		$scope.appId="10026";
 		$scope.goodsId="1";
 		$scope.businessType="1";
 		$scope.goodsName="testGoodsName";
