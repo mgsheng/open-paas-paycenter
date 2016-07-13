@@ -23,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
+import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -44,6 +47,8 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 	 private MerchantInfoService merchantInfoService;
 	 @Autowired
 	 private PayserviceDev payserviceDev;
+	 @Autowired
+	 private UserAccountBalanceService userAccountBalanceService;
 	/**
 	 * 微信订单回调接口
 	 * @param request
@@ -103,6 +108,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 			        //log.info(packageParams);
 				    //判断签名是否正确
 				    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
+				    	String rechargeMsg="";
 				        //------------------------------
 				        //处理业务开始
 				        //------------------------------
@@ -128,6 +134,24 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 				            
 				            //////////执行自己的业务逻辑////////////////
 				        	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
+				        	if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+								String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+								UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
+								if(userAccountBalance!=null){
+									userAccountBalance.setBalance(Double.parseDouble(total_fee));
+									userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+									rechargeMsg="SUCCESS";
+								}else{
+									userAccountBalance=new UserAccountBalance();
+									userAccountBalance.setUserId(userId);
+									userAccountBalance.setStatus(1);
+									userAccountBalance.setType(1);
+									userAccountBalance.setCreateTime(new Date());
+									userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
+									rechargeMsg="SUCCESS";
+								}
+								
+							}
 				        	if(merchantOrderInfo!=null){
 				        		int notifyStatus=merchantOrderInfo.getNotifyStatus();
 								int payStatus=merchantOrderInfo.getPayStatus();
@@ -142,7 +166,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 									merchantOrderInfoService.updateOrder(merchantOrderInfo);
 								}
 								if(notifyStatus!=1){
-									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService));
+									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg));
 									   thread.run();	
 								}
 								log.info("支付成功");

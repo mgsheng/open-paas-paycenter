@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
+import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytParamKeys;
@@ -46,6 +48,8 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
 	 private MerchantInfoService merchantInfoService;
+	 @Autowired
+	 private UserAccountBalanceService userAccountBalanceService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -102,7 +106,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 		orderDataMap.put("ac_date", ac_date);
 		orderDataMap.put("fee", fee);
 		orderDataMap.put("attach", attach);
-	
+		  String rechargeMsg="";
 			String Wsign=HytPacketUtils.map2StrRealURL(orderDataMap);
           String backMsg="";
           // -- 验证签名
@@ -111,7 +115,29 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 				RSASign rsautil =HytUtils.getRSASignVertifyObject(); 
 			    flag = rsautil.verify(Wsign,server_sign,server_cert, HytConstants.CHARSET_GBK);//验证签名
 			    if (!flag) {
+			    	
+			    	
 					  MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
+					  
+					  //充值
+						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+							String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+							UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
+							if(userAccountBalance!=null){
+								userAccountBalance.setBalance(Double.parseDouble(total_fee)/100);
+								userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+								rechargeMsg="SUCCESS";
+							}else{
+								userAccountBalance=new UserAccountBalance();
+								userAccountBalance.setUserId(userId);
+								userAccountBalance.setStatus(1);
+								userAccountBalance.setType(1);
+								userAccountBalance.setCreateTime(new Date());
+								userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
+								rechargeMsg="SUCCESS";
+							}
+							
+						}
 					  int payStatus=merchantOrderInfo.getPayStatus();
 					  Double payCharge=0.0;
 					  if(payStatus!=1){
@@ -129,9 +155,28 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							  backMsg="error";
 							
 						}else{
+							
 							//判断该笔订单是否在商户网站中已经做过处理
 							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 							MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
+								if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+									String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+									UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
+									if(userAccountBalance!=null){
+										userAccountBalance.setBalance(Double.parseDouble(total_fee));
+										userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+										rechargeMsg="SUCCESS";
+									}else{
+										userAccountBalance=new UserAccountBalance();
+										userAccountBalance.setUserId(userId);
+										userAccountBalance.setStatus(1);
+										userAccountBalance.setType(1);
+										userAccountBalance.setCreateTime(new Date());
+										userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
+										rechargeMsg="SUCCESS";
+									}
+									
+								}
 							int notifyStatus=merchantOrderInfo.getNotifyStatus();
 							int payStatus=merchantOrderInfo.getPayStatus();
 							Double payCharge=0.0;
@@ -145,7 +190,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 								merchantOrderInfoService.updateOrder(merchantOrderInfo);
 							}
 							if(notifyStatus!=1){
-								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService));
+								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg));
 								   thread.run();	
 							}
 							  backMsg="success";

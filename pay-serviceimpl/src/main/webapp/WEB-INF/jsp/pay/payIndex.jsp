@@ -66,7 +66,7 @@
 				<li value="14"><img src="${pageContext.request.contextPath}/images/pingan.jpg" /></li>
 				<li>查看更多</li>
 			</ul>
-			<div class="btn" style="padding-left: 35%">
+			<div class="btn" >
 				<span class="confirm" onclick="submitCheck();">确认</span>
 				<span class="cancel">取消</span>
 			</div>

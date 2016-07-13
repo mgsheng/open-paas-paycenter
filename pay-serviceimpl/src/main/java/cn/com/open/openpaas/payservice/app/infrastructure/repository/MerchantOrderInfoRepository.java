@@ -1,10 +1,8 @@
 package cn.com.open.openpaas.payservice.app.infrastructure.repository;
 
-import org.apache.ibatis.annotations.Param;
-
-import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -14,6 +12,7 @@ import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
  * 
  */
 public interface MerchantOrderInfoRepository extends Repository {
+
 	MerchantOrderInfo findByMerchantOrderId (String merchantOrderId);
 	MerchantOrderInfo findByMidAndAppId (@Param("merchantOrderId")String merchantOrderId,@Param("appId")String appId);
 	void saveMerchantOrderInfo(MerchantOrderInfo merchantOrderInfo);
@@ -27,4 +26,5 @@ public interface MerchantOrderInfoRepository extends Repository {
 	List<MerchantOrderInfo> findByPayAndNotifyStatus();
 	void updateNotifyStatus(MerchantOrderInfo orderInfo);
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
+
 }

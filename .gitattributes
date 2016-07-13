@@ -189,6 +189,7 @@ pay-serviceimpl/LICENSE -text
 pay-serviceimpl/README.md -text
 pay-serviceimpl/build.gradle -text
 pay-serviceimpl/pom.xml -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/balance/service/UserAccountBalanceServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderProThread.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayConfig.java -text
@@ -248,6 +249,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/MerchantInfoRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/OrderRefundRepositoryMyBatis.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserAccuntBalanceRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/AppRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradeChannelRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradePaymentRepository.java -text
@@ -256,6 +258,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/MerchantOrderInfoRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/OrderRefundRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/Repository.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/UserAccountBalanceRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/job/InitJob.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/job/TimingJob.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/kafka/KafkaConsumer.java -text
@@ -286,6 +289,7 @@ pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/LogMonitorMapp
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/OrderRefundMapper.xml -text
+pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml -text
 pay-serviceimpl/src/main/resources/cert/800075500030008.p12 -text
 pay-serviceimpl/src/main/resources/cert/hytrootca.cer -text
 pay-serviceimpl/src/main/resources/disconf.properties -text

@@ -67,6 +67,7 @@ public class TestOrderCallbackController extends BaseControllerUtil {
 		params.put("goodsName", request.getParameter("goodsName"));
 		params.put("goodsDesc", request.getParameter("goodsDesc"));
 		params.put("parameter", request.getParameter("parameter"));
+		params.put("rechargeMsg", request.getParameter("rechargeMsg"));
 		 //除去数组中的空值和签名参数
         Map<String, Object> map=new HashMap<String, Object>();
         //生成签名结果

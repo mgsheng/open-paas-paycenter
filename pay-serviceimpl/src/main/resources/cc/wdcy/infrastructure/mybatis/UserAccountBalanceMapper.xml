@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.UserAccuntBalanceRepositoryMyBatis">
+	<resultMap type="UserAccountBalance" id="userAccountBalanceMap">
+		<id column="Id" property="id" jdbcType="INTEGER" />
+		<result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="BALANCE" property="balance" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="TYPE" property="type" jdbcType="INTEGER" />
+		<result column="APP_ID" property="appId" jdbcType="INTEGER" />
+		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  USER_ID,
+	  USER_NAME,
+	  BALANCE,
+	  STATUS,
+	  TYPE,
+	  APP_ID,
+	  SOURCE_ID,
+	  CREATE_TIME
+	</sql>
+	<sql id="Base_Column_List">
+		Id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into USER_ACCOUNT_BALANCE
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{userId, jdbcType=VARCHAR},
+			#{userName, jdbcType=VARCHAR},
+			#{balance, jdbcType=DECIMAL},
+			#{status, jdbcType=INTEGER},
+			#{type, jdbcType=INTEGER},
+			#{appId, jdbcType=INTEGER},
+			#{sourceId, jdbcType=VARCHAR},
+			#{createTime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+	
+	<select id="findByUserId" resultMap="userAccountBalanceMap">
+         select * from USER_ACCOUNT_BALANCE
+         where  USER_ID = #{userId}
+	</select>
+	<select id="getBalanceInfo" resultMap="userAccountBalanceMap">
+         select * from USER_ACCOUNT_BALANCE
+         where  SOURCE_ID = #{sourceId} 
+         and APP_ID= #{appId}
+	</select>
+	
+    <update id="updateBalanceInfo" parameterType="UserAccountBalance" flushCache="true">
+        update USER_ACCOUNT_BALANCE set
+        <if test="status != null" >
+        STATUS=#{status},
+        </if>
+         <if test="balance != null" >
+        BALANCE=#{balance}
+        </if>
+        where Id = #{id}
+    </update>
+ 
+	<insert id="saveUserAccountBalance" parameterType="UserAccountBalance" useGeneratedKeys="true" keyProperty="id">
+        insert into USER_ACCOUNT_BALANCE(Id,USER_ID,USER_NAME,BALANCE,STATUS,TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+        values
+        (#{id},#{userId},#{userName},#{balance},#{status},#{type},#{createTime},#{appId},#{sourceId})
+    </insert>
+</mapper>

@@ -16,6 +16,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
@@ -46,6 +48,8 @@ import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
 import com.alipay.demo.trade.utils.ZxingUtils;
 
+import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
+import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
@@ -65,6 +69,7 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
+import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
 import cn.com.open.openpaas.payservice.app.tools.QRCodeEncoderHandler;
 import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.StringTool;
@@ -89,6 +94,8 @@ public class UnifyPayController extends BaseControllerUtil{
 	 private DictTradeChannelService dictTradeChannelService;
 	 @Autowired
 	 private PayserviceDev payserviceDev;
+	 @Autowired
+	 private UserAccountBalanceService userAccountBalanceService;
 	 
 	 // 支付宝当面付2.0服务
 	    private static AlipayTradeService tradeService;
@@ -128,7 +135,7 @@ public class UnifyPayController extends BaseControllerUtil{
      * @return Json
      */
     @RequestMapping("unifyPay")
-    public void unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
+    public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime=System.currentTimeMillis();
     	String outTradeNo=request.getParameter("outTradeNo");
     	String userName=request.getParameter("userName");
@@ -161,7 +168,7 @@ public class UnifyPayController extends BaseControllerUtil{
         if(!paraMandatoryCheck(Arrays.asList(outTradeNo,userId,merchantId,goodsName,totalFee))){
         	paraMandaChkAndReturn(3, response,"必传参数中有空值");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-            return;
+        	return "";
         }
         //判断用户是否存在
         /*if(userId!=null && !("").equals(userId)){
@@ -171,7 +178,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	if(merchantInfo==null){
         	paraMandaChkAndReturn(3, response,"商户ID不存在");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-        	return;
+        	return "";
         }
     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
     	sParaTemp.put("appId",appId);
@@ -191,18 +198,18 @@ public class UnifyPayController extends BaseControllerUtil{
 		if(!hmacSHA1Verification){
 			paraMandaChkAndReturn(1, response,"认证失败");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-			return;
+        	return "";
 		} 
     	
         if(!StringTool.isNumeric(totalFee)){
         	paraMandaChkAndReturn(3, response,"订单金额格式有误");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-        	return;
+        	return "";
         }
         if(!("CNY").equals(feeType)){
         	paraMandaChkAndReturn(3, response,"金额类型有误");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-        	return;
+        	return "";
         } 
        /* Boolean payType=validatePayType(paymentChannel,paymentType);
         if(!payType){
@@ -238,16 +245,53 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
-	/*	SortedMap<Object,Object> params = new TreeMap<Object,Object>();
-		params.put("outTradeNo", outTradeNo);
-		params.put("totalFee", AmountUtil.changeF2Y(totalFee));
-		params.put("goodsName", goodsName);
-		String result=sendPost("http://localhost:8080/pay-service/alipay/selectPayChannel", params);
-		response.getWriter().print(result);*/
-		if(!nullEmptyBlankJudge(businessType)&&"1".equals(businessType)){
+		  //用户账户创建
+			if(!nullEmptyBlankJudge(businessType)&&"2".equals(businessType)){
+				UserAccountBalance  userAccountBalance=userAccountBalanceService.getBalanceInfo(userId, Integer.parseInt(appId));
+				if(userAccountBalance==null){
+					SortedMap<Object,Object> sParaTemp2 = new TreeMap<Object,Object>();
+					timestamp=DateTools.getSolrDate(new Date());
+		  		 	signatureNonce=StringTool.getRandom(100,1);
+					sParaTemp2.put("app_id",appId);
+					sParaTemp2.put("timestamp", timestamp);
+					sParaTemp2.put("signatureNonce", signatureNonce);
+					sParaTemp2.put("source_id", userId);
+					String params2=createSign(sParaTemp2);
+			   		signature=HMacSha1.HmacSHA1Encrypt(params2, merchantInfo.getPayKey());
+			   		signature=HMacSha1.getNewResult(signature);
+			   		sParaTemp2.put("signature", signature);
+					String result=sendPost(payserviceDev.getUserCenter_getUserId_url(), sParaTemp2);
+					 JSONObject obj = JSONObject.fromObject(result);
+					 String status = obj.getString("status");
+					 //用户中心返回的用户的唯一ID
+					 String user_id="";
+						if(status.equals("1")){
+							user_id= obj.getString("user_id");
+						}else{
+							response.sendRedirect("errorPayChannel");
+							return "";
+						}
+					userAccountBalance=new UserAccountBalance();
+					userAccountBalance.setUserName(userName);
+					userAccountBalance.setStatus(1);
+					userAccountBalance.setType(2);
+					userAccountBalance.setSourceId(userId);
+					userAccountBalance.setUserId(user_id);
+					userAccountBalance.setAppId(Integer.parseInt(appId));
+					userAccountBalance.setCreateTime(new Date());
+					userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
+				}
+				
+			}			
 			 if(paymentChannel==null || ("").equals(paymentChannel)){
 				 //跳转到收银台
-				 response.sendRedirect("selectPayChannel?outTradeNo="+outTradeNo+"&appId="+appId);
+				 //response.sendRedirect("selectPayChannel?outTradeNo="+outTradeNo+"&appId="+appId);
+	        	  model.addAttribute("totalFee",merchantOrderInfo.getOrderAmount());
+	              model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
+	              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
+				 model.addAttribute("outTradeNo", outTradeNo);
+				 model.addAttribute("appId", appId);
+				 return "pay/payIndex";
 		        }else{
 		        	merchantOrderInfo=merchantOrderInfoService.findById(newId);
 		        	if(merchantOrderInfo!=null){
@@ -302,12 +346,8 @@ public class UnifyPayController extends BaseControllerUtil{
 		    			response.sendRedirect("errorPayChannel");
 		        	}
 		        }
-		}else{
-			UnifyPayControllerLog.log(merchantOrderInfo.getMerchantOrderId(), userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-        	//跳转到错误页面
-			response.sendRedirect("errorPayChannel");
-		}
-		
+
+		return "";
 		
     }	
    

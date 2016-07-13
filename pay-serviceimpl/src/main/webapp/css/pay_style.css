@@ -145,7 +145,7 @@ border:1px solid #eb6100 ;
 .btn{
 	clear: both;
 	padding-top: 32px;
-	width: 300px;
+	width: 100%;
     margin: 0 auto;
 }
 .btn span{
