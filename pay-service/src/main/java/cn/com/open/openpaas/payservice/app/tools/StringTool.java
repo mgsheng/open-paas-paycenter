@@ -189,6 +189,22 @@ public class StringTool {
 		}
 		return outBuffer.toString();
 	}
+	/**
+	 * 根据传递的区间返回随机值
+	 * @param max
+	 * @param min
+	 * @return
+	 */
+	public static String getRandom(int max,int min){
+		String value="";
+		if(max>min){
+			 Random random = new Random();
+		     int s = random.nextInt(max)%(max-min+1) + min;	
+		     value=String.valueOf(s);
+		}
+	       
+		return value;
+	}
 	
 	public static void main(String[] args) {
 //		System.out.println(decodeUnicode("\u5317\u4eac"));

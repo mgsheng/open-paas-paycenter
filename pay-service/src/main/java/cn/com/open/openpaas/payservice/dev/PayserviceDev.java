@@ -16,9 +16,16 @@ public class PayserviceDev {
 	public String wx_urlCode_path;
 	public String server_host;
 	public String tcl_pay_version;
+	public String userCenter_getUserId_url;
 	
 	
 	
+	public String getUserCenter_getUserId_url() {
+		return userCenter_getUserId_url;
+	}
+	public void setUserCenter_getUserId_url(String userCenter_getUserId_url) {
+		this.userCenter_getUserId_url = userCenter_getUserId_url;
+	}
 	public String getTcl_pay_version() {
 		return tcl_pay_version;
 	}

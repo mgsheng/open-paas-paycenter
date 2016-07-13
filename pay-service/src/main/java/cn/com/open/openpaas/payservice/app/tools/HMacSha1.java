@@ -42,5 +42,13 @@ public class HMacSha1 {
     	    signature = signature.replaceAll(new String("\n"), "");
         //完成 Mac 操作   
         return      signature;    
-    }    
+    } 
+    public static String getNewResult(String result){
+    	if(result.contains("+")){
+    		result=result.replaceAll("\\+", "%2B");
+    	}
+    	return result;
+    };
+
+    
 }  
