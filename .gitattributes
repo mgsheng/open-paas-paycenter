@@ -153,6 +153,8 @@ pay-service/src/main/java/cn/com/open/openpaas/payservice/app/merchant/service/M
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/order/model/MerchantOrderInfo.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/order/service/MerchantOrderInfoService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/payment/model/DictTradePayment.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/record/model/UserSerialRecord.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/record/service/UserSerialRecordService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/redis/service/RedisDataSource.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/refund/model/OrderRefund.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/refund/service/OrderRefundService.java -text

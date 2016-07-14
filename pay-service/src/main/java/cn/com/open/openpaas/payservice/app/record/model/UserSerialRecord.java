@@ -1,13 +1,13 @@
-package cn.com.open.openpaas.payservice.app.order.model;
+package cn.com.open.openpaas.payservice.app.record.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 
+ * 用户流水记录表
  */
-public class MerchantOrderInfo implements Serializable {
+public class UserSerialRecord implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -81,7 +81,7 @@ public class MerchantOrderInfo implements Serializable {
 	
 	private String userName;
 	
-	private String sourceUid;
+	private Long sourceUid;
 	
 	private String sourceUserName;
 	
@@ -109,7 +109,7 @@ public class MerchantOrderInfo implements Serializable {
 		this.businessType = businessType;
 	}
 
-	public MerchantOrderInfo(){
+	public UserSerialRecord(){
 		
 	}
 
@@ -324,11 +324,11 @@ public class MerchantOrderInfo implements Serializable {
 		this.userName = userName;
 	}
 
-	public String getSourceUid() {
+	public Long getSourceUid() {
 		return sourceUid;
 	}
 
-	public void setSourceUid(String sourceUid) {
+	public void setSourceUid(Long sourceUid) {
 		this.sourceUid = sourceUid;
 	}
 
