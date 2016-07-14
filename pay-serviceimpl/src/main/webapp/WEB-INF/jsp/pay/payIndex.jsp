@@ -31,7 +31,7 @@
 		<div style="position:relative;">
 				<div id="tipInfo1" class="payment-dropdown-menu" style="display:none;width:1140px;height:auto;padding:10px;border-radius:5px;top:50px;" >
 						<div class="cloutOut" >
-							<h4 style="text-align:right;" ><span onclick="clouOut()">关闭</span></h4>
+							<h4 style="text-align:right;" ><span onclick="clouOut()"><img src="${pageContext.request.contextPath}/images/close.png" /></span></h4>
 						</div>
 						<div class="payment-collapse">
 							<h4><span class="payment-collapse-arrow"></span>没有开通网上银行如何购买？</h4>
@@ -72,7 +72,7 @@
 					<p>数量1</p>
 					
 					<div style="position:relative;">
-						<span onMouseOver="showTip();" onMouseOut="hideTip();">支付帮助</span>
+						<span class="assist" onMouseOver="showTip();" onMouseOut="hideTip();">支付帮助</span>
 						<div id="tipInfo" class="payment-dropdown-menu" style="display:none; background-color:#fff;border:solid 1px #999999;width:1000px;height:auto; position:absolute;left:-900px;padding:10px;border-radius:5px;top:50px;" >
 								<div class="payment-collapse">
 									<h4><span class="payment-collapse-arrow"></span>没有开通网上银行如何购买？</h4>
