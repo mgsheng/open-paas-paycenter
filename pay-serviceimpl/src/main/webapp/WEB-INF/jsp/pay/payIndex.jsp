@@ -26,7 +26,37 @@
 				<li>我的订单</li>
 			</ul>
 		</div>
+		
 	</header>
+		<div style="position:relative;">
+				<div id="tipInfo1" class="payment-dropdown-menu" style="display:none;width:1140px;height:auto;padding:10px;border-radius:5px;top:50px;" >
+						<div class="cloutOut" >
+							<h4 style="text-align:right;" ><span onclick="clouOut()">关闭</span></h4>
+						</div>
+						<div class="payment-collapse">
+							<h4><span class="payment-collapse-arrow"></span>没有开通网上银行如何购买？</h4>
+							<p>各银行已有支持无需网银的小额支付产品，可直接选择付款。或者，可选择银联在线支付或快捷支付（只支持信用卡）付款。</p>
+						</div>
+						<div class="payment-collapse payment-collapse-open">
+							<h4><span class="payment-collapse-arrow"></span>没找到我常用的网上银行？</h4>
+							<p>建议选择银联在线支付付款，支持超过180家银行，包括主流银行和地方银行，例如华夏银行，江苏银行，南京银行等。</p>
+						</div>
+						<div class="payment-collapse">
+							<h4><span class="payment-collapse-arrow"></span>什么是地方银行？</h4>
+							<p>地方银行主要指注册和经营在当地的城市商业银行、农村合作银行、村镇银行等中小金融机构，例如江苏银行，南京银行，华夏银行等。</p>
+						</div>
+						<div class="payment-collapse">
+							<h4><span class="payment-collapse-arrow"></span>无法跳转到对应的支付页面支付？</h4>
+							<p>建议刷新当前页面，如果没恢复正常建议重启或更换到IE浏览器。</p>
+						</div>
+						<div class="payment-collapse">
+							<h4><span class="payment-collapse-arrow"></span>网上银行扣款后，订单仍显示"未付款"怎么办？</h4>
+							<p>可能是由于银行的数据没有即时传输，请您不要担心，稍后刷新页面查看。如较长时间仍显示未付款，可先向银行或支付平台获取支付凭证（扣款订单号/第三方交易号），联系奥鹏客服为您解决。</p>
+						</div>
+				</div>
+		</div>
+
+
 
 		<div class="pay-tips">
 			<dl>
@@ -40,11 +70,47 @@
 					<h3>应付总额：<span class="color">${totalFee}</span>元</h3>
 					<p>${goodsName}</p>
 					<p>数量1</p>
+					
+					<div style="position:relative;">
+						<span onMouseOver="showTip();" onMouseOut="hideTip();">支付帮助</span>
+						<div id="tipInfo" class="payment-dropdown-menu" style="display:none; background-color:#fff;border:solid 1px #999999;width:1000px;height:auto; position:absolute;left:-900px;padding:10px;border-radius:5px;top:50px;" >
+								<div class="payment-collapse">
+									<h4><span class="payment-collapse-arrow"></span>没有开通网上银行如何购买？</h4>
+									<p>各银行已有支持无需网银的小额支付产品，可直接选择付款。或者，可选择银联在线支付或快捷支付（只支持信用卡）付款。</p>
+								</div>
+								<div class="payment-collapse payment-collapse-open">
+									<h4><span class="payment-collapse-arrow"></span>没找到我常用的网上银行？</h4>
+									<p>建议选择银联在线支付付款，支持超过180家银行，包括主流银行和地方银行，例如华夏银行，江苏银行，南京银行等。</p>
+								</div>
+								<div class="payment-collapse">
+									<h4><span class="payment-collapse-arrow"></span>什么是地方银行？</h4>
+									<p>地方银行主要指注册和经营在当地的城市商业银行、农村合作银行、村镇银行等中小金融机构，例如江苏银行，南京银行，华夏银行等。</p>
+								</div>
+								<div class="payment-collapse">
+									<h4><span class="payment-collapse-arrow"></span>无法跳转到对应的支付页面支付？</h4>
+									<p>建议刷新当前页面，如果没恢复正常建议重启或更换到IE浏览器。</p>
+								</div>
+								<div class="payment-collapse">
+									<h4><span class="payment-collapse-arrow"></span>网上银行扣款后，订单仍显示"未付款"怎么办？</h4>
+									<p>可能是由于银行的数据没有即时传输，请您不要担心，稍后刷新页面查看。如较长时间仍显示未付款，可先向银行或支付平台获取支付凭证（扣款订单号/第三方交易号），联系奥鹏客服为您解决。</p>
+								</div>
+						</div>
+					</div>
+					
 				</dd>
 			</dl>
 		</div>
 		<div class="pay-method content" >
+		
 			<h3 class="title">选择以下支付方式付款</h3>
+			
+			
+			
+			
+	
+			
+			
+			
 			<h3 class="tit">支付平台<span> （大额支付推荐使用支付宝）</span></h3>
 			<ul>
 				<li value="1"><img src="${pageContext.request.contextPath}/images/zhifubao.jpg" /></li>
@@ -67,7 +133,7 @@
 				<li>查看更多</li>
 			</ul>
 			<div class="btn" >
-				<span class="confirm" onclick="submitCheck();">确认</span>
+				<span class="confirm" onclick="submitCheck('confirm-modal');">确认</span>
 				<span class="cancel">取消</span>
 			</div>
 		</div>
@@ -90,6 +156,32 @@
 		</div>
 	</div>
 </div>
+
+
+
+
+
+
+<div id="confirm-modal" style="display:none;">
+ 		<div class="modal-mask"></div>
+	 <div class="modal-box">
+		<div class="modal-head"><i class="icon icon-close"></i>
+		<img class="icon icon-close" onclick="closeBtu()" src="${pageContext.request.contextPath}/images/close.png" />
+		</div>
+		<div class="modal-body"><i class="icon icon-ecom"></i>
+			<img class="icon icon-ecom" src="${pageContext.request.contextPath}/images/gtanhao.jpg" />
+			<div class="modal-contentw"><h3>请您在新打开的页面上完成付款。</h3><p>付款完成前请不要关闭此窗口。<br>完成付款后请根据您的情况点击下面的按钮：</p>
+				<div class="modal-btn-group">
+					<button class="btn1 modal-btn-ok" onclick="accompLish('${outTradeNo}')">已完成付款</button>
+					<button class="btn1 modal-btn-cancel" onclick="outBtu()">付款遇到问题</button>
+				</div>
+				<span class="modal-back" onclick="closeBtu()">返回选择其他支付方式</span>
+			</div>
+		</div>
+	</div>
+ 
+</div>
+
 
 <script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.qrcode.min.js"></script><!--生成二维码-->
@@ -125,30 +217,75 @@
 		$(".mask").hide();
 		$(".payLayer").hide();
 	});
-	function submitCheck(){
+	function submitCheck(obj){
 	         if(areaCode=="3"){
 	          $.ajax({
-			 type: 'post',
-			 dataType:'text',
-			 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId,
-			 success: function(date){
-			   urlCode=date;
-			   console.log(urlCode+"==urlCode");
-			   $(".mask").show();
-		       $(".payLayer").show();
-		       $("#payCode").empty();
-		       $('#payCode').qrcode(urlCode);// 生成二维码
-			   }
+				 type: 'post',
+				 dataType:'text',
+				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId,
+				 success: function(date){
+					   urlCode=date;
+					   console.log(urlCode+"==urlCode");
+					   $(".mask").show();
+				       $(".payLayer").show();
+				       $("#payCode").empty();
+				       $('#payCode').qrcode(urlCode);// 生成二维码
+				   }
 			   });
 	         }else{
 	         	$("form").submit();
 	         }
-			
+	         if(areaCode!=3){
+	        	 document.getElementById(obj).style.display = 'block';
+	        	 $('.mask').show();
+	         }
+	         
 			
 	}
 	function aa(){
 	$("form").submit();
 	}
+	
+	function accompLish(outTradeNo){
+		 $.ajax({
+			 type: 'post',
+			 dataType:'text',
+			 url: "${pageContext.request.contextPath}/alipay/selectAccomplish?outTradeNo="+outTradeNo,
+			 success: function(date){
+				  if(date=="success"){
+					  $("#confirm-modal").hide();
+					  alert("交易成功");
+				  }else{
+					  $("#confirm-modal").hide();
+					  alert("交易失败");
+				  }
+			   }
+			   });
+	}
+	
+	function clouOut(){
+		$("#tipInfo1").hide();
+	}
+	function outBtu(){
+		$("#confirm-modal").hide();
+		$("#tipInfo1").show();
+		$('.mask').hide();
+	}
+	
+	function closeBtu(){
+		$("#confirm-modal").hide();
+		 $('.mask').hide();
+	}
+	
+	function showTip() {
+		$("#tipInfo").show();
+	}
+	
+	function hideTip() {
+		$("#tipInfo").hide();
+	}
+	
+	
 </script>
 </body>
 </html>
