@@ -71,6 +71,9 @@
         <li>
             <p><a href="orderRefund">订单退款</a> <br/>订单退款接口</p>
         </li>
+        <li>
+            <p><a href="getOrderQuery">汇银通订单查询</a> <br/>汇银通订单查询</p>
+        </li>
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
         </li> -->
