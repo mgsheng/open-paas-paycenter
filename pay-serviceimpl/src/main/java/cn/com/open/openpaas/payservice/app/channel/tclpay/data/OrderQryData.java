@@ -5,6 +5,7 @@ import java.util.Map;
 
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytParamKeys;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytDateUtils;
+import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 
 /**
  * 名称：订单查询数据构造类
@@ -28,6 +29,23 @@ public class OrderQryData {
 		orderQryDataMap.put(HytParamKeys.OUT_TRADE_NO, "2015025110244776");
 		orderQryDataMap.put(HytParamKeys.ORDER_TIME, orderTime);
 		orderQryDataMap.put(HytParamKeys.SERVICE, "OrderSearch");
+		return orderQryDataMap;
+	}
+	
+	public static Map<String, String> buildGetOrderQryDataMap(MerchantOrderInfo merchantOrderInfo) {
+		String orderTime = HytDateUtils.generateOrderTime();
+
+		Map<String, String> orderQryDataMap = new HashMap<String, String>();
+		orderQryDataMap.put(HytParamKeys.CHARSET, "00");
+		orderQryDataMap.put(HytParamKeys.VERSION, merchantOrderInfo.getMerchantVersion());
+		orderQryDataMap.put(HytParamKeys.MERCHANT_CERT, "1.0");
+		orderQryDataMap.put(HytParamKeys.MERCHANT_SIGN, "1.0");//业务不熟待定
+		orderQryDataMap.put(HytParamKeys.SIGN_TYPE, "RSA");
+		orderQryDataMap.put(HytParamKeys.SERVICE, "OrderSearch");
+		orderQryDataMap.put(HytParamKeys.REQUEST_ID, merchantOrderInfo.getPayOrderId());
+		orderQryDataMap.put(HytParamKeys.MERCHANT_CODE, merchantOrderInfo.getChannelOrderId());
+		orderQryDataMap.put(HytParamKeys.ORDER_TIME, orderTime);
+		orderQryDataMap.put(HytParamKeys.OUT_TRADE_NO, merchantOrderInfo.getMerchantOrderId());
 		return orderQryDataMap;
 	}
 }

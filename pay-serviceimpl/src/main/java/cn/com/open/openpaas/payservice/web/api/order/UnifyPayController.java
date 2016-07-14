@@ -56,7 +56,9 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.CommonConfig;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.data.OrderQryData;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.data.ScanCodeOrderData;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.service.OrderQryService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.service.ScanCodeOrderService;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
@@ -350,6 +352,8 @@ public class UnifyPayController extends BaseControllerUtil{
 		return "";
 		
     }	
+    
+   
    
     public Boolean validatePayType(String paymentChannel,String paymentType){
     	Boolean returnValue=false;
@@ -528,6 +532,52 @@ public class UnifyPayController extends BaseControllerUtil{
     	}
        
     }
+    
+    /**selectAccomplish
+     * 查询支付结果获取状态
+     * @throws Exception 
+     */
+    @RequestMapping(value = "selectAccomplish", method = RequestMethod.POST)
+    public void payAccomplish(HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	String outTradeNo=request.getParameter("outTradeNo");
+    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo);
+    	int payStatus = merchantOrderInfo.getPayStatus();
+    	String backMsg="";
+    	if(payStatus==1){
+    		backMsg="success";
+    	}else{
+    		backMsg="error";
+    	}
+    	WebUtils.writeJson(response, backMsg);
+    }
+    
+    /**selectAccomplish
+     * 查询支付结果获取状态
+     * @throws Exception 
+     */
+    @RequestMapping(value = "getOrderQuery")
+    public void getOrderQuery(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
+    	String outTradeNo=request.getParameter("outTradeNo");
+        String appId = request.getParameter("appId");
+      //获取当前订单
+  		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
+    	
+        if(orderInfo!=null){
+    		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
+            String notify_url =dictTradeChannels.getNotifyUrl();
+            	OrderQryService orderQry = new OrderQryService();
+    			 orderQry.query(OrderQryData.buildGetOrderQryDataMap(orderInfo));
+//    			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+//    			response.setCharacterEncoding("GBK");
+//    			response.sendRedirect(URL);
+            
+    	}
+    	
+    	
+    	
+    	
+    }
+    
     public String getAreaCode(String areaCode){
     	String newAreaCode="";
     	
