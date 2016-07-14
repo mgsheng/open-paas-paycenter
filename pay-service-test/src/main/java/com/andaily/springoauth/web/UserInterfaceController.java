@@ -62,6 +62,11 @@ public class UserInterfaceController {
     private String orderQueryUri;
     @Value("#{properties['order-refund-uri']}")
     private String orderRefundUri;
+    
+    @Value("#{properties['getOrder-query-uri']}")
+    private String getOrderQueryUri;
+    
+    
     final static String  SEPARATOR = "&";
     private Map<String,String> map=LoadPopertiesFile.loadProperties();
      /*
@@ -229,6 +234,43 @@ public class UserInterfaceController {
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
+     
+     /*
+      *  Entrance:   step-1
+      * */
+ 	@RequestMapping(value = "getOrderQuery", method = RequestMethod.GET)
+ 	public String getOrderQuery(Model model) {
+ 		model.addAttribute("getOrderQueryUri", getOrderQueryUri);
+ 		return "usercenter/user_getorder_query";
+ 	}
+ 	
+ 	/* 
+     * Redirect to oauth-server bind page:   step-2
+     * */
+     @RequestMapping(value = "getOrderQuery", method = RequestMethod.POST)
+     public String getOrderQuery(String  outTradeNo,String appId) throws Exception {
+    	 String key=map.get(appId);
+   	  	 String result="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+	   	 if(key!=null){
+	   		    timestamp=DateTools.getSolrDate(new Date());
+			 	StringBuilder encryptText = new StringBuilder();
+			 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+			 	encryptText.append(appId);
+			 	encryptText.append(SEPARATOR);
+			 	encryptText.append(timestamp);
+			 	encryptText.append(SEPARATOR);
+			 	encryptText.append(signatureNonce);
+				result=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
+				result=HMacSha1.getNewResult(result);
+	   	 }
+    	 final String fullUri =getOrderQueryUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+result+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     }
+ 	
+ 	
      /*
       *  Entrance:   step-1
       * */
