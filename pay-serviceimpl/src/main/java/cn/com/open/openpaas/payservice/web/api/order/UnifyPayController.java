@@ -232,7 +232,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo=new MerchantOrderInfo();
 			merchantOrderInfo.setId(newId);
 			merchantOrderInfo.setAppId(appId);
-			merchantOrderInfo.setSourceUid(SysUtil.toLong(userId));
+			merchantOrderInfo.setSourceUid(userId);
 			merchantOrderInfo.setSourceUserName(userName);
 			merchantOrderInfo.setMerchantId(SysUtil.toInteger(merchantId));
 			merchantOrderInfo.setIp(clientIp);
