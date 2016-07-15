@@ -11,5 +11,5 @@ public interface UserAccountBalanceService {
 	void saveUserAccountBalance(UserAccountBalance userAccountBalance);
 	UserAccountBalance findByUserId(String userId);
 	UserAccountBalance getBalanceInfo(String sourceId,Integer appId);
-	void updateBalanceInfo(UserAccountBalance userAccountBalance);
+	public Boolean updateBalanceInfo(UserAccountBalance userAccountBalance);
 }
