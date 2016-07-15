@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytParamKeys;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
@@ -195,17 +196,24 @@ public class ScanCodeOrderData {
 
 		return data;
 	}
-	public static Map<String, String> buildOrderDataMap(MerchantOrderInfo merchantOrderInfo,String version,String charset,String channelCode,String Service,String returnUrl ) throws UnsupportedEncodingException {
+	public static Map<String, String> buildOrderDataMap(MerchantOrderInfo merchantOrderInfo,String version,String charset,String channelCode,String Service,DictTradeChannel dictTradeChannel ) throws UnsupportedEncodingException {
 
 		String orderTime = HytDateUtils.generateOrderTime();
-
+//merchant_code:800075500030008#buyer_id:156XXXXXX32#time_expire:10080#out_msg_type:XML#sign_type:RSA#sign_type:RSA#sign_type:RSA#spbill_create_ip:127.0.0.1
+		String other= dictTradeChannel.getOther();
+		Map<String, String> others = new HashMap<String, String>();
+		others=getPartner(other);
+    	String merchant_code=others.get("merchant_code");
+    	String time_expire=others.get("time_expire");
+    	String out_msg_type=others.get("out_msg_type");
+    	String spbill_create_ip=others.get("spbill_create_ip");
 		Map<String, String> orderDataMap = new HashMap<String, String>();
 		orderDataMap.put(HytParamKeys.CHARSET, charset);
 		orderDataMap.put(HytParamKeys.VERSION, version);
 		orderDataMap.put(HytParamKeys.SIGN_TYPE, "RSA");
 		String requestId = orderTime;
 		orderDataMap.put(HytParamKeys.REQUEST_ID, requestId);
-		orderDataMap.put(HytParamKeys.MERCHANT_CODE, "800075500030008");
+		orderDataMap.put(HytParamKeys.MERCHANT_CODE, merchant_code);
 		orderDataMap.put(HytParamKeys.APP_NO, "");
 		orderDataMap.put(HytParamKeys.MERCHANT_NAME, "");
 		orderDataMap.put(HytParamKeys.OUT_TRADE_NO, merchantOrderInfo.getMerchantOrderId());
@@ -215,23 +223,38 @@ public class ScanCodeOrderData {
 		String subject =merchantOrderInfo.getMerchantProductName();
 		orderDataMap.put(HytParamKeys.PRODUCT_NAME,subject);
 		orderDataMap.put(HytParamKeys.SHOW_URL,
-				"http://www.test.com/test/showproduct.jsp");
+				"");
 		orderDataMap.put(HytParamKeys.PRODUCT_ID, merchantOrderInfo.getMerchantProductId());
 		orderDataMap.put(HytParamKeys.PRODUCT_DESC,subject);
 		orderDataMap.put(HytParamKeys.ATTACH, "1010");
 		orderDataMap.put(HytParamKeys.RETURN_URL,
-				returnUrl);
+				dictTradeChannel.getNotifyUrl());
 		orderDataMap.put(HytParamKeys.NOTIFY_URL,
-				returnUrl);
-		orderDataMap.put(HytParamKeys.SPBILL_CREATE_IP, "127.0.0.1");
-		orderDataMap.put(HytParamKeys.BUYER_ID, "156XXXXXX32");
+				dictTradeChannel.getNotifyUrl());
+		orderDataMap.put(HytParamKeys.SPBILL_CREATE_IP, spbill_create_ip);
+		orderDataMap.put(HytParamKeys.BUYER_ID, merchantOrderInfo.getSourceUid());
 
 		orderDataMap.put(HytParamKeys.ORDER_TIME, orderTime);
 		orderDataMap.put(HytParamKeys.TOTAL_AMOUNT,String.valueOf(merchantOrderInfo.getOrderAmount()*100));
-		orderDataMap.put(HytParamKeys.CURRENCY, "CNY");
-		orderDataMap.put(HytParamKeys.TIME_EXPIRE, "10080");
+		orderDataMap.put(HytParamKeys.CURRENCY, "");
+		orderDataMap.put(HytParamKeys.TIME_EXPIRE, time_expire);
 
-		orderDataMap.put(HytParamKeys.OUT_MSG_TYPE, "XML");
+		orderDataMap.put(HytParamKeys.OUT_MSG_TYPE, out_msg_type);
 		return orderDataMap;
+	}
+	//sign_type:MD5#payment_type:1#input_charset:utf-8#service:create_direct_pay_by_user#partner:2088801478647757
+	public static Map<String, String> getPartner(String other){
+		if(other==null&&"".equals(other)){
+			return null;
+		}else{
+		String others []=other.split("#");
+		Map<String, String> sParaTemp = new HashMap<String, String>();
+		for (int i=0;i<others.length;i++){
+			String values []=others[i].split(":");
+			   sParaTemp.put(values[0], values[1]);  
+		}
+		
+		return sParaTemp;
+		}
 	}
 }
