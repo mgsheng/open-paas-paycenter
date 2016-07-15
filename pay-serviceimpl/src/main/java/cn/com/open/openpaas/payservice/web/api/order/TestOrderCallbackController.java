@@ -2,6 +2,7 @@ package cn.com.open.openpaas.payservice.web.api.order;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -25,9 +26,12 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayCore;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayNotify;
 import cn.com.open.openpaas.payservice.app.channel.alipay.MD5;
 import cn.com.open.openpaas.payservice.app.log.AlipayControllerLog;
+import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 
 /**
@@ -37,7 +41,9 @@ import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 @RequestMapping("/test/order/")
 public class TestOrderCallbackController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(TestOrderCallbackController.class);
-    private static final String PAY_KEY = "945fa18c666a4e0097809f6727bc6997";
+    private static final String PAY_KEY = "fc3db98a48a5434aaddbd2c75a7382ba";
+    @Autowired
+	 private MerchantOrderInfoService merchantOrderInfoService;
 	
 	/**
 	 * 业务订单回调接口
@@ -49,8 +55,31 @@ public class TestOrderCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public void testDirctPay(HttpServletRequest request,HttpServletResponse response) throws MalformedURLException, DocumentException, IOException {
+		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId("test20160517","10026");
+		String newId="";
+		newId=SysUtil.careatePayOrderId();
+		if(merchantOrderInfo!=null){
+			//更新现有订单信息
+			merchantOrderInfo.setId(newId);
+			merchantOrderInfo.setCreateDate(new Date());
+		int res=merchantOrderInfoService.updateOrderId(merchantOrderInfo);	
+		System.out.println(res);
+		  DistributedLock lock = null;
+		  lock = new DistributedLock("10.100.136.36:2181,10.100.136.37:2181,10.100.136.38:2181","account1");
+          //lock = new DistributedLock("127.0.0.1:2182","test2");
+          lock.lock();
+          try {
+        	  System.out.println("sleep 5s:"+newId);
+			Thread.sleep(10000);
+			
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+          lock.unlock();
+		}
 		//获取支付宝GET过来反馈信息
-		long startTime = System.currentTimeMillis();
+		/*long startTime = System.currentTimeMillis();
 		String secret=request.getParameter("secret");
 		SortedMap<Object,Object> params = new TreeMap<Object,Object>();
 		params.put("orderId", request.getParameter("orderId"));
@@ -78,7 +107,7 @@ public class TestOrderCallbackController extends BaseControllerUtil {
     	   map.put("errorCode", "1");
     	   map.put("errorMsg", "验证错误");
        }
-		WebUtils.writeErrorJson(response, map);
+		WebUtils.writeErrorJson(response, map);*/
 	  }
 
     /**
