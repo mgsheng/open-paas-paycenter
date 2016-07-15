@@ -205,11 +205,11 @@
 	  	NOTIFY_DATE = #{notifyDate}
         where ID = #{id}
     </update>
-    <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true">
+    <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true" >
         update MERCHANT_ORDER_INFO set
         ID = #{id},
 		CREATE_DATE = #{createDate}
-        where MERCHANT_ORDERID = #{merchantOrderId}
+        where MERCHANT_ORDERID = #{merchantOrderId} and APPID=#{appId}
     </update>
 	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
         insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE)
