@@ -499,24 +499,23 @@ public class UnifyPayController extends BaseControllerUtil{
     	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo, appId);
     	if(merchantOrderInfo!=null){
     		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
-            String notify_url =dictTradeChannels.getNotifyUrl();
          	//支付渠道为支付宝
              if(!nullEmptyBlankJudge(areaCode)&&"1".equals(areaCode)){
         			ScanCodeOrderService scanCode = new ScanCodeOrderService();
-        			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",notify_url));
+        			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
         			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
         			response.setCharacterEncoding("GBK");
         			response.sendRedirect(URL);
              }
              else if(!nullEmptyBlankJudge(areaCode)&&"3".equals(areaCode)){
              		ScanCodeOrderService scanCode = new ScanCodeOrderService();
-            		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",notify_url));
+            		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
             		// response.getWriter().print(qr_code_url);
             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
             } else if(!nullEmptyBlankJudge(areaCode)&&"2".equals(areaCode)){
             	ScanCodeOrderService scanCode = new ScanCodeOrderService();
-    			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",notify_url));
+    			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
     			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
     			response.setCharacterEncoding("UTF-8");
     			response.sendRedirect(URL);
@@ -524,7 +523,7 @@ public class UnifyPayController extends BaseControllerUtil{
               }else{
             	  String newareaCode=getAreaCode(areaCode);
             	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
-      			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",notify_url));
+      			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels));
       			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
       			response.setCharacterEncoding("UTF-8");
       			response.sendRedirect(URL);
