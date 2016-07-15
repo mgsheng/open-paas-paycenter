@@ -64,8 +64,8 @@
 </div>
 <script>
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
-		$scope.outTradeNo="test20160517";
-		$scope.appId="23";
+		$scope.outTradeNo="test201607151059";
+		$scope.appId="10026";
         $scope.visible = false;
 
         $scope.showParams = function () {
