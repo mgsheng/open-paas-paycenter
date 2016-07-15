@@ -74,6 +74,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/order_manual_send.jsp -t
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login_callback.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_dirct_pay.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_file_downlond.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_getorder_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_refund.jsp -text
