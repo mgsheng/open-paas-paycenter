@@ -62,13 +62,13 @@ public class TestOrderCallbackController extends BaseControllerUtil {
 			//更新现有订单信息
 			merchantOrderInfo.setId(newId);
 			merchantOrderInfo.setCreateDate(new Date());
-		int res=merchantOrderInfoService.updateOrderId(merchantOrderInfo);	
-		System.out.println(res);
+		
 		  DistributedLock lock = null;
 		  lock = new DistributedLock("10.100.136.36:2181,10.100.136.37:2181,10.100.136.38:2181","account1");
           //lock = new DistributedLock("127.0.0.1:2182","test2");
           lock.lock();
           try {
+        	merchantOrderInfoService.updateOrderId(merchantOrderInfo);	
         	  System.out.println("sleep 5s:"+newId);
 			Thread.sleep(10000);
 			
