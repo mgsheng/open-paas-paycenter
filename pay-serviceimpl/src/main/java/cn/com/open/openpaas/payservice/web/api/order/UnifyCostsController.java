@@ -27,7 +27,9 @@ import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordServic
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.StringTool;
+import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
+import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 /**
  * 
@@ -43,6 +45,8 @@ public class UnifyCostsController extends BaseControllerUtil{
 	 private MerchantInfoService merchantInfoService;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
+	 @Autowired
+	 private PayserviceDev payserviceDev;
 	 
 	
 
@@ -113,7 +117,20 @@ public class UnifyCostsController extends BaseControllerUtil{
         	if(userAccountBalance.getBalance()!=null&&userAccountBalance.getBalance()>Double.parseDouble(amount)){
         	    Double newAmount=userAccountBalance.getBalance()-Double.parseDouble(amount);
         	    userAccountBalance.setBalance(newAmount);
-        	    userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+        	    
+        	     DistributedLock lock = null;
+                 try {
+           		  lock = new DistributedLock(payserviceDev.getZookeeper_config(),userAccountBalance.getSourceId()+userAccountBalance.getAppId());
+           		  lock.lock();
+           		  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+       			
+       		     } catch (Exception e) {
+       			// TODO Auto-generated catch block
+	       			e.printStackTrace();
+	       		  }finally{
+	       			  lock.unlock(); 
+	       		  }
+        	    
         	    UserSerialRecord userSerialRecord=new UserSerialRecord();
         	    userSerialRecord.setAmount(Double.parseDouble(amount));
         	    userSerialRecord.setAppId(Integer.parseInt(appId));

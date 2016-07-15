@@ -17,9 +17,16 @@ public class PayserviceDev {
 	public String server_host;
 	public String tcl_pay_version;
 	public String userCenter_getUserId_url;
+	public String zookeeper_config;
 	
 	
 	
+	public String getZookeeper_config() {
+		return zookeeper_config;
+	}
+	public void setZookeeper_config(String zookeeper_config) {
+		this.zookeeper_config = zookeeper_config;
+	}
 	public String getUserCenter_getUserId_url() {
 		return userCenter_getUserId_url;
 	}

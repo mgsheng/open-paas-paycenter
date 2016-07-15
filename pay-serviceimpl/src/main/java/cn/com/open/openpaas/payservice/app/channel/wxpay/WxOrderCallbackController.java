@@ -30,8 +30,11 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
+import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
+import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 
 /**
@@ -49,6 +52,8 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 	 private PayserviceDev payserviceDev;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
+	 @Autowired
+	 private UserSerialRecordService userSerialRecordService;
 	/**
 	 * 微信订单回调接口
 	 * @param request
@@ -136,15 +141,31 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 				        	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
 				        	if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
 								String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+								UserSerialRecord userSerialRecord=new UserSerialRecord();
+				        	    userSerialRecord.setAmount(Double.parseDouble(total_fee));
+				        	    userSerialRecord.setAppId(Integer.parseInt(merchantOrderInfo.getAppId()));
+				        	    userSerialRecord.setSerialNo(out_trade_no);
+				        	    userSerialRecord.setSourceId(merchantOrderInfo.getSourceUid());
+				        	    userSerialRecord.setPayType(1);
+				        	    userSerialRecord.setCreateTime(new Date());
+				        	    userSerialRecord.setUserName(merchantOrderInfo.getUserName());
+				        	    userSerialRecordService.saveUserSerialRecord(userSerialRecord);
 								UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
 								if(userAccountBalance!=null){
 									userAccountBalance.setBalance(Double.parseDouble(total_fee)/100+userAccountBalance.getBalance());
-									Boolean updatestatus=userAccountBalanceService.updateBalanceInfo(userAccountBalance);
-									if(updatestatus){
-										rechargeMsg="SUCCESS";	
-									}else{
-										rechargeMsg="ERROR";
-									}
+									 DistributedLock lock = null;
+					                 try {
+					           		  lock = new DistributedLock(payserviceDev.getZookeeper_config(),userAccountBalance.getSourceId()+userAccountBalance.getAppId());
+					           		  lock.lock();
+					           		  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+					           		  rechargeMsg="SUCCESS";
+					       		     } catch (Exception e) {
+					       			// TODO Auto-generated catch block
+						       			e.printStackTrace();
+						       		 rechargeMsg="ERROR";
+						       		  }finally{
+						       			  lock.unlock(); 
+						       		  }
 								}else{
 									userAccountBalance=new UserAccountBalance();
 									userAccountBalance.setUserId(userId);
@@ -169,6 +190,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 									merchantOrderInfo.setPayOrderId(transaction_id);
 									merchantOrderInfoService.updateOrder(merchantOrderInfo);
 								}
+							
 								if(notifyStatus!=1){
 									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg));
 									   thread.run();	

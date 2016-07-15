@@ -55,19 +55,18 @@ public class TestOrderCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public void testDirctPay(HttpServletRequest request,HttpServletResponse response) throws MalformedURLException, DocumentException, IOException {
-		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId("test20160517","10026");
+	/*	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId("test20160517","10026");
 		String newId="";
 		newId=SysUtil.careatePayOrderId();
 		if(merchantOrderInfo!=null){
 			//更新现有订单信息
 			merchantOrderInfo.setId(newId);
 			merchantOrderInfo.setCreateDate(new Date());
-		
-		  DistributedLock lock = null;
-		  lock = new DistributedLock("10.100.136.36:2181,10.100.136.37:2181,10.100.136.38:2181","account1");
-          //lock = new DistributedLock("127.0.0.1:2182","test2");
-          lock.lock();
+	     DistributedLock lock = null;
           try {
+        	
+    		  lock = new DistributedLock("10.100.136.36:2181,10.100.136.37:2181,10.100.136.38:2181","account1");
+    		  lock.lock();
         	merchantOrderInfoService.updateOrderId(merchantOrderInfo);	
         	  System.out.println("sleep 5s:"+newId);
 			Thread.sleep(10000);
@@ -75,11 +74,12 @@ public class TestOrderCallbackController extends BaseControllerUtil {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-          lock.unlock();
-		}
+		  }finally{
+			  lock.unlock(); 
+		  }
+		}*/
 		//获取支付宝GET过来反馈信息
-		/*long startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 		String secret=request.getParameter("secret");
 		SortedMap<Object,Object> params = new TreeMap<Object,Object>();
 		params.put("orderId", request.getParameter("orderId"));
@@ -107,7 +107,7 @@ public class TestOrderCallbackController extends BaseControllerUtil {
     	   map.put("errorCode", "1");
     	   map.put("errorMsg", "验证错误");
        }
-		WebUtils.writeErrorJson(response, map);*/
+		WebUtils.writeErrorJson(response, map);
 	  }
 
     /**

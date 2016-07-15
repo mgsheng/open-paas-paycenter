@@ -24,8 +24,12 @@ import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
+import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+import cn.com.open.openpaas.payservice.dev.PayserviceDev;
+import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 
 /**
@@ -41,6 +45,10 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 private MerchantInfoService merchantInfoService;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
+	 @Autowired
+	 private PayserviceDev payserviceDev;
+	 @Autowired
+	 private UserSerialRecordService userSerialRecordService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -96,15 +104,33 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				String rechargeMsg="";
 				if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
 					String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+					//流水记录
+					UserSerialRecord userSerialRecord=new UserSerialRecord();
+	        	    userSerialRecord.setAmount(total_fee);
+	        	    userSerialRecord.setAppId(Integer.parseInt(merchantOrderInfo.getAppId()));
+	        	    userSerialRecord.setSerialNo(out_trade_no);
+	        	    userSerialRecord.setSourceId(merchantOrderInfo.getSourceUid());
+	        	    userSerialRecord.setPayType(1);
+	        	    userSerialRecord.setCreateTime(new Date());
+	        	    userSerialRecord.setUserName(merchantOrderInfo.getUserName());
+	        	    userSerialRecordService.saveUserSerialRecord(userSerialRecord);
+	        	    //充值
 					UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
 					if(userAccountBalance!=null){
 						userAccountBalance.setBalance(total_fee/100+userAccountBalance.getBalance());
-						Boolean updatestatus=userAccountBalanceService.updateBalanceInfo(userAccountBalance);
-						if(updatestatus){
-							rechargeMsg="SUCCESS";	
-						}else{
-							rechargeMsg="ERROR";
-						}
+						 DistributedLock lock = null;
+		                 try {
+		           		  lock = new DistributedLock(payserviceDev.getZookeeper_config(),userAccountBalance.getSourceId()+userAccountBalance.getAppId());
+		           		  lock.lock();
+		           		  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+		           		  rechargeMsg="SUCCESS";
+		       		     } catch (Exception e) {
+		       			// TODO Auto-generated catch block
+			       			e.printStackTrace();
+			       		 rechargeMsg="ERROR";
+			       		  }finally{
+			       			  lock.unlock(); 
+			       		  }
 					}else{
 						userAccountBalance=new UserAccountBalance();
 						userAccountBalance.setUserId(userId);
