@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.andaily.springoauth.service.dto.DirctPayDto;
 import com.andaily.springoauth.service.dto.OrderRefund;
 import com.andaily.springoauth.service.dto.UnifyPayDto;
+import com.andaily.springoauth.service.dto.UserSerialRecord;
 
 import com.andaily.springoauth.tools.AESUtil;
 import com.andaily.springoauth.tools.DESUtil;
@@ -65,6 +66,8 @@ public class UserInterfaceController {
     
     @Value("#{properties['getOrder-query-uri']}")
     private String getOrderQueryUri;
+    @Value("#{properties['unify-costs-uri']}")
+    private String unifyCostsUri;
     
     
     final static String  SEPARATOR = "&";
@@ -305,7 +308,47 @@ public class UserInterfaceController {
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }     
-     
+     /**
+      * 统一扣费
+      * @param model
+      * @return
+      */
+ 	@RequestMapping(value = "unifyCosts", method = RequestMethod.GET)
+ 	public String unifyCosts(Model model) {
+ 		model.addAttribute("unifyCostsUri", unifyCostsUri);
+ 		return "usercenter/user_unify_costs";
+ 	}
+ 	 /**
+     * 统一扣费
+     * @param model
+     * @return
+     */
+     @RequestMapping(value = "unifyCosts", method = RequestMethod.POST)
+     public String unifyCosts(UserSerialRecord userSerialRecord) throws Exception {
+    	 String key=map.get(userSerialRecord.getAppId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("app_id",userSerialRecord.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("source_id", userSerialRecord.getSourceId());
+	   		sParaTemp.put("user_name", userSerialRecord.getUserName());
+	   		sParaTemp.put("amount", userSerialRecord.getAmount());
+	   		sParaTemp.put("serial_no", userSerialRecord.getSerialNo());
+	   		sParaTemp.put("merchantId", userSerialRecord.getMerchantId());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+	   	 }
+    	 final String fullUri =userSerialRecord.getFullUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     } 
      /** 
       * 发送POST请求 
       *  

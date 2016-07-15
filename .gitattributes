@@ -31,6 +31,7 @@ pay-service-test/src/main/java/com/andaily/springoauth/service/dto/DirctPayDto.j
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/RefreshAccessTokenDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/UnifyPayDto.java -text
+pay-service-test/src/main/java/com/andaily/springoauth/service/dto/UserSerialRecord.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/AESUtil.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/DESUtil.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/DateTools.java -text
@@ -76,6 +77,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_dirct_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_getorder_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_refund.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_unify_costs.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/log4j.xml -text
 pay-service-test/src/main/webapp/WEB-INF/soc-servlet.xml -text
@@ -255,6 +257,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/OrderRefundRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserAccuntBalanceRepositoryMyBatis.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserSerialRecordRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/AppRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradeChannelRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradePaymentRepository.java -text
@@ -264,15 +267,18 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/OrderRefundRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/Repository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/UserAccountBalanceRepository.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/UserSerialRecordRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/job/InitJob.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/job/TimingJob.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/kafka/KafkaConsumer.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/kafka/KafkaProducer.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/log/AlipayControllerLog.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/log/UnifyCostsControllerLog.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/log/UnifyPayControllerLog.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/log/service/LogMonitorServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/merchant/service/MerchantInfoServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/order/service/MerchantOrderInfoServiceImpl.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/record/service/UserSerialRecordServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/redis/service/RedisClientTemplate.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/redis/service/RedisConstant.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/redis/service/RedisDataSourceImpl.java -text
@@ -281,11 +287,11 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/thread/Charact
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/thread/LogMonitorThread.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/thread/PrnCurrentTime.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/oauth/OauthSignatureValidateHandler.java -text
-pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/CopyOfUnifyPayController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderAutoSendController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderManualSendController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderRefundController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/TestOrderCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UnifyCostsController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UnifyPayController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserOrderQueryController.java -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml -text
@@ -295,6 +301,7 @@ pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMa
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/OrderRefundMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml -text
+pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml -text
 pay-serviceimpl/src/main/resources/cert/800075500030008.p12 -text
 pay-serviceimpl/src/main/resources/cert/hytrootca.cer -text
 pay-serviceimpl/src/main/resources/disconf.properties -text

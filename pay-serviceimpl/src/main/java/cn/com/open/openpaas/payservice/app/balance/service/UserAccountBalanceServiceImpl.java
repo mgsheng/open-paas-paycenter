@@ -30,8 +30,13 @@ public class UserAccountBalanceServiceImpl implements UserAccountBalanceService 
 	}
 
 	@Override
-	public void updateBalanceInfo(UserAccountBalance userAccountBalance) {
-		userAccountBalanceRepository.updateBalanceInfo(userAccountBalance);
+	public Boolean updateBalanceInfo(UserAccountBalance userAccountBalance) {
+		try{
+			userAccountBalanceRepository.updateBalanceInfo(userAccountBalance);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
 		
 	}
 

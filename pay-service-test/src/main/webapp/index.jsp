@@ -74,6 +74,9 @@
         <li>
             <p><a href="getOrderQuery">汇银通订单查询</a> <br/>汇银通订单查询</p>
         </li>
+        <li>
+            <p><a href="unifyCosts">统一扣费</a> <br/>统一扣费接口</p>
+        </li>
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
         </li> -->

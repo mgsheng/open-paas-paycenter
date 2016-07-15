@@ -7,10 +7,12 @@
 		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
 		<result column="BALANCE" property="balance" jdbcType="DECIMAL" />
 		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="VERSION" property="version" jdbcType="INTEGER" />
 		<result column="TYPE" property="type" jdbcType="INTEGER" />
 		<result column="APP_ID" property="appId" jdbcType="INTEGER" />
 		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
 		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+		
 	</resultMap>
 	<sql id="Insert_Column_List">
 	  USER_ID,
@@ -20,7 +22,8 @@
 	  TYPE,
 	  APP_ID,
 	  SOURCE_ID,
-	  CREATE_TIME
+	  CREATE_TIME,
+	  VERSION
 	</sql>
 	<sql id="Base_Column_List">
 		Id,
@@ -43,14 +46,15 @@
 			#{type, jdbcType=INTEGER},
 			#{appId, jdbcType=INTEGER},
 			#{sourceId, jdbcType=VARCHAR},
-			#{createTime, jdbcType=TIMESTAMP}
+			#{createTime, jdbcType=TIMESTAMP},
+			#{version, jdbcType=INTEGER}
 			
 		)
 	</insert>
 	
 	<select id="findByUserId" resultMap="userAccountBalanceMap">
          select * from USER_ACCOUNT_BALANCE
-         where  USER_ID = #{userId}
+         where  SOURCE_ID = #{userId}
 	</select>
 	<select id="getBalanceInfo" resultMap="userAccountBalanceMap">
          select * from USER_ACCOUNT_BALANCE
@@ -64,9 +68,11 @@
         STATUS=#{status},
         </if>
          <if test="balance != null" >
-        BALANCE=#{balance}
+        BALANCE=#{balance},
         </if>
+        VERSION=VERSION+1 
         where Id = #{id}
+        and VERSION=#{version}
     </update>
  
 	<insert id="saveUserAccountBalance" parameterType="UserAccountBalance" useGeneratedKeys="true" keyProperty="id">

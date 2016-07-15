@@ -28,16 +28,16 @@
         <appender-ref ref="Console" />
         <appender-ref ref="dailyRollingFileAlipayControllerLog" />    
     </logger>
-    
-    <!-- UserResetPwdControllerLog -->
-    <logger name="cn.com.open.openpaas.userservice.app.log.UserResetPwdControllerLog" additivity="false">
+       <!-- OauthControllerLog -->
+    <logger name="cn.com.open.openpaas.payservice.app.log.UnifyCostsControllerLog" additivity="false">
         <level value="info" />
         <appender-ref ref="Console" />
-        <appender-ref ref="dailyRollingFileUserResetPwdControllerLog" />    
+        <appender-ref ref="dailyRollingFileUnifyCostsControllerLog" />    
     </logger>
+ 
 
 	 <!-- UnifyPayControllerLog -->
-    <logger name="cn.com.open.openpaas.payservice.app.log" additivity="false">
+    <logger name="cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog" additivity="false">
         <level value="info" />
         <appender-ref ref="Console" />
         <appender-ref ref="dailyRollingFileUnifyPayControllerLog" />    
@@ -71,17 +71,17 @@
             <param name="ConversionPattern" value="%m%n"></param>  
         </layout>  
     </appender>
-    
-    <!-- UserResetPwdControllerLog 输出日志到文件  每天一个文件 -->  
-    <appender name="dailyRollingFileUserResetPwdControllerLog"  
+    <!-- OauthControllerLog 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFileUnifyCostsControllerLog"  
         class="org.apache.log4j.DailyRollingFileAppender"> 
         <param name="ImmediateFlush" value="true"></param>  
-        <param name="File" value="${catalina.home}/logs/catalina_server_user_reset_pwd_controller.log"></param>  
-        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_unify_costs_controller.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>
         <layout class="org.apache.log4j.PatternLayout">  
             <param name="ConversionPattern" value="%m%n"></param>  
         </layout>  
-    </appender>
+    </appender>    
+  
     
     <!-- UnifyPayControllerLog 输出日志到文件  每天一个文件 -->  
     <appender name="dailyRollingFileUnifyPayControllerLog"  

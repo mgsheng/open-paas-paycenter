@@ -138,9 +138,13 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 								String userId=String.valueOf(merchantOrderInfo.getSourceUid());
 								UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
 								if(userAccountBalance!=null){
-									userAccountBalance.setBalance(Double.parseDouble(total_fee));
-									userAccountBalanceService.updateBalanceInfo(userAccountBalance);
-									rechargeMsg="SUCCESS";
+									userAccountBalance.setBalance(Double.parseDouble(total_fee)/100+userAccountBalance.getBalance());
+									Boolean updatestatus=userAccountBalanceService.updateBalanceInfo(userAccountBalance);
+									if(updatestatus){
+										rechargeMsg="SUCCESS";	
+									}else{
+										rechargeMsg="ERROR";
+									}
 								}else{
 									userAccountBalance=new UserAccountBalance();
 									userAccountBalance.setUserId(userId);

@@ -37,7 +37,7 @@ import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 @RequestMapping("/test/order/")
 public class TestOrderCallbackController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(TestOrderCallbackController.class);
-    private static final String PAY_KEY = "fc3db98a48a5434aaddbd2c75a7382ba";
+    private static final String PAY_KEY = "945fa18c666a4e0097809f6727bc6997";
 	
 	/**
 	 * 业务订单回调接口

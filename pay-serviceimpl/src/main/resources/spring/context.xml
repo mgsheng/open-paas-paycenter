@@ -25,6 +25,7 @@
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.order.service"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.refund.service"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.balance.service"/>
+    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.record.service"/>
 
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
