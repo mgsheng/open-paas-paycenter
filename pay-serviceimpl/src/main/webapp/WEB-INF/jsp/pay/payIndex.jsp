@@ -255,9 +255,11 @@
 				  if(date=="success"){
 					  $("#confirm-modal").hide();
 					  alert("交易成功");
+					  $('.mask').hide();
 				  }else{
 					  $("#confirm-modal").hide();
 					  alert("交易失败");
+					  $('.mask').hide();
 				  }
 			   }
 			   });
