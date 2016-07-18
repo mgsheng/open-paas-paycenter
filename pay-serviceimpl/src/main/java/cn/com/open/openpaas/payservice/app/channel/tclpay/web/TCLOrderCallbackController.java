@@ -2,10 +2,8 @@ package cn.com.open.openpaas.payservice.app.channel.tclpay.web;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,14 +20,9 @@ import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytParamKeys;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.data.ScanCodeOrderData;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.service.ScanCodeOrderService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytUtils;
-import cn.com.open.openpaas.payservice.app.log.AlipayControllerLog;
-import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
@@ -37,8 +30,8 @@ import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
-import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 
 /**
