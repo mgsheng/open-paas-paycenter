@@ -381,10 +381,9 @@ border:1px solid #eb6100 ;
 
 .btn1:hover {
     color: #fff;
-    background-color: #28ac9f;
+    background-color: #eb6100;
     background-image: -webkit-gradient(linear,left top,left bottom,from(#2dc0b2),to(#27a79b));
     background-image: -webkit-linear-gradient(top,#2dc0b2,#27a79b);
-    background-image: linear-gradient(180deg,#2dc0b2,#27a79b);
 }
 .modal-btn-group .btn1 {
     font-weight: 700;
@@ -394,7 +393,7 @@ border:1px solid #eb6100 ;
     background-color: #2bb8aa;
     background-image: -webkit-gradient(linear,left top,left bottom,from(#2fc9b9),to(#29b0a2));
     background-image: -webkit-linear-gradient(top,#2fc9b9,#29b0a2);
-    background-image: linear-gradient(180deg,#2fc9b9,#29b0a2);
+    background-image: linear-gradient(#eb6100,#eb6100,#eb6100);
     border-bottom: 1px solid #18655e;
 }
 .modal-btn-ok {
@@ -418,7 +417,7 @@ border:1px solid #eb6100 ;
 
 .modal-back {
 	cursor:pointer;
-    color: #2bb8aa;
+    color: #eb6100;
 }
 .assist{
 	 float:right;
