@@ -26,6 +26,6 @@ public class CommonConfig {
 	/**
 	 * 生产测试商户公钥证书名称
 	 */
-	public static String MERCHANT_PUBCERT_PATH="hytrootca.cer";
+	public static String MERCHANT_PUBCERT_PATH="800075500030008.cer";
     
 }

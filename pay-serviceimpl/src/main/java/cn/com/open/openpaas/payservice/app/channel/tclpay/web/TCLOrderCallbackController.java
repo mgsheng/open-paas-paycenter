@@ -119,7 +119,6 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 			    	
 			    	
 					  MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
-					  
 					  //充值
 						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
 							String userId=String.valueOf(merchantOrderInfo.getSourceUid());
@@ -133,7 +132,6 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 				           		  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
 				           		  rechargeMsg="SUCCESS";
 				       		     } catch (Exception e) {
-				       			// TODO Auto-generated catch block
 					       			e.printStackTrace();
 					       		 rechargeMsg="ERROR";
 					       		  }finally{

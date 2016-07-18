@@ -206,6 +206,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayFTFController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayNotify.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipaySubmit.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/BusinessType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/Channel.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/DemoHbRunner.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5.java -text
@@ -304,8 +305,8 @@ pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderI
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/OrderRefundMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml -text
+pay-serviceimpl/src/main/resources/cert/800075500030008.cer -text
 pay-serviceimpl/src/main/resources/cert/800075500030008.p12 -text
-pay-serviceimpl/src/main/resources/cert/hytrootca.cer -text
 pay-serviceimpl/src/main/resources/disconf.properties -text
 pay-serviceimpl/src/main/resources/emailtemplate/activation.html -text
 pay-serviceimpl/src/main/resources/emailtemplate/resetpassword.html -text

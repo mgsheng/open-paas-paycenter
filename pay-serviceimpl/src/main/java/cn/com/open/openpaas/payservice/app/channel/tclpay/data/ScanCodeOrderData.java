@@ -232,10 +232,11 @@ public class ScanCodeOrderData {
 		orderDataMap.put(HytParamKeys.NOTIFY_URL,
 				dictTradeChannel.getNotifyUrl());
 		orderDataMap.put(HytParamKeys.SPBILL_CREATE_IP, spbill_create_ip);
-		orderDataMap.put(HytParamKeys.BUYER_ID, merchantOrderInfo.getSourceUid());
+		orderDataMap.put(HytParamKeys.BUYER_ID, others.get("buyer_id"));
 
 		orderDataMap.put(HytParamKeys.ORDER_TIME, orderTime);
 		orderDataMap.put(HytParamKeys.TOTAL_AMOUNT,String.valueOf(merchantOrderInfo.getOrderAmount()*100));
+		
 		orderDataMap.put(HytParamKeys.CURRENCY, "");
 		orderDataMap.put(HytParamKeys.TIME_EXPIRE, time_expire);
 
