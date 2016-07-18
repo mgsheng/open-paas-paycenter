@@ -181,6 +181,35 @@
 								<option value="10001">支付宝-即时到账</option>
 								<option value="10003">支付宝-当面付</option>
 								<option value="10002">微信-扫码支付</option>
+								<option value="10004">TCL-支付宝</option>
+								<option value="10005">TCL-微信</option>
+								<option value="10006">TCL-银联</option>
+								<option value="CMB">TCL-招行</option>
+								<option value="ICBC">TCL-工行</option>
+								<option value="CCB">TCL-建行</option>
+								<option value="ABC">TCL-农行</option>
+								<option value="BOC">TCL-中国银行</option>
+								<option value="PSBC">TCL-邮政</option>
+								<option value="CGB">TCL-广发</option>
+								<option value="SPDB">TCL-浦发</option>
+								<option value="CEB">TCL-光大</option>
+								<option value="PAB">TCL-平安</option>
+								<option value="ECITIC">TCL-中信</option>
+								<option value="BOS">TCL-上海</option>
+								<option value="SDB">TCL-深圳</option>
+								<option value="BOB">TCL-北京</option>
+								<option value="HXB">TCL-华夏</option>
+								<option value="CMBC">TCL-民生</option>
+								<option value="CIB">TCL-兴业</option>
+								<option value="M_ICBC">TCL-工行企业</option>
+								<option value="M_CMB">TCL-招商企业</option>
+								<option value="M_ABC">TCL-农行企业</option>
+								<option value="M_CCB">TCL-建行企业</option>
+								<option value="M_CEB">TCL-光大企业</option>
+								<option value="M_BOC">TCL-中行企业</option>
+								<option value="M_SPDB">TCL-浦发企业</option>
+								<option value="M_BCOM">TCL-交行企业</option>
+								<option value="M_PAB">TCL-平安企业</option>
 							</select>
                             <p class="help-block">支付方式</p>
                         </div>
