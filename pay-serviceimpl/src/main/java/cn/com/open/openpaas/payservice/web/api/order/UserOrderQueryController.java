@@ -132,16 +132,20 @@ public class UserOrderQueryController extends BaseControllerUtil{
       //获取当前订单
   		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
         if(orderInfo!=null){
-//    			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
+    			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
 //    			Map<String, String> orderQryDataMap1 = OrderQryData.buildGetOrderQryDataMap(orderInfo, dictTradeChannels);
     		    Map<String, String> orderQryDataMap = new HashMap<String,String>();
     			String orderTime = HytDateUtils.generateOrderTime();
+    			String other= dictTradeChannels.getOther();
+    			Map<String, String> others = new HashMap<String, String>();
+    			others=getPartner(other);
+    			String merchant_code=others.get("merchant_code");
     			orderQryDataMap.put(HytParamKeys.CHARSET, "00");
     			orderQryDataMap.put(HytParamKeys.VERSION, "1.0");
     			orderQryDataMap.put(HytParamKeys.SIGN_TYPE, "RSA");
     			orderQryDataMap.put(HytParamKeys.SERVICE, "OrderSearch");
-    			orderQryDataMap.put(HytParamKeys.REQUEST_ID, "");//orderInfo.getPayOrderId() 
-    			orderQryDataMap.put(HytParamKeys.MERCHANT_CODE, "800075500030008");
+    			orderQryDataMap.put(HytParamKeys.REQUEST_ID, ""); 
+    			orderQryDataMap.put(HytParamKeys.MERCHANT_CODE, merchant_code);
     			orderQryDataMap.put(HytParamKeys.ORDER_TIME, orderTime);
     			orderQryDataMap.put(HytParamKeys.OUT_TRADE_NO, orderInfo.getMerchantOrderId());
     			RSASign util = HytUtils.getRSASignObject();
@@ -150,26 +154,25 @@ public class UserOrderQueryController extends BaseControllerUtil{
    				try {
    					merchant_sign = util.sign(reqData, HytConstants.CHARSET_GBK);
    				} catch (Exception e) {
-   					// TODO Auto-generated catch block
    					e.printStackTrace();
    				}
 				String merchant_cert = util.getCertInfo();
 	   			orderQryDataMap.put(HytParamKeys.MERCHANT_CERT, merchant_cert);
 	   			orderQryDataMap.put(HytParamKeys.MERCHANT_SIGN, merchant_sign);
     			String result=sendPost1("https://ipos.tclpay.cn/hipos/payTrans", orderQryDataMap);
-    			orderQryDataMap.remove("merchant_cert");
-    			orderQryDataMap.remove("merchant_sign");
+    			orderQryDataMap.remove(HytParamKeys.MERCHANT_CERT);
+    			orderQryDataMap.remove(HytParamKeys.MERCHANT_SIGN);
     			String Wsign=HytPacketUtils.map2StrRealURL(orderQryDataMap);
     			boolean flag = false;
     			RSASign rsautil =HytUtils.getRSASignVertifyObject(); 
     			flag = rsautil.verify(Wsign,merchant_sign,merchant_cert, HytConstants.CHARSET_GBK);//验证签名
-    			Map<String, String> others = new HashMap<String, String>();
+    			Map<String, String> othere = new HashMap<String, String>();
     			if(flag!=true){
-    				others.put("false", "验证没通过查询失败");
-    				writeSuccessJson(response,others);
+    				othere.put("false", "验证没通过查询失败");
+    				writeSuccessJson(response,othere);
     			}else{
-        			others=getResult(result);
-        			JSONObject obj = JSONObject.fromObject(others);
+        			othere=getResult(result);
+        			JSONObject obj = JSONObject.fromObject(othere);
         			System.out.println(obj);
         			writeSuccessJson(response,obj);
     			}
@@ -213,42 +216,45 @@ public class UserOrderQueryController extends BaseControllerUtil{
   		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
     	
         if(orderInfo!=null){
-//    			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
+    			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
 	            Map<String,String> sParaTemp2 = new HashMap<String,String>();
+    			String other= dictTradeChannels.getOther();
+    			Map<String, String> others = new HashMap<String, String>();
+    			others=getPartner(other);
+    			String merchant_code=others.get("merchant_code");
 				String acDate = HytDateUtils.getCurDateStr();
-				sParaTemp2.put("charset","00");
-				sParaTemp2.put("version", "1.0");
-				sParaTemp2.put("sign_type","RSA");
-				sParaTemp2.put("service", "Statement");
-				sParaTemp2.put("request_id",  orderInfo.getPayOrderId());
-				sParaTemp2.put("merchant_code", "800075500030008");
-				sParaTemp2.put("ac_date", acDate);
+				sParaTemp2.put(HytParamKeys.CHARSET,"00");
+				sParaTemp2.put(HytParamKeys.VERSION, "1.0");
+				sParaTemp2.put(HytParamKeys.SIGN_TYPE,"RSA");
+				sParaTemp2.put(HytParamKeys.SERVICE, "Statement");
+				sParaTemp2.put(HytParamKeys.REQUEST_ID,  orderInfo.getPayOrderId());
+				sParaTemp2.put(HytParamKeys.MERCHANT_CODE, merchant_code);
+				sParaTemp2.put(HytParamKeys.AC_DATE, acDate);
 				RSASign util = HytUtils.getRSASignObject();
 	   			 String reqData = HytPacketUtils.map2Str(sParaTemp2);
 	   			 String merchant_sign = "";
 	   				try {
 	   					merchant_sign = util.sign(reqData, HytConstants.CHARSET_GBK);
 	   				} catch (Exception e) {
-	   					// TODO Auto-generated catch block
 	   					e.printStackTrace();
 	   				}
 					String merchant_cert = util.getCertInfo();
 					sParaTemp2.put(HytParamKeys.MERCHANT_CERT, merchant_cert);
 					sParaTemp2.put(HytParamKeys.MERCHANT_SIGN, merchant_sign);
 				String result=sendPost1("https://ipos.tclpay.cn/hipos/payTrans", sParaTemp2);
-				sParaTemp2.remove("merchant_cert");
-				sParaTemp2.remove("merchant_sign");
+				sParaTemp2.remove(HytParamKeys.MERCHANT_CERT);
+				sParaTemp2.remove(HytParamKeys.MERCHANT_SIGN);
     			String Wsign=HytPacketUtils.map2StrRealURL(sParaTemp2);
     			boolean flag = false;
     			RSASign rsautil =HytUtils.getRSASignVertifyObject(); 
     			flag = rsautil.verify(Wsign,merchant_sign,merchant_cert, HytConstants.CHARSET_GBK);//验证签名
-    			Map<String, String> others = new HashMap<String, String>();
+    			Map<String, String> othere = new HashMap<String, String>();
     			if(flag!=true){
-    				others.put("false", "验证没通过查询失败");
-    				writeSuccessJson(response,others);
+    				othere.put("false", "验证没通过查询失败");
+    				writeSuccessJson(response,othere);
     			}else{
-        			others=getDownlond(result);
-        			JSONObject obj = JSONObject.fromObject(others);
+        			othere=getDownlond(result);
+        			JSONObject obj = JSONObject.fromObject(othere);
         			System.out.println(obj);
         			writeSuccessJson(response,obj);
     			}
@@ -285,4 +291,20 @@ public class UserOrderQueryController extends BaseControllerUtil{
 		return sParaTemp;
 		}
 	}
+    
+  //sign_type:MD5#payment_type:1#input_charset:utf-8#service:create_direct_pay_by_user#partner:2088801478647757
+  		public static Map<String, String> getPartner(String other){
+  			if(other==null&&"".equals(other)){
+  				return null;
+  			}else{
+  			String others []=other.split("#");
+  			Map<String, String> sParaTemp = new HashMap<String, String>();
+  			for (int i=0;i<others.length;i++){
+  				String values []=others[i].split(":");
+  				   sParaTemp.put(values[0], values[1]);  
+  			}
+  			
+  			return sParaTemp;
+  			}
+  		}
 }
