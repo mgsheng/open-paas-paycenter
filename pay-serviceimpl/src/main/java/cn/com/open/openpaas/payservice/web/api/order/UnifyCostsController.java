@@ -27,9 +27,9 @@ import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordServic
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.StringTool;
+import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
-import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 /**
  * 

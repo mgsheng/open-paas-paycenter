@@ -31,7 +31,6 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
-import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 
 /**
