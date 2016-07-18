@@ -33,8 +33,8 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
-import cn.com.open.openpaas.payservice.web.site.DistributedLock;
 
 
 /**
