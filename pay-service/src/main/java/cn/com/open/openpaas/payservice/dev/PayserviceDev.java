@@ -20,7 +20,22 @@ public class PayserviceDev {
 	public String zookeeper_config;
 	public String pay_channle;
 	public String pay_switch;
+	public String tcl_pay_url;
+	public String ali_pay_url;
 	
+	
+	public String getTcl_pay_url() {
+		return tcl_pay_url;
+	}
+	public void setTcl_pay_url(String tcl_pay_url) {
+		this.tcl_pay_url = tcl_pay_url;
+	}
+	public String getAli_pay_url() {
+		return ali_pay_url;
+	}
+	public void setAli_pay_url(String ali_pay_url) {
+		this.ali_pay_url = ali_pay_url;
+	}
 	public String getPay_channle() {
 		return pay_channle;
 	}
