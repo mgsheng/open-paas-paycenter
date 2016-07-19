@@ -183,6 +183,8 @@
             <property name="zookeeper_config" value="${zookeeper_config}"></property>
             <property name="pay_switch" value="${pay_switch}"></property>
             <property name="pay_channle" value="${pay_channle}"></property>
+            <property name="tcl_pay_url" value="${tcl_pay_url}"></property>
+            <property name="ali_pay_url" value="${ali_pay_url}"></property>
             
         </bean>
 </beans>

@@ -24,10 +24,6 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 public class AlipayController {
-	 /**
-     * 支付宝提供给商户的服务接入网关URL(新)
-     */
-    private static final String ALIPAY_GATEWAY_NEW = "https://mapi.alipay.com/gateway.do?";
    
 	  public static Boolean analysisValue(JSONObject obj ){
 	    	String state = obj.getString("state");
@@ -106,7 +102,7 @@ public class AlipayController {
                     String temp_params = sb.toString();  
                     params = temp_params.substring(0, temp_params.length() - 1);  
             }  
-           	 return "redirect:" + ALIPAY_GATEWAY_NEW+params;
+           	 return params;
     }
 	
 	/**
@@ -163,7 +159,7 @@ public class AlipayController {
                     String temp_params = sb.toString();  
                     params = temp_params.substring(0, temp_params.length() - 1);  
             }  
-           	 return "redirect:" + ALIPAY_GATEWAY_NEW+params;
+           	 return params;
     }
 
 
