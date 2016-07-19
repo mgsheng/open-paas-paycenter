@@ -146,13 +146,17 @@ border:1px solid #eb6100 ;
 .pay-method li img{
 	max-width: 89%;
 }
-.btn{
+.box{
 	clear: both;
-	padding-top: 32px;
+	padding: 32px 0;
 	width: 100%;
     margin: 0 auto;
 }
-.btn span{
+.box p{
+	width:355px;
+	margin:0 auto
+}
+.box span{
 	display: inline-block;
 	width: 121px;
 	height: 46px;
@@ -161,11 +165,11 @@ border:1px solid #eb6100 ;
 	text-align: center;
 	cursor: pointer;
 }
-.btn .confirm{
+.box .confirm{
 	background: #eb6100;
 	color:#fff;
 }
-.btn .cancel{
+.box .cancel{
 	background: #efefef;
 	color:#919191;
 	margin-left: 32px;
