@@ -58,10 +58,16 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.CommonConfig;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytParamKeys;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.data.OrderQryData;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.data.ScanCodeOrderData;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.service.OrderQryService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.service.ScanCodeOrderService;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytDateUtils;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;
+import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytUtils;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
@@ -146,6 +152,14 @@ public class UnifyPayController extends BaseControllerUtil{
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime=System.currentTimeMillis();
     	String outTradeNo=request.getParameter("outTradeNo");
+    	String pay_switch = payserviceDev.getPay_switch();
+    	String paySwitch []=pay_switch.split("#");
+    	String payZhifubao = paySwitch[0];
+    	String payWx=paySwitch[1];
+    	String payTcl = paySwitch[2];
+    	
+    	String pay_channle = payserviceDev.getPay_channle();
+    	System.out.println(pay_switch);
     	String userName=request.getParameter("userName");
         String userId = request.getParameter("userId");
         String merchantId = request.getParameter("merchantId");
@@ -271,7 +285,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
-		  //用户账户创建
+		  //用户账户创
 			if(!nullEmptyBlankJudge(businessType)&&String.valueOf(BusinessType.COSTS.getValue()).equals(businessType)){
 				UserAccountBalance  userAccountBalance=userAccountBalanceService.getBalanceInfo(userId, Integer.parseInt(appId));
 				if(userAccountBalance==null){
@@ -317,6 +331,13 @@ public class UnifyPayController extends BaseControllerUtil{
 	              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
 				 model.addAttribute("outTradeNo", outTradeNo);
 				 model.addAttribute("appId", appId);
+				 model.addAttribute("payZhifubao", payZhifubao);
+				 model.addAttribute("payWx", payWx);
+				 model.addAttribute("payTcl", payTcl);
+				 model.addAttribute("totalFee", totalFee);
+				 model.addAttribute("goodsDesc", goodsDesc);
+				 model.addAttribute("goodsId", goodsId);
+				 model.addAttribute("merchantId", merchantId);
 				 return "pay/payIndex";
 		        }else{
 		        	merchantOrderInfo=merchantOrderInfoService.findById(newId);
@@ -591,6 +612,17 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping(value = "selectChannelPay", method = RequestMethod.POST)
     public void payChannel(HttpServletRequest request,HttpServletResponse response) throws Exception{
+    	
+    	String goodsName=request.getParameter("goodsName");
+    	String payZhifubao=request.getParameter("payZhifubao");
+    	String payWx=request.getParameter("payWx");
+    	String payTcl=request.getParameter("payTcl");
+    	String totalFee=request.getParameter("totalFee");
+    	String goodsDesc=request.getParameter("goodsDesc");
+    	String goodsId=request.getParameter("goodsId");
+    	String merchantId=request.getParameter("merchantId");
+    	
+    	
     	String areaCode=request.getParameter("areaCode");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String appId=request.getParameter("appId");
@@ -599,25 +631,63 @@ public class UnifyPayController extends BaseControllerUtil{
     		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
          	//支付渠道为支付宝
              if(!nullEmptyBlankJudge(areaCode)&&"1".equals(areaCode)){
-        			ScanCodeOrderService scanCode = new ScanCodeOrderService();
-        			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
-        			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
-        			response.setCharacterEncoding("GBK");
-        			response.sendRedirect(URL);
+            	 if(!nullEmptyBlankJudge(payZhifubao)&&"0".equals(payZhifubao)){
+            		ScanCodeOrderService scanCode = new ScanCodeOrderService();
+         			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
+         			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+         			response.setCharacterEncoding("GBK");
+         			response.sendRedirect(URL);
+            	 }else{
+            		 
+            		//调用支付宝即时支付方法  
+            		 String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
+            		response.sendRedirect(url.replace("redirect:", ""));	
+            		 
+            	 }
              }
              else if(!nullEmptyBlankJudge(areaCode)&&"3".equals(areaCode)){
-             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
-            		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
-            		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
-            		// response.getWriter().print(qr_code_url);
-            		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+            	 if(!nullEmptyBlankJudge(payWx)&&"0".equals(payWx)){
+            		ScanCodeOrderService scanCode = new ScanCodeOrderService();
+             		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
+             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
+             		// response.getWriter().print(qr_code_url);
+             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+            	 }else{
+            		 
+            		 
+            		 
+            		 WxpayInfo payInfo=new WxpayInfo();
+                   	 payInfo.setAppid(payserviceDev.getWx_app_id());
+                   	 //payInfo.setDevice_info("WEB");
+                   	 payInfo.setMch_id(payserviceDev.getWx_mch_id());
+                   	 payInfo.setNonce_str(WxPayCommonUtil.create_nonce_str());
+                   	 payInfo.setBody(goodsDesc);
+                   	 //payInfo.setAttach("某某分店");
+                   	 payInfo.setOut_trade_no(merchantOrderInfo.getId());
+                   	 payInfo.setProduct_id(goodsId);
+                   	 payInfo.setTotal_fee(Integer.parseInt(totalFee));
+                   	 payInfo.setSpbill_create_ip(payserviceDev.getWx_spbill_create_ip());
+                   	 payInfo.setNotify_url(payserviceDev.getWx_notify_url());
+                   	 payInfo.setTrade_type(payserviceDev.getWx_trade_type());
+                   	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
+                    //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
+                	 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode;
+                	 response.sendRedirect(fullUri.replace("redirect:", ""));	
+            	 }
+             		
             } else if(!nullEmptyBlankJudge(areaCode)&&"2".equals(areaCode)){
-            	ScanCodeOrderService scanCode = new ScanCodeOrderService();
-    			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
-    			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
-    			response.setCharacterEncoding("UTF-8");
-    			response.sendRedirect(URL);
-        		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+            	if(!nullEmptyBlankJudge(payTcl)&&"1".equals(payTcl)){
+            		ScanCodeOrderService scanCode = new ScanCodeOrderService();
+        			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
+        			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+        			response.setCharacterEncoding("UTF-8");
+        			response.sendRedirect(URL);
+            		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+            	}else{
+            		
+            	}
+            	
               }else{
             	  String newareaCode=getAreaCode(areaCode);
             	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
@@ -647,7 +717,9 @@ public class UnifyPayController extends BaseControllerUtil{
     	}
     	WebUtils.writeJson(response, backMsg);
     }
+
     
+
     /**selectAccomplish
      * 查询支付结果获取状态
      * @throws Exception 
@@ -687,7 +759,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
         String notify_url =dictTradeChannels.getNotifyUrl();
         OrderQryService orderQry = new OrderQryService();
-        orderQry.query(OrderQryData.buildGetOrderQryDataMap(orderInfo));
+        orderQry.query(OrderQryData.buildGetOrderQryDataMap(orderInfo, dictTradeChannels));
 //    			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
 //    			response.setCharacterEncoding("GBK");
 //    			response.sendRedirect(URL);
@@ -698,6 +770,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	
     }
     
+
     public String getAreaCode(String areaCode){
     	String newAreaCode="";
     	
