@@ -133,8 +133,10 @@ public class UserOrderQueryController extends BaseControllerUtil{
   		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
         if(orderInfo!=null){
     			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
+
 //    			Map<String, String> orderQryDataMap1 = OrderQryData.buildGetOrderQryDataMap(orderInfo, dictTradeChannels);
-    		    Map<String, String> orderQryDataMap = new HashMap<String,String>();
+    		    
+    			Map<String, String> orderQryDataMap = new HashMap<String,String>();
     			String orderTime = HytDateUtils.generateOrderTime();
     			String other= dictTradeChannels.getOther();
     			Map<String, String> others = new HashMap<String, String>();
@@ -217,7 +219,8 @@ public class UserOrderQueryController extends BaseControllerUtil{
     	
         if(orderInfo!=null){
     			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
-	            Map<String,String> sParaTemp2 = new HashMap<String,String>();
+    			Map<String, String> orderQryDataMap1 = OrderQryData.buildGetFileDownloadMap(orderInfo, dictTradeChannels);
+    			Map<String,String> sParaTemp2 = new HashMap<String,String>();
     			String other= dictTradeChannels.getOther();
     			Map<String, String> others = new HashMap<String, String>();
     			others=getPartner(other);
