@@ -17,6 +17,16 @@ public class DictTradePayment implements Serializable {
 	private BigDecimal paymentType;
 	
 	private String rate;
+	private String remark;
+	
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
 
 	public DictTradePayment() {
 		super();

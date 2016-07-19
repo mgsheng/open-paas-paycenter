@@ -83,6 +83,13 @@ public class OrderRefundController extends BaseControllerUtil{
 	    	sParaTemp.put("refundMoney",refundMoney);
 	   		sParaTemp.put("timestamp", timestamp);
 	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("merchantId", merchantId);
+	   		sParaTemp.put("remark", remark);
+	   		sParaTemp.put("userid", userid);
+	   		sParaTemp.put("username", username);
+	   		sParaTemp.put("realName", realname);
+	   		sParaTemp.put("phone", phone);
+	   		sParaTemp.put("goodsId", goodsId);
 	   		String param=createSign(sParaTemp);
 	   		
 	   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,param,merchantInfo.getPayKey());

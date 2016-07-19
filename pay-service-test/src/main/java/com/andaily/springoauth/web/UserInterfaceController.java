@@ -141,7 +141,21 @@ public class UserInterfaceController {
 	   		sParaTemp.put("goodsName", unifyPayDto.getGoodsName());
 	   		sParaTemp.put("totalFee", unifyPayDto.getTotalFee());
 	   		sParaTemp.put("merchantId", unifyPayDto.getMerchantId());
+	   		sParaTemp.put("username", unifyPayDto.getUserName());
+	   		sParaTemp.put("goodsId", unifyPayDto.getGoodsId());
 	   		sParaTemp.put("businessType", unifyPayDto.getBusinessType());
+	   		sParaTemp.put("goodsDesc", unifyPayDto.getGoodsDesc());
+	   		sParaTemp.put("goodsTag", unifyPayDto.getGoodsTag());
+	   		sParaTemp.put("showUrl", unifyPayDto.getShowUrl());
+	   		sParaTemp.put("buyerRealName", unifyPayDto.getBuyerRealName());
+	   		sParaTemp.put("buyerCertNo", unifyPayDto.getBuyerCertNo());
+	   		sParaTemp.put("inputCharset", unifyPayDto.getInputCharset());
+	   		sParaTemp.put("paymentOutTime", unifyPayDto.getPaymentOutTime());
+	   		sParaTemp.put("paymentType", unifyPayDto.getPaymentType());
+	   		sParaTemp.put("paymentChannel", unifyPayDto.getPaymentChannel());
+	   		sParaTemp.put("feeType", unifyPayDto.getFeeType());
+	   		sParaTemp.put("clientIp", unifyPayDto.getClientIp());
+	   		sParaTemp.put("parameter", unifyPayDto.getParameter());
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);
@@ -253,22 +267,22 @@ public class UserInterfaceController {
      @RequestMapping(value = "getOrderQuery", method = RequestMethod.POST)
      public String getOrderQuery(String  outTradeNo,String appId) throws Exception {
     	 String key=map.get(appId);
-   	  	 String result="";
+   	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
 	   	 if(key!=null){
-	   		    timestamp=DateTools.getSolrDate(new Date());
-			 	StringBuilder encryptText = new StringBuilder();
-			 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
-			 	encryptText.append(appId);
-			 	encryptText.append(SEPARATOR);
-			 	encryptText.append(timestamp);
-			 	encryptText.append(SEPARATOR);
-			 	encryptText.append(signatureNonce);
-				result=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
-				result=HMacSha1.getNewResult(result);
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",appId);
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",outTradeNo );
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
 	   	 }
-    	 final String fullUri =getOrderQueryUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+result+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+    	 final String fullUri =getOrderQueryUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
@@ -300,6 +314,13 @@ public class UserInterfaceController {
 	   		sParaTemp.put("signatureNonce", signatureNonce);
 	   		sParaTemp.put("refundMoney", orderRefund.getRefundMoney());
 	   		sParaTemp.put("outTradeNo", orderRefund.getMerchantOrderId());
+	   		sParaTemp.put("merchantId", orderRefund.getMerchantId());
+	   		sParaTemp.put("remark", orderRefund.getRemark());
+	   		sParaTemp.put("userid", orderRefund.getSourceUid());
+	   		sParaTemp.put("username", orderRefund.getSourceUsername());
+	   		sParaTemp.put("realName", orderRefund.getRealName());
+	   		sParaTemp.put("phone", orderRefund.getPhone());
+	   		sParaTemp.put("goodsId", orderRefund.getGoodsId());
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);

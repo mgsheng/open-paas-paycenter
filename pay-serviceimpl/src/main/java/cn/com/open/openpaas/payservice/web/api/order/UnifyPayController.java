@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -69,6 +70,8 @@ import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.payment.model.DictTradePayment;
+import cn.com.open.openpaas.payservice.app.payment.service.DictTradePaymentService;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
@@ -97,6 +100,8 @@ public class UnifyPayController extends BaseControllerUtil{
 	 private DictTradeChannelService dictTradeChannelService;
 	 @Autowired
 	 private PayserviceDev payserviceDev;
+	 @Autowired
+	 private DictTradePaymentService dictTradePaymentService;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
 	 
@@ -187,14 +192,29 @@ public class UnifyPayController extends BaseControllerUtil{
     	sParaTemp.put("appId",appId);
    		sParaTemp.put("timestamp", timestamp);
    		sParaTemp.put("signatureNonce", signatureNonce);
-   		sParaTemp.put("outTradeNo",outTradeNo);
+   		sParaTemp.put("outTradeNo",outTradeNo );
    		sParaTemp.put("userId", userId);
-   		sParaTemp.put("goodsName",goodsName);
+   		sParaTemp.put("goodsName", goodsName);
    		sParaTemp.put("totalFee", totalFee);
-   		sParaTemp.put("merchantId",merchantId);
-   		sParaTemp.put("businessType",businessType);
+   		sParaTemp.put("merchantId", merchantId);
+   		sParaTemp.put("businessType", merchantId);
+   		sParaTemp.put("username", userName);
+   		sParaTemp.put("merchantId", merchantId);
+   		sParaTemp.put("goodsId", goodsId);
+   		sParaTemp.put("businessType", businessType);
+   		sParaTemp.put("goodsDesc", goodsDesc);
+   		sParaTemp.put("goodsTag", goodsTag);
+   		sParaTemp.put("showUrl", showUrl);
+   		sParaTemp.put("buyerRealName",buyerRealName);
+   		sParaTemp.put("buyerCertNo",buyerCertNo);
+   		sParaTemp.put("inputCharset", inputCharset);
+   		sParaTemp.put("paymentOutTime", paymentOutTime);
+   		sParaTemp.put("paymentType", paymentType);
+   		sParaTemp.put("paymentChannel",paymentChannel);
+   		sParaTemp.put("feeType", feeType);
+   		sParaTemp.put("clientIp", clientIp);
+   		sParaTemp.put("parameter", parameter);
    		String params=createSign(sParaTemp);
-   		
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
         //认证
        // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
@@ -223,6 +243,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		String newId="";
 		newId=SysUtil.careatePayOrderId();
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
+		DictTradePayment dictTradePayment=dictTradePaymentService.findByPaymentName(paymentType);
 		if(merchantOrderInfo!=null){
 			//更新现有订单信息
 			merchantOrderInfo.setId(newId);
@@ -245,6 +266,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setMerchantProductDesc(goodsDesc);//商品描述
 			merchantOrderInfo.setMerchantProductId(goodsId);
 			merchantOrderInfo.setParameter1(parameter);
+			merchantOrderInfo.setPaymentId(dictTradePayment.getId());
+			merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
@@ -387,7 +410,8 @@ public class UnifyPayController extends BaseControllerUtil{
 		        	}
 		        }
 
-		 return "";
+		  String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
+       	  return "redirect:" + fullUri;
     }	
     
    /**
@@ -632,19 +656,42 @@ public class UnifyPayController extends BaseControllerUtil{
     public void getOrderQuery(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
     	String outTradeNo=request.getParameter("outTradeNo");
         String appId = request.getParameter("appId");
+        String timestamp=request.getParameter("timestamp");
+	    String signatureNonce=request.getParameter("signatureNonce");
+	    String signature=request.getParameter("signature");
+	    
       //获取当前订单
   		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
-    	
-        if(orderInfo!=null){
-    		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
-            String notify_url =dictTradeChannels.getNotifyUrl();
-            	OrderQryService orderQry = new OrderQryService();
-    			 orderQry.query(OrderQryData.buildGetOrderQryDataMap(orderInfo));
+  		if(orderInfo==null){
+         	paraMandaChkAndReturn(1, response,"订单号不存在");
+         	return ;
+         } 
+  		MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
+  		if(merchantInfo==null){
+         	paraMandaChkAndReturn(2, response,"认证失败");
+         	return ;
+         } 
+  		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+    	sParaTemp.put("appId",appId);
+   		sParaTemp.put("timestamp", timestamp);
+   		sParaTemp.put("signatureNonce", signatureNonce);
+   		sParaTemp.put("outTradeNo",outTradeNo );
+   		String params=createSign(sParaTemp);
+   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+        //认证
+       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+		if(!hmacSHA1Verification){
+			paraMandaChkAndReturn(2, response,"认证失败");
+			return;
+		} 
+    	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
+        String notify_url =dictTradeChannels.getNotifyUrl();
+        OrderQryService orderQry = new OrderQryService();
+        orderQry.query(OrderQryData.buildGetOrderQryDataMap(orderInfo));
 //    			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
 //    			response.setCharacterEncoding("GBK");
 //    			response.sendRedirect(URL);
             
-    	}
     	
     	
     	
