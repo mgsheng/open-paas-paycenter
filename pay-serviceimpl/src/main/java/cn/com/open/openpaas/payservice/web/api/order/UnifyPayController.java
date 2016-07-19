@@ -265,7 +265,9 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setMerchantProductDesc(goodsDesc);//商品描述
 			merchantOrderInfo.setMerchantProductId(goodsId);
 			merchantOrderInfo.setParameter1(parameter);
-			merchantOrderInfo.setPaymentId(dictTradePayment.getId());
+			if(dictTradePayment!=null){
+				merchantOrderInfo.setPaymentId(dictTradePayment.getId());
+			}
 			merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
@@ -337,7 +339,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		            		//调用支付宝即时支付方法  
 		                	String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
 		                		//response.sendRedirect(url.replace("redirect:", ""));
-		                		 return url;
+		                	return "redirect:"+payserviceDev.getAli_pay_url()+url;
 		        			
 		            	}//支付宝-即时到账支付
 		        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
@@ -347,7 +349,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		            		// 支付宝-网银支付
 		            		String defaultbank=getDefaultbank(paymentType);
 		            		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
-		            		return url;
+		            		return "redirect:"+payserviceDev.getAli_pay_url()+url;
 		            		
 		            	}
 		        		
@@ -379,7 +381,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		        	     if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
 		         			ScanCodeOrderService scanCode = new ScanCodeOrderService();
 		         			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
-		         			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+		         			String URL=payserviceDev.getTcl_pay_url()+returnCode;
 		         			return "redirect:" + URL;
 		         			//response.sendRedirect(URL);
 		              }
@@ -395,14 +397,14 @@ public class UnifyPayController extends BaseControllerUtil{
 		            	 //银联支付
 		             	ScanCodeOrderService scanCode = new ScanCodeOrderService();
 		     			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
-		     			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+		     			String URL=payserviceDev.getTcl_pay_url()+returnCode;
 		     			//response.sendRedirect(URL);
 		     			return "redirect:" + URL;
 		               }else{
 		            	   //TCL直连银行
 		             	 ScanCodeOrderService scanCode = new ScanCodeOrderService();
 		       			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels));
-		       			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+		       			String URL=payserviceDev.getTcl_pay_url()+returnCode;
 		       			return "redirect:" + URL;
 		       			//response.sendRedirect(URL);
 		               }
