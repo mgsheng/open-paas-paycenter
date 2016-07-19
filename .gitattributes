@@ -223,6 +223,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/CommonConfig.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/HytConstants.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/HytFileDownload.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/HytParamKeys.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/SignedPacket.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/data/OrderQryData.java -text
