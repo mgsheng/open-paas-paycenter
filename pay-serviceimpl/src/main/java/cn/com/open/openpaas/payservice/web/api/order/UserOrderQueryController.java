@@ -129,9 +129,35 @@ public class UserOrderQueryController extends BaseControllerUtil{
     public void getOrderQuery(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
     	String outTradeNo=request.getParameter("outTradeNo");
         String appId = request.getParameter("appId");
+        String timestamp=request.getParameter("timestamp");
+	    String signatureNonce=request.getParameter("signatureNonce");
+	    String signature=request.getParameter("signature");
       //获取当前订单
   		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
-        if(orderInfo!=null){
+  		if(orderInfo==null){
+         	paraMandaChkAndReturn(1, response,"订单号不存在");
+         	return ;
+         } 
+  		MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
+  		if(merchantInfo==null){
+         	paraMandaChkAndReturn(2, response,"认证失败");
+         	return ;
+         } 
+  		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+    	sParaTemp.put("appId",appId);
+   		sParaTemp.put("timestamp", timestamp);
+   		sParaTemp.put("signatureNonce", signatureNonce);
+   		sParaTemp.put("outTradeNo",outTradeNo );
+   		String params=createSign(sParaTemp);
+   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+        //认证
+       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+		if(!hmacSHA1Verification){
+			paraMandaChkAndReturn(2, response,"认证失败");
+			return;
+		} 
+  		
+  		
     			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
 
 //    			Map<String, String> orderQryDataMap1 = OrderQryData.buildGetOrderQryDataMap(orderInfo, dictTradeChannels);
@@ -178,7 +204,6 @@ public class UserOrderQueryController extends BaseControllerUtil{
         			System.out.println(obj);
         			writeSuccessJson(response,obj);
     			}
-    	}
     }
     
     public static Map<String, String> getResult(String other){
@@ -214,10 +239,34 @@ public class UserOrderQueryController extends BaseControllerUtil{
     public void fileDownlond(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
     	String outTradeNo=request.getParameter("outTradeNo");
         String appId = request.getParameter("appId");
+        String timestamp=request.getParameter("timestamp");
+	    String signatureNonce=request.getParameter("signatureNonce");
+	    String signature=request.getParameter("signature");
       //获取当前订单
   		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
-    	
-        if(orderInfo!=null){
+  		
+  		if(orderInfo==null){
+         	paraMandaChkAndReturn(1, response,"订单号不存在");
+         	return ;
+         } 
+  		MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
+  		if(merchantInfo==null){
+         	paraMandaChkAndReturn(2, response,"认证失败");
+         	return ;
+         } 
+  		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+    	sParaTemp.put("appId",appId);
+   		sParaTemp.put("timestamp", timestamp);
+   		sParaTemp.put("signatureNonce", signatureNonce);
+   		sParaTemp.put("outTradeNo",outTradeNo );
+   		String params=createSign(sParaTemp);
+   	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+        //认证
+       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+		if(!hmacSHA1Verification){
+			paraMandaChkAndReturn(2, response,"认证失败");
+			return;
+		} 
     			DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
     			Map<String, String> orderQryDataMap1 = OrderQryData.buildGetFileDownloadMap(orderInfo, dictTradeChannels);
     			Map<String,String> sParaTemp2 = new HashMap<String,String>();
@@ -262,7 +311,6 @@ public class UserOrderQueryController extends BaseControllerUtil{
         			writeSuccessJson(response,obj);
     			}
     			
-    	}
     }
     
     public static Map<String, String> getDownlond(String other){

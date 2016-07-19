@@ -304,22 +304,22 @@ public class UserInterfaceController {
      @RequestMapping(value = "fileDownlond", method = RequestMethod.POST)
      public String fileDownlond(String  outTradeNo,String appId) throws Exception {
     	 String key=map.get(appId);
-   	  	 String result="";
+   	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
 	   	 if(key!=null){
-	   		    timestamp=DateTools.getSolrDate(new Date());
-			 	StringBuilder encryptText = new StringBuilder();
-			 	signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
-			 	encryptText.append(appId);
-			 	encryptText.append(SEPARATOR);
-			 	encryptText.append(timestamp);
-			 	encryptText.append(SEPARATOR);
-			 	encryptText.append(signatureNonce);
-				result=HMacSha1.HmacSHA1Encrypt(encryptText.toString(), key);
-				result=HMacSha1.getNewResult(result);
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",appId);
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",outTradeNo );
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
 	   	 }
-    	 final String fullUri =fileDownlondUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+result+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+    	 final String fullUri =fileDownlondUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
