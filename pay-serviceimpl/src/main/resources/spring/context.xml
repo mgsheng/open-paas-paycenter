@@ -181,6 +181,8 @@
             <property name="tcl_pay_version" value="${tcl_pay_version}"></property>
             <property name="userCenter_getUserId_url" value="${userCenter_getUserId_url}"></property>
             <property name="zookeeper_config" value="${zookeeper_config}"></property>
+            <property name="pay_switch" value="${pay_switch}"></property>
+            <property name="pay_channle" value="${pay_channle}"></property>
             
         </bean>
 </beans>

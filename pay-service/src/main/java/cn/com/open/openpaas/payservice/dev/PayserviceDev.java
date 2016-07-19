@@ -18,9 +18,21 @@ public class PayserviceDev {
 	public String tcl_pay_version;
 	public String userCenter_getUserId_url;
 	public String zookeeper_config;
+	public String pay_channle;
+	public String pay_switch;
 	
-	
-	
+	public String getPay_channle() {
+		return pay_channle;
+	}
+	public void setPay_channle(String pay_channle) {
+		this.pay_channle = pay_channle;
+	}
+	public String getPay_switch() {
+		return pay_switch;
+	}
+	public void setPay_switch(String pay_switch) {
+		this.pay_switch = pay_switch;
+	}
 	public String getZookeeper_config() {
 		return zookeeper_config;
 	}

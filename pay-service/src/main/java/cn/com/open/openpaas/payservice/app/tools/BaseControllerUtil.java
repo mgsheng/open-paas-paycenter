@@ -686,5 +686,19 @@ public class BaseControllerUtil {
 			 String temp_params = sb.toString();  
 			return sb.toString().substring(0, temp_params.length()-1);
 		}
+		public static Map<String, String> getPartner(String other){
+			if(other==null&&"".equals(other)){
+				return null;
+			}else{
+			String others []=other.split("#");
+			Map<String, String> sParaTemp = new HashMap<String, String>();
+			for (int i=0;i<others.length;i++){
+				String values []=others[i].split(":");
+				   sParaTemp.put(values[0], values[1]);  
+			}
+			
+			return sParaTemp;
+			}
+		}
 
 }

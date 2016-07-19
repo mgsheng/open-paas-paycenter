@@ -172,7 +172,7 @@ public class TestAlipayController extends BaseControllerUtil {
            	 return "redirect:" + ALIPAY_GATEWAY_NEW+params;
     }
 	//sign_type:MD5#payment_type:1#input_charset:utf-8#service:create_direct_pay_by_user#partner:2088801478647757
-	public Map<String, String> getPartner(String other){
+	public Map<String, String> getPartner1(String other){
 		if(other==null&&"".equals(other)){
 			return null;
 		}else{

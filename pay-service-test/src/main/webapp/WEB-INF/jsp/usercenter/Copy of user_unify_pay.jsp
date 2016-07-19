@@ -20,7 +20,7 @@
     <div class="panel-body">
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
-            <form action="unifyPay" method="post" class="form-horizontal" target="_blank">
+            <form action="unifyPay" method="post" class="form-horizontal">
             <%-- <form action="${userCenterRegUri}" method="post" class="form-horizontal"> --%>
                 <input type="hidden" name="unifyPayUri" id="unifyPayUri" value="${unifyPayUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
@@ -178,21 +178,82 @@
                         <div class="col-sm-10">
                            <select name="paymentType" id="paymentType" class="form-control" ng-mode="paymentType">
                                 <option value=""></option>
-								<option value="ALIPAY">支付宝-即时到账</option>
-								<!-- <option value="ALIFAF">支付宝-当面付</option> -->
+								<option value="ALI_PAY">支付宝-即时到账</option>
+								<option value="ALI_FAF">支付宝-当面付</option>
+								
+								<option value="ALI_ICBCBTB">支付宝-工行(企业)</option>
+								<option value="ALI_ABCBTB">支付宝-农行(企业)</option>
+								<option value="ALI_CCBBTB">支付宝-建行(企业)</option>
+								<option value="ALI_SPDBB2B">支付宝-上海浦东银行(企业)</option>
+								<option value="ALI_BOCB2C">支付宝-中国银行</option>
+								<option value="ALI_ICBCB2C">支付宝-中国工商银行</option>
+								<option value="ALI_CMB">支付宝-招商银行</option>
+								<option value="ALI_CCB">支付宝-建设银行</option>
+								<option value="ALI_ABC">支付宝-农业银行</option>
+								<option value="ALI_SPDB">支付宝-上海浦东发展银行</option>
+								<option value="ALI_CIB">支付宝-兴业银行</option>
+								<option value="ALI_GDB">支付宝-广东发展银行</option>
+								<option value="ALI_SDB">支付宝-深圳发展银行</option>
+								<option value="ALI_CMBC">支付宝-中国民生银行</option>
+								<option value="ALI_COMM">支付宝-交通银行</option>
+								<option value="ALI_CITIC">支付宝-中信银行</option>
+								<option value="ALI_HZCBB2C">支付宝-杭州银行</option>
+								<option value="ALI_CEBBANK">支付宝-中国光大银行</option>
+								<option value="ALI_SHBANK">支付宝-上海银行</option>
+								<option value="ALI_NBBANK">支付宝-宁波银行</option>
+								<option value="ALI_SPABANK">支付宝-平安银行</option>
+								<option value="ALI_BJRCB">支付宝-北京农村商业银行</option>
+								<option value="ALI_FDB">支付宝-富滇银行</option>
+								<option value="ALI_POSTGC">支付宝-中国邮政储蓄银行</option>
+								<option value="ALI_abc1003">支付宝-visa</option>
+								<option value="ALI_abc1004">支付宝-master</option>
+								<option value="ALI_CMB-DEBIT">支付宝-招商银行(借)</option>
+								<option value="ALI_CCB-DEBIT">支付宝-中国建设银行(借)</option>
+								<option value="ALI_ICBC-DEBIT">支付宝-中国工商银行(借) </option>
+								<option value="ALI_COMM-DEBIT">支付宝-交通银行(借)</option>
+								<option value="ALI_GDB-DEBIT">支付宝-广发银行(借)</option>
+								<option value="ALI_BOC-DEBIT">支付宝-中国银行(借)</option>
+								<option value="ALI_CEB-DEBIT">支付宝-中国光大银行(借)</option>
+								<option value="ALI_SPDB-DEBIT">支付宝-上海浦东发展银行(借)</option>
+								<option value="ALI_PSBC-DEBIT">支付宝-中国邮政储蓄银行(借)</option>
+								<option value="ALI_BJBANK">支付宝-北京银行(借)</option>
+								<option value="ALI_SHRCB">支付宝-上海农商银行(借)</option>
+								<option value="ALI_WZCBB2C-DEBIT">支付宝-温州银行(借)</option>
+								<option value="ALI_COMM">支付宝-交通银行(借)</option>
+								<option value="ALI_CMBC">支付宝-中国民生银行(借)</option>
+								<option value="ALI_BJRCB">支付宝-北京农村商业银行(借) </option>
+								<option value="ALI_SPA-DEBIT">支付宝-平安银行(借)</option>
+								<option value="ALI_CITIC-DEBIT">支付宝-中信银行(借)</option>
 								<option value="WEIXIN">微信-扫码支付</option>
-								<option value="UPOP">银联</option>
-								<option value="CMB">招商银行</option>
-								<option value="ICBC">工商银行</option>
-								<option value="CCB">建设银行</option>
-								<option value="ABC">农业银行</option>
-								<option value="BOC">中国银行</option>
-								<option value="BCOM">交通银行</option>
-								<option value="PSBC">中国邮政银行</option>
-								<option value="CGB">广发银行</option>
-								<option value="SPDB">浦发银行</option>
-								<option value="CEB">中国光大银行</option>
-								<option value="PAB">中国平安银行</option>
+								<option value="TCL_ALIPAY">TCL-支付宝</option>
+								<option value="TCL_WEIXIN">TCL-微信</option>
+								<option value="TCL_UPOP">TCL-银联</option>
+								<option value="TCL_CMB">TCL-招行</option>
+								<option value="TCL_ICBC">TCL-工行</option>
+								<option value="TCL_CCB">TCL-建行</option>
+								<option value="TCL_ABC">TCL-农行</option>
+								<option value="TCL_BOC">TCL-中国银行</option>
+								<option value="TCL_PSBC">TCL-邮政</option>
+								<option value="TCL_CGB">TCL-广发</option>
+								<option value="TCL_SPDB">TCL-浦发</option>
+								<option value="TCL_CEB">TCL-光大</option>
+								<option value="TCL_PAB">TCL-平安</option>
+								<option value="TCL_ECITIC">TCL-中信</option>
+								<option value="TCL_BOS">TCL-上海</option>
+								<option value="TCL_SDB">TCL-深圳</option>
+								<option value="TCL_BOB">TCL-北京</option>
+								<option value="TCL_HXB">TCL-华夏</option>
+								<option value="TCL_CMBC">TCL-民生</option>
+								<option value="TCL_CIB">TCL-兴业</option>
+								<option value="TCL_M_ICBC">TCL-工行企业</option>
+								<option value="TCL_M_CMB">TCL-招商企业</option>
+								<option value="TCL_M_ABC">TCL-农行企业</option>
+								<option value="TCL_M_CCB">TCL-建行企业</option>
+								<option value="TCL_M_CEB">TCL-光大企业</option>
+								<option value="TCL_M_BOC">TCL-中行企业</option>
+								<option value="TCL_M_SPDB">TCL-浦发企业</option>
+								<option value="TCL_M_BCOM">TCL-交行企业</option>
+								<option value="TCL_M_PAB">TCL-平安企业</option>
 							</select>
                             <p class="help-block">支付方式</p>
                         </div>

@@ -108,6 +108,64 @@ public class AlipayController {
             }  
            	 return "redirect:" + ALIPAY_GATEWAY_NEW+params;
     }
+	
+	/**
+	 * 返回支付宝网银调用地址
+	 **/
+	public  static String getEBankPayUrl(String marchantId,String out_trade_no,String subject,String total_fee,String body,DictTradeChannelService dictTradeChannelService,PayserviceDev payserviceDev,String defaultbank) throws MalformedURLException, DocumentException, IOException {
+		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(marchantId,Channel.ALI.getValue());
+		String other= dictTradeChannels.getOther();
+		Map<String, String> others = new HashMap<String, String>();
+		others=getPartner(other);
+		
+    	String partner=others.get("partner");
+    	String seller_id=others.get("partner"); 
+        String notify_url =dictTradeChannels.getNotifyUrl();
+    	String return_url=dictTradeChannels.getBackurl();
+    	//String log_path=request.getParameter("log_path");
+    	String input_charset=dictTradeChannels.getInputCharset();
+    	String payment_type=dictTradeChannels.getPaymentType();
+    	String service=payserviceDev.getAli_service();
+		//把请求参数打包成数组
+		Map<String, String> sParaTemp = new HashMap<String, String>();
+		sParaTemp.put("service", service);
+        sParaTemp.put("partner", partner);
+        sParaTemp.put("seller_id", seller_id);
+        sParaTemp.put("_input_charset", input_charset);
+		sParaTemp.put("payment_type", payment_type);
+		sParaTemp.put("notify_url", notify_url);
+		sParaTemp.put("return_url", return_url);
+		sParaTemp.put("anti_phishing_key",AlipaySubmit.query_timestamp());
+		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+		sParaTemp.put("out_trade_no", out_trade_no);
+		sParaTemp.put("defaultbank", defaultbank);
+		//subject = URLEncoder.encode(subject,"UTF-8");
+		sParaTemp.put("subject", subject);
+		sParaTemp.put("total_fee",total_fee);
+		sParaTemp.put("body", body);
+		 Map<String, String> parameters = buildRequestPara(sParaTemp,payserviceDev);
+            StringBuffer sb = new StringBuffer();// 处理请求参数  
+            String params = "";// 编码之后的参数  
+                // 编码请求参数  
+                if (parameters.size() == 1) {  
+                    for (String name : parameters.keySet()) {  
+                        sb.append(name).append("=").append(  
+                                java.net.URLEncoder.encode(parameters.get(name),  
+                                        "UTF-8"));  
+                    }  
+                    params = sb.toString();  
+                } else {  
+                    for (String name : parameters.keySet()) {  
+                        sb.append(name).append("=").append(  
+                        		java.net.URLEncoder.encode(parameters.get(name),  
+                                        "UTF-8")).append("&");  
+                    }  
+                    String temp_params = sb.toString();  
+                    params = temp_params.substring(0, temp_params.length() - 1);  
+            }  
+           	 return "redirect:" + ALIPAY_GATEWAY_NEW+params;
+    }
+
 
     /**
      * 生成要请求给支付宝的参数数组

@@ -68,6 +68,8 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/password.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/refresh_token.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/register.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/resources/user_user_info.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~](2)[!!-~]of[!!-~]user_unify_pay.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~]of[!!-~]user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/alipay_order_callback.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/dynamic_login.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/order_manual_send.jsp -text
@@ -208,6 +210,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipaySubmit.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/BusinessType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/Channel.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/CopyOfPaymentType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/DemoHbRunner.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5Util.java -text

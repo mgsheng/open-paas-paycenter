@@ -20,7 +20,7 @@
     <div class="panel-body">
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
-            <form action="unifyPay" method="post" class="form-horizontal" target="_blank">
+            <form action="unifyPay" method="post" class="form-horizontal">
             <%-- <form action="${userCenterRegUri}" method="post" class="form-horizontal"> --%>
                 <input type="hidden" name="unifyPayUri" id="unifyPayUri" value="${unifyPayUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
@@ -178,8 +178,8 @@
                         <div class="col-sm-10">
                            <select name="paymentType" id="paymentType" class="form-control" ng-mode="paymentType">
                                 <option value=""></option>
-								<option value="ALIPAY">支付宝-即时到账</option>
-								<!-- <option value="ALIFAF">支付宝-当面付</option> -->
+								<option value="ALI_PAY">支付宝-即时到账</option>
+								<option value="ALI_FAF">支付宝-当面付</option>
 								<option value="WEIXIN">微信-扫码支付</option>
 								<option value="UPOP">银联</option>
 								<option value="CMB">招商银行</option>
