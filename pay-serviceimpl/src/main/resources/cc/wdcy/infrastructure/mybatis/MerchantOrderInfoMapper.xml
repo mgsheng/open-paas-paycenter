@@ -214,8 +214,8 @@
     ]]>
     </update>
 	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE)
+        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE,PAYMENT_ID)
         values
-        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType})
+        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId})
     </insert>
 </mapper>

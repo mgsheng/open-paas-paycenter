@@ -22,7 +22,7 @@ public class DictTradePaymentTypeServiceImpl implements DictTradePaymentService 
 
 	@Override
 	public DictTradePayment findByPaymentName(String paymentName) {
-		return null;
+		return dictTradePaymentRepository.findByPaymentName(paymentName);
 	}
 
 
