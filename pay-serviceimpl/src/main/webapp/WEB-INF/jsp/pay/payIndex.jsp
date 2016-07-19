@@ -13,6 +13,13 @@
 <input type="hidden"  name="outTradeNo" value="${outTradeNo}" id="outTradeNo"/>
 <input type="hidden" name="areaCode" value="" id="areaCode"/>
 <input type="hidden" name="appId" value="${appId}" id="appId"/>
+<input type="hidden" name="goodsName" value="${goodsName}" id="goodsName"/>
+<input type="hidden" name="payZhifubao" value="${payZhifubao}" id="payZhifubao"/>
+<input type="hidden" name="payTcl" value="${payTcl}" id="payTcl"/>
+<input type="hidden" name="goodsDesc" value="${goodsDesc}" id="goodsDesc"/>
+<input type="hidden" name="goodsId" value="${goodsId}" id="goodsId"/>
+<input type="hidden" name="merchantId" value="${merchantId}" id="merchantId"/>
+
 <div class="wrap">
 	<header class="header">
 		<div class="header-box">
@@ -55,8 +62,6 @@
 						</div>
 				</div>
 		</div>
-
-
 
 		<div class="pay-tips">
 			<dl>
@@ -101,16 +106,7 @@
 			</dl>
 		</div>
 		<div class="pay-method content" >
-		
 			<h3 class="title">选择以下支付方式付款</h3>
-			
-			
-			
-			
-	
-			
-			
-			
 			<h3 class="tit">支付平台<span> （大额支付推荐使用支付宝）</span></h3>
 			<ul>
 				<li value="1"><img src="${pageContext.request.contextPath}/images/zhifubao.jpg" /></li>
@@ -132,9 +128,11 @@
 				<li value="14"><img src="${pageContext.request.contextPath}/images/pingan.jpg" /></li>
 				<li>查看更多</li>
 			</ul>
-			<div class="btn" >
-				<span class="confirm" onclick="submitCheck('confirm-modal');">确认</span>
-				<span class="cancel">取消</span>
+			<div class="box" >
+				<p>
+					<span class="confirm" onclick="submitCheck('confirm-modal');">确认</span>
+					<span class="cancel">取消</span>
+				</p>
 			</div>
 		</div>
 
@@ -156,10 +154,6 @@
 		</div>
 	</div>
 </div>
-
-
-
-
 
 
 <div id="confirm-modal" style="display:none;">
@@ -219,10 +213,12 @@
 	});
 	function submitCheck(obj){
 	         if(areaCode=="3"){
+	         var payWx="${payWx}";
+	         var totalFee="${totalFee}";
 	          $.ajax({
 				 type: 'post',
 				 dataType:'text',
-				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId,
+				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee,
 				 success: function(date){
 					   urlCode=date;
 					   console.log(urlCode+"==urlCode");
