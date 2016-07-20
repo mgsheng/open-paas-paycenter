@@ -323,7 +323,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("payZhifubao", payZhifubao);
 				 model.addAttribute("payWx", payWx);
 				 model.addAttribute("payTcl", payTcl);
-				 model.addAttribute("totalFee", totalFee);
+				 model.addAttribute("totalFeeValue", totalFee);
 				 model.addAttribute("goodsDesc", goodsDesc);
 				 model.addAttribute("goodsId", goodsId);
 				 model.addAttribute("merchantId", merchantId);
