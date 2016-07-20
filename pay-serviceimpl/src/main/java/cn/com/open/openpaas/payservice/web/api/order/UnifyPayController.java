@@ -268,7 +268,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			if(dictTradePayment!=null){
 				merchantOrderInfo.setPaymentId(dictTradePayment.getId());
 			}
-			if(paymentChannel!=""){
+			if(!nullEmptyBlankJudge(paymentChannel)){
 				merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
 			}
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
@@ -630,7 +630,7 @@ public class UnifyPayController extends BaseControllerUtil{
             		 
             		//调用支付宝即时支付方法  
             		 String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
-            		response.sendRedirect(url.replace("redirect:", ""));	
+            		response.sendRedirect(payserviceDev.getAli_pay_url()+"?"+url);
             		 
             	 }
              }
