@@ -14,6 +14,7 @@
 <input type="hidden" name="areaCode" value="" id="areaCode"/>
 <input type="hidden" name="appId" value="${appId}" id="appId"/>
 <input type="hidden" name="goodsName" value="${goodsName}" id="goodsName"/>
+<input type="hidden" name="totalFee" value="${totalFee}" id="totalFee"/>
 <input type="hidden" name="payZhifubao" value="${payZhifubao}" id="payZhifubao"/>
 <input type="hidden" name="payTcl" value="${payTcl}" id="payTcl"/>
 <input type="hidden" name="goodsDesc" value="${goodsDesc}" id="goodsDesc"/>
