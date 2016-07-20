@@ -14,7 +14,7 @@
 <input type="hidden" name="areaCode" value="" id="areaCode"/>
 <input type="hidden" name="appId" value="${appId}" id="appId"/>
 <input type="hidden" name="goodsName" value="${goodsName}" id="goodsName"/>
-<input type="hidden" name="totalFee" value="${totalFee}" id="totalFee"/>
+<input type="hidden" name="totalFee" value="${totalFeeValue}" id="totalFee"/>
 <input type="hidden" name="payZhifubao" value="${payZhifubao}" id="payZhifubao"/>
 <input type="hidden" name="payTcl" value="${payTcl}" id="payTcl"/>
 <input type="hidden" name="goodsDesc" value="${goodsDesc}" id="goodsDesc"/>
@@ -75,7 +75,7 @@
 				<dd class="form-info2">
 					<h3>应付总额：<span class="color">${totalFee}</span>元</h3>
 					<p>${goodsName}</p>
-					<p>数量1</p>
+					<p>数量</p>
 					
 					<div style="position:relative;">
 						<span class="assist" onMouseOver="showTip();" onMouseOut="hideTip();">支付帮助</span>
