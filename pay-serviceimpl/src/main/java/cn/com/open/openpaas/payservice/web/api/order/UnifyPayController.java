@@ -268,7 +268,9 @@ public class UnifyPayController extends BaseControllerUtil{
 			if(dictTradePayment!=null){
 				merchantOrderInfo.setPaymentId(dictTradePayment.getId());
 			}
-			merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
+			if(paymentChannel!=""){
+				merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
+			}
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
