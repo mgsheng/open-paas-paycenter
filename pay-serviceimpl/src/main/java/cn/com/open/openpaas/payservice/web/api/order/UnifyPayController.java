@@ -601,16 +601,16 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping(value = "selectChannelPay", method = RequestMethod.POST)
     public void payChannel(HttpServletRequest request,HttpServletResponse response) throws Exception{
-    	
     	String goodsName=request.getParameter("goodsName");
-    	String payZhifubao=request.getParameter("payZhifubao");
-    	String payWx=request.getParameter("payWx");
-    	String payTcl=request.getParameter("payTcl");
     	String totalFee=request.getParameter("totalFee");
     	String goodsDesc=request.getParameter("goodsDesc");
     	String goodsId=request.getParameter("goodsId");
     	String merchantId=request.getParameter("merchantId");
-    	
+    	String pay_switch = payserviceDev.getPay_switch();
+    	String paySwitch []=pay_switch.split("#");
+    	String payZhifubao = paySwitch[0];
+    	String payWx=paySwitch[1];
+    	String payTcl = paySwitch[2];
     	
     	String areaCode=request.getParameter("areaCode");
     	String outTradeNo=request.getParameter("outTradeNo");
