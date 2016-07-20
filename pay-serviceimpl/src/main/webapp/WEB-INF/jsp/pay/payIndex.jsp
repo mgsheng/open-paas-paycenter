@@ -221,14 +221,16 @@
 	function submitCheck(obj){
 	         if(areaCode=="3"){
 	         var payWx="${payWx}";
-	         var totalFee="${totalFee}";
+	         var totalFee="${totalFeeValue}";
+	         var goodsDesc="${goodsDesc}";
+	         var goodsId="${goodsId}";
 	          $.ajax({
 				 type: 'post',
 				 beforeSend:function () {
 					 $("#load-print").show();
 				    },
 				 dataType:'text',
-				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee,
+				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId,
 				 success: function(date){
 					   urlCode=date;
 					   console.log(urlCode+"==urlCode");
