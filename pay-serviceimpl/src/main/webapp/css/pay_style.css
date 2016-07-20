@@ -428,3 +428,13 @@ border:1px solid #eb6100 ;
 	 padding:22px 20px;
 }
 
+.load-print{
+	display:none; 
+	width:150px;
+	height:150px;
+	position:fixed;
+	left:50%;
+	top:50%;
+	margin-left:-75px;
+	margin-top:-75px;
+}
