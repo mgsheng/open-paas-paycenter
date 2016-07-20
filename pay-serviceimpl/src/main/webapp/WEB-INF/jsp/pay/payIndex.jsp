@@ -172,10 +172,16 @@
 				</div>
 				<span class="modal-back" onclick="closeBtu()">返回选择其他支付方式</span>
 			</div>
-		</div>
+		</div> 
 	</div>
  
 </div>
+
+<div id="load-print" class="load-print">
+			<img style="width:150px" src="${pageContext.request.contextPath}/images/dongtu.gif" />
+</div>
+
+
 
 
 <script src="${pageContext.request.contextPath}/js/jquery-1.7.1.min.js"></script>
@@ -218,6 +224,9 @@
 	         var totalFee="${totalFee}";
 	          $.ajax({
 				 type: 'post',
+				 beforeSend:function () {
+					 $("#load-print").show();
+				    },
 				 dataType:'text',
 				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee,
 				 success: function(date){
@@ -227,7 +236,10 @@
 				       $(".payLayer").show();
 				       $("#payCode").empty();
 				       $('#payCode').qrcode(urlCode);// 生成二维码
+				       $("#load-print").hide();
+				      
 				   }
+				 
 			   });
 	         }else{
 	         	$("form").submit();
