@@ -623,11 +623,10 @@ public class UnifyPayController extends BaseControllerUtil{
             	 if(!nullEmptyBlankJudge(payZhifubao)&&"1".equals(payZhifubao)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
          			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
-         			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
          			response.setCharacterEncoding("GBK");
          			response.sendRedirect(URL);
             	 }else{
-            		 
             		//调用支付宝即时支付方法  
             		 String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
             		response.sendRedirect(payserviceDev.getAli_pay_url()+"?"+url);
@@ -669,7 +668,7 @@ public class UnifyPayController extends BaseControllerUtil{
             	if(!nullEmptyBlankJudge(payTcl)&&"1".equals(payTcl)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
         			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
-        			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+        			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
         			response.setCharacterEncoding("UTF-8");
         			response.sendRedirect(URL);
             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
@@ -681,7 +680,7 @@ public class UnifyPayController extends BaseControllerUtil{
             	  String newareaCode=getAreaCode(areaCode);
             	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
       			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels));
-      			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
+      			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
       			response.setCharacterEncoding("UTF-8");
       			response.sendRedirect(URL);
               }
