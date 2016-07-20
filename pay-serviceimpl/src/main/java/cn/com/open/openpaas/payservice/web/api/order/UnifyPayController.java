@@ -620,7 +620,7 @@ public class UnifyPayController extends BaseControllerUtil{
     		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
          	//支付渠道为支付宝
              if(!nullEmptyBlankJudge(areaCode)&&"1".equals(areaCode)){
-            	 if(!nullEmptyBlankJudge(payZhifubao)&&"0".equals(payZhifubao)){
+            	 if(!nullEmptyBlankJudge(payZhifubao)&&"1".equals(payZhifubao)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
          			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
          			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
@@ -635,7 +635,7 @@ public class UnifyPayController extends BaseControllerUtil{
             	 }
              }
              else if(!nullEmptyBlankJudge(areaCode)&&"3".equals(areaCode)){
-            	 if(!nullEmptyBlankJudge(payWx)&&"0".equals(payWx)){
+            	 if(!nullEmptyBlankJudge(payWx)&&"1".equals(payWx)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
              		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
              		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
