@@ -207,7 +207,8 @@
 							     <option value=""></option>
 								<option value="10001">支付宝</option>
 								<option value="10002">微信</option>
-								<option value="10004">TCL</option>
+								<option value="10005">直连银行</option>
+								<option value="10003">银联</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>
