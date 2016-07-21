@@ -423,41 +423,6 @@
 	<version>1.8.6</version>
 </dependency>
 <dependency>
-	<groupId>org.glassfish.metro</groupId>
-	<artifactId>webservices-extra</artifactId>
-	<version>2.2</version>
-</dependency>
-<dependency>
-	<groupId>javax.xml.bind</groupId>
-	<artifactId>jaxb-api</artifactId>
-	<version>2.1</version>
-</dependency>
-<dependency>
-	<groupId>javax.xml.ws</groupId>
-	<artifactId>jaxws-api</artifactId>
-	<version>2.1</version>
-</dependency>
-<dependency>
-	<groupId>org.apache.geronimo.specs</groupId>
-	<artifactId>geronimo-jaxws_2.1_spec</artifactId>
-	<version>1.0</version>
-</dependency>
-<dependency>
-	<groupId>javax.xml</groupId>
-	<artifactId>webservices-api</artifactId>
-	<version>2.1-b16</version>
-</dependency>
-<dependency>
-	<groupId>org.glassfish.metro</groupId>
-	<artifactId>webservices-extra-api</artifactId>
-	<version>2.2</version>
-</dependency>
-<dependency>
-	<groupId>com.sun.xml.ws</groupId>
-	<artifactId>webservices-rt</artifactId>
-	<version>2.0</version>
-</dependency>
-<dependency>
 	<groupId>cglib</groupId>
 	<artifactId>cglib</artifactId>
 	<version>2.2.2</version>
@@ -572,6 +537,7 @@
     	<artifactId>core</artifactId>
     	<version>2.2</version>
 		</dependency>
+		<!-- kafka -->
         <dependency>
         <groupId>org.apache.kafka</groupId>
         <artifactId>kafka_2.10</artifactId>
@@ -582,6 +548,7 @@
     <artifactId>bcprov-jdk16</artifactId>
     <version>1.45</version>
 </dependency>
+<!-- disconf -->
 <dependency>
     <groupId>com.baidu.disconf</groupId>
     <artifactId>disconf-core</artifactId>

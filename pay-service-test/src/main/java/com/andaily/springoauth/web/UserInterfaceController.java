@@ -143,7 +143,7 @@ public class UserInterfaceController {
 	   		sParaTemp.put("goodsName", unifyPayDto.getGoodsName());
 	   		sParaTemp.put("totalFee", unifyPayDto.getTotalFee());
 	   		sParaTemp.put("merchantId", unifyPayDto.getMerchantId());
-	   		sParaTemp.put("username", unifyPayDto.getUserName());
+	   		sParaTemp.put("userName", unifyPayDto.getUserName());
 	   		sParaTemp.put("goodsId", unifyPayDto.getGoodsId());
 	   		sParaTemp.put("businessType", unifyPayDto.getBusinessType());
 	   		sParaTemp.put("goodsDesc", unifyPayDto.getGoodsDesc());
