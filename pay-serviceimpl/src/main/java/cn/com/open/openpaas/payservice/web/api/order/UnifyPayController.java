@@ -26,22 +26,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.alipay.api.AlipayResponse;
-import com.alipay.api.response.AlipayTradePrecreateResponse;
-import com.alipay.demo.trade.config.Configs;
-import com.alipay.demo.trade.model.ExtendParams;
-import com.alipay.demo.trade.model.GoodsDetail;
-import com.alipay.demo.trade.model.builder.AlipayTradePayContentBuilder;
-import com.alipay.demo.trade.model.builder.AlipayTradePrecreateContentBuilder;
-import com.alipay.demo.trade.model.result.AlipayF2FPayResult;
-import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
-import com.alipay.demo.trade.service.AlipayMonitorService;
-import com.alipay.demo.trade.service.AlipayTradeService;
-import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
-import com.alipay.demo.trade.utils.ZxingUtils;
-
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
@@ -62,7 +46,6 @@ import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.payment.model.DictTradePayment;
 import cn.com.open.openpaas.payservice.app.payment.service.DictTradePaymentService;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
@@ -74,6 +57,22 @@ import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
+
+import com.alipay.api.AlipayResponse;
+import com.alipay.api.response.AlipayTradePrecreateResponse;
+import com.alipay.demo.trade.config.Configs;
+import com.alipay.demo.trade.model.ExtendParams;
+import com.alipay.demo.trade.model.GoodsDetail;
+import com.alipay.demo.trade.model.builder.AlipayTradePayContentBuilder;
+import com.alipay.demo.trade.model.builder.AlipayTradePrecreateContentBuilder;
+import com.alipay.demo.trade.model.result.AlipayF2FPayResult;
+import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
+import com.alipay.demo.trade.service.AlipayMonitorService;
+import com.alipay.demo.trade.service.AlipayTradeService;
+import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
+import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
+import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
+import com.alipay.demo.trade.utils.ZxingUtils;
 
 /**
  * 
@@ -91,8 +90,6 @@ public class UnifyPayController extends BaseControllerUtil{
 	 private DictTradeChannelService dictTradeChannelService;
 	 @Autowired
 	 private PayserviceDev payserviceDev;
-	 @Autowired
-	 private DictTradePaymentService dictTradePaymentService;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
 	 
@@ -142,7 +139,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	String payWx=paySwitch[1];
     	String payTcl = paySwitch[2];
     	String payEbank = paySwitch[3];
-    	
+    	String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
     	String userName=request.getParameter("userName");
         String userId = request.getParameter("userId");
         String merchantId = request.getParameter("merchantId");
@@ -232,13 +229,13 @@ public class UnifyPayController extends BaseControllerUtil{
 		if(!hmacSHA1Verification){
 			paraMandaChkAndReturn(1, response,"认证失败");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
-        	return "";
+        	return "redirect:" + fullUri;
 		} 
     	
         if(!StringTool.isNumeric(totalFee)){
         	paraMandaChkAndReturn(3, response,"订单金额格式有误");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
-        	return "";
+        	return "redirect:" + fullUri;
         }
       /*  if(!("CNY").equals(feeType)){
         	paraMandaChkAndReturn(3, response,"金额类型有误");
@@ -249,12 +246,11 @@ public class UnifyPayController extends BaseControllerUtil{
         if(!payType){
         	paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
-			return "";
+			return "redirect:" + fullUri;
         }
 		String newId="";
 		newId=SysUtil.careatePayOrderId();
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
-		DictTradePayment dictTradePayment=dictTradePaymentService.findByPaymentName(paymentType);
 		if(merchantOrderInfo!=null){
 			//更新现有订单信息
 			merchantOrderInfo.setId(newId);
@@ -277,9 +273,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setMerchantProductDesc(goodsDesc);//商品描述
 			merchantOrderInfo.setMerchantProductId(goodsId);
 			merchantOrderInfo.setParameter1(parameter);
-			if(dictTradePayment!=null){
-				merchantOrderInfo.setPaymentId(dictTradePayment.getId());
-			}
+			int paymentTypeId=PaymentType.getTypeByValue(paymentType).getType();
+			merchantOrderInfo.setPaymentId(paymentTypeId);
 			if(!nullEmptyBlankJudge(paymentChannel)){
 				merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
 			}
@@ -395,7 +390,7 @@ public class UnifyPayController extends BaseControllerUtil{
 	                   	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
 	                    //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
 	                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
-	                	 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode;
+	                	 fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode;
 	                	  return "redirect:" + fullUri;
 	        		}
 		    	 
@@ -407,7 +402,7 @@ public class UnifyPayController extends BaseControllerUtil{
            		ScanCodeOrderService scanCode = new ScanCodeOrderService();
           		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
           		//response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
-          		 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+qr_code_url;
+          		 fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+qr_code_url;
              	  return "redirect:" + fullUri;
 		    	 }
 		     	}  		
@@ -444,9 +439,9 @@ public class UnifyPayController extends BaseControllerUtil{
        			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
        			return "redirect:" + URL;
 		    	 }
-		     	}  		      	
+		     	 }  		      	
 		        }
-		  String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
+		  
        	  return "redirect:" + fullUri;
     }	
     
@@ -496,7 +491,7 @@ public class UnifyPayController extends BaseControllerUtil{
     		 returnValue=true;	
     	}
     	if(paymentChannel!=null&&paymentChannel.equals(Channel.ALI.getValue()+"")){
-    	 if(paymentType!=null&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.UPOP.getValue()+"").equals(paymentType)){
+    	 if(paymentType!=null&&(PaymentType.ALIPAY.getValue()).equals(paymentType)){
     		 returnValue=true;
     	 }else{
     		 returnValue=false; 
@@ -508,7 +503,7 @@ public class UnifyPayController extends BaseControllerUtil{
     		 returnValue=false; 
     	 }
     	}if(paymentChannel!=null&&paymentChannel.equals(Channel.EBANK.getValue()+"")){
-    		if(paymentType!=null&&(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){
+    		if(paymentType!=null&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){
        		 returnValue=true;
        	 }else{
        		 returnValue=false; 
@@ -921,97 +916,5 @@ public class UnifyPayController extends BaseControllerUtil{
             log.info("body:" + response.getBody());
         }
     }
- // 测试当面付2.0支付
-    public void test_trade_pay(AlipayTradeService service) {
-        // (必填) 商户网站订单系统中唯一订单号，64个字符以内，只能包含字母、数字、下划线，
-        // 需保证商户系统端不能重复，建议通过数据库sequence生成，
-        String outTradeNo = "tradepay" + System.currentTimeMillis() + (long)(Math.random() * 10000000L);
 
-        // (必填) 订单标题，粗略描述用户的支付目的。如“喜士多（浦东店）消费”
-        String subject = "条码支付-消费";
-
-        // (必填) 订单总金额，单位为元，不能超过1亿元
-        // 如果同时传入了【打折金额】,【不可打折金额】,【订单总金额】三者,则必须满足如下条件:【订单总金额】=【打折金额】+【不可打折金额】
-        String totalAmount = "0.01";
-
-        // (必填) 付款条码，用户支付宝钱包手机app点击“付款”产生的付款条码
-//        String authCode = "286648048691290423";   // 未用条码
-//        String authCode = "286399918342265510"; // 已用条码
-        String authCode = "287231759284359794"; // 已用条码
-
-        // (不推荐使用) 订单可打折金额，可以配合商家平台配置折扣活动，如果订单部分商品参与打折，可以将部分商品总价填写至此字段，默认全部商品可打折
-        // 如果该值未传入,但传入了【订单总金额】,【不可打折金额】 则该值默认为【订单总金额】- 【不可打折金额】
-//        String discountableAmount = "1.00"; //
-
-        // (可选) 订单不可打折金额，可以配合商家平台配置折扣活动，如果酒水不参与打折，则将对应金额填写至此字段
-        // 如果该值未传入,但传入了【订单总金额】,【打折金额】,则该值默认为【订单总金额】-【打折金额】
-        String undiscountableAmount = "0.0";
-
-        // 卖家支付宝账号ID，用于支持一个签约账号下支持打款到不同的收款账号，(打款到sellerId对应的支付宝账号)
-        // 如果该字段为空，则默认为与支付宝签约的商户的PID，也就是appid对应的PID
-        String sellerId = "";
-
-        // 订单描述，可以对交易或商品进行一个详细地描述，比如填写"购买商品2件共15.00元"
-        String body = "购买商品2件共15.00元";
-
-        // 商户操作员编号，添加此参数可以为商户操作员做销售统计
-        String operatorId = "test_operator_id";
-
-        // (必填) 商户门店编号，通过门店号和商家后台可以配置精准到门店的折扣信息，详询支付宝技术支持
-        String storeId = "test_store_id";
-
-        // 业务扩展参数，目前可添加由支付宝分配的系统商编号(通过setSysServiceProviderId方法)，详情请咨询支付宝技术支持
-        String providerId = "2088100200300400500";
-        ExtendParams extendParams = new ExtendParams();
-        extendParams.setSysServiceProviderId(providerId);
-
-        // 支付超时，线下扫码交易定义为5分钟
-        String timeExpress = "5m";
-
-        // 商品明细列表，需填写购买商品详细信息，
-        List<GoodsDetail> goodsDetailList = new ArrayList<GoodsDetail>();
-        // 创建一个商品信息，参数含义分别为商品id（使用国标）、名称、单价（单位为分）、数量，如果需要添加商品类别，详见GoodsDetail
-        GoodsDetail goods1 = GoodsDetail.newInstance("goods_id001", "xx小面包", 1500, 1);
-        // 创建好一个商品后添加至商品明细列表
-        goodsDetailList.add(goods1);
-
-        // 继续创建并添加第一条商品信息，用户购买的产品为“xx牙刷”，单价为5.05元，购买了两件
-        GoodsDetail goods2 = GoodsDetail.newInstance("goods_id002", "xx牙刷", 505, 2);
-        goodsDetailList.add(goods2);
-
-        // 创建请求builder，设置请求参数
-        AlipayTradePayContentBuilder builder = new AlipayTradePayContentBuilder()
-                .setOutTradeNo(outTradeNo)
-                .setSubject(subject)
-                .setAuthCode(authCode)
-                .setTotalAmount(totalAmount)
-                .setStoreId(storeId)
-                .setUndiscountableAmount(undiscountableAmount)
-                .setBody(body)
-                .setOperatorId(operatorId)
-                .setExtendParams(extendParams)
-                .setSellerId(sellerId)
-                .setGoodsDetailList(goodsDetailList)
-                .setTimeExpress(timeExpress);
-
-        // 调用tradePay方法获取当面付应答
-        AlipayF2FPayResult result = service.tradePay(builder);
-        switch (result.getTradeStatus()) {
-            case SUCCESS:
-                log.info("支付宝支付成功: )");
-                break;
-
-            case FAILED:
-                log.error("支付宝支付失败!!!");
-                break;
-
-            case UNKNOWN:
-                log.error("系统异常，订单状态未知!!!");
-                break;
-
-            default:
-                log.error("不支持的交易状态，交易返回异常!!!");
-                break;
-        }
-    }
 }
