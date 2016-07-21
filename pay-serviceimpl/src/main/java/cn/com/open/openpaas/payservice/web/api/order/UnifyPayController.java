@@ -334,6 +334,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("goodsDesc", goodsDesc);
 				 model.addAttribute("goodsId", goodsId);
 				 model.addAttribute("merchantId", merchantId);
+				 model.addAttribute("paymentType", paymentType);
 				 return "pay/payIndex";
 		        }else{
 		        	merchantOrderInfo=merchantOrderInfoService.findById(newId);
@@ -637,11 +638,13 @@ public class UnifyPayController extends BaseControllerUtil{
     	String goodsDesc=request.getParameter("goodsDesc");
     	String goodsId=request.getParameter("goodsId");
     	String merchantId=request.getParameter("merchantId");
+//    	String paymentType=request.getParameter("paymentType");
     	String pay_switch = payserviceDev.getPay_switch();
     	String paySwitch []=pay_switch.split("#");
     	String payZhifubao = paySwitch[0];
     	String payWx=paySwitch[1];
     	String payTcl = paySwitch[2];
+    	String payEbank = paySwitch[3];
     	
     	String areaCode=request.getParameter("areaCode");
     	String outTradeNo=request.getParameter("outTradeNo");
@@ -673,8 +676,6 @@ public class UnifyPayController extends BaseControllerUtil{
              		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
             	 }else{
             		 
-            		 
-            		 
             		 WxpayInfo payInfo=new WxpayInfo();
                    	 payInfo.setAppid(payserviceDev.getWx_app_id());
                    	 //payInfo.setDevice_info("WEB");
@@ -704,16 +705,28 @@ public class UnifyPayController extends BaseControllerUtil{
         			response.sendRedirect(URL);
             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
             	}else{
-            		
+            		//银联支付给自己带开发
             	}
             	
               }else{
-            	  String newareaCode=getAreaCode(areaCode);
-            	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
-      			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels));
-      			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-      			response.setCharacterEncoding("UTF-8");
-      			response.sendRedirect(URL);
+            	  if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
+            		  String newareaCode=getAreaCode(areaCode);
+                	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
+          			  String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels));
+          			  String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
+          			  response.setCharacterEncoding("UTF-8");
+          			  response.sendRedirect(URL);
+            	  }else{
+            		// 支付宝-网银支付
+     		    	 if(!(PaymentType.UPOP.getValue()+"").equals(areaCode)&&!(PaymentType.WEIXIN.getValue()+"").equals(areaCode)&&!(PaymentType.ALIPAY.getValue()+"").equals(areaCode)){ 
+     		    		 String defaultbank=getAreaCode(areaCode);
+     		    		 String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
+     		    		 String fullUri=payserviceDev.getAli_pay_url()+"?"+url;
+     		    		 response.sendRedirect(fullUri.replace("redirect:", ""));
+     		    	 }
+            		  
+            	  }
+            	  
               }
     	}
        
@@ -793,27 +806,27 @@ public class UnifyPayController extends BaseControllerUtil{
     public String getAreaCode(String areaCode){
     	String newAreaCode="";
     	
-    	if(!nullEmptyBlankJudge(areaCode)&&"4".equals(areaCode)){
+    	if(!nullEmptyBlankJudge(areaCode)&&"10001".equals(areaCode)){
     		newAreaCode="CMB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"5".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10002".equals(areaCode)){
     		newAreaCode="ICBC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"6".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10003".equals(areaCode)){
     		newAreaCode="CCB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"7".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10004".equals(areaCode)){
     		newAreaCode="ABC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"8".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10005".equals(areaCode)){
     		newAreaCode="BOC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"9".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10006".equals(areaCode)){
     		newAreaCode="BCOM";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10007".equals(areaCode)){
     		newAreaCode="PSBC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"11".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10008".equals(areaCode)){
     		newAreaCode="CGB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"12".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10009".equals(areaCode)){
     		newAreaCode="SPDB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"13".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"100010".equals(areaCode)){
     		newAreaCode="CEB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"14".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10011".equals(areaCode)){
     		newAreaCode="PAB";
     	}
     	return newAreaCode;
