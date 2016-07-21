@@ -15,8 +15,6 @@
 <input type="hidden" name="appId" value="${appId}" id="appId"/>
 <input type="hidden" name="goodsName" value="${goodsName}" id="goodsName"/>
 <input type="hidden" name="totalFee" value="${totalFeeValue}" id="totalFee"/>
-<input type="hidden" name="payZhifubao" value="${payZhifubao}" id="payZhifubao"/>
-<input type="hidden" name="payTcl" value="${payTcl}" id="payTcl"/>
 <input type="hidden" name="goodsDesc" value="${goodsDesc}" id="goodsDesc"/>
 <input type="hidden" name="goodsId" value="${goodsId}" id="goodsId"/>
 <input type="hidden" name="merchantId" value="${merchantId}" id="merchantId"/>
@@ -116,17 +114,17 @@
 			</ul>
 			<h3 class="tit">银行借记卡及信用卡</h3>
 			<ul>
-				<li value="4"><img src="${pageContext.request.contextPath}/images/zhaohang.jpg" /></li>
-				<li value="5"><img src="${pageContext.request.contextPath}/images/gonghang.jpg" /></li>
-				<li value="6"><img src="${pageContext.request.contextPath}/images/jianhang.jpg" /></li>
-				<li value="7"><img src="${pageContext.request.contextPath}/images/nonghang.jpg" /></li>
-				<li value="8"><img src="${pageContext.request.contextPath}/images/zhonghang.jpg" /></li>
-				<li value="9"><img src="${pageContext.request.contextPath}/images/jiaohang.jpg" /></li>
-				<li value="10"><img src="${pageContext.request.contextPath}/images/youzheng.jpg" /></li>
-				<li value="11"><img src="${pageContext.request.contextPath}/images/guangfa.jpg" /></li>
-				<li value="12"><img src="${pageContext.request.contextPath}/images/pufa.jpg" /></li>
-				<li value="13"><img src="${pageContext.request.contextPath}/images/guangda.jpg" /></li>
-				<li value="14"><img src="${pageContext.request.contextPath}/images/pingan.jpg" /></li>
+				<li value="10001"><img src="${pageContext.request.contextPath}/images/zhaohang.jpg" /></li>
+				<li value="10002"><img src="${pageContext.request.contextPath}/images/gonghang.jpg" /></li>
+				<li value="10003"><img src="${pageContext.request.contextPath}/images/jianhang.jpg" /></li>
+				<li value="10004"><img src="${pageContext.request.contextPath}/images/nonghang.jpg" /></li>
+				<li value="10005"><img src="${pageContext.request.contextPath}/images/zhonghang.jpg" /></li>
+				<li value="10006"><img src="${pageContext.request.contextPath}/images/jiaohang.jpg" /></li>
+				<li value="10007"><img src="${pageContext.request.contextPath}/images/youzheng.jpg" /></li>
+				<li value="10008"><img src="${pageContext.request.contextPath}/images/guangfa.jpg" /></li>
+				<li value="10009"><img src="${pageContext.request.contextPath}/images/pufa.jpg" /></li>
+				<li value="10010"><img src="${pageContext.request.contextPath}/images/guangda.jpg" /></li>
+				<li value="10011"><img src="${pageContext.request.contextPath}/images/pingan.jpg" /></li>
 				<li>查看更多</li>
 			</ul>
 			<div class="box" >
@@ -236,6 +234,10 @@
 				 dataType:'text',
 				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId,
 				 success: function(date){
+					  var obj = JSON.parse(date);
+					  alert(obj);
+					 
+					 
 					   urlCode=date;
 					   console.log(urlCode+"==urlCode");
 					   $(".mask").show();
