@@ -150,7 +150,11 @@
 	<div>
 		<div class="phone"><img src="${pageContext.request.contextPath}/images/phone.jpg" /></div>
 		<div class="erweimaBox">
-			<div class="erweima"><div id="payCode"></div></div>
+			<div class="erweima" id="erweima">
+			   
+			<div id="payCode">
+			</div>
+			</div>
 			<p>请使用微信扫一扫<br>扫描二维码支付</p>
 		</div>
 	</div>
@@ -237,7 +241,14 @@
 					   $(".mask").show();
 				       $(".payLayer").show();
 				       $("#payCode").empty();
-				       $('#payCode').qrcode(urlCode);// 生成二维码
+					   var status = date.slice(2,8);
+					   if(status!="status"){
+						   $('#payCode').qrcode(urlCode);// 生成二维码
+					   }else{
+						   var urlDu = date.split(",")[1];
+						   var url=urlDu.slice(10,urlDu.length-1);
+						   document.getElementById("erweima").innerHTML="<img src="+url+" width='260' height='260'>";
+					   }
 				       $("#load-print").hide();
 				      
 				   }
