@@ -362,12 +362,6 @@ public class UnifyPayController extends BaseControllerUtil{
 	        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
 	            		//调用支付宝当面付方法  
 	        			test_trade_precreate(merchantOrderInfo.getMerchantOrderId(),merchantOrderInfo.getMerchantProductName(),String.valueOf(merchantOrderInfo.getOrderAmount()),"0","",String.valueOf(merchantOrderInfo.getMerchantId()),merchantOrderInfo.getMerchantProductDesc(),"test_operator_id","120m");
-	            	}else{
-	            		// 支付宝-网银支付
-	            		String defaultbank=getDefaultbank(paymentType);
-	            		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
-	            		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
-	            		
 	            	}
 		    	 
 		     }if(!nullEmptyBlankJudge(payZhifubao)&&"1".equals(payZhifubao)){
