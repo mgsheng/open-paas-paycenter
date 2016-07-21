@@ -135,16 +135,14 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping("unifyPay")
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
-    	long startTime=System.currentTimeMillis();
     	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
     	String paySwitch []=pay_switch.split("#");
     	String payZhifubao = paySwitch[0];
     	String payWx=paySwitch[1];
     	String payTcl = paySwitch[2];
+    	String payEbank = paySwitch[3];
     	
-    	String pay_channle = payserviceDev.getPay_channle();
-    	System.out.println(pay_switch);
     	String userName=request.getParameter("userName");
         String userId = request.getParameter("userId");
         String merchantId = request.getParameter("merchantId");
@@ -335,91 +333,104 @@ public class UnifyPayController extends BaseControllerUtil{
 		            	merchantOrderInfoService.updateOrderInfo(merchantOrderInfo);
 		        	}        	
 		        	UnifyPayControllerLog.log(merchantOrderInfo.getMerchantOrderId(), userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-		        	if((Channel.ALI.getValue()+"").equals(paymentChannel)){
-		        		//支付宝-即时到账支付
-		        		if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
-		            		//调用支付宝即时支付方法  
-		                	String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
-		                		//response.sendRedirect(url.replace("redirect:", ""));
-		                	return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
-		        			
-		            	}//支付宝-即时到账支付
-		        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
-		            		//调用支付宝当面付方法  
-		        			test_trade_precreate(merchantOrderInfo.getMerchantOrderId(),merchantOrderInfo.getMerchantProductName(),String.valueOf(merchantOrderInfo.getOrderAmount()),"0","",String.valueOf(merchantOrderInfo.getMerchantId()),merchantOrderInfo.getMerchantProductDesc(),"test_operator_id","120m");
-		            	}else{
-		            		// 支付宝-网银支付
-		            		String defaultbank=getDefaultbank(paymentType);
-		            		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
-		            		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
-		            		
-		            	}
-		        		
-		        	}else if((Channel.WEIXIN.getValue()+"").equals(paymentChannel)){
-		        		//微信-扫码支付
-		        		if((PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
-		                	WxpayInfo payInfo=new WxpayInfo();
-		                   	 payInfo.setAppid(payserviceDev.getWx_app_id());
-		                   	 //payInfo.setDevice_info("WEB");
-		                   	 payInfo.setMch_id(payserviceDev.getWx_mch_id());
-		                   	 payInfo.setNonce_str(WxPayCommonUtil.create_nonce_str());
-		                   	 payInfo.setBody(goodsDesc);
-		                   	 //payInfo.setAttach("某某分店");
-		                   	 payInfo.setOut_trade_no(merchantOrderInfo.getId());
-		                   	 payInfo.setProduct_id(goodsId);
-		                   	 payInfo.setTotal_fee(Integer.parseInt(totalFee));
-		                   	 payInfo.setSpbill_create_ip(payserviceDev.getWx_spbill_create_ip());
-		                   	 payInfo.setNotify_url(payserviceDev.getWx_notify_url());
-		                   	 payInfo.setTrade_type(payserviceDev.getWx_trade_type());
-		                   	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
-		                    //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
-		                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
-		                	 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode;
-		                	  return "redirect:" + fullUri;
-		        		}
-		        	}else if((Channel.TCL.getValue()+"").equals(paymentChannel)){
-		        		//TCL转账
-		        		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
-		        	     if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
-		         			ScanCodeOrderService scanCode = new ScanCodeOrderService();
-		         			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
-		         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-		         			return "redirect:" + URL;
-		         			//response.sendRedirect(URL);
-		              }
-		              else if((PaymentType.WEIXIN.getValue()).equals(paymentType)){
-		            	  //TCL微信
-		              		ScanCodeOrderService scanCode = new ScanCodeOrderService();
-		             		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
-		             		//response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
-		             		 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+qr_code_url;
-		                	  return "redirect:" + fullUri;
-		             		// response.getWriter().print(qr_code_url);
-		             } else if((PaymentType.UPOP.getValue()).equals(paymentType)){
-		            	 //银联支付
-		             	ScanCodeOrderService scanCode = new ScanCodeOrderService();
-		     			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
-		     			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-		     			//response.sendRedirect(URL);
-		     			return "redirect:" + URL;
-		               }else{
-		            	   //TCL直连银行
-		             	 ScanCodeOrderService scanCode = new ScanCodeOrderService();
-		       			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels));
-		       			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-		       			return "redirect:" + URL;
-		       			//response.sendRedirect(URL);
-		               }
-		        		
-		        	}else{
-		        		UnifyPayControllerLog.log(merchantOrderInfo.getMerchantOrderId(), userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-		            	//跳转到错误页面
-		        		 String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
+		        	
+		      //payZhifubao     payWx	 payTcl
+		        	
+		     if(!nullEmptyBlankJudge(payZhifubao)&&"0".equals(payZhifubao)){
+		    	//支付宝-即时到账支付
+	        		if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
+	            		//调用支付宝即时支付方法  
+	                	String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
+	                		//response.sendRedirect(url.replace("redirect:", ""));
+	                	return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
+	        			
+	            	}//支付宝-即时到账支付
+	        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
+	            		//调用支付宝当面付方法  
+	        			test_trade_precreate(merchantOrderInfo.getMerchantOrderId(),merchantOrderInfo.getMerchantProductName(),String.valueOf(merchantOrderInfo.getOrderAmount()),"0","",String.valueOf(merchantOrderInfo.getMerchantId()),merchantOrderInfo.getMerchantProductDesc(),"test_operator_id","120m");
+	            	}else{
+	            		// 支付宝-网银支付
+	            		String defaultbank=getDefaultbank(paymentType);
+	            		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
+	            		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
+	            		
+	            	}
+		    	 
+		     }if(!nullEmptyBlankJudge(payZhifubao)&&"1".equals(payZhifubao)){
+			    	//支付宝-即时到账支付
+		    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
+		    	  if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
+		    			
+	         			ScanCodeOrderService scanCode = new ScanCodeOrderService();
+	         			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
+	         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
+	         			return "redirect:" + URL;
+	         			//response.sendRedirect(URL);
+	              }
+		     	}
+		     if(!nullEmptyBlankJudge(payWx)&&"0".equals(payWx)){
+		    		//微信-扫码支付
+	        		if((PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
+	                	WxpayInfo payInfo=new WxpayInfo();
+	                   	 payInfo.setAppid(payserviceDev.getWx_app_id());
+	                   	 //payInfo.setDevice_info("WEB");
+	                   	 payInfo.setMch_id(payserviceDev.getWx_mch_id());
+	                   	 payInfo.setNonce_str(WxPayCommonUtil.create_nonce_str());
+	                   	 payInfo.setBody(goodsDesc);
+	                   	 //payInfo.setAttach("某某分店");
+	                   	 payInfo.setOut_trade_no(merchantOrderInfo.getId());
+	                   	 payInfo.setProduct_id(goodsId);
+	                   	 payInfo.setTotal_fee(Integer.parseInt(totalFee));
+	                   	 payInfo.setSpbill_create_ip(payserviceDev.getWx_spbill_create_ip());
+	                   	 payInfo.setNotify_url(payserviceDev.getWx_notify_url());
+	                   	 payInfo.setTrade_type(payserviceDev.getWx_trade_type());
+	                   	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
+	                    //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+	                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
+	                	 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode;
 	                	  return "redirect:" + fullUri;
-		    			//response.sendRedirect("errorPayChannel");
-		        	}
+	        		}
+		    	 
+		     	}  	
+		     if(!nullEmptyBlankJudge(payWx)&&"1".equals(payWx)){
+		    	 //TCL微信
+		    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
+           		ScanCodeOrderService scanCode = new ScanCodeOrderService();
+          		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
+          		//response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
+          		 String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+qr_code_url;
+             	  return "redirect:" + fullUri;
+		    	 
+		     	}  		
+		     if(!nullEmptyBlankJudge(payTcl)&&"0".equals(payTcl)){
+		    	 
+		     	}  	
+		     if(!nullEmptyBlankJudge(payTcl)&&"1".equals(payTcl)){
+		    	 //TCL微信
+		    	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
+		   	 //银联支付
+             	ScanCodeOrderService scanCode = new ScanCodeOrderService();
+     			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
+     			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
+     			//response.sendRedirect(URL);
+     			return "redirect:" + URL;	 
+		     }
+		        	
+		     if(!nullEmptyBlankJudge(payEbank)&&"0".equals(payEbank)){
+		    	// 支付宝-网银支付
+         		String defaultbank=getDefaultbank(paymentType);
+         		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
+         		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
+		     	}  	
+		     if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
+		  	   //TCL直连银行
+		    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
+             	 ScanCodeOrderService scanCode = new ScanCodeOrderService();
+       			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels));
+       			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
+       			return "redirect:" + URL;
+		     	}  		      	
 		        }
-
 		  String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
        	  return "redirect:" + fullUri;
     }	
@@ -481,9 +492,19 @@ public class UnifyPayController extends BaseControllerUtil{
     	 }else{
     		 returnValue=false; 
     	 }
-    	}if(paymentChannel!=null&&paymentChannel.equals(Channel.TCL.getValue()+"")){
-    		 returnValue=true;
-    	}
+    	}if(paymentChannel!=null&&paymentChannel.equals(Channel.EBANK.getValue()+"")){
+    		if(paymentType!=null&&(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){
+       		 returnValue=true;
+       	 }else{
+       		 returnValue=false; 
+       	 }
+    	}if(paymentChannel!=null&&paymentChannel.equals(Channel.UPOP.getValue()+"")){
+    		if(paymentType!=null&&PaymentType.UPOP.getValue().equals(paymentType)){
+          		 returnValue=true;
+          	 }else{
+          		 returnValue=false; 
+          	 }
+       	}
     	return returnValue;
     }
  
