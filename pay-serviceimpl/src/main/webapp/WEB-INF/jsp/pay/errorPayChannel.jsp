@@ -16,7 +16,7 @@
 		<div class="header-box">
 			<span class="logo">
 				<img src="${pageContext.request.contextPath}/images/open-logo.png" />
-				<h3>错误界面</h3>
+				<h3 style="display: initial;">奥鹏教育</h3>
 			</span>
 		</div>
 		

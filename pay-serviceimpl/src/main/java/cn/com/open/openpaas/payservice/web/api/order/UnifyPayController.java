@@ -46,7 +46,6 @@ import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.payment.service.DictTradePaymentService;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
@@ -61,11 +60,8 @@ import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandl
 import com.alipay.api.AlipayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.demo.trade.config.Configs;
-import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.GoodsDetail;
-import com.alipay.demo.trade.model.builder.AlipayTradePayContentBuilder;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateContentBuilder;
-import com.alipay.demo.trade.model.result.AlipayF2FPayResult;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayMonitorService;
 import com.alipay.demo.trade.service.AlipayTradeService;
@@ -227,9 +223,9 @@ public class UnifyPayController extends BaseControllerUtil{
         //认证
        // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
 		if(!hmacSHA1Verification){
-			paraMandaChkAndReturn(3, response,"认证失败");
+			//paraMandaChkAndReturn(3, response,"认证失败");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
-        	return "redirect:" + fullUri;
+        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
 		} 
     	
         if(!StringTool.isNumeric(totalFee)){
@@ -432,13 +428,24 @@ public class UnifyPayController extends BaseControllerUtil{
 		    	 }
 		     	}  	
 		     if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
+		    	 
+		    	 
+		    	 
 		  	   //TCL直连银行
 		    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
-		    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
-             	 ScanCodeOrderService scanCode = new ScanCodeOrderService();
-       			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels));
-       			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-       			return "redirect:" + URL;
+		    		 
+		    	if(PaymentType.SPDB.getValue().equals(paymentType)){
+		    		String defaultbank=getDefaultbank(paymentType);
+	         		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
+	         		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;	
+		    	}else{
+		    		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
+	             	 ScanCodeOrderService scanCode = new ScanCodeOrderService();
+	       			String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels));
+	       			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
+	       			return "redirect:" + URL;
+		    	  }	 
+		    	
 		    	 }
 		     	 }  		      	
 		        }
@@ -471,7 +478,7 @@ public class UnifyPayController extends BaseControllerUtil{
  		 }if(PaymentType.PSBC.getValue().equals(paymentType)){
 			   returnValue="POSTGC";
  		 }if(PaymentType.CGB.getValue().equals(paymentType)){
-			   returnValue="CGB";
+			   returnValue="GDB";
  		 }if(PaymentType.SPDB.getValue().equals(paymentType)){
 			   returnValue="SPDB";
  		 }if(PaymentType.CEB.getValue().equals(paymentType)){
