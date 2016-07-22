@@ -255,10 +255,6 @@
 				 dataType:'text',
 				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId,
 				 success: function(date){
-					  var obj = JSON.parse(date);
-					  alert(obj);
-					 
-					 
 					   urlCode=date;
 					   console.log(urlCode+"==urlCode");
 					   $(".mask").show();
