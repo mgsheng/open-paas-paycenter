@@ -14,6 +14,7 @@ import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytHttpsClient;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytUtils;
+import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 
 
 /**
@@ -146,6 +147,30 @@ public class ScanCodeOrderService {
 					+ merchant_sign + HytConstants.SYMBOL_AND
 					+ HytParamKeys.MERCHANT_CERT + HytConstants.SYMBOL_EQUAL
 					+ merchant_cert;
+			System.out.println("==================request===============>>>>"
+					+ buf);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return buf;
+	}
+	/**
+	 * 扫码订单提交
+	 * 
+	 * @param dataMap
+	 */
+	public String bulidPostRequest(Map<String, String> dataMap,String url) {
+		RSASign util = HytUtils.getRSASignObject();
+		String reqData = HytPacketUtils.map2Str(dataMap);
+		String buf ="";
+		try {
+			String merchant_sign = util.sign(reqData, "GBK");
+			String merchant_cert = util.getCertInfo();
+			dataMap.put("merchant_sign", merchant_sign);
+			dataMap.put("merchant_cert", merchant_cert);
+			buf =SendPostMethod.buildRequest(dataMap, "post", "ok", url);
 			System.out.println("==================request===============>>>>"
 					+ buf);
 		} catch (UnsupportedEncodingException e) {
