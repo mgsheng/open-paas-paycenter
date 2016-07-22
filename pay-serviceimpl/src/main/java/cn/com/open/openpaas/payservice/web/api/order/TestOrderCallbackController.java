@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayConfig;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
@@ -52,7 +53,7 @@ public class TestOrderCallbackController extends BaseControllerUtil {
 	 * @throws DocumentException 
 	 * @throws MalformedURLException 
 	 */
-	@RequestMapping("callBack")
+	@RequestMapping(value = "callBack", method = RequestMethod.POST)
 	public void testDirctPay(HttpServletRequest request,HttpServletResponse response) throws MalformedURLException, DocumentException, IOException {
 	/*	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId("test20160517","10026");
 		String newId="";

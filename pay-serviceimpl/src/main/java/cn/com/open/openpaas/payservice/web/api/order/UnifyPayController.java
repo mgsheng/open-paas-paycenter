@@ -153,12 +153,12 @@ public class UnifyPayController extends BaseControllerUtil{
     	}
     	
     	String goodsTag="";
-    	if (!nullEmptyBlankJudge(request.getParameter("goodsDesc"))){
+    	if (!nullEmptyBlankJudge(request.getParameter("goodsTag"))){
     		goodsTag=new String(request.getParameter("goodsTag").getBytes("iso-8859-1"),"utf-8");
     	}
     	String showUrl=request.getParameter("showUrl");
     	String buyerRealName="";
-    	if (!nullEmptyBlankJudge(request.getParameter("goodsDesc"))){
+    	if (!nullEmptyBlankJudge(request.getParameter("buyerRealName"))){
     		buyerRealName=new String(request.getParameter("buyerRealName").getBytes("iso-8859-1"),"utf-8");
     	}
     	String buyerCertNo=request.getParameter("buyerCertNo");
@@ -170,7 +170,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	String feeType=request.getParameter("feeType");
     	String clientIp=request.getParameter("clientIp");
     	String parameter="";
-    	if (!nullEmptyBlankJudge(request.getParameter("goodsDesc"))){
+    	if (!nullEmptyBlankJudge(request.getParameter("parameter"))){
     		parameter=new String(request.getParameter("parameter").getBytes("iso-8859-1"),"utf-8");
     	}
     			
@@ -182,9 +182,9 @@ public class UnifyPayController extends BaseControllerUtil{
     	Map<String ,Object> map=new HashMap<String,Object>();
     	
         if(!paraMandatoryCheck(Arrays.asList(outTradeNo,userId,merchantId,goodsName,totalFee))){
-        	paraMandaChkAndReturn(3, response,"必传参数中有空值");
+        	//paraMandaChkAndReturn(1, response,"必传参数中有空值");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-        	return "";
+        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
         }
         //判断用户是否存在
         /*if(userId!=null && !("").equals(userId)){
@@ -192,9 +192,9 @@ public class UnifyPayController extends BaseControllerUtil{
         }*/
     	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
     	if(merchantInfo==null){
-        	paraMandaChkAndReturn(3, response,"商户ID不存在");
+        	//paraMandaChkAndReturn(2, response,"商户ID不存在");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
-        	return "";
+        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
         }
     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
     	sParaTemp.put("appId",appId);
@@ -227,15 +227,15 @@ public class UnifyPayController extends BaseControllerUtil{
         //认证
        // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
 		if(!hmacSHA1Verification){
-			paraMandaChkAndReturn(1, response,"认证失败");
+			paraMandaChkAndReturn(3, response,"认证失败");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
         	return "redirect:" + fullUri;
 		} 
     	
         if(!StringTool.isNumeric(totalFee)){
-        	paraMandaChkAndReturn(3, response,"订单金额格式有误");
+        	//paraMandaChkAndReturn(3, response,"订单金额格式有误");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
-        	return "redirect:" + fullUri;
+        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
         }
       /*  if(!("CNY").equals(feeType)){
         	paraMandaChkAndReturn(3, response,"金额类型有误");
@@ -244,9 +244,9 @@ public class UnifyPayController extends BaseControllerUtil{
         }*/ 
        Boolean payType=validatePayType(paymentChannel,paymentType);
         if(!payType){
-        	paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
+        	//paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
         	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
-			return "redirect:" + fullUri;
+        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
         }
 		String newId="";
 		newId=SysUtil.careatePayOrderId();
@@ -523,7 +523,21 @@ public class UnifyPayController extends BaseControllerUtil{
      * 跳转到错误页面
      */
     @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public String errorPayChannel(HttpServletRequest request, Model model){
+    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo){
+    	String errorMsg="";
+    	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+    		errorMsg="必传参数中有空值";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+    		errorMsg="订单金额有误";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+    		errorMsg="所选支付渠道与支付类型不匹配";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+    		errorMsg="商户ID不存在";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+    		errorMsg="所选支付渠道与支付类型不匹配";
+    	}
+    	model.addAttribute("outTradeNo", outTradeNo);
+    	model.addAttribute("errorMsg", errorMsg);
     	return "pay/errorPayChannel";
     }	
 
