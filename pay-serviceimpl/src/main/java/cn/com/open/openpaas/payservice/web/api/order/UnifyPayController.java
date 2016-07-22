@@ -731,9 +731,11 @@ public class UnifyPayController extends BaseControllerUtil{
           			  response.setCharacterEncoding("UTF-8");
           			  response.sendRedirect(URL);
             	  }else{
+            		  
             		// 支付宝-网银支付
      		    	 if(!(PaymentType.UPOP.getValue()+"").equals(areaCode)&&!(PaymentType.WEIXIN.getValue()+"").equals(areaCode)&&!(PaymentType.ALIPAY.getValue()+"").equals(areaCode)){ 
-     		    		 String defaultbank=getAreaCode(areaCode);
+     		    		 String defaultbank=getDefaultbank(areaCode);
+//     		    		 String defaultbank=getAreaCode(areaCode);
      		    		 String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
      		    		 String fullUri=payserviceDev.getAli_pay_url()+"?"+url;
      		    		 response.sendRedirect(fullUri.replace("redirect:", ""));
@@ -745,6 +747,11 @@ public class UnifyPayController extends BaseControllerUtil{
     	}
        
     }
+    
+    
+    
+    
+   
     
     /**selectAccomplish
      * 查询支付结果获取状态
@@ -838,7 +845,7 @@ public class UnifyPayController extends BaseControllerUtil{
     		newAreaCode="CGB";
     	}if(!nullEmptyBlankJudge(areaCode)&&"10009".equals(areaCode)){
     		newAreaCode="SPDB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"100010".equals(areaCode)){
+    	}if(!nullEmptyBlankJudge(areaCode)&&"10010".equals(areaCode)){
     		newAreaCode="CEB";
     	}if(!nullEmptyBlankJudge(areaCode)&&"10011".equals(areaCode)){
     		newAreaCode="PAB";

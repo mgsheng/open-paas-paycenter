@@ -196,11 +196,32 @@
 	 var appId=$("#appId").val();
 
 	$(".pay-method li").click(function(){
-	    
 		$(".pay-method li").removeClass('active');
 		$(this).addClass('active');
 		areaCode=$(this).attr("value");
-		$("#areaCode").val(areaCode);
+		if(areaCode=="10001"){
+			$("#areaCode").val("CMB");
+		}else if(areaCode=="10002"){
+			$("#areaCode").val("ICBC");
+		}else if(areaCode=="10003"){
+			$("#areaCode").val("CCB");
+		}else if(areaCode=="10004"){
+			$("#areaCode").val("ABC");
+		}else if(areaCode=="10005"){
+			$("#areaCode").val("BOC");
+		}else if(areaCode=="10006"){
+			$("#areaCode").val("BCOM");
+		}else if(areaCode=="10007"){
+			$("#areaCode").val("PSBC");
+		}else if(areaCode=="10008"){
+			$("#areaCode").val("CGB");
+		}else if(areaCode=="10009"){
+			$("#areaCode").val("SPDB");
+		}else if(areaCode=="10010"){
+			$("#areaCode").val("CEB");
+		}else if(areaCode=="10011"){
+			$("#areaCode").val("PAB");
+		}
 		console.log(areaCode+"==areaCode");
 	});
 	$("#weixinPay").bind("click",function(){
