@@ -696,7 +696,6 @@ public class UnifyPayController extends BaseControllerUtil{
              		// response.getWriter().print(qr_code_url);
              		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
             	 }else{
-            		 
             		 WxpayInfo payInfo=new WxpayInfo();
                    	 payInfo.setAppid(payserviceDev.getWx_app_id());
                    	 //payInfo.setDevice_info("WEB");
@@ -728,7 +727,6 @@ public class UnifyPayController extends BaseControllerUtil{
             	}else{
             		//银联支付给自己带开发
             	}
-            	
               }else{
             	  if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
             		  String newareaCode=getAreaCode(areaCode);
@@ -742,17 +740,13 @@ public class UnifyPayController extends BaseControllerUtil{
             		// 支付宝-网银支付
      		    	 if(!(PaymentType.UPOP.getValue()+"").equals(areaCode)&&!(PaymentType.WEIXIN.getValue()+"").equals(areaCode)&&!(PaymentType.ALIPAY.getValue()+"").equals(areaCode)){ 
      		    		 String defaultbank=getDefaultbank(areaCode);
-//     		    		 String defaultbank=getAreaCode(areaCode);
      		    		 String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getMerchantOrderId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
      		    		 String fullUri=payserviceDev.getAli_pay_url()+"?"+url;
      		    		 response.sendRedirect(fullUri.replace("redirect:", ""));
      		    	 }
-            		  
             	  }
-            	  
               }
     	}
-       
     }
     
     
@@ -823,43 +817,44 @@ public class UnifyPayController extends BaseControllerUtil{
 //    			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
 //    			response.setCharacterEncoding("GBK");
 //    			response.sendRedirect(URL);
-            
-    	
-    	
-    	
     	
     }
     
 
     public String getAreaCode(String areaCode){
     	String newAreaCode="";
-    	
-    	if(!nullEmptyBlankJudge(areaCode)&&"10001".equals(areaCode)){
-    		newAreaCode="CMB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10002".equals(areaCode)){
-    		newAreaCode="ICBC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10003".equals(areaCode)){
-    		newAreaCode="CCB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10004".equals(areaCode)){
-    		newAreaCode="ABC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10005".equals(areaCode)){
-    		newAreaCode="BOC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10006".equals(areaCode)){
-    		newAreaCode="BCOM";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10007".equals(areaCode)){
-    		newAreaCode="PSBC";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10008".equals(areaCode)){
-    		newAreaCode="CGB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10009".equals(areaCode)){
-    		newAreaCode="SPDB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10010".equals(areaCode)){
-    		newAreaCode="CEB";
-    	}if(!nullEmptyBlankJudge(areaCode)&&"10011".equals(areaCode)){
-    		newAreaCode="PAB";
+    	if(!nullEmptyBlankJudge(areaCode)){
+    		if(PaymentType.CMB.getValue().equals(areaCode)){
+        		newAreaCode="CMB";
+        	}if(PaymentType.ICBC.getValue().equals(areaCode)){
+        		newAreaCode="ICBC";
+        	}if(PaymentType.CCB.getValue().equals(areaCode)){
+        		newAreaCode="CCB";
+        	}if(PaymentType.ABC.getValue().equals(areaCode)){
+        		newAreaCode="ABC";
+        	}if(PaymentType.BOC.getValue().equals(areaCode)){
+        		newAreaCode="BOC";
+        	}if(PaymentType.BCOM.getValue().equals(areaCode)){
+        		newAreaCode="BCOM";
+        	}if(PaymentType.PSBC.getValue().equals(areaCode)){
+        		newAreaCode="PSBC";
+        	}if(PaymentType.CGB.getValue().equals(areaCode)){
+        		newAreaCode="CGB";
+        	}if(PaymentType.SPDB.getValue().equals(areaCode)){
+        		newAreaCode="SPDB";
+        	}if(PaymentType.CEB.getValue().equals(areaCode)){
+        		newAreaCode="CEB";
+        	}if(PaymentType.PAB.getValue().equals(areaCode)){
+        		newAreaCode="PAB";
+        	}
     	}
-    	return newAreaCode;
-    	
+    	else{
+    		newAreaCode="";  
+  	   }
+  	   return newAreaCode;
     }
+    
+   
  // 测试当面付2.0生成支付二维码
     public void test_trade_precreate(String outTradeNo,String subject,String totalAmount,String undiscountableAmount,String sellerId,String storeId,String body,String operatorId,String timeExpress ) {
         // (必填) 商户网站订单系统中唯一订单号，64个字符以内，只能包含字母、数字、下划线，
