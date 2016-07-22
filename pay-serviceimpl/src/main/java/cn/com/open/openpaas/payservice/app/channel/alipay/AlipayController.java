@@ -60,6 +60,7 @@ public class AlipayController {
 		
     	String partner=others.get("partner");
     	String seller_id=others.get("partner"); 
+    	String it_b_pay=others.get("it_b_pay"); 
         String notify_url =dictTradeChannels.getNotifyUrl();
     	String return_url=dictTradeChannels.getBackurl();
     	//String log_path=request.getParameter("log_path");
@@ -78,6 +79,7 @@ public class AlipayController {
 		sParaTemp.put("anti_phishing_key",AlipaySubmit.query_timestamp());
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
 		sParaTemp.put("out_trade_no", out_trade_no);
+		sParaTemp.put("it_b_pay", it_b_pay);
 		//subject = URLEncoder.encode(subject,"UTF-8");
 		sParaTemp.put("subject", subject);
 		sParaTemp.put("total_fee",total_fee);
@@ -116,6 +118,7 @@ public class AlipayController {
 		
     	String partner=others.get("partner");
     	String seller_id=others.get("partner"); 
+    	String it_b_pay=others.get("it_b_pay"); 
         String notify_url =dictTradeChannels.getNotifyUrl();
     	String return_url=dictTradeChannels.getBackurl();
     	//String log_path=request.getParameter("log_path");
@@ -135,6 +138,7 @@ public class AlipayController {
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
 		sParaTemp.put("out_trade_no", out_trade_no);
 		sParaTemp.put("defaultbank", defaultbank);
+		sParaTemp.put("it_b_pay", it_b_pay);
 		//subject = URLEncoder.encode(subject,"UTF-8");
 		sParaTemp.put("subject", subject);
 		sParaTemp.put("total_fee",total_fee);
@@ -193,24 +197,20 @@ public class AlipayController {
         }
         return mysign;
     }
-    public static Map<String, String> getPartner(String other){
-		if(other==null&&"".equals(other)){
-			return null;
-		}else{
-		String others []=other.split("#");
-		Map<String, String> sParaTemp = new HashMap<String, String>();
-		String partner="";
-		String values="";
-		for (int i=0;i<others.length;i++){
-		   values=others[i];
-		   int j=values.indexOf(":");
-		   if(values.substring(0, j).equals("partner")){
-			   partner=values.substring(j+1,values.length());  
-		   }
+	//sign_type:MD5#payment_type:1#input_charset:utf-8#service:create_direct_pay_by_user#partner:2088801478647757
+		public static Map<String, String> getPartner(String other){
+			if(other==null&&"".equals(other)){
+				return null;
+			}else{
+			String others []=other.split("#");
+			Map<String, String> sParaTemp = new HashMap<String, String>();
+			for (int i=0;i<others.length;i++){
+				String values []=others[i].split(":");
+				   sParaTemp.put(values[0], values[1]);  
+			}
+			
+			return sParaTemp;
+			}
 		}
-		sParaTemp.put("partner", partner);
-		return sParaTemp;
-		}
-	}
 
 }
