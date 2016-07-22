@@ -247,6 +247,8 @@
 	         var totalFee="${totalFeeValue}";
 	         var goodsDesc="${goodsDesc}";
 	         var goodsId="${goodsId}";
+	         $(".mask").show();
+		       $(".payLayer").show();
 	          $.ajax({
 				 type: 'post',
 				 beforeSend:function () {
@@ -257,8 +259,6 @@
 				 success: function(date){
 					   urlCode=date;
 					   console.log(urlCode+"==urlCode");
-					   $(".mask").show();
-				       $(".payLayer").show();
 				       $("#payCode").empty();
 					   var status = date.slice(2,8);
 					   if(status!="status"){
