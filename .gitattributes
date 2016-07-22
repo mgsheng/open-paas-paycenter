@@ -348,6 +348,7 @@ pay-serviceimpl/src/main/webapp/WEB-INF/jsp/oauth_approval.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/oauth_error.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/errorPayChannel.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payIndex.jsp -text
+pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/selectPayChannel.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/wxCodePay.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/unity/dashboard.jsp -text
