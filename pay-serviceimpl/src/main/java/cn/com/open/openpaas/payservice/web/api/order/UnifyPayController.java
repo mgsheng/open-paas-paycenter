@@ -463,27 +463,27 @@ public class UnifyPayController extends BaseControllerUtil{
 	   if(!nullEmptyBlankJudge(paymentType)){
 		 if(PaymentType.CMB.getValue().equals(paymentType)){
 			   returnValue="CMB";
-   		 }if(PaymentType.BOC.getValue().equals(paymentType)){
+   		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
 			   returnValue="BOCB2C";
- 		 }if(PaymentType.ICBC.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
 			   returnValue="ICBCB2C";
- 		 }if(PaymentType.CCB.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.CCB.getValue().equals(paymentType)){
 			   returnValue="CCB";
- 		 }if(PaymentType.ABC.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
 			   returnValue="ABC";
- 		 }if(PaymentType.BOC.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
 			   returnValue="BOCB2C";
- 		 }if(PaymentType.BCOM.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
 			   returnValue="COMM-DEBIT";
- 		 }if(PaymentType.PSBC.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
 			   returnValue="POSTGC";
- 		 }if(PaymentType.CGB.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.CGB.getValue().equals(paymentType)){
 			   returnValue="GDB";
- 		 }if(PaymentType.SPDB.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.SPDB.getValue().equals(paymentType)){
 			   returnValue="SPDB";
- 		 }if(PaymentType.CEB.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.CEB.getValue().equals(paymentType)){
 			   returnValue="CEB-DEBIT";
- 		 }if(PaymentType.PAB.getValue().equals(paymentType)){
+ 		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
 			   returnValue="SPABANK";
 		 }
    		   
@@ -504,19 +504,22 @@ public class UnifyPayController extends BaseControllerUtil{
     	 }else{
     		 returnValue=false; 
     	 }
-    	}if(paymentChannel!=null&&paymentChannel.equals(Channel.WEIXIN.getValue()+"")){
+    	}
+    	else if(paymentChannel!=null&&paymentChannel.equals(Channel.WEIXIN.getValue()+"")){
     	 if(paymentType!=null&&(PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
     		 returnValue=true;
     	 }else{
     		 returnValue=false; 
     	 }
-    	}if(paymentChannel!=null&&paymentChannel.equals(Channel.EBANK.getValue()+"")){
+    	}
+    	else if(paymentChannel!=null&&paymentChannel.equals(Channel.EBANK.getValue()+"")){
     		if(paymentType!=null&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){
        		 returnValue=true;
        	 }else{
        		 returnValue=false; 
        	 }
-    	}if(paymentChannel!=null&&paymentChannel.equals(Channel.UPOP.getValue()+"")){
+    	}
+    	else if(paymentChannel!=null&&paymentChannel.equals(Channel.UPOP.getValue()+"")){
     		if(paymentType!=null&&PaymentType.UPOP.getValue().equals(paymentType)){
           		 returnValue=true;
           	 }else{
@@ -826,25 +829,35 @@ public class UnifyPayController extends BaseControllerUtil{
     	if(!nullEmptyBlankJudge(areaCode)){
     		if(PaymentType.CMB.getValue().equals(areaCode)){
         		newAreaCode="CMB";
-        	}if(PaymentType.ICBC.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.ICBC.getValue().equals(areaCode)){
         		newAreaCode="ICBC";
-        	}if(PaymentType.CCB.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.CCB.getValue().equals(areaCode)){
         		newAreaCode="CCB";
-        	}if(PaymentType.ABC.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.ABC.getValue().equals(areaCode)){
         		newAreaCode="ABC";
-        	}if(PaymentType.BOC.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.BOC.getValue().equals(areaCode)){
         		newAreaCode="BOC";
-        	}if(PaymentType.BCOM.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.BCOM.getValue().equals(areaCode)){
         		newAreaCode="BCOM";
-        	}if(PaymentType.PSBC.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.PSBC.getValue().equals(areaCode)){
         		newAreaCode="PSBC";
-        	}if(PaymentType.CGB.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.CGB.getValue().equals(areaCode)){
         		newAreaCode="CGB";
-        	}if(PaymentType.SPDB.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.SPDB.getValue().equals(areaCode)){
         		newAreaCode="SPDB";
-        	}if(PaymentType.CEB.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.CEB.getValue().equals(areaCode)){
         		newAreaCode="CEB";
-        	}if(PaymentType.PAB.getValue().equals(areaCode)){
+        	}
+    		else if(PaymentType.PAB.getValue().equals(areaCode)){
         		newAreaCode="PAB";
         	}
     	}
