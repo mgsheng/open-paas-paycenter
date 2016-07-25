@@ -20,7 +20,7 @@ public class DictTradePayment implements Serializable {
 	private String remark;
 	
 	private String icon;
-	private String paymentSort;
+	private Integer paymentSort;
 
 	public String getRemark() {
 		return remark;
@@ -74,13 +74,15 @@ public class DictTradePayment implements Serializable {
 		this.icon = icon;
 	}
 
-	public String getPaymentSort() {
+	public Integer getPaymentSort() {
 		return paymentSort;
 	}
 
-	public void setPaymentSort(String paymentSort) {
+	public void setPaymentSort(Integer paymentSort) {
 		this.paymentSort = paymentSort;
 	}
+
+	
 	
 	
 }
