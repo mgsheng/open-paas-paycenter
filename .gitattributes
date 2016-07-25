@@ -80,6 +80,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_file_downlond.jsp -
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_getorder_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_refund.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_pay_ditch.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_unify_costs.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/log4j.xml -text
