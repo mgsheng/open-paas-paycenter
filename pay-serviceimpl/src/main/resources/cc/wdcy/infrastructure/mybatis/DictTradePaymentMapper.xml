@@ -7,6 +7,7 @@
 		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="DECIMAL" />
 		<result column="RATE" property="rate" jdbcType="VARCHAR" />
 		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="PAYMENT_SORT" property="paymentSort" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 		PAYMENT_NAME,

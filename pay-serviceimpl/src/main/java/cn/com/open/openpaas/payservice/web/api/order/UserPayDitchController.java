@@ -39,9 +39,16 @@ public class UserPayDitchController extends BaseControllerUtil{
 	    @RequestMapping(value = "payDitch")
 	    public void payDitch(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
 	    	try {
-		    	List<DictTradePayment> dictTradePayment = dictTradePaymentService.findByAllMessage("1");
+		    	List<DictTradePayment> dictTradePaymentList = dictTradePaymentService.findByAllMessage("1");
+		    	String addressIcon="http://10.100.134.91:8080/pay-service/";
+		    	int dict = dictTradePaymentList.size();
+		    	for(int i=0;i<dict;i++){
+		    		DictTradePayment dictTradePayment = dictTradePaymentList.get(i);
+		    		String icon = dictTradePayment.getIcon();
+		    		dictTradePayment.setIcon(addressIcon+icon);
+		    	}
 		  		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
-		  		sParaTemp.put("channelList", dictTradePayment);
+		  		sParaTemp.put("channelList", dictTradePaymentList);
 		  		sParaTemp.put("state", "ok");
 		  		writeSuccessJson(response,sParaTemp);
 	    	} catch (Exception e) {
