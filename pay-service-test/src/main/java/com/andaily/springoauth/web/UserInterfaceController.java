@@ -70,6 +70,8 @@ public class UserInterfaceController {
     private String fileDownlondUri;
     @Value("#{properties['unify-costs-uri']}")
     private String unifyCostsUri;
+    @Value("#{properties['pay-ditch-uri']}")
+    private String payditchUri;
     
     
     final static String  SEPARATOR = "&";
@@ -324,6 +326,25 @@ public class UserInterfaceController {
          return "redirect:" + fullUri;
      }
  	
+     /*
+      *  Entrance:   step-1
+      * */
+ 	@RequestMapping(value = "payDitch", method = RequestMethod.GET)
+ 	public String payDitch(Model model) {
+ 		model.addAttribute("payditchUri", payditchUri);
+ 		return "usercenter/user_pay_ditch";
+ 	}
+ 	
+ 	/* 
+     * Redirect to oauth-server bind page:   step-2
+     * */
+     @RequestMapping(value = "payDitch", method = RequestMethod.POST)
+     public String payDitch(String  outTradeNo,String appId) throws Exception {
+    	 
+    	 final String fullUri =payditchUri;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     }
  	
      /*
       *  Entrance:   step-1
