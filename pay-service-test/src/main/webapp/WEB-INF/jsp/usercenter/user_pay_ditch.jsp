@@ -26,26 +26,8 @@
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
 
                 <div ng-show="visible">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">outTradeNo</label>
-
-                        <div class="col-sm-10">
-                            <input type="text" name="outTradeNo" id="outTradeNo"
-                                   class="form-control" ng-model="outTradeNo"/>
-
-                            <p class="help-block">业务方唯一订单号（必填）</p>
-                        </div>
-                    </div>
-                    <div class="form-group">  
-                        <label class="col-sm-2 control-label">appId</label>
-
-                        <div class="col-sm-10">
-                            <input type="text" name="appId" size="50" id="appId" class="form-control"
-                                   ng-model="appId"/>
-
-                            <p class="help-block">应用Id,23-测试应用Id</p>
-                        </div>
-                    </div>
+                    
+                    
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>
                         <br/>
