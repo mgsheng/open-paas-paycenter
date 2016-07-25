@@ -19,6 +19,8 @@ public class DictTradePayment implements Serializable {
 	private String rate;
 	private String remark;
 	
+	private String icon;
+	private String paymentSort;
 
 	public String getRemark() {
 		return remark;
@@ -63,5 +65,22 @@ public class DictTradePayment implements Serializable {
 	public void setRate(String rate) {
 		this.rate = rate;
 	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public String getPaymentSort() {
+		return paymentSort;
+	}
+
+	public void setPaymentSort(String paymentSort) {
+		this.paymentSort = paymentSort;
+	}
+	
 	
 }
