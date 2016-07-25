@@ -80,6 +80,9 @@
         <li>
             <p><a href="fileDownlond">对账文件下载申请</a> <br/>对账文件下载申请</p>
         </li>
+        <li>
+            <p><a href="payDitch">支付渠道接口</a> <br/>支付渠道接口</p>
+        </li>
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
         </li> -->
