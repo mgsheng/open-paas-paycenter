@@ -25,6 +25,12 @@ public class DictTradePaymentTypeServiceImpl implements DictTradePaymentService 
 		return dictTradePaymentRepository.findByPaymentName(paymentName);
 	}
 
+	@Override
+	public List<DictTradePayment> findByAllMessage(String status) {
+		// TODO Auto-generated method stub
+		return dictTradePaymentRepository.findByAllMessage(status);
+	}
+
 
 
 }
