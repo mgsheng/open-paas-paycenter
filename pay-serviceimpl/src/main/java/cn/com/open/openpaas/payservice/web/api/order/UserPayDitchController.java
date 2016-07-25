@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.payment.model.DictTradePayment;
 import cn.com.open.openpaas.payservice.app.payment.service.DictTradePaymentService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 /**
  * 支付渠道查询  
@@ -30,6 +31,8 @@ public class UserPayDitchController extends BaseControllerUtil{
 	
 	 @Autowired
 	 DictTradePaymentService dictTradePaymentService;
+	 @Autowired
+	 private PayserviceDev payserviceDev;
 	 
 		
 	 /**getOrderQuery
@@ -40,12 +43,11 @@ public class UserPayDitchController extends BaseControllerUtil{
 	    public void payDitch(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
 	    	try {
 		    	List<DictTradePayment> dictTradePaymentList = dictTradePaymentService.findByAllMessage("1");
-		    	String addressIcon="http://10.100.134.91:8080/pay-service/";
 		    	int dict = dictTradePaymentList.size();
 		    	for(int i=0;i<dict;i++){
 		    		DictTradePayment dictTradePayment = dictTradePaymentList.get(i);
 		    		String icon = dictTradePayment.getIcon();
-		    		dictTradePayment.setIcon(addressIcon+icon);
+		    		dictTradePayment.setIcon(payserviceDev.getServer_host()+icon);
 		    	}
 		  		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 		  		sParaTemp.put("channelList", dictTradePaymentList);
