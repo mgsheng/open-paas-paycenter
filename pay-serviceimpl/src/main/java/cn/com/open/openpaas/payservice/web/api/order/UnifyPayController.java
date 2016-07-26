@@ -771,7 +771,7 @@ public class UnifyPayController extends BaseControllerUtil{
 //             		// response.getWriter().print(qr_code_url);
 //             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
              		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
-             		String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+qr_code_url;
+             		String fullUri="/alipay/wxpay?urlCode="+qr_code_url;
 	             	return "redirect:" + fullUri;
              		
             	 }else{
