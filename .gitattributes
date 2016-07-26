@@ -258,6 +258,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceAdvice.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceSwitcher.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DynamicDataSource.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/ditch/service/DictTradePaymentTypeDitchServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradeChannelRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradePaymentDitchRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradePaymentRepositoryMyBatis.java -text
