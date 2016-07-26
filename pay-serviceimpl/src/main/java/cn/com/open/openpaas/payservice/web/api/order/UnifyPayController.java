@@ -632,6 +632,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	 // WebUtils.writeJson(response, urlCode);
     	   
     }
+ 
     /**
      * 跳转到wxpay页面
      */
@@ -765,10 +766,14 @@ public class UnifyPayController extends BaseControllerUtil{
              else if(!nullEmptyBlankJudge(areaCode)&&"3".equals(areaCode)){
             	 if(!nullEmptyBlankJudge(payWx)&&"1".equals(payWx)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
+//             		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
+//             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
+//             		// response.getWriter().print(qr_code_url);
+//             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
              		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
-             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
-             		// response.getWriter().print(qr_code_url);
-             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+             		String fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+qr_code_url;
+	             	return "redirect:" + fullUri;
+             		
             	 }else{
             		 WxpayInfo payInfo=new WxpayInfo();
                    	 payInfo.setAppid(payserviceDev.getWx_app_id());
@@ -791,13 +796,13 @@ public class UnifyPayController extends BaseControllerUtil{
             	 }
              		
             } else if(!nullEmptyBlankJudge(areaCode)&&"2".equals(areaCode)){
-            	if(!nullEmptyBlankJudge(payTcl)&&"1".equals(payTcl)){
+            	if(!nullEmptyBlankJudge(payTcl)&&"0".equals(payTcl)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
         		/*	String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
         			response.setCharacterEncoding("UTF-8");
         			response.sendRedirect(URL);*/
-            		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
+            		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels), payserviceDev.getTcl_pay_url());
 	       			model.addAttribute("res", res);
          			return "pay/payRedirect";
             	}else{
