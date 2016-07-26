@@ -13,7 +13,7 @@ public class DictTradePaymentDitch implements Serializable {
 	private String icon;
 	private String payment_value;
 	private String payment_name;
-	private BigDecimal payment_type;
+	private Integer payment_type;
 	private Integer payment_sort;
 	
 	public String getIcon() {
@@ -34,17 +34,17 @@ public class DictTradePaymentDitch implements Serializable {
 	public void setPayment_name(String payment_name) {
 		this.payment_name = payment_name;
 	}
-	public BigDecimal getPayment_type() {
-		return payment_type;
-	}
-	public void setPayment_type(BigDecimal payment_type) {
-		this.payment_type = payment_type;
-	}
 	public Integer getPayment_sort() {
 		return payment_sort;
 	}
 	public void setPayment_sort(Integer payment_sort) {
 		this.payment_sort = payment_sort;
+	}
+	public Integer getPayment_type() {
+		return payment_type;
+	}
+	public void setPayment_type(Integer payment_type) {
+		this.payment_type = payment_type;
 	}
 
 	
