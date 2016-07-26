@@ -237,31 +237,32 @@
 	});
 	function submitCheck(obj){
 	         if(areaCode=="3"){
-	         var payWx="${payWx}";
-	         var totalFee="${totalFeeValue}";
-	         var goodsDesc="${goodsDesc}";
-	         var goodsId="${goodsId}";
-	         $(".mask").show();
-		       $(".payLayer").show();
-	          $.ajax({
-				 type: 'post',
-				 beforeSend:function () {
-					 $("#load-print").show();
-				    },
-				 dataType:'text',
-				 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId,
-				 success: function(date){
-					   urlCode=date;
-					   console.log(urlCode+"==urlCode");
-				       $("#payCode").empty();
-					   var urlDu = date.split(",")[1];
-					   var url=urlDu.slice(10,urlDu.length-1);
-					   document.getElementById("erweima").innerHTML="<img src="+url+" width='260' height='260'>";
-				       $("#load-print").hide();
-				      
-				   }
-				 
-			   });
+	        	 document.getElementById("erweima").innerHTML="";
+		         var payWx="${payWx}";
+		         var totalFee="${totalFeeValue}";
+		         var goodsDesc="${goodsDesc}";
+		         var goodsId="${goodsId}";
+		         $(".mask").show();
+			       $(".payLayer").show();
+		          $.ajax({
+					 type: 'post',
+					 beforeSend:function () {
+						 $("#load-print").show();
+					    },
+					 dataType:'text',
+					 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId,
+					 success: function(date){
+						   urlCode=date;
+						   console.log(urlCode+"==urlCode");
+					       $("#payCode").empty();
+						   var urlDu = date.split(",")[1];
+						   var url=urlDu.slice(10,urlDu.length-1);
+						   document.getElementById("erweima").innerHTML="<img src="+url+" width='260' height='260'>";
+					       $("#load-print").hide();
+					      
+					   }
+					 
+				   });
 	         }else{
 	         	$("form").submit();
 	         }
@@ -307,6 +308,7 @@
 	function closeBtu(){
 		$("#confirm-modal").hide();
 		 $('.mask').hide();
+		 $("#load-print").hide();
 	}
 	
 	function showTip() {
