@@ -191,8 +191,8 @@
 		areaCode=$(this).attr("value");
 		if(areaCode=="1"){
 			$("#areaCode").val("1");
-		}else if(areaCode=="1"){
-			$("#areaCode").val("1");
+		}else if(areaCode=="2"){
+			$("#areaCode").val("2");
 		}else if(areaCode=="10001"){
 			$("#areaCode").val("CMB");
 		}else if(areaCode=="10002"){
