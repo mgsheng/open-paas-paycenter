@@ -254,14 +254,9 @@
 					   urlCode=date;
 					   console.log(urlCode+"==urlCode");
 				       $("#payCode").empty();
-					   var status = date.slice(2,8);
-					   if(status!="status"){
-						   $('#payCode').qrcode(urlCode);// 生成二维码
-					   }else{
-						   var urlDu = date.split(",")[1];
-						   var url=urlDu.slice(10,urlDu.length-1);
-						   document.getElementById("erweima").innerHTML="<img src="+url+" width='260' height='260'>";
-					   }
+					   var urlDu = date.split(",")[1];
+					   var url=urlDu.slice(10,urlDu.length-1);
+					   document.getElementById("erweima").innerHTML="<img src="+url+" width='260' height='260'>";
 				       $("#load-print").hide();
 				      
 				   }
