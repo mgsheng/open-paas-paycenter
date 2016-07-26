@@ -151,6 +151,7 @@ pay-service/src/main/java/cn/com/open/openpaas/payservice/app/balance/service/Us
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/model/DictTradeChannel.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/model/DirctPayDto.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelService.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/ditch/service/DictTradePaymentDitchService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/domain/model/AbstractDomain.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/log/model/LogMonitor.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/log/model/PayServiceLog.java -text
