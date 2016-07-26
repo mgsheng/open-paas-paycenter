@@ -62,6 +62,7 @@ public class UserPayDitchController extends BaseControllerUtil{
 				e.printStackTrace();
 				SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 				sParaTemp.put("失败", "error");
+				sParaTemp.put("失败原因", e.getClass());
 				writeSuccessJson(response,sParaTemp);
 			}
 	    }
