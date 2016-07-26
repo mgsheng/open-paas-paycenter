@@ -39,8 +39,5 @@
          select * from DICT_TRADE_PAYMENT
          where  PAYMENT_NAME = #{paymentName}
 	</select>
-	<select id="findByAllMessage" resultMap="DictTradePaymentMap">
-         select * from DICT_TRADE_PAYMENT
-         where  PAYMENT_STATUS = #{paymentStatus}
-	</select>
+	
 </mapper>
