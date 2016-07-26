@@ -6,9 +6,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
@@ -17,17 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.log.AlipayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
-import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -83,26 +87,42 @@ public class AliOrderCallbackController extends BaseControllerUtil {
         Double total_fee=Double .valueOf(request.getParameter("total_fee"));
 		//交易状态
 		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
+		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
+		String body = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
 		Map<String, Object> map=new HashMap<String, Object>();
 
-		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
-		
+		//添加日志
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setAmount(request.getParameter("total_fee"));
+		 payServiceLog.setAppId("");
+		 payServiceLog.setChannelId("");
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setLogType(payserviceDev.getLog_type());
+		 payServiceLog.setMerchantId("");
+		 payServiceLog.setMerchantOrderId(out_trade_no);
+		 payServiceLog.setOrderId("");
+		 payServiceLog.setPaymentId("");
+		 payServiceLog.setPayOrderId(trade_no);
+		 payServiceLog.setProductDesc(body);
+		 payServiceLog.setProductName(subject);
+		 payServiceLog.setRealAmount(request.getParameter("total_fee"));
+		 payServiceLog.setSourceUid("");
+		 payServiceLog.setUsername("");
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params);
 		if(verify_result){//验证成功
 			//////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代码
-
 			//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
 			if(trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")){
 				//判断该笔订单是否在商户网站中已经做过处理
-					//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				backMsg="success";
 				MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
 				//账户充值操作
 				String rechargeMsg="";
 				if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-					String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+					/*String userId=String.valueOf(merchantOrderInfo.getSourceUid());
 					//流水记录
 					UserSerialRecord userSerialRecord=new UserSerialRecord();
 	        	    userSerialRecord.setAmount(total_fee);
@@ -138,8 +158,37 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 						userAccountBalance.setCreateTime(new Date());
 						userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
 						rechargeMsg="SUCCESS";
-					}
-					
+					}*/
+					//拼接发送的加密信息
+					SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+					sParaTemp.put("userId",merchantOrderInfo.getSourceUid());
+			        sParaTemp.put("total_fee", total_fee*100);
+			        sParaTemp.put("appId", merchantOrderInfo.getAppId());
+			        sParaTemp.put("userName",merchantOrderInfo.getUserName());
+					sParaTemp.put("out_trade_no", out_trade_no);
+					String returnValue= sendPost(payserviceDev.getUser_balance_url(),sParaTemp);
+					JSONObject reqjson = JSONObject.fromObject(returnValue);
+					 Boolean callBackSend=analysisValue(reqjson);
+					  if(callBackSend){
+						  payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+						  payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+					  	  payServiceLog.setUsername(merchantOrderInfo.getUserName());
+					  	  payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+						  payServiceLog.setErrorCode("");
+				          payServiceLog.setStatus("ok");
+				          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						  rechargeMsg="SUCESS";
+					  }else{
+						  payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+						  payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+					  	  payServiceLog.setUsername(merchantOrderInfo.getUserName());
+					  	  payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+						  payServiceLog.setErrorCode("1");
+				          payServiceLog.setStatus("error");
+				          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						rechargeMsg="ERROR";
+					  }
+					  
 				}
 				int notifyStatus=merchantOrderInfo.getNotifyStatus();
 				int payStatus=merchantOrderInfo.getPayStatus();
@@ -155,7 +204,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
 				}
 				if(notifyStatus!=1){
-					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg));
+					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
 					   thread.run();	
 				}
 					//如果有做过处理，不执行商户的业务程序
@@ -168,6 +217,9 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			//////////////////////////////////////////////////////////////////////////////////////////
 		}else{
 			//该页面可做页面美工编辑
+			  payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 			backMsg="error";
 		}
 		AlipayControllerLog.log(startTime,params, map);

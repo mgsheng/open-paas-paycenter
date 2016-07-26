@@ -22,8 +22,31 @@ public class PayserviceDev {
 	public String pay_switch;
 	public String tcl_pay_url;
 	public String ali_pay_url;
+	public String user_balance_url;
+	public String kong_log_url;
+	private String log_type;
 	
 	
+	
+	
+	public String getLog_type() {
+		return log_type;
+	}
+	public void setLog_type(String log_type) {
+		this.log_type = log_type;
+	}
+	public String getKong_log_url() {
+		return kong_log_url;
+	}
+	public void setKong_log_url(String kong_log_url) {
+		this.kong_log_url = kong_log_url;
+	}
+	public String getUser_balance_url() {
+		return user_balance_url;
+	}
+	public void setUser_balance_url(String user_balance_url) {
+		this.user_balance_url = user_balance_url;
+	}
 	public String getTcl_pay_url() {
 		return tcl_pay_url;
 	}

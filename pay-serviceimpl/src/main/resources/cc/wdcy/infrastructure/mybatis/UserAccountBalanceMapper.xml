@@ -68,7 +68,7 @@
         STATUS=#{status},
         </if>
          <if test="balance != null" >
-        BALANCE=#{balance},
+        BALANCE=BALANCE+#{balance},
         </if>
         VERSION=VERSION+1 
         where Id = #{id}

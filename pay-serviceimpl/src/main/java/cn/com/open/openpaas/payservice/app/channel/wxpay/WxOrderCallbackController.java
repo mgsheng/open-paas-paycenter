@@ -16,6 +16,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
 import org.dom4j.DocumentException;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
@@ -27,12 +29,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
+import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
@@ -111,6 +116,27 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 					// 账号信息(需要修改)
 			        String key = payserviceDev.getWx_key(); // key
 			        //log.info(packageParams);
+			        //添加日志
+			      //添加日志
+					 PayServiceLog payServiceLog=new PayServiceLog();
+					 payServiceLog.setAmount((String)packageParams.get("total_fee"));
+					 payServiceLog.setAppId("");
+					 payServiceLog.setChannelId("");
+					 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+					 payServiceLog.setLogType(payserviceDev.getLog_type());
+					 payServiceLog.setMerchantId("");
+					 payServiceLog.setMerchantOrderId((String)packageParams.get("out_trade_no"));
+					 payServiceLog.setOrderId("");
+					 payServiceLog.setPaymentId("");
+					 payServiceLog.setPayOrderId((String)packageParams.get("transaction_id"));
+					 payServiceLog.setProductDesc("");
+					 payServiceLog.setProductName("");
+					 payServiceLog.setRealAmount((String)packageParams.get("total_fee"));
+					 payServiceLog.setSourceUid("");
+					 payServiceLog.setUsername("");
+			        
+			        
+			        
 				    //判断签名是否正确
 				    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
 				    	String rechargeMsg="";
@@ -140,7 +166,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 				            //////////执行自己的业务逻辑////////////////
 				        	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
 				        	if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-								String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+								/*String userId=String.valueOf(merchantOrderInfo.getSourceUid());
 								UserSerialRecord userSerialRecord=new UserSerialRecord();
 				        	    userSerialRecord.setAmount(Double.parseDouble(total_fee));
 				        	    userSerialRecord.setAppId(Integer.parseInt(merchantOrderInfo.getAppId()));
@@ -174,7 +200,27 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 									userAccountBalance.setCreateTime(new Date());
 									userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
 									rechargeMsg="SUCCESS";
-								}
+								}*/
+				        		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+								sParaTemp.put("userId",merchantOrderInfo.getSourceUid());
+						        sParaTemp.put("total_fee",Double.parseDouble(total_fee));
+						        sParaTemp.put("appId", merchantOrderInfo.getAppId());
+						        sParaTemp.put("userName",merchantOrderInfo.getUserName());
+								sParaTemp.put("out_trade_no", out_trade_no);
+								String returnValue= sendPost(payserviceDev.getUser_balance_url(),sParaTemp);
+								JSONObject reqjson = JSONObject.fromObject(returnValue);
+								 Boolean callBackSend=analysisValue(reqjson);
+								  if(callBackSend){
+									 payServiceLog.setErrorCode("");
+							         payServiceLog.setStatus("ok");
+							         UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+									  rechargeMsg="SUCESS";
+								  }else{
+									payServiceLog.setErrorCode("1");
+							        payServiceLog.setStatus("error");
+							        UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+									rechargeMsg="ERROR";
+								  }
 								
 							}
 				        	if(merchantOrderInfo!=null){
@@ -192,7 +238,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 								}
 							
 								if(notifyStatus!=1){
-									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg));
+									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
 									   thread.run();	
 								}
 								log.info("支付成功");
@@ -200,6 +246,9 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 					            resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
 					                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
 				        	}else{
+				        		payServiceLog.setErrorCode("2");
+						        payServiceLog.setStatus("error");
+						        UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 				        		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 					            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
@@ -211,6 +260,9 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 				        }
 				      
 				    } else{
+				    	payServiceLog.setErrorCode("3");
+				        payServiceLog.setStatus("error");
+				        UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 				    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 				                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
 				    	log.info("通知签名验证失败");

@@ -42,6 +42,7 @@ import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -143,6 +144,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	String goodsId=request.getParameter("goodsId");
     	String goodsName=new String(request.getParameter("goodsName").getBytes("iso-8859-1"),"utf-8");
     	//String goodsName=request.getParameter("goodsName");
+    	
     	String goodsDesc="";
     	if (!nullEmptyBlankJudge(request.getParameter("goodsDesc"))){
     		goodsDesc=new String(request.getParameter("goodsDesc").getBytes("iso-8859-1"),"utf-8");
@@ -173,12 +175,30 @@ public class UnifyPayController extends BaseControllerUtil{
 	    String timestamp=request.getParameter("timestamp");
 	    String signatureNonce=request.getParameter("signatureNonce");
 	    String businessType=request.getParameter("businessType");
-    	
-    	Map<String ,Object> map=new HashMap<String,Object>();
-    	
+	    PayServiceLog payServiceLog=new PayServiceLog();
+	    payServiceLog.setAmount(totalFee);
+	    payServiceLog.setAppId(appId);
+	    payServiceLog.setChannelId(paymentChannel);
+	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+	    payServiceLog.setLogType(payserviceDev.getLog_type());
+	    payServiceLog.setMerchantId(merchantId);
+	    payServiceLog.setMerchantOrderId(outTradeNo);
+	    payServiceLog.setOrderId("");
+	    payServiceLog.setPaymentId(paymentType);
+	    payServiceLog.setPayOrderId("");
+	    payServiceLog.setProductDesc(goodsDesc);
+	    payServiceLog.setProductName(goodsName);
+	    payServiceLog.setRealAmount("");
+	    payServiceLog.setSourceUid(userId);
+	    payServiceLog.setUsername(userName);
+		payServiceLog.setErrorCode("");
+    	payServiceLog.setStatus("ok");
+    	UnifyPayControllerLog.log(payServiceLog,payserviceDev);
         if(!paraMandatoryCheck(Arrays.asList(outTradeNo,userId,merchantId,goodsName,totalFee))){
         	//paraMandaChkAndReturn(1, response,"必传参数中有空值");
-        	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
+        	payServiceLog.setErrorCode("1");
+        	payServiceLog.setStatus("error");
+        	UnifyPayControllerLog.log(payServiceLog,payserviceDev);
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
         }
         //判断用户是否存在
@@ -188,7 +208,9 @@ public class UnifyPayController extends BaseControllerUtil{
     	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
     	if(merchantInfo==null){
         	//paraMandaChkAndReturn(2, response,"商户ID不存在");
-        	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
+    		payServiceLog.setErrorCode("2");
+    		payServiceLog.setStatus("error");
+    		UnifyPayControllerLog.log(payServiceLog,payserviceDev);
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
         }
     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
@@ -221,15 +243,21 @@ public class UnifyPayController extends BaseControllerUtil{
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
         //认证
        // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+   	
+   	    
 		if(!hmacSHA1Verification){
 			//paraMandaChkAndReturn(3, response,"认证失败");
-        	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
+			payServiceLog.setErrorCode("3");
+			payServiceLog.setStatus("error");
+			UnifyPayControllerLog.log(payServiceLog,payserviceDev);
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
 		} 
     	
         if(!StringTool.isNumeric(totalFee)){
+        	payServiceLog.setErrorCode("4");
+        	payServiceLog.setStatus("error");
         	//paraMandaChkAndReturn(3, response,"订单金额格式有误");
-        	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
+        	UnifyPayControllerLog.log(payServiceLog,payserviceDev);
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
         }
       /*  if(!("CNY").equals(feeType)){
@@ -240,7 +268,9 @@ public class UnifyPayController extends BaseControllerUtil{
        Boolean payType=validatePayType(paymentChannel,paymentType);
         if(!payType){
         	//paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
-        	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName, totalFee, map);
+        	payServiceLog.setErrorCode("5");
+        	payServiceLog.setStatus("error");
+        	UnifyPayControllerLog.log(payServiceLog,payserviceDev);
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
         }
 		String newId="";
@@ -337,10 +367,12 @@ public class UnifyPayController extends BaseControllerUtil{
 		        		merchantOrderInfo.setChannelId(SysUtil.toInteger(paymentChannel));
 		            	merchantOrderInfoService.updateOrderInfo(merchantOrderInfo);
 		        	}        	
-		        	UnifyPayControllerLog.log(merchantOrderInfo.getMerchantOrderId(), userId, merchantId, goodsName, AmountUtil.changeF2Y(totalFee), map);
 		        	
 		      //payZhifubao     payWx	 payTcl
-		        	
+             log.info("-----------------------支付开始-----------------------------------------");
+             payServiceLog.setErrorCode("");
+             payServiceLog.setStatus("");
+             UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 		     if(String.valueOf(Channel.ALI.getValue()).equals(paymentChannel)){
 		    	 if("0".equals(payZhifubao)){
 				    	//支付宝-即时到账支付
@@ -550,13 +582,13 @@ public class UnifyPayController extends BaseControllerUtil{
     	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
     		errorMsg="必传参数中有空值";
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-    		errorMsg="订单金额有误";
+    		errorMsg="验证失败";
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
     		errorMsg="所选支付渠道与支付类型不匹配";
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
     		errorMsg="商户ID不存在";
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-    		errorMsg="所选支付渠道与支付类型不匹配";
+    		errorMsg="订单金额格式有误";
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);
@@ -686,6 +718,27 @@ public class UnifyPayController extends BaseControllerUtil{
     	String outTradeNo=request.getParameter("outTradeNo");
     	String appId=request.getParameter("appId");
     	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo, appId);
+    	//日志添加
+    	PayServiceLog payServiceLog=new PayServiceLog();
+  	    payServiceLog.setAmount(totalFee);
+  	    payServiceLog.setAppId(appId);
+  	    payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+  	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+  	    payServiceLog.setLogType(payserviceDev.getLog_type());
+  	    payServiceLog.setMerchantId(merchantId);
+  	    payServiceLog.setMerchantOrderId(outTradeNo);
+  	    payServiceLog.setOrderId("");
+  	    payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+  	    payServiceLog.setPayOrderId("");
+  	    payServiceLog.setProductDesc(goodsDesc);
+  	    payServiceLog.setProductName(goodsName);
+  	    payServiceLog.setRealAmount("");
+  	    payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+  	    payServiceLog.setUsername(merchantOrderInfo.getUserName());
+        payServiceLog.setErrorCode("");
+        payServiceLog.setStatus("");
+        log.info("-------------------------支付开始--------------------------");
+        UnifyPayControllerLog.log(payServiceLog,payserviceDev);	
     	if(merchantOrderInfo!=null){
     		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
          	//支付渠道为支付宝

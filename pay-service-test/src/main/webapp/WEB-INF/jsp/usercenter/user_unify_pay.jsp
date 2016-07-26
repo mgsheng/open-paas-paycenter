@@ -41,8 +41,8 @@
                         <label class="col-sm-2 control-label">username</label>
 
                         <div class="col-sm-10">
-                            <input type="text" name="username" id="username"
-                                   class="form-control" ng-model="username"/>
+                            <input type="text" name="userName" id="userName"
+                                   class="form-control" ng-model="userName"/>
                            <p class="help-block">用户名（接入用户中心时可以传递）</p>
                         </div>
                     </div>
@@ -313,7 +313,7 @@
 <script type="text/javascript">
 	function btnSubmit(){
 		var outTradeNo=$("#outTradeNo").val();
-		var userName=$("#username").val();
+		var userName=$("#userName").val();
 		var userId=$("#userId").val();
 		var appId=$("#appId").val();
 		var merchantId=$("#merchantId").val();

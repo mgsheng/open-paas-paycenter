@@ -18,10 +18,14 @@ import org.apache.commons.httpclient.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
+import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
 /**
@@ -36,12 +40,14 @@ public class AliOrderProThread implements Runnable {
 	private MerchantInfoService merchantInfoService;
 	private MerchantOrderInfo merchantOrderInfo;
 	private String rechargeMsg;
+	private PayserviceDev payserviceDev;
 	
-	public AliOrderProThread(MerchantOrderInfo merchantOrderInfo,MerchantOrderInfoService merchantOrderInfoService,MerchantInfoService merchantInfoService,String rechargeMsg){
+	public AliOrderProThread(MerchantOrderInfo merchantOrderInfo,MerchantOrderInfoService merchantOrderInfoService,MerchantInfoService merchantInfoService,String rechargeMsg, PayserviceDev payserviceDev){
 		this.merchantOrderInfoService = merchantOrderInfoService;
 		this.merchantInfoService=merchantInfoService;
 		this.merchantOrderInfo=merchantOrderInfo;
 		this.rechargeMsg=rechargeMsg;
+		this.payserviceDev=payserviceDev;
 	}
 	
 	@Override
@@ -78,6 +84,27 @@ public class AliOrderProThread implements Runnable {
 		Boolean callBackSend=false;
 		int count=0;
 		String sendMsg="";
+		
+		//添加日志
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getAmount()));
+		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
+		 payServiceLog.setChannelId("");
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setLogType(payserviceDev.getLog_type());
+		 payServiceLog.setMerchantId("");
+		 payServiceLog.setMerchantOrderId(String.valueOf(merchantOrderInfo.getChannelOrderId()));
+		 payServiceLog.setOrderId("");
+		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+		 payServiceLog.setPayOrderId(String.valueOf(merchantOrderInfo.getPayOrderId()));
+		 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
+		 payServiceLog.setProductName(merchantOrderInfo.getMerchantProductName());
+		 payServiceLog.setRealAmount(String.valueOf(merchantOrderInfo.getPayAmount()));
+		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
+		  payServiceLog.setErrorCode("");
+		  payServiceLog.setStatus("ok");
+		  UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 		// sendPost(merchantOrderInfo.getNotifyUrl(),parameters);
 		  do { 
 			      log.info("-----------------------------通知业务方开始--------------------------");
@@ -88,6 +115,9 @@ public class AliOrderProThread implements Runnable {
 				  if(callBackSend){
 					  merchantOrderInfo.setNotifyStatus(1);
 					  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
+					  payServiceLog.setErrorCode("");
+					  payServiceLog.setStatus("ok");
+					  UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 					  sendMsg="通知成功！";
 				  }else{
 					  if(count>1){
@@ -96,6 +126,9 @@ public class AliOrderProThread implements Runnable {
 					merchantOrderInfo.setNotifyStatus(2);
 				    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
 					merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
+					payServiceLog.setErrorCode("1");
+				    payServiceLog.setStatus("error");
+					UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 					sendMsg="通知失败！";
 				  }
 			} while (!callBackSend);

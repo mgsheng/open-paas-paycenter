@@ -1,13 +1,20 @@
 package cn.com.open.openpaas.payservice.app.log;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.com.open.openpaas.payservice.app.app.model.App;
+import cn.com.open.openpaas.payservice.app.log.model.LogMonitor;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
+import cn.com.open.openpaas.payservice.app.tools.HttpTools;
+import cn.com.open.openpaas.payservice.dev.PayserviceDev;
+
+import com.alibaba.fastjson.JSONObject;
 
 
 /**
@@ -23,54 +30,73 @@ public class UnifyPayControllerLog {
 	 * 输出日志
 	 * 格式：
 	 * 日期#方法名#执行时间#用户名#密码#应用ID#执行status#错误号#
-	 * @param outTradeNo long startTime = System.currentTimeMillis();
+	 * @param startTime long startTime = System.currentTimeMillis();
 	 * @param username
 	 * @param password
-	 * @param goodsName
-	 * @param totalFee
-	 * @param map 
+	 * @param app
+	 * @param map
 	 */
-	public static void log(String outTradeNo,String userId,String merchantId,String goodsName, String totalFee, Map<String, Object> map){
+	public static void log(PayServiceLog log, PayserviceDev payserviceDev){
 		try {
 			Throwable ex = new Throwable();
 			StringBuffer msg = new StringBuffer();
-			long endTime = System.currentTimeMillis(); //获取结束时间
+		 	Map<String ,Object> map=new HashMap<String,Object>();
 			//根据堆栈[1]获取到调用的方法名 0是自身
 			if (ex.getStackTrace() != null && ex.getStackTrace()[1] != null) {
 				//获取时间
 				msg.append(DateTools.dateToString(new Date(), "yyyyMMddHHmmss")).append("#");
 				//获取方法名
 				msg.append(ex.getStackTrace()[1].getMethodName()).append("#");
+				log.setServiceName(ex.getStackTrace()[1].getMethodName());
 				//获取业务方唯一订单号
-				msg.append(outTradeNo).append("#");
+				msg.append(log.getMerchantOrderId()).append("#");
 				//获取用户Id
-				msg.append(userId).append("#");
+				msg.append(log.getSourceUid()).append("#");
 				//获取商户Id
-				msg.append(merchantId).append("#");
+				msg.append(log.getMerchantId()).append("#");
 				//商品名称
-				msg.append(goodsName).append("#");
+				msg.append(log.getProductName()).append("#");
 				//订单金额
-				msg.append(totalFee).append("#");
+				msg.append(log.getAmount()).append("#");
+				//实收金额
+				msg.append(log.getRealAmount()).append("#");
+				//用户名
+				msg.append(log.getUsername()).append("#");
+				//支付渠道订单号
+				msg.append(log.getPayOrderId()).append("#");
+				//支付服务日志流水号或订单号
+				msg.append(log.getOrderId()).append("#");
+				//渠道号
+				msg.append(log.getChannelId()).append("#");
+				//支付方式
+				msg.append(log.getPaymentId()).append("#");
+				//商品描述
+				msg.append(log.getProductDesc()).append("#");
+				//日志类型
+				msg.append(log.getLogType()).append("#");
+				//应用id
+				msg.append(log.getAppId()).append("#");
 				//获取执行状态
+				
 				if(map!=null && map.get("status") !=null){
+					log.setStatus((String) map.get("status"));
 					msg.append(map.get("status")).append("#");
-					//获取错误号status=error为错误
-					if(map.get("status").toString().equals("error") && map.get("error_code")!=null){
-						msg.append(map.get("error_code")).append("#");
+					//获取错误号status=0为错误
+					if(map.get("status").toString().equals("error") && map.get("errorCode")!=null){
+						msg.append(map.get("errorCode")).append("#");
+						log.setErrorCode((String) map.get("errorCode"));
 					}
 					else{
 						msg.append("#");
 					}
 				}
-				/*if(map!=null && map.get("flag")!=null){
-					if(totalFee.get("flag").equals("false")){
-						msg.append("0").append("#").append(totalFee.get("error_code"));
-					}else{
-						msg.append("1").append("#").append("#");
-					}
-				}*/
 			}
-			logger.info(msg.toString());
+			logger.info(msg.toString()+"|"+JSONObject.toJSONString(log));
+			Map <String,String>logMap=new HashMap<String,String>();
+			logMap.put("tag", "payservice");
+			logMap.put("logData", JSONObject.toJSONString(log));
+			HttpTools.doPostForJson(payserviceDev.getKong_log_url(), logMap,"UTF-8");
+			
 			ex = null;
 			msg = null;
 		} catch (Exception e) {

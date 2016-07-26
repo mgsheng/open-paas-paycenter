@@ -176,6 +176,7 @@ pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/DateTools.ja
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/DateUtils.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/HMacSha1.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/Help_Encrypt.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/HttpTools.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/MD5.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/PropertiesTool.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/tools/QRCodeEncoderHandler.java -text
@@ -308,6 +309,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/Orde
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/TestOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UnifyCostsController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UnifyPayController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserAccountBalanceController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserOrderQueryController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserPayDitchController.java -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml -text

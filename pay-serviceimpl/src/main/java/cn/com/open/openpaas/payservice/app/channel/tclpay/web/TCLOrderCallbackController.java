@@ -5,9 +5,13 @@ import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
@@ -23,12 +27,15 @@ import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytUtils;
+import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
@@ -108,8 +115,25 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 		orderDataMap.put("fee", fee);
 		orderDataMap.put("attach", attach);
 		  String rechargeMsg="";
-			String Wsign=HytPacketUtils.map2StrRealURL(orderDataMap);
+	      String Wsign=HytPacketUtils.map2StrRealURL(orderDataMap);
           String backMsg="";
+        //添加日志
+ 		 PayServiceLog payServiceLog=new PayServiceLog();
+ 		 payServiceLog.setAmount(request.getParameter("total_fee"));
+ 		 payServiceLog.setAppId("");
+ 		 payServiceLog.setChannelId("");
+ 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+ 		 payServiceLog.setLogType(payserviceDev.getLog_type());
+ 		 payServiceLog.setMerchantId("");
+ 		 payServiceLog.setMerchantOrderId(out_trade_no);
+ 		 payServiceLog.setOrderId("");
+ 		 payServiceLog.setPaymentId("");
+ 		 payServiceLog.setPayOrderId(trade_no);
+ 		 payServiceLog.setProductDesc("");
+ 		 payServiceLog.setProductName("");
+ 		 payServiceLog.setRealAmount(request.getParameter("total_fee"));
+ 		 payServiceLog.setSourceUid("");
+ 		 payServiceLog.setUsername("");
           // -- 验证签名
 				boolean flag = false;	
 				
@@ -121,7 +145,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 					  MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
 					  //充值
 						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							String userId=String.valueOf(merchantOrderInfo.getSourceUid());
+							/*String userId=String.valueOf(merchantOrderInfo.getSourceUid());
 							UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
 							if(userAccountBalance!=null){
 								userAccountBalance.setBalance(Double.parseDouble(total_fee)/100+userAccountBalance.getBalance());
@@ -146,7 +170,29 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 								userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
 								rechargeMsg="SUCCESS";
 							}
-							
+							*/
+							SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+							sParaTemp.put("userId",merchantOrderInfo.getSourceUid());
+							if(!nullEmptyBlankJudge(total_fee)){
+								sParaTemp.put("total_fee", Double.parseDouble(total_fee));	
+							}
+					        sParaTemp.put("appId", merchantOrderInfo.getAppId());
+					        sParaTemp.put("userName",merchantOrderInfo.getUserName());
+							sParaTemp.put("out_trade_no", out_trade_no);
+							String returnValue= sendPost(payserviceDev.getUser_balance_url(),sParaTemp);
+							JSONObject reqjson = JSONObject.fromObject(returnValue);
+							 Boolean callBackSend=analysisValue(reqjson);
+							  if(callBackSend){
+								  payServiceLog.setErrorCode("");
+						          payServiceLog.setStatus("ok");
+						          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+								  rechargeMsg="SUCESS";
+							  }else{
+								  payServiceLog.setErrorCode("1");
+						          payServiceLog.setStatus("error");
+						          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+								rechargeMsg="ERROR";
+							  }
 						}
 					  int payStatus=merchantOrderInfo.getPayStatus();
 					  Double payCharge=0.0;
@@ -163,9 +209,11 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 				}else{
 					 if (!return_code.equals("000000")) { //请求异常
 							  backMsg="error";
+							  payServiceLog.setErrorCode("2");
+					          payServiceLog.setStatus("error");
+					          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 							
 						}else{
-							
 							//判断该笔订单是否在商户网站中已经做过处理
 							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 							MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
@@ -192,7 +240,10 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 						           		  rechargeMsg="SUCCESS";
 						       		     } catch (Exception e) {
 							       			e.printStackTrace();
-							       		 rechargeMsg="ERROR";
+							       		   rechargeMsg="ERROR";
+							       		  payServiceLog.setErrorCode("3");
+								          payServiceLog.setStatus("error");
+								          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 							       		  }finally{
 							       			  lock.unlock(); 
 							       		  }
@@ -203,6 +254,9 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 										userAccountBalance.setType(1);
 										userAccountBalance.setCreateTime(new Date());
 										userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
+										 payServiceLog.setErrorCode("");
+								          payServiceLog.setStatus("ok");
+								          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 										rechargeMsg="SUCCESS";
 									}
 									
@@ -221,10 +275,10 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							}
 							
 							if(notifyStatus!=1){
-								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg));
+								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
 								   thread.run();	
 							}
-							  backMsg="success";
+							backMsg="success";
 						}
 						
 					

@@ -11,6 +11,8 @@ public class PayServiceLog {
 	private String appId;
 	//接口状态
 	private String status;
+	//错误码
+	private String errorCode;
 	//支付服务日志流水号或订单号
 	private String orderId;
 	//业务方订单号
@@ -31,8 +33,23 @@ public class PayServiceLog {
     private String paymentId;
     //商品名称
     private String productName;
-    //商品类型
+    //商品描述
     private String productDesc;
+    //日志类型
+    private String logType;
+    
+	public String getErrorCode() {
+		return errorCode;
+	}
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+	public String getLogType() {
+		return logType;
+	}
+	public void setLogType(String logType) {
+		this.logType = logType;
+	}
 	public String getServiceName() {
 		return serviceName;
 	}

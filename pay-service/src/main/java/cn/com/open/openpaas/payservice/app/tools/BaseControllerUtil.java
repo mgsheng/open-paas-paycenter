@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,8 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 
 import net.sf.json.JSONObject;
 
@@ -700,5 +703,13 @@ public class BaseControllerUtil {
 			return sParaTemp;
 			}
 		}
+		public static Boolean analysisValue(JSONObject obj ){
+		    	String state = obj.getString("status");
+				if(!state.equals("1")){
+					return false;
+				}else{
+					return true;
+				}
+		    }
 
 }
