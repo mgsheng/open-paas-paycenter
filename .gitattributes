@@ -259,6 +259,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/Dat
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceSwitcher.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DynamicDataSource.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradeChannelRepositoryMyBatis.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradePaymentDitchRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradePaymentRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/LogMonitorRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/MerchantInfoRepositoryMyBatis.java -text
@@ -268,6 +269,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserSerialRecordRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/AppRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradeChannelRepository.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradePaymentDitchRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradePaymentRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/LogMonitorRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/MerchantInfoRepository.java -text
