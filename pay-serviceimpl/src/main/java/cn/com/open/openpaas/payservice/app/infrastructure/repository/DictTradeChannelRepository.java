@@ -14,6 +14,6 @@ import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 public interface DictTradeChannelRepository extends Repository {
 
 	List<DictTradeChannel> findByMerId(Integer merchantId);
-	DictTradeChannel findByMAI(@Param("merid")String merid,@Param("id")Integer id);
+	DictTradeChannel findByMAI(@Param("merid")String merid,@Param("paymentChannel")Integer id);
 
 }

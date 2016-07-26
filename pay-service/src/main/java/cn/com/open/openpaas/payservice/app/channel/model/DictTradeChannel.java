@@ -37,7 +37,17 @@ public class DictTradeChannel implements Serializable {
     private String paymentType;
     private String signType;
     private String inputCharset;
+    private String paymentChannel;
     
+    
+	public String getPaymentChannel() {
+		return paymentChannel;
+	}
+
+	public void setPaymentChannel(String paymentChannel) {
+		this.paymentChannel = paymentChannel;
+	}
+
 	public String getInputCharset() {
 		return inputCharset;
 	}

@@ -17,6 +17,7 @@
 		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="INTEGER" />
 		<result column="type" property="type" jdbcType="INTEGER" />   
 		<result column="input_charset" property="inputCharset" jdbcType="VARCHAR" />
+		<result column="payment_channel" property="paymentChannel" jdbcType="VARCHAR" />
 		
 
 	</resultMap>
@@ -34,7 +35,8 @@
 		PAYMENT_TYPE,
 		NOTIFY_URL,
 		input_charset,
-		type
+		type,
+		payment_channel
 	</sql>
 	<sql id="Base_Column_List">
 		ID,
@@ -63,7 +65,8 @@
 			#{paymentType,jdbcType=INTEGER},
 			#{signType,jdbcType=VARCHAR},
 			#{inputCharset,jdbcType=VARCHAR},
-			#{type,jdbcType=INTEGER}
+			#{type,jdbcType=INTEGER},
+			#{paymentChannel,jdbcType=VARCHAR}
 		)
 	</insert>
 	
@@ -74,6 +77,6 @@
 	<select id="findByMAI" resultMap="DictTradeChannelMap">
          select * from DICT_TRADE_CHANNEL
          where  MERID = #{merid}
-         and ID=#{id}
+         and payment_channel=#{paymentChannel}
 	</select>
 </mapper>
