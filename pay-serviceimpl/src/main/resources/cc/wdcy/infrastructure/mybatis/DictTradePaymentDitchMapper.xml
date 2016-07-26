@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.DictTradePaymentDitchRepositoryMyBatis">
+	<resultMap type="DictTradePaymentDitch" id="DictTradePaymentDitchMap">
+		
+		<result column="PAYMENT_NAME" property="payment_value" jdbcType="VARCHAR" />
+		<result column="PAYMENT_TYPE" property="payment_type" jdbcType="DECIMAL" />
+		<result column="REMARK" property="payment_name" jdbcType="VARCHAR" />
+		<result column="PAYMENT_SORT" property="payment_sort" jdbcType="INTEGER" />
+		<result column="ICON" property="icon" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+		PAYMENT_NAME,
+		PAYMENT_TYPE,
+		RATE,
+		REMARK
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.ditch.model.DictTradePaymentDitch">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into DICT_TRADE_PAYMENT
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{paymentName, jdbcType=VARCHAR},
+			#{paymentType, jdbcType=DECIMAL},
+			#{rate,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="findByAllDitch" resultMap="DictTradePaymentDitchMap">
+         select *
+         from DICT_TRADE_PAYMENT
+         where  PAYMENT_STATUS = #{paymentStatus}
+	</select>
+</mapper>
