@@ -35,28 +35,23 @@
 		
 	</header>
 		<div style="position:relative;">
-				<div id="tipInfo1" class="payment-dropdown-menu" style="display:none;width:1140px;height:auto;padding:10px;border-radius:5px;top:50px;" >
+				<div id="tipInfo1" class="paymentTop" >
 						<div class="cloutOut" >
 							<h4 style="text-align:right;" ><span onclick="clouOut()"><img src="${pageContext.request.contextPath}/images/close.png" /></span></h4>
 						</div>
-						<div class="payment-collapse">
-							<h4><span class="payment-collapse-arrow"></span>没有开通网上银行如何购买？</h4>
+						<div ><h4>没有开通网上银行如何购买？</h4>
 							<p>各银行已有支持无需网银的小额支付产品，可直接选择付款。或者，可选择银联在线支付或快捷支付（只支持信用卡）付款。</p>
 						</div>
-						<div class="payment-collapse payment-collapse-open">
-							<h4><span class="payment-collapse-arrow"></span>没找到我常用的网上银行？</h4>
+						<div ><h4>没找到我常用的网上银行？</h4>
 							<p>建议选择银联在线支付付款，支持超过180家银行，包括主流银行和地方银行，例如华夏银行，江苏银行，南京银行等。</p>
 						</div>
-						<div class="payment-collapse">
-							<h4><span class="payment-collapse-arrow"></span>什么是地方银行？</h4>
+						<div><h4>什么是地方银行？</h4>
 							<p>地方银行主要指注册和经营在当地的城市商业银行、农村合作银行、村镇银行等中小金融机构，例如江苏银行，南京银行，华夏银行等。</p>
 						</div>
-						<div class="payment-collapse">
-							<h4><span class="payment-collapse-arrow"></span>无法跳转到对应的支付页面支付？</h4>
+						<div ><h4>无法跳转到对应的支付页面支付？</h4>
 							<p>建议刷新当前页面，如果没恢复正常建议重启或更换到IE浏览器。</p>
 						</div>
-						<div class="payment-collapse">
-							<h4><span class="payment-collapse-arrow"></span>网上银行扣款后，订单仍显示"未付款"怎么办？</h4>
+						<div><h4>网上银行扣款后，订单仍显示"未付款"怎么办？</h4>
 							<p>可能是由于银行的数据没有即时传输，请您不要担心，稍后刷新页面查看。如较长时间仍显示未付款，可先向银行或支付平台获取支付凭证（扣款订单号/第三方交易号），联系奥鹏客服为您解决。</p>
 						</div>
 				</div>
@@ -74,36 +69,31 @@
 					<h3>应付总额：<span class="color">${totalFee}</span>元</h3>
 					<p>${goodsName}</p>
 					<p>数量</p>
-					
-					<div style="position:relative;">
-						<span class="assist" onMouseOver="showTip();" onMouseOut="hideTip();">支付帮助</span>
-						<div id="tipInfo" class="payment-dropdown-menu" style="display:none; background-color:#fff;border:solid 1px #999999;width:1000px;height:auto; position:absolute;left:-900px;padding:10px;border-radius:5px;top:50px;" >
-								<div class="payment-collapse">
-									<h4><span class="payment-collapse-arrow"></span>没有开通网上银行如何购买？</h4>
-									<p>各银行已有支持无需网银的小额支付产品，可直接选择付款。或者，可选择银联在线支付或快捷支付（只支持信用卡）付款。</p>
-								</div>
-								<div class="payment-collapse payment-collapse-open">
-									<h4><span class="payment-collapse-arrow"></span>没找到我常用的网上银行？</h4>
-									<p>建议选择银联在线支付付款，支持超过180家银行，包括主流银行和地方银行，例如华夏银行，江苏银行，南京银行等。</p>
-								</div>
-								<div class="payment-collapse">
-									<h4><span class="payment-collapse-arrow"></span>什么是地方银行？</h4>
-									<p>地方银行主要指注册和经营在当地的城市商业银行、农村合作银行、村镇银行等中小金融机构，例如江苏银行，南京银行，华夏银行等。</p>
-								</div>
-								<div class="payment-collapse">
-									<h4><span class="payment-collapse-arrow"></span>无法跳转到对应的支付页面支付？</h4>
-									<p>建议刷新当前页面，如果没恢复正常建议重启或更换到IE浏览器。</p>
-								</div>
-								<div class="payment-collapse">
-									<h4><span class="payment-collapse-arrow"></span>网上银行扣款后，订单仍显示"未付款"怎么办？</h4>
-									<p>可能是由于银行的数据没有即时传输，请您不要担心，稍后刷新页面查看。如较长时间仍显示未付款，可先向银行或支付平台获取支付凭证（扣款订单号/第三方交易号），联系奥鹏客服为您解决。</p>
-								</div>
-						</div>
-					</div>
-					
 				</dd>
 			</dl>
+			<dl>
+				<div>
+						<div id="tipInfo" class="payment"  >
+							<div><h4><span ></span>没有开通网上银行如何购买？</h4>
+								<p>各银行已有支持无需网银的小额支付产品，可直接选择付款。或者，可选择银联在线支付或快捷支付（只支持信用卡）付款。</p>
+							</div>
+							<div><h4><span ></span>没找到我常用的网上银行？</h4>
+								<p>建议选择银联在线支付付款，支持超过180家银行，包括主流银行和地方银行，例如华夏银行，江苏银行，南京银行等。</p>
+							</div>
+							<div><h4><span></span>什么是地方银行？</h4>
+								<p>地方银行主要指注册和经营在当地的城市商业银行、农村合作银行、村镇银行等中小金融机构，例如江苏银行，南京银行，华夏银行等。</p>
+							</div>
+							<div><h4><span ></span>无法跳转到对应的支付页面支付？</h4>
+								<p>建议刷新当前页面，如果没恢复正常建议重启或更换到IE浏览器。</p>
+							</div>
+							<div><h4><span ></span>网上银行扣款后，订单仍显示"未付款"怎么办？</h4>
+								<p>可能是由于银行的数据没有即时传输，请您不要担心，稍后刷新页面查看。如较长时间仍显示未付款，可先向银行或支付平台获取支付凭证（扣款订单号/第三方交易号），联系奥鹏客服为您解决。</p>
+							</div>
+						</div>
+				  </div>
+			</dl>
 		</div>
+		<span class="assist" onMouseOver="showTip();" onMouseOut="hideTip();">支付帮助</span>
 		<div class="pay-method content" >
 			<h3 class="title">选择以下支付方式付款</h3>
 			<h3 class="tit">支付平台<span> （大额支付推荐使用支付宝）</span></h3>
@@ -165,7 +155,7 @@
 		<div class="modal-head"><i class="icon icon-close"></i>
 		<img class="icon icon-close" onclick="closeBtu()" src="${pageContext.request.contextPath}/images/close.png" />
 		</div>
-		<div class="modal-body"><i class="icon icon-ecom"></i>
+		<div class="modal-body1"><i class="icon icon-ecom"></i>
 			<img class="icon icon-ecom" src="${pageContext.request.contextPath}/images/gtanhao.jpg" />
 			<div class="modal-contentw"><h3>请您在新打开的页面上完成付款。</h3><p>付款完成前请不要关闭此窗口。<br>完成付款后请根据您的情况点击下面的按钮：</p>
 				<div class="modal-btn-group">

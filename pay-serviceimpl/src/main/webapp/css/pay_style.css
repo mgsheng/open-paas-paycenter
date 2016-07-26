@@ -337,9 +337,10 @@ border:1px solid #eb6100 ;
     background-image: url(./img/icon-common@2x.KyXBh.png);
     background-size: 168px;
 }
-.modal-body {
+.modal-body1 {
     margin: 40px;
     position: relative;
+    position:10px;
 }
 
 .icon-ecom {
@@ -394,11 +395,11 @@ border:1px solid #eb6100 ;
     padding: 7px 20px 6px;
 }
 .btn1 {
-    background-color: #2bb8aa;
-    background-image: -webkit-gradient(linear,left top,left bottom,from(#2fc9b9),to(#29b0a2));
-    background-image: -webkit-linear-gradient(top,#2fc9b9,#29b0a2);
+    background-color: #eb6100;
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#eb6100),to(#eb6100));
+    background-image: -webkit-linear-gradient(top,#eb6100,#eb6100);
     background-image: linear-gradient(#eb6100,#eb6100,#eb6100);
-    border-bottom: 1px solid #18655e;
+    border-bottom: 1px solid #eb6100;
 }
 .modal-btn-ok {
     margin-right: 5px;
@@ -423,9 +424,16 @@ border:1px solid #eb6100 ;
 	cursor:pointer;
     color: #eb6100;
 }
+.uu{
+	 width: 100%;
+}
 .assist{
 	 float:right;
-	 padding:22px 20px;
+	 padding-top:5px;
+	 padding-right:30px;
+	 text-align: right;
+	 width: 60px;
+	 height: 20px;
 }
 
 .load-print{
@@ -438,3 +446,25 @@ border:1px solid #eb6100 ;
 	margin-left:-75px;
 	margin-top:-75px;
 }
+.paymentTop{
+	display:none;
+	width:1140px;
+	height:auto;
+	padding:10px;
+	border-radius:5px;
+	top:50px;
+}
+
+.payment{
+	display:none;
+	background-color:#fff;
+	border:solid 1px #999999;
+	width:1000px;
+	height:auto; 
+	position:absolute;
+	left:90px;
+	padding:10px;
+	border-radius:5px;
+	top:350px;
+}
+
