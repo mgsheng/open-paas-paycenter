@@ -133,7 +133,7 @@
 <div class="payLayer">
 	<div class="hd">
 		<img src="${pageContext.request.contextPath}/images/weixinPay.jpg" />
-		<img class="close" src="${pageContext.request.contextPath}/images/close.png" />
+		<img class="close" onclick="closeAll()" src="${pageContext.request.contextPath}/images/close.png" />
 	</div>
 	<div>
 		<div class="phone"><img src="${pageContext.request.contextPath}/images/phone.jpg" /></div>
@@ -319,6 +319,9 @@
 		$("#tipInfo").hide();
 	}
 	
+	function closeAll() {
+		$("#load-print").hide();
+	}
 	
 </script>
 </body>
