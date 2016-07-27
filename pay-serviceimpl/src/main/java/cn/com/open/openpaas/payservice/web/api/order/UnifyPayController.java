@@ -802,7 +802,7 @@ public class UnifyPayController extends BaseControllerUtil{
         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
         			response.setCharacterEncoding("UTF-8");
         			response.sendRedirect(URL);*/
-            		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels), payserviceDev.getTcl_pay_url());
+            		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 	       			model.addAttribute("res", res);
          			return "pay/payRedirect";
             	}else{
