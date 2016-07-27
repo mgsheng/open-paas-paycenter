@@ -796,7 +796,7 @@ public class UnifyPayController extends BaseControllerUtil{
             	 }
              		
             } else if(!nullEmptyBlankJudge(areaCode)&&"2".equals(areaCode)){
-            	if(!nullEmptyBlankJudge(payTcl)&&"0".equals(payTcl)){
+            	if(!nullEmptyBlankJudge(payTcl)&&"1".equals(payTcl)){
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
         		/*	String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
