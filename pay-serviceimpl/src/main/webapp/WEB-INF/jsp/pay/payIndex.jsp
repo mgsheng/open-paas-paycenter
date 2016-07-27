@@ -34,7 +34,8 @@
 		</div>
 		
 	</header>
-		<div style="position:relative;">
+	<div class="paymentfi" style="position:relative;">
+		<div class="paymentfi" style="position:relative;">
 				<div id="tipInfo1" class="paymentTop" >
 						<div class="cloutOut" >
 							<h4 style="text-align:right;" ><span onclick="clouOut()"><img src="${pageContext.request.contextPath}/images/close.png" /></span></h4>
@@ -56,7 +57,7 @@
 						</div>
 				</div>
 		</div>
-
+	</div>
 		<div class="pay-tips">
 			<dl>
 				<dt><img src="${pageContext.request.contextPath}/images/success.png" /></dt>
@@ -139,9 +140,6 @@
 		<div class="phone"><img src="${pageContext.request.contextPath}/images/phone.jpg" /></div>
 		<div class="erweimaBox">
 			<div class="erweima" id="erweima">
-			   
-			<div id="payCode">
-			</div>
 			</div>
 			<p>请使用微信扫一扫<br>扫描二维码支付</p>
 		</div>
@@ -236,15 +234,16 @@
 		$(".payLayer").hide();
 	});
 	function submitCheck(obj){
-	         if(areaCode=="3"){
-	        	 document.getElementById("erweima").innerHTML="";
+         if(areaCode=="3"){
+        	 var a=document.getElementById("erweima").innerHTML.length;
+        	 if ( a == 4) {
 		         var payWx="${payWx}";
 		         var totalFee="${totalFeeValue}";
 		         var goodsDesc="${goodsDesc}";
 		         var goodsId="${goodsId}";
 		         $(".mask").show();
-			       $(".payLayer").show();
-		          $.ajax({
+			     $(".payLayer").show();
+		         $.ajax({
 					 type: 'post',
 					 beforeSend:function () {
 						 $("#load-print").show();
@@ -259,19 +258,19 @@
 						   var url=urlDu.slice(10,urlDu.length-1);
 						   document.getElementById("erweima").innerHTML="<img src="+url+" width='260' height='260'>";
 					       $("#load-print").hide();
-					      
 					   }
-					 
-				   });
-	         }else{
-	         	$("form").submit();
-	         }
-	         if(areaCode!=3){
-	        	 document.getElementById(obj).style.display = 'block';
-	        	 $('.mask').show();
-	         }
-	         
-			
+				 });
+	        	 }else{
+	        		 $(".mask").show();
+	        		 $(".payLayer").show();
+	        	 }
+         }else{
+         	$("form").submit();
+         }
+         if(areaCode!=3){
+        	 document.getElementById(obj).style.display = 'block';
+        	 $('.mask').show();
+         }
 	}
 	function aa(){
 	$("form").submit();
