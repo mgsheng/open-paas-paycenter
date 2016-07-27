@@ -25,10 +25,14 @@ public class PayserviceDev {
 	public String user_balance_url;
 	public String kong_log_url;
 	private String log_type;
+	private String yeepayCommonReqURL;
 	
-	
-	
-	
+	public String getYeepayCommonReqURL() {
+		return yeepayCommonReqURL;
+	}
+	public void setYeepayCommonReqURL(String yeepayCommonReqURL) {
+		this.yeepayCommonReqURL = yeepayCommonReqURL;
+	}
 	public String getLog_type() {
 		return log_type;
 	}

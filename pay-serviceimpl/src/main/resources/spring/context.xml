@@ -188,6 +188,7 @@
             <property name="user_balance_url" value="${user_balance_url}"></property>
             <property name="kong_log_url" value="${kong_log_url}"></property>
             <property name="log_type" value="${log_type}"></property>
+            <property name="yeepayCommonReqURL" value="${yeepayCommonReqURL}"></property>
             
         </bean>
 </beans>

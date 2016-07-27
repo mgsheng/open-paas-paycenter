@@ -41,6 +41,8 @@ import cn.com.open.openpaas.payservice.app.channel.tclpay.service.ScanCodeOrderS
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
+import cn.com.open.openpaas.payservice.app.channel.yeepay.HmacUtils;
+import cn.com.open.openpaas.payservice.app.channel.yeepay.PaymentForOnlineService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
@@ -51,7 +53,9 @@ import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
+import cn.com.open.openpaas.payservice.app.tools.PropertiesTool;
 import cn.com.open.openpaas.payservice.app.tools.QRCodeEncoderHandler;
+import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.StringTool;
 import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
@@ -469,7 +473,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		         		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
 				    	 }
 				     	}  	
-				     if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
+		    	 else if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
 				  	   //TCL直连银行
 				    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
 				    		 
@@ -488,15 +492,102 @@ public class UnifyPayController extends BaseControllerUtil{
 		         			return "pay/payRedirect";
 			       			//return "redirect:" + URL;
 				    	  }	 
+				      } 
+				  }else if(!nullEmptyBlankJudge(payEbank)&&"2".equals(payEbank)){
+					  	   //易宝支付
+					    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
+					    		totalFee=AmountUtil.changeF2Y(totalFee);
+					    		 String res = getYeePayUrl(totalFee,
+										merchantOrderInfo,paymentType);
+					    		 model.addAttribute("res", res);
+				         		 return "pay/payRedirect";
+					        }
 				      }
-				  }   
-		     }
+		      }
 		    		      	
 		}
 		  
        	  return "redirect:" + fullUri;
-    }	
+    }
+    /**
+     * 获取易宝支付地址
+     * @param totalFee
+     * @param merchantOrderInfo
+     * @return
+     */
+	public String getYeePayUrl(String totalFee,
+			MerchantOrderInfo merchantOrderInfo,String paymentType) {
+		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.YEEPAY.getValue());
+		 String other= dictTradeChannels.getOther();
+		 Map<String, String> others = new HashMap<String, String>();
+		 others=getPartner(other);
+		 String p0_Cmd=others.get("p0_Cmd");
+		 String p1_MerId=others.get("p1_MerId");
+		 String p2_Order=merchantOrderInfo.getMerchantOrderId();
+		 String p3_Amt=totalFee;
+		 String p4_Cur=others.get("p4_Cur");
+		 String p5_Pid=merchantOrderInfo.getMerchantProductName();
+		 String p6_Pcat="";
+		 String p7_Pdesc="";
+		 if(!nullEmptyBlankJudge(merchantOrderInfo.getMerchantProductDesc())){
+			 p7_Pdesc=merchantOrderInfo.getMerchantProductDesc();
+		 }
+		 String p8_Url=dictTradeChannels.getNotifyUrl();
+		 String p9_SAF=others.get("p9_SAF");
+		 String pa_MP="";
+		 String pd_FrpId=getYeePayFrpId(paymentType);
+		 
+		 String pr_NeedResponse=others.get("pr_NeedResponse");
+		 String keyValue=others.get("keyValue");
+		 String hmac=HmacUtils.getReqMd5HmacForOnlinePayment(others.get("p0_Cmd"), p1_MerId, p2_Order, p3_Amt, p4_Cur, p5_Pid, p6_Pcat, p7_Pdesc, p8_Url, p9_SAF, pa_MP, pd_FrpId, pr_NeedResponse, keyValue);
+		 Map<String, String> dataMap=new HashMap<String, String>();
+		 dataMap.put("p0_Cmd", p0_Cmd);
+		 dataMap.put("p1_MerId", p1_MerId);
+		 dataMap.put("p2_Order", p2_Order);
+		 dataMap.put("p3_Amt", p3_Amt);
+		 dataMap.put("p4_Cur", p4_Cur);
+		 dataMap.put("p5_Pid", p5_Pid);
+		 dataMap.put("p6_Pcat", p6_Pcat);
+		 dataMap.put("p7_Pdesc", p7_Pdesc);
+		 dataMap.put("p8_Url", p8_Url);
+		 dataMap.put("p9_SAF", p9_SAF);
+		 dataMap.put("pa_MP", pa_MP);
+		 dataMap.put("pd_FrpId", pd_FrpId);
+		 dataMap.put("pr_NeedResponse", pr_NeedResponse);
+		 dataMap.put("hmac", hmac);
+		 String res =SendPostMethod.buildRequest(dataMap, "post", "ok",payserviceDev.getYeepayCommonReqURL());
+		return res;
+	}	
     
+	public String getYeePayFrpId(String paymentType){
+		 String returnValue="";
+		 if(!nullEmptyBlankJudge(paymentType)){
+			 if(PaymentType.CMB.getValue().equals(paymentType)){
+				   returnValue="CMBCHINA-NET-B2C";
+	   		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
+				   returnValue="BOC-NET-B2C";
+	 		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+				   returnValue="ICBC-NET-B2C";
+	 		 }else if(PaymentType.CCB.getValue().equals(paymentType)){
+				   returnValue="CCB-NET-B2C";
+	 		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
+				   returnValue="ABC-NET-B2C";
+	 		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
+				   returnValue="BOCO-NET-B2C";
+	 		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
+				   returnValue="POST-NET-B2C";
+	 		 }else if(PaymentType.CGB.getValue().equals(paymentType)){
+				   returnValue="GDB-NET-B2C";
+	 		 }else if(PaymentType.SPDB.getValue().equals(paymentType)){
+				   returnValue="SPDB-NET-B2C";
+	 		 }else if(PaymentType.CEB.getValue().equals(paymentType)){
+				   returnValue="CEB-NET-B2C";
+	 		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
+				   returnValue="PINGANBANK-NET";
+			 } 
+		 }
+		 return returnValue;
+	}
    /**
     * 返回银行代码
     * @param paymentType
@@ -515,8 +606,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			   returnValue="CCB";
  		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
 			   returnValue="ABC";
- 		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
-			   returnValue="BOCB2C";
  		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
 			   returnValue="COMM-DEBIT";
  		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
@@ -819,8 +908,14 @@ public class UnifyPayController extends BaseControllerUtil{
                 		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 		       			model.addAttribute("res", res);
 	         			return "pay/payRedirect";
-            	  }else{
-            		  
+            	  }else if(!nullEmptyBlankJudge(payEbank)&&"2".equals(payEbank)){
+				  	   //易宝支付
+				    		totalFee=AmountUtil.changeF2Y(totalFee);
+				    		 String res = getYeePayUrl(totalFee,
+									merchantOrderInfo,areaCode);
+				    		 model.addAttribute("res", res);
+			         		 return "pay/payRedirect";
+			      }else{
             		// 支付宝-网银支付
      		    	 if(!(PaymentType.UPOP.getValue()+"").equals(areaCode)&&!(PaymentType.WEIXIN.getValue()+"").equals(areaCode)&&!(PaymentType.ALIPAY.getValue()+"").equals(areaCode)){ 
      		    		 String defaultbank=getDefaultbank(areaCode);
@@ -949,7 +1044,40 @@ public class UnifyPayController extends BaseControllerUtil{
   	   }
   	   return newAreaCode;
     }
-    
+    /**
+     * 易宝支付
+     * @param areaCode
+     * @return
+     */
+    public String getYeePayCode(String paymentType){
+    	String returnValue="";
+    	if(!nullEmptyBlankJudge(paymentType)){
+    		 if(PaymentType.CMB.getValue().equals(paymentType)){
+				   returnValue="CMBCHINA-NET-B2C";
+	   		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
+				   returnValue="BOC-NET-B2C";
+	 		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+				   returnValue="ICBC-NET-B2C";
+	 		 }else if(PaymentType.CCB.getValue().equals(paymentType)){
+				   returnValue="CCB-NET-B2C";
+	 		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
+				   returnValue="ABC-NET-B2C";
+	 		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
+				   returnValue="BOCO-NET-B2C";
+	 		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
+				   returnValue="POST-NET-B2C";
+	 		 }else if(PaymentType.CGB.getValue().equals(paymentType)){
+				   returnValue="GDB-NET-B2C";
+	 		 }else if(PaymentType.SPDB.getValue().equals(paymentType)){
+				   returnValue="SPDB-NET-B2C";
+	 		 }else if(PaymentType.CEB.getValue().equals(paymentType)){
+				   returnValue="CEB-NET-B2C";
+	 		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
+				   returnValue="PINGANBANK-NET";
+			 } 
+    	}
+  	   return returnValue;
+    }
    
  // 测试当面付2.0生成支付二维码
     public void test_trade_precreate(String outTradeNo,String subject,String totalAmount,String undiscountableAmount,String sellerId,String storeId,String body,String operatorId,String timeExpress ) {
