@@ -142,7 +142,8 @@ public class AliOrderProThread implements Runnable {
 					merchantOrderInfo.setNotifyStatus(2);
 				    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
 					merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
-					payServiceLog.setErrorCode("1");
+					//连接超时
+					payServiceLog.setErrorCode("2");
 				    payServiceLog.setStatus("error");
 					UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 					sendMsg="通知失败！";
