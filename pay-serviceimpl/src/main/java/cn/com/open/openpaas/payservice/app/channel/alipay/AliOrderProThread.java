@@ -109,18 +109,34 @@ public class AliOrderProThread implements Runnable {
 		  do { 
 			      log.info("-----------------------------通知业务方开始--------------------------");
 		    	  String returnValue= sendPost(notifyUrl,sParaTemp);
-				  JSONObject reqjson = JSONObject.fromObject(returnValue);
-				  count+=1;
-				  callBackSend=analysisValue(reqjson);
-				  if(callBackSend){
-					  merchantOrderInfo.setNotifyStatus(1);
-					  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
-					  payServiceLog.setErrorCode("");
-					  payServiceLog.setStatus("ok");
-					  UnifyPayControllerLog.log(payServiceLog,payserviceDev);
-					  sendMsg="通知成功！";
-				  }else{
-					  if(count>1){
+		    	  count+=1;
+		    	  if(returnValue!=null)
+		    	  {
+		    		  JSONObject reqjson = JSONObject.fromObject(returnValue);
+						 
+					  callBackSend=analysisValue(reqjson);
+					  if(callBackSend){
+						  merchantOrderInfo.setNotifyStatus(1);
+						  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
+						  payServiceLog.setErrorCode("");
+						  payServiceLog.setStatus("ok");
+						  UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						  sendMsg="通知成功！";
+					  }else{
+						  if(count>1){
+							  callBackSend=true;  
+						  }
+						merchantOrderInfo.setNotifyStatus(2);
+					    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
+						merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
+						payServiceLog.setErrorCode("1");
+					    payServiceLog.setStatus("error");
+						UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						sendMsg="通知失败！";
+		    	  }
+				  }
+		    	  else{
+		    		  if(count>1){
 						  callBackSend=true;  
 					  }
 					merchantOrderInfo.setNotifyStatus(2);
@@ -130,7 +146,7 @@ public class AliOrderProThread implements Runnable {
 				    payServiceLog.setStatus("error");
 					UnifyPayControllerLog.log(payServiceLog,payserviceDev);
 					sendMsg="通知失败！";
-				  }
+		    	  }
 			} while (!callBackSend);
 		  log.info("通知是否成功："+sendMsg);
 		}
@@ -207,6 +223,7 @@ public class AliOrderProThread implements Runnable {
             System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
+            return null;
         } finally {  
             try {  
                 if (out != null) {  
