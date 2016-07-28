@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.openpaas.payservice.app.infrastructure.repository.MerchantOrderInfoRepository;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
+import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 
 /**
  * 
@@ -76,6 +77,12 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 	public void updatePayStatus(Integer payStatus, String id) {
 		merchantOrderInfoRepository.updatePayStatus(payStatus, id);
 		
+	}
+
+	@Override
+	public List<MerchantOrderInfo> findOrderByTime(Date startTime, Date endTime,
+			String appId) {
+		return merchantOrderInfoRepository.findOrderByTime(startTime, endTime, appId);
 	}
 
 }

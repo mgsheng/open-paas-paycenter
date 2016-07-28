@@ -1,5 +1,6 @@
 package cn.com.open.openpaas.payservice.app.infrastructure.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -26,5 +27,6 @@ public interface MerchantOrderInfoRepository extends Repository {
 	List<MerchantOrderInfo> findByPayAndNotifyStatus();
 	void updateNotifyStatus(MerchantOrderInfo orderInfo);
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
+	List<MerchantOrderInfo> findOrderByTime(@Param("startTime")Date startTime, @Param("startTime")Date endTime,@Param("appId")String appId);
 
 }

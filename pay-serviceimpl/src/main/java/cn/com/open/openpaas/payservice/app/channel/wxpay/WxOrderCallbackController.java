@@ -28,8 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
+import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -71,11 +73,13 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		//读取参数
 		        log.info("------------------------------微信回调处理开始------------------------------");
+		        long startTime = System.currentTimeMillis();
 				InputStream inputStream ;
 				StringBuffer sb = new StringBuffer();
 				inputStream = request.getInputStream();
 			    String resXml = "";
 				String s ;
+				
 				BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 				while ((s = in.readLine()) != null){
 					sb.append(s);
@@ -113,130 +117,59 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 						}
 						packageParams.put(parameter, v);
 					}
+		        	String out_trade_no = (String)packageParams.get("out_trade_no");
+		        	String transaction_id=(String)packageParams.get("transaction_id");
+		        	
+		        	String total_fee = (String)packageParams.get("total_fee");
+		        	Double total_fees=Double.parseDouble(total_fee);
 					// 账号信息(需要修改)
 			        String key = payserviceDev.getWx_key(); // key
 			        //log.info(packageParams);
-			        //添加日志
+			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 			      //添加日志
 					 PayServiceLog payServiceLog=new PayServiceLog();
-					 payServiceLog.setAmount((String)packageParams.get("total_fee"));
-					 payServiceLog.setAppId("");
-					 payServiceLog.setChannelId("");
+					 payServiceLog.setAmount(total_fee);
+					 payServiceLog.setAppId(merchantOrderInfo.getAppId());
+					 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 					 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 					 payServiceLog.setLogType(payserviceDev.getLog_type());
-					 payServiceLog.setMerchantId("");
-					 payServiceLog.setMerchantOrderId((String)packageParams.get("out_trade_no"));
-					 payServiceLog.setOrderId("");
-					 payServiceLog.setPaymentId("");
-					 payServiceLog.setPayOrderId((String)packageParams.get("transaction_id"));
-					 payServiceLog.setProductDesc("");
-					 payServiceLog.setProductName("");
-					 payServiceLog.setRealAmount((String)packageParams.get("total_fee"));
-					 payServiceLog.setSourceUid("");
-					 payServiceLog.setUsername("");
-			        
-			        
+					 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
+					 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
+					 payServiceLog.setOrderId(out_trade_no);
+					 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+					 payServiceLog.setPayOrderId(transaction_id);
+					 payServiceLog.setRealAmount(total_fee);
+					 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+					 payServiceLog.setUsername(merchantOrderInfo.getUserName());
+					 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+			         payServiceLog.setStatus("ok");
+			         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			        
 				    //判断签名是否正确
 				    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
 				    	String rechargeMsg="";
-				        //------------------------------
 				        //处理业务开始
-				        //------------------------------
 				    	log.info("----------------------------处理业务开始------------------");
 				        if("SUCCESS".equals((String)packageParams.get("result_code"))){
 				        	// 这里是支付成功
 				            //////////执行自己的业务逻辑////////////////
 				        	log.info("----------------支付成功执行业务逻辑--------------------------");
-				        	String mch_id = (String)packageParams.get("mch_id");
-				        	String openid = (String)packageParams.get("openid");
-				        	String is_subscribe = (String)packageParams.get("is_subscribe");
-				        	String out_trade_no = (String)packageParams.get("out_trade_no");
-				        	String transaction_id=(String)packageParams.get("transaction_id");
-				        	
-				        	String total_fee = (String)packageParams.get("total_fee");
-				        	Double total_fees=Double.parseDouble(total_fee);
-				        	
-				        	log.info("mch_id:"+mch_id);
-				        	log.info("openid:"+openid);
-				        	log.info("is_subscribe:"+is_subscribe);
-				        	log.info("out_trade_no:"+out_trade_no);
-				        	log.info("total_fee:"+total_fees);
-				            
-				            //////////执行自己的业务逻辑////////////////
-				        	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
+				        
 				        	if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-								/*String userId=String.valueOf(merchantOrderInfo.getSourceUid());
-								UserSerialRecord userSerialRecord=new UserSerialRecord();
-				        	    userSerialRecord.setAmount(Double.parseDouble(total_fee));
-				        	    userSerialRecord.setAppId(Integer.parseInt(merchantOrderInfo.getAppId()));
-				        	    userSerialRecord.setSerialNo(out_trade_no);
-				        	    userSerialRecord.setSourceId(merchantOrderInfo.getSourceUid());
-				        	    userSerialRecord.setPayType(1);
-				        	    userSerialRecord.setCreateTime(new Date());
-				        	    userSerialRecord.setUserName(merchantOrderInfo.getUserName());
-				        	    userSerialRecordService.saveUserSerialRecord(userSerialRecord);
-								UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
-								if(userAccountBalance!=null){
-									userAccountBalance.setBalance(Double.parseDouble(total_fee)/100+userAccountBalance.getBalance());
-									 DistributedLock lock = null;
-					                 try {
-					           		  lock = new DistributedLock(payserviceDev.getZookeeper_config(),userAccountBalance.getSourceId()+userAccountBalance.getAppId());
-					           		  lock.lock();
-					           		  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
-					           		  rechargeMsg="SUCCESS";
-					       		     } catch (Exception e) {
-					       			// TODO Auto-generated catch block
-						       			e.printStackTrace();
-						       		 rechargeMsg="ERROR";
-						       		  }finally{
-						       			  lock.unlock(); 
-						       		  }
-								}else{
-									userAccountBalance=new UserAccountBalance();
-									userAccountBalance.setUserId(userId);
-									userAccountBalance.setStatus(1);
-									userAccountBalance.setType(1);
-									userAccountBalance.setCreateTime(new Date());
-									userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
-									rechargeMsg="SUCCESS";
-								}*/
-				        		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
-								sParaTemp.put("userId",merchantOrderInfo.getSourceUid());
-						        sParaTemp.put("total_fee",Double.parseDouble(total_fee));
-						        sParaTemp.put("appId", merchantOrderInfo.getAppId());
-						        sParaTemp.put("userName",merchantOrderInfo.getUserName());
-								sParaTemp.put("out_trade_no", out_trade_no);
-								String returnValue= sendPost(payserviceDev.getUser_balance_url(),sParaTemp);
-								JSONObject reqjson = JSONObject.fromObject(returnValue);
-								 Boolean callBackSend=analysisValue(reqjson);
-								  if(callBackSend){
-									 payServiceLog.setErrorCode("");
-							         payServiceLog.setStatus("ok");
-							         UnifyPayControllerLog.log(payServiceLog,payserviceDev);
-									  rechargeMsg="SUCESS";
-								  }else{
-									payServiceLog.setErrorCode("1");
-							        payServiceLog.setStatus("error");
-							        UnifyPayControllerLog.log(payServiceLog,payserviceDev);
-									rechargeMsg="ERROR";
-								  }
-								
-							}
-				        	if(merchantOrderInfo!=null){
-				        		int notifyStatus=merchantOrderInfo.getNotifyStatus();
+				        		rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+				        		
+								}
+					        	int notifyStatus=merchantOrderInfo.getNotifyStatus();
 								int payStatus=merchantOrderInfo.getPayStatus();
 								Double payCharge=0.0;
 								if(payStatus!=1){
-									merchantOrderInfo.setPayStatus(1);
-									merchantOrderInfo.setPayAmount((total_fees-payCharge)/100);
-									merchantOrderInfo.setAmount(total_fees/100);
-									merchantOrderInfo.setPayCharge(0.0);
-									merchantOrderInfo.setDealDate(new Date());
-									merchantOrderInfo.setPayOrderId(transaction_id);
-									merchantOrderInfoService.updateOrder(merchantOrderInfo);
-								}
-							
+								merchantOrderInfo.setPayStatus(1);
+								merchantOrderInfo.setPayAmount((total_fees-payCharge)/100);
+								merchantOrderInfo.setAmount(total_fees/100);
+								merchantOrderInfo.setPayCharge(0.0);
+								merchantOrderInfo.setDealDate(new Date());
+								merchantOrderInfo.setPayOrderId(transaction_id);
+								merchantOrderInfoService.updateOrder(merchantOrderInfo);
 								if(notifyStatus!=1){
 									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
 									   thread.run();	
@@ -245,15 +178,22 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 					            //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
 					            resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
 					                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+					            payServiceLog.setLogName(PayLogName.CALLBACK_END);
+					            UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				        	}else{
 				        		payServiceLog.setErrorCode("2");
 						        payServiceLog.setStatus("error");
-						        UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+						        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				        		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 					            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
 				        	}
 				        } else {
+				        	payServiceLog.setErrorCode("4");
+					        payServiceLog.setStatus("error");
+					        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+					        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				        	log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 				            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 				                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
@@ -262,12 +202,12 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 				    } else{
 				    	payServiceLog.setErrorCode("3");
 				        payServiceLog.setStatus("error");
-				        UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+				        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+				        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 				                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
 				    	log.info("通知签名验证失败");
 				    }
-					
 				   }
 				    //------------------------------
 			        //处理业务完毕

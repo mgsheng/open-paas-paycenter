@@ -36,11 +36,12 @@ public class UnifyPayControllerLog {
 	 * @param app
 	 * @param map
 	 */
-	public static void log(PayServiceLog log, PayserviceDev payserviceDev){
+	public static void log(long startTime,PayServiceLog log, PayserviceDev payserviceDev){
 		try {
 			Throwable ex = new Throwable();
 			StringBuffer msg = new StringBuffer();
 		 	Map<String ,Object> map=new HashMap<String,Object>();
+		 	long endTime = System.currentTimeMillis(); //获取结束时间
 			//根据堆栈[1]获取到调用的方法名 0是自身
 			if (ex.getStackTrace() != null && ex.getStackTrace()[1] != null) {
 				//获取时间
@@ -48,6 +49,7 @@ public class UnifyPayControllerLog {
 				//获取方法名
 				msg.append(ex.getStackTrace()[1].getMethodName()).append("#");
 				log.setServiceName(ex.getStackTrace()[1].getMethodName());
+				log.setExecutionTime(endTime-startTime);
 				//获取业务方唯一订单号
 				msg.append(log.getMerchantOrderId()).append("#");
 				//获取用户Id
@@ -91,7 +93,7 @@ public class UnifyPayControllerLog {
 					}
 				}
 			}
-			logger.info(msg.toString()+"|"+JSONObject.toJSONString(log));
+			//logger.info(msg.toString()+"|"+JSONObject.toJSONString(log));
 			Map <String,String>logMap=new HashMap<String,String>();
 			logMap.put("tag", "payservice");
 			logMap.put("logData", JSONObject.toJSONString(log));

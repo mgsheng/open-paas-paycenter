@@ -13,4 +13,8 @@ public interface PayLogName {
 	public static String CALLBACK_START = "callback_start";
 	//第三方回调结束
 	public static String CALLBACK_END = "callback_end";
+	//扣费开始
+	public static String COSTS_START = "costs_start";
+	//扣费结束
+	public static String COSTS_END = "costs_end";
 }

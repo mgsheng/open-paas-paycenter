@@ -21,6 +21,7 @@ import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.log.UnifyCostsControllerLog;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
@@ -74,26 +75,23 @@ public class UnifyCostsController extends BaseControllerUtil{
     	PayServiceLog payServiceLog=new PayServiceLog();
   	    payServiceLog.setAmount(amount);
   	    payServiceLog.setAppId(appId);
-  	    payServiceLog.setChannelId("");
   	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
   	    payServiceLog.setLogType(payserviceDev.getLog_type());
   	    payServiceLog.setMerchantId(merchantId);
   	    payServiceLog.setMerchantOrderId(serialNo);
-  	    payServiceLog.setOrderId("");
-  	    payServiceLog.setPaymentId("");
-  	    payServiceLog.setPayOrderId("");
-  	    payServiceLog.setProductDesc("");
-  	    payServiceLog.setProductName("");
-  	    payServiceLog.setRealAmount("");
+  	    payServiceLog.setRealAmount(amount);
   	    payServiceLog.setSourceUid(sourceId);
   	    payServiceLog.setUsername(userName);
+  	    payServiceLog.setStatus("ok");
+  	    payServiceLog.setLogName(PayLogName.COSTS_START);
     	Map<String ,Object> map=new HashMap<String,Object>();
     	
         if(!paraMandatoryCheck(Arrays.asList(serialNo,appId,amount,sourceId))){
         	map=paraMandaChkAndReturnMap(1, response,"必传参数中有空值");
         	payServiceLog.setErrorCode("1");
         	payServiceLog.setStatus("error");
-        	 UnifyPayControllerLog.log(payServiceLog,payserviceDev);	
+        	payServiceLog.setLogName(PayLogName.COSTS_END);
+        	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
         	writeErrorJson(response,map);
         	return ;
         }
@@ -101,9 +99,9 @@ public class UnifyCostsController extends BaseControllerUtil{
     	if(merchantInfo==null){
     		payServiceLog.setErrorCode("2");
         	payServiceLog.setStatus("error");
-        	
+        	payServiceLog.setLogName(PayLogName.COSTS_END);
         	map=paraMandaChkAndReturnMap(2, response,"商户ID不存在");
-        	 UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+        	 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	writeErrorJson(response,map);
         	return ;
         }
@@ -122,7 +120,8 @@ public class UnifyCostsController extends BaseControllerUtil{
 			map=paraMandaChkAndReturnMap(3, response,"认证失败");
 			payServiceLog.setErrorCode("3");
         	payServiceLog.setStatus("error");
-        	 UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+        	payServiceLog.setLogName(PayLogName.COSTS_END);
+        	 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			writeErrorJson(response,map);
         	return ;
 		} 
@@ -131,7 +130,8 @@ public class UnifyCostsController extends BaseControllerUtil{
         	payServiceLog.setErrorCode("4");
         	payServiceLog.setStatus("error");
         	map=paraMandaChkAndReturnMap(4, response,"订单金额格式有误");
-        	 UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+        	payServiceLog.setLogName(PayLogName.COSTS_END);
+        	 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	writeErrorJson(response,map);
         	return ;
         }
@@ -140,7 +140,8 @@ public class UnifyCostsController extends BaseControllerUtil{
         	payServiceLog.setErrorCode("5");
         	payServiceLog.setStatus("error");
         	map=paraMandaChkAndReturnMap(5, response,"账户不存在");
-        	 UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+        	payServiceLog.setLogName(PayLogName.COSTS_END);
+        	 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			writeErrorJson(response,map);
         	return ;	
         }else{
@@ -175,18 +176,21 @@ public class UnifyCostsController extends BaseControllerUtil{
         		payServiceLog.setErrorCode("");
             	payServiceLog.setStatus("ok");
         		writeSuccessJson(response,map);
+        		payServiceLog.setLogName(PayLogName.COSTS_END);
+        	    UnifyPayControllerLog.log(startTime, payServiceLog, payserviceDev);
         		return ;
         	}else{
         		payServiceLog.setErrorCode("6");
             	payServiceLog.setStatus("error");
+            	payServiceLog.setLogName(PayLogName.COSTS_END);
         		map=paraMandaChkAndReturnMap(6, response,"账户余额不足");
-        		 UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+        		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
             	writeErrorJson(response,map);
             	return ;
         	}
         	
         }
-        
+      
     }	
     
 	

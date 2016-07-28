@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
+import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 
 /**
  * 
@@ -27,5 +28,6 @@ public interface MerchantOrderInfoService {
 	void updateNotifyStatus(MerchantOrderInfo orderInfo);
 
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
+	List<MerchantOrderInfo> findOrderByTime(Date startTime,Date endTime,String appId);
 	
 }

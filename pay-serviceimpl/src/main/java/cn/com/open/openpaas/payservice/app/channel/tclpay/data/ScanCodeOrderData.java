@@ -216,7 +216,7 @@ public class ScanCodeOrderData {
 		orderDataMap.put(HytParamKeys.MERCHANT_CODE, merchant_code);
 		orderDataMap.put(HytParamKeys.APP_NO, "");
 		orderDataMap.put(HytParamKeys.MERCHANT_NAME, "");
-		orderDataMap.put(HytParamKeys.OUT_TRADE_NO, merchantOrderInfo.getMerchantOrderId());
+		orderDataMap.put(HytParamKeys.OUT_TRADE_NO, merchantOrderInfo.getId());
 		orderDataMap.put(HytParamKeys.SERVICE, Service);
 		orderDataMap.put(HytParamKeys.CHANNEL_CODE, channelCode);
 		orderDataMap.put(HytParamKeys.CHANNEL_PRODUCT_CODE, "");

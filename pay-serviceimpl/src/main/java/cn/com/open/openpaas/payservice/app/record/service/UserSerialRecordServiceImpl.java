@@ -1,5 +1,8 @@
 package cn.com.open.openpaas.payservice.app.record.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +22,12 @@ public class UserSerialRecordServiceImpl implements UserSerialRecordService {
 	@Override
 	public void saveUserSerialRecord(UserSerialRecord userSerialRecord) {
 		userSerialRecordRepository.saveUserSerialRecord(userSerialRecord);
+	}
+
+	@Override
+	public List<UserSerialRecord> getSerialByTime(Date startTime, Date endTime,
+			String appId) {
+		return userSerialRecordRepository.getSerialByTime(startTime, endTime, appId);
 	}
 
 

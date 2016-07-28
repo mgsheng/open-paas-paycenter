@@ -22,8 +22,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
+import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.log.AlipayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -90,24 +92,27 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
 		String body = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
 		Map<String, Object> map=new HashMap<String, Object>();
-
+		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		//添加日志
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(request.getParameter("total_fee"));
-		 payServiceLog.setAppId("");
-		 payServiceLog.setChannelId("");
+		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
+		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
-		 payServiceLog.setMerchantId("");
-		 payServiceLog.setMerchantOrderId(out_trade_no);
-		 payServiceLog.setOrderId("");
-		 payServiceLog.setPaymentId("");
+		 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
+		 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
+		 payServiceLog.setOrderId(out_trade_no);
+		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
 		 payServiceLog.setPayOrderId(trade_no);
 		 payServiceLog.setProductDesc(body);
 		 payServiceLog.setProductName(subject);
 		 payServiceLog.setRealAmount(request.getParameter("total_fee"));
-		 payServiceLog.setSourceUid("");
-		 payServiceLog.setUsername("");
+		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
+		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+         payServiceLog.setStatus("ok");
+         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params);
 		if(verify_result){//验证成功
@@ -118,82 +123,13 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				backMsg="success";
-				MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(out_trade_no);
 				//账户充值操作
 				String rechargeMsg="";
 				if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-					/*String userId=String.valueOf(merchantOrderInfo.getSourceUid());
-					//流水记录
-					UserSerialRecord userSerialRecord=new UserSerialRecord();
-	        	    userSerialRecord.setAmount(total_fee);
-	        	    userSerialRecord.setAppId(Integer.parseInt(merchantOrderInfo.getAppId()));
-	        	    userSerialRecord.setSerialNo(out_trade_no);
-	        	    userSerialRecord.setSourceId(merchantOrderInfo.getSourceUid());
-	        	    userSerialRecord.setPayType(1);
-	        	    userSerialRecord.setCreateTime(new Date());
-	        	    userSerialRecord.setUserName(merchantOrderInfo.getUserName());
-	        	    userSerialRecordService.saveUserSerialRecord(userSerialRecord);
-	        	    //充值
-					UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
-					if(userAccountBalance!=null){
-						userAccountBalance.setBalance(total_fee/100+userAccountBalance.getBalance());
-						 DistributedLock lock = null;
-		                 try {
-		           		  lock = new DistributedLock(payserviceDev.getZookeeper_config(),userAccountBalance.getSourceId()+userAccountBalance.getAppId());
-		           		  lock.lock();
-		           		  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
-		           		  rechargeMsg="SUCCESS";
-		       		     } catch (Exception e) {
-		       			// TODO Auto-generated catch block
-			       			e.printStackTrace();
-			       		 rechargeMsg="ERROR";
-			       		  }finally{
-			       			  lock.unlock(); 
-			       		  }
-					}else{
-						userAccountBalance=new UserAccountBalance();
-						userAccountBalance.setUserId(userId);
-						userAccountBalance.setStatus(1);
-						userAccountBalance.setType(1);
-						userAccountBalance.setCreateTime(new Date());
-						userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
-						rechargeMsg="SUCCESS";
-					}*/
-					//拼接发送的加密信息
-					SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
-					sParaTemp.put("userId",merchantOrderInfo.getSourceUid());
-			        sParaTemp.put("total_fee", total_fee*100);
-			        sParaTemp.put("appId", merchantOrderInfo.getAppId());
-			        sParaTemp.put("userName",merchantOrderInfo.getUserName());
-					sParaTemp.put("out_trade_no", out_trade_no);
-					String returnValue= sendPost(payserviceDev.getUser_balance_url(),sParaTemp);
-					JSONObject reqjson = JSONObject.fromObject(returnValue);
-					 Boolean callBackSend=analysisValue(reqjson);
-					  if(callBackSend){
-						  payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-						  payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
-					  	  payServiceLog.setUsername(merchantOrderInfo.getUserName());
-					  	  payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-						  payServiceLog.setErrorCode("");
-				          payServiceLog.setStatus("ok");
-				          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
-						  rechargeMsg="SUCESS";
-					  }else{
-						  payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-						  payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
-					  	  payServiceLog.setUsername(merchantOrderInfo.getUserName());
-					  	  payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-						  payServiceLog.setErrorCode("1");
-				          payServiceLog.setStatus("error");
-				          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
-						rechargeMsg="ERROR";
-					  }
-					  
-				}
+				rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 				int notifyStatus=merchantOrderInfo.getNotifyStatus();
 				int payStatus=merchantOrderInfo.getPayStatus();
 				Double payCharge=0.0;
-				
 				if(payStatus!=1){
 					merchantOrderInfo.setPayStatus(1);
 					merchantOrderInfo.setPayAmount(total_fee-payCharge);
@@ -211,18 +147,22 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			}
 			//该页面可做页面美工编辑
 			
-			 
 			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 			//////////////////////////////////////////////////////////////////////////////////////////
+				
+		   
 		}else{
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
-	          UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+	          payServiceLog.setLogName(PayLogName.CALLBACK_END);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
-		AlipayControllerLog.log(startTime,params, map);
+	    payServiceLog.setLogName(PayLogName.CALLBACK_END);
+		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
 		WebUtils.writeJson(response, backMsg);
 	  } 
+	}
 }

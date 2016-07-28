@@ -207,6 +207,7 @@ pay-serviceimpl/README.md -text
 pay-serviceimpl/build.gradle -text
 pay-serviceimpl/pom.xml -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/balance/service/UserAccountBalanceServiceImpl.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/UnifyPayUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderProThread.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayConfig.java -text
@@ -266,6 +267,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/PaymentForOnlineService.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/QueryResult.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/RefundResult.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/YeeOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceAdvice.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceSwitcher.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DynamicDataSource.java -text
@@ -314,6 +316,8 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/oauth/Oaut
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderAutoSendController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderManualSendController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderRefundController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/QueryOrderInfoController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/QuerySerialRecordController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/TestOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UnifyCostsController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UnifyPayController.java -text

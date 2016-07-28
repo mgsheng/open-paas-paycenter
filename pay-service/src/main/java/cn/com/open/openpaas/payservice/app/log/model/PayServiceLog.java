@@ -37,7 +37,24 @@ public class PayServiceLog {
     private String productDesc;
     //日志类型
     private String logType;
+    //日志名称
+    private String logName;
+    //执行时间
+    private long executionTime;
     
+    
+	public long getExecutionTime() {
+		return executionTime;
+	}
+	public void setExecutionTime(long executionTime) {
+		this.executionTime = executionTime;
+	}
+	public String getLogName() {
+		return logName;
+	}
+	public void setLogName(String logName) {
+		this.logName = logName;
+	}
 	public String getErrorCode() {
 		return errorCode;
 	}

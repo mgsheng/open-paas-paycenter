@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
@@ -55,6 +56,7 @@ public class AliOrderProThread implements Runnable {
 		if(merchantOrderInfoService == null){
 			return;
 		}
+		long startTime = System.currentTimeMillis();
 		String notifyUrl=merchantOrderInfo.getNotifyUrl();
 		MerchantInfo merchantInfo = null;
 		if(nullEmptyBlankJudge(notifyUrl)){
@@ -89,12 +91,12 @@ public class AliOrderProThread implements Runnable {
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getAmount()));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
-		 payServiceLog.setChannelId("");
+		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
-		 payServiceLog.setMerchantId("");
-		 payServiceLog.setMerchantOrderId(String.valueOf(merchantOrderInfo.getChannelOrderId()));
-		 payServiceLog.setOrderId("");
+		 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
+		 payServiceLog.setMerchantOrderId(String.valueOf(merchantOrderInfo.getMerchantOrderId()));
+		 payServiceLog.setOrderId(merchantOrderInfo.getId());
 		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
 		 payServiceLog.setPayOrderId(String.valueOf(merchantOrderInfo.getPayOrderId()));
 		 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
@@ -102,9 +104,9 @@ public class AliOrderProThread implements Runnable {
 		 payServiceLog.setRealAmount(String.valueOf(merchantOrderInfo.getPayAmount()));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		  payServiceLog.setErrorCode("");
-		  payServiceLog.setStatus("ok");
-		  UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+		 payServiceLog.setLogName(PayLogName.NOTIFY_START);
+		 payServiceLog.setStatus("ok");
+		  UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		// sendPost(merchantOrderInfo.getNotifyUrl(),parameters);
 		  do { 
 			      log.info("-----------------------------通知业务方开始--------------------------");
@@ -118,9 +120,8 @@ public class AliOrderProThread implements Runnable {
 					  if(callBackSend){
 						  merchantOrderInfo.setNotifyStatus(1);
 						  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
-						  payServiceLog.setErrorCode("");
-						  payServiceLog.setStatus("ok");
-						  UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						  payServiceLog.setLogName(PayLogName.NOTIFY_END);
+						  UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 						  sendMsg="通知成功！";
 					  }else{
 						  if(count>1){
@@ -130,10 +131,11 @@ public class AliOrderProThread implements Runnable {
 					    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
 						merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
 						payServiceLog.setErrorCode("1");
-					    payServiceLog.setStatus("error");
-						UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+						 payServiceLog.setLogName(PayLogName.NOTIFY_END);
+						 payServiceLog.setStatus("error");
+							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 						sendMsg="通知失败！";
-		    	  }
+		    	   }
 				  }
 		    	  else{
 		    		  if(count>1){
@@ -144,8 +146,9 @@ public class AliOrderProThread implements Runnable {
 					merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
 					//连接超时
 					payServiceLog.setErrorCode("2");
+					 payServiceLog.setLogName(PayLogName.NOTIFY_END);
 				    payServiceLog.setStatus("error");
-					UnifyPayControllerLog.log(payServiceLog,payserviceDev);
+					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					sendMsg="通知失败！";
 		    	  }
 			} while (!callBackSend);
