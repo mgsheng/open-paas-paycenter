@@ -360,6 +360,7 @@ public class UnifyPayController extends BaseControllerUtil{
 	              model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
 	              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
 				 model.addAttribute("outTradeNo", merchantOrderInfo.getId());
+				 model.addAttribute("merchantOrderId", merchantOrderInfo.getMerchantOrderId());
 				 model.addAttribute("appId", appId);
 				 model.addAttribute("payZhifubao", payZhifubao);
 				 model.addAttribute("payWx", payWx);
@@ -827,8 +828,10 @@ public class UnifyPayController extends BaseControllerUtil{
     	
     	String areaCode=request.getParameter("areaCode");
     	String outTradeNo=request.getParameter("outTradeNo");
+    	String merchantOrderId=request.getParameter("merchantOrderId");
     	String appId=request.getParameter("appId");
-    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo, appId);
+    	
+    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(merchantOrderId, appId);
     	//日志添加
     	PayServiceLog payServiceLog=new PayServiceLog();
   	    payServiceLog.setAmount(totalFee);
@@ -967,29 +970,30 @@ public class UnifyPayController extends BaseControllerUtil{
     }
     
     
-    
-    
-   
-    
     /**selectAccomplish
      * 查询支付结果获取状态
      * @throws Exception 
      */
     @RequestMapping(value = "selectAccomplish", method = RequestMethod.POST)
     public void payAccomplish(HttpServletRequest request,HttpServletResponse response) throws Exception{
-    	String outTradeNo=request.getParameter("outTradeNo");
-    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo);
-    	int payStatus = merchantOrderInfo.getPayStatus();
-    	String backMsg="";
-    	if(payStatus==1){
-    		backMsg="success";
-    	}else{
-    		backMsg="error";
-    	}
-    	WebUtils.writeJson(response, backMsg);
+    	try{
+    		String outTradeNo=request.getParameter("outTradeNo");
+        	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo);
+        	int payStatus = merchantOrderInfo.getPayStatus();
+        	String backMsg="";
+        	if(payStatus==1){
+        		backMsg="success";
+        	}else{
+        		backMsg="error";
+        	}
+        	WebUtils.writeJson(response, backMsg);
+    	}catch (Exception e) {
+    		String backMsg="error";
+    		WebUtils.writeJson(response, backMsg);
+		}
+    	
     }
 
-    
 
     /**selectAccomplish
      * 查询支付结果获取状态
