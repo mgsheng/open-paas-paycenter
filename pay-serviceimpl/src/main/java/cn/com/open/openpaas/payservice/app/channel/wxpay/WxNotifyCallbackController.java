@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
@@ -49,9 +48,9 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/wxpay/order/")
-public class WxOrderCallbackController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(WxOrderCallbackController.class);
+@RequestMapping("/wxpay/notify/")
+public class WxNotifyCallbackController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(WxNotifyCallbackController.class);
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
@@ -71,7 +70,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public String dirctPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
+	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		//读取参数
 		        log.info("------------------------------微信回调处理开始------------------------------");
 		        long startTime = System.currentTimeMillis();
@@ -127,7 +126,6 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 			        String key = payserviceDev.getWx_key(); // key
 			        //log.info(packageParams);
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
-			    	 String backMsg="";
 			    	if(merchantOrderInfo!=null){
 			    		//添加日志
 						 PayServiceLog payServiceLog=new PayServiceLog();
@@ -147,7 +145,6 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 						 payServiceLog.setLogName(PayLogName.CALLBACK_START);
 				         payServiceLog.setStatus("ok");
 				         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				        
 					    //判断签名是否正确
 					    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
 					    	String rechargeMsg="";
@@ -191,7 +188,6 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 						            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 						                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
 					        	}
-									backMsg="success";
 					        } else {
 					        	payServiceLog.setErrorCode("4");
 						        payServiceLog.setStatus("error");
@@ -200,7 +196,6 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 					        	log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 					            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
-					            backMsg="error";
 					        }
 					    } else{
 					    	payServiceLog.setErrorCode("3");
@@ -210,22 +205,22 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 					    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
 					    	log.info("通知签名验证失败");
-					    	  backMsg="error";
 					    }
 			    	}else{
 			    		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 			            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 			                    + "<return_msg><![CDATA[订单查询失败]]></return_msg>" + "</xml> ";
-			            backMsg="error";
 			    	}
-			    	 model.addAttribute("backMsg", backMsg);
-					 model.addAttribute("outTradeNo", out_trade_no);
+			      
 				   }
 				    //------------------------------
 			        //处理业务完毕
 			        //------------------------------
-				
-				 return "pay/callBack";
+			        BufferedOutputStream out = new BufferedOutputStream(
+			                response.getOutputStream());
+			        out.write(resXml.getBytes());
+			        out.flush();
+			        out.close();
 				}
 	
 }

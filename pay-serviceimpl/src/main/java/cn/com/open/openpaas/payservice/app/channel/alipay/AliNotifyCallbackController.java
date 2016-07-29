@@ -19,9 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
@@ -43,9 +41,9 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/alipay/order/")
-public class AliOrderCallbackController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(AliOrderCallbackController.class);
+@RequestMapping("/alipay/notify")
+public class AliNotifyCallbackController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(AliNotifyCallbackController.class);
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
@@ -65,7 +63,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public String dirctPay(HttpServletRequest request,HttpServletResponse response, Model model) throws MalformedURLException, DocumentException, IOException {
+	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		//获取支付宝GET过来反馈信息
 		long startTime = System.currentTimeMillis();
 		Map<String,String> params = new HashMap<String,String>();
@@ -166,8 +164,6 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		}else{
 			backMsg="error";
 		} 
-		 model.addAttribute("backMsg", backMsg);
-		 model.addAttribute("outTradeNo", out_trade_no);
-		 return "pay/callBack";
+		WebUtils.writeJson(response, backMsg);
 	}
 }

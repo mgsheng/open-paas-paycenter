@@ -438,7 +438,7 @@ public class HttpTools {
 				Entry<?, ?> element = (Entry<?, ?>) iter.next();
 				params.append(element.getKey().toString());
 				params.append("=");
-				params.append(URLEncoder.encode(element.getValue().toString(), HttpTools.requestEncoding));
+				params.append(element.getValue().toString());
 				params.append("&");
 			}
 

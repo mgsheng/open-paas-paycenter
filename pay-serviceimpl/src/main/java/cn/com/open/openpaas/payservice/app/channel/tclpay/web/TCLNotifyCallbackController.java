@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
@@ -48,9 +47,9 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/tcl/order/")
-public class TCLOrderCallbackController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(TCLOrderCallbackController.class);
+@RequestMapping("/tcl/notify/")
+public class TCLNotifyCallbackController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(TCLNotifyCallbackController.class);
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
@@ -70,7 +69,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public String dirctPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
+	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
 		long startTime = System.currentTimeMillis();
 		//商户订单号
@@ -195,9 +194,9 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
               else{
 				backMsg="error";	
 			}
-			model.addAttribute("backMsg", backMsg);
-			model.addAttribute("outTradeNo", out_trade_no);
-			return "pay/callBack";	
+			    WebUtils.writeJson(response, backMsg);
+			   
+					//如果有做过处理，不执行商户的业务程序
 		
 	  } 
 }

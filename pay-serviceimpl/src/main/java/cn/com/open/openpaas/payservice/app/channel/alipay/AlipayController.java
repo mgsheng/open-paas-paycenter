@@ -74,7 +74,7 @@ public class AlipayController {
         sParaTemp.put("seller_id", seller_id);
         sParaTemp.put("_input_charset", input_charset);
 		sParaTemp.put("payment_type", payment_type);
-		sParaTemp.put("notify_url", notify_url);
+		sParaTemp.put("notify_url",notify_url );
 		sParaTemp.put("return_url", return_url);
 		sParaTemp.put("anti_phishing_key",AlipaySubmit.query_timestamp());
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);

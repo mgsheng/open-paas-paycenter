@@ -210,6 +210,7 @@ pay-serviceimpl/build.gradle -text
 pay-serviceimpl/pom.xml -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/balance/service/UserAccountBalanceServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/UnifyPayUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderProThread.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayConfig.java -text
@@ -252,11 +253,13 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/utils/HytPacketUtils.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/utils/HytStringUtils.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/utils/HytUtils.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TCLNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TCLOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TestScanCodeOrder.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxConfigure.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxHttpUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxMatrixToImageWriter.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxPayCommonUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxXMLUtil.java -text

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -189,7 +190,8 @@ public class AliOrderProThread implements Runnable {
 			Object v = entry.getValue();
 			if(null != v && !"".equals(v) 
 					&& !"sign".equals(k) && !"key".equals(k)) {
-				sb.append(k + "=" + v + "&");
+				String value=URLEncoder.encode((String)v, "UTF-8");
+				sb.append(k + "=" + value + "&");
 			}
 		  }
 		   String temp_params = sb.toString(); 

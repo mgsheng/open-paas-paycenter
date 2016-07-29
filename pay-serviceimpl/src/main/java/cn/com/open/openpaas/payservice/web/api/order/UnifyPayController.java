@@ -407,7 +407,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			         			return "redirect:" + URL;*/
 			         			String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 			         			//response.sendRedirect(URL);
-			         			model.addAttribute("res", res);
+			         			 model.addAttribute("res", res);
 			         			 payServiceLog.setLogName(PayLogName.PAY_END);
 			        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
 			         			return "pay/payRedirect";

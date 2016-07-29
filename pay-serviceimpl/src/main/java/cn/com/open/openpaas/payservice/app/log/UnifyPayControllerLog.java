@@ -97,7 +97,7 @@ public class UnifyPayControllerLog {
 			Map <String,String>logMap=new HashMap<String,String>();
 			logMap.put("tag", "payservice");
 			logMap.put("logData", JSONObject.toJSONString(log));
-			HttpTools.doPostForJson(payserviceDev.getKong_log_url(), logMap,"UTF-8");
+			HttpTools.URLPost(payserviceDev.getKong_log_url(), logMap,"UTF-8");
 			
 			ex = null;
 			msg = null;
@@ -105,5 +105,6 @@ public class UnifyPayControllerLog {
 			e.printStackTrace();
 		}
 	}
+	
 	
 }
