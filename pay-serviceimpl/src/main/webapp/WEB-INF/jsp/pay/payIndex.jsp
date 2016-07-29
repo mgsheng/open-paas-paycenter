@@ -235,6 +235,7 @@
 		         var payWx="${payWx}";
 		         var totalFee="${totalFeeValue}";
 		         var goodsDesc="${goodsDesc}";
+		         var merchantOrderId="${merchantOrderId}";
 		         var goodsId="${goodsId}";
 		         $(".mask").show();
 			     $(".payLayer").show();
@@ -244,7 +245,7 @@
 						 $("#load-print").show();
 					    },
 					 dataType:'text',
-					 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId,
+					 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&merchantOrderId="+merchantOrderId,
 					 success: function(date){
 						   urlCode=date;
 						   console.log(urlCode+"==urlCode");
