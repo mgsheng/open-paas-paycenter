@@ -228,7 +228,7 @@ public class ScanCodeOrderData {
 		orderDataMap.put(HytParamKeys.PRODUCT_DESC,subject);
 		orderDataMap.put(HytParamKeys.ATTACH, "1010");
 		orderDataMap.put(HytParamKeys.RETURN_URL,
-				dictTradeChannel.getNotifyUrl());
+				dictTradeChannel.getBackurl());
 		orderDataMap.put(HytParamKeys.NOTIFY_URL,
 				dictTradeChannel.getNotifyUrl());
 		orderDataMap.put(HytParamKeys.SPBILL_CREATE_IP, spbill_create_ip);

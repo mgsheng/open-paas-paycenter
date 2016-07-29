@@ -373,6 +373,7 @@ pay-serviceimpl/src/main/webapp/WEB-INF/jsp/mobile/dashboard.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/oauth_approval-mobile.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/oauth_approval.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/oauth_error.jsp -text
+pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/callBack.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/errorPayChannel.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payIndex.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payRedirect.jsp -text
