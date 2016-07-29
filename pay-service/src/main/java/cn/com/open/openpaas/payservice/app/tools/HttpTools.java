@@ -2,7 +2,6 @@ package cn.com.open.openpaas.payservice.app.tools;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,25 +9,46 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
-import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpStatus;
 
 import sun.net.www.protocol.http.HttpURLConnection;
 
 public class HttpTools {
+	private static MultiThreadedHttpConnectionManager connectionManager = null;
+	private static int connectionTimeOut = 10 * 1000;
 
+	private static int socketTimeOut = 10 * 1000;
+
+	private static int maxConnectionPerHost = 500;
+
+	private static int maxTotalConnections = 500;
+
+	private static HttpClient client;
+
+	static {
+		connectionManager = new MultiThreadedHttpConnectionManager();
+		connectionManager.getParams().setConnectionTimeout(connectionTimeOut);
+		connectionManager.getParams().setSoTimeout(socketTimeOut);
+		connectionManager.getParams().setDefaultMaxConnectionsPerHost(
+				maxConnectionPerHost);
+		connectionManager.getParams().setMaxTotalConnections(
+				maxTotalConnections);
+		client = new HttpClient(connectionManager);
+	}
 	/**
 	 * 连接超时
 	 */
@@ -447,12 +467,13 @@ public class HttpTools {
 			url_con.getOutputStream().close();
 			java.io.InputStream in = null;
 			in = url_con.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
-			for (String line = null; (line = reader.readLine()) != null;)
-				doc.append(line).append("\n");
-			reader.close();
+			in.close();
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+//			for (String line = null; (line = reader.readLine()) != null;)
+//				doc.append(line).append("\n");
+//			reader.close();
 			String result=doc.toString();
-			
+//			
 		}
 		catch (IOException e) {
 			logger.error("网络故障", e);
@@ -504,11 +525,58 @@ public class HttpTools {
 		reader.close();
 		return doc.toString();
 	}
+	/**
+	 * POST方式提交数据
+	 * 
+	 * @param url
+	 *            待请求的URL
+	 * @param params
+	 *            要提交的数据
+	 * @param enc
+	 *            编码
+	 * @return 响应结果
+	 * @throws IOException
+	 * @throws IOException
+	 *             IO异常
+	 */
+	public static void URLPost(String url, Map<String, String> params,
+			String encode) throws IOException {
+		PostMethod postMethod = null;
+		try {
+			postMethod = new PostMethod(url);
+			postMethod.setRequestHeader("Content-Type",
+					"application/x-www-form-urlencoded;charset=" + encode);
+			// 将表单的值放入postMethod中
+			Set<String> keySet = params.keySet();
+			for (String key : keySet) {
+				String value = params.get(key);
+				postMethod.addParameter(key, value);
+			}
+			// 执行postMethod
+			client.executeMethod(postMethod);
+		} catch (HttpException ex) {
+			ex.printStackTrace();
+			throw ex;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			throw ex;
+		} finally {
+			if (postMethod != null) {
+				postMethod.releaseConnection();
+				postMethod = null;
+			}
+		}
+	}
 	public static void main(String[] args) {
-//		Map<String, String> map = new HashMap<String, String>();
-//		map.put("username", "manage");
-//		map.put("password", "123123");
-//		String temp = HttpTools.doGet("http://localhost:8080/api/user/login.json", map, "utf8");
+		String data="{\"amount\":\"1\",\"appId\":\"10027\",\"channelId\":\"10001\",\"creatTime\":\"2016-07-29 13:37:51\",\"executionTime\":144,\"logName\":\"pay_start\",\"logType\":\"1\",\"merchantId\":\"10001\",\"merchantOrderId\":\"test2016071211221\",\"paymentId\":\"ALIPAY\",\"productDesc\":\"testGoodsDesc\",\"productName\":\"testGoodsName\",\"realAmount\":\"1\",\"serviceName\":\"unifyPay\",\"sourceUid\":\"36133476-3827-4188-AE4A-0B9DBFC6AC64\",\"status\":\"ok\",\"username\":\"中文\"}";
+		Map<String, String> map = new HashMap<String, String>();
+		map.put("tag", "payservice");
+		map.put("logData", data);
+		try {
+			HttpTools.URLPost("http://paas-logger-openops.myalauda.cn/api/core/logger/log.json", map, "utf8");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 //		System.out.println(temp);
 	}
 }
