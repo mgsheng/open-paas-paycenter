@@ -11,6 +11,7 @@
 <body>
 <form id="inputForm" action="${pageContext.request.contextPath}/alipay/selectChannelPay" method="post" target="_blank">
 <input type="hidden"  name="outTradeNo" value="${outTradeNo}" id="outTradeNo"/>
+<input type="hidden"  name="merchantOrderId" value="${merchantOrderId}" id="merchantOrderId"/>
 <input type="hidden" name="areaCode" value="" id="areaCode"/>
 <input type="hidden" name="appId" value="${appId}" id="appId"/>
 <input type="hidden" name="goodsName" value="${goodsName}" id="goodsName"/>
