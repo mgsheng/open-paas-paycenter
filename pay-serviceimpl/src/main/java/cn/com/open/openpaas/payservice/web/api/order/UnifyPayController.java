@@ -250,7 +250,6 @@ public class UnifyPayController extends BaseControllerUtil{
         //认证
        // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
    	
-   	    
 		if(!hmacSHA1Verification){
 			//paraMandaChkAndReturn(3, response,"认证失败");
 			payServiceLog.setErrorCode("3");
@@ -640,8 +639,6 @@ public class UnifyPayController extends BaseControllerUtil{
  		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
 			   returnValue="SPABANK";
 		 }
-   		   
-		   
 	   }else{
 		   returnValue="";  
 	   }
@@ -836,7 +833,9 @@ public class UnifyPayController extends BaseControllerUtil{
     	PayServiceLog payServiceLog=new PayServiceLog();
   	    payServiceLog.setAmount(totalFee);
   	    payServiceLog.setAppId(appId);
-  	    payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+  	    if(merchantOrderInfo.getChannelId()!=null){
+  	      payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));	
+  	    }
   	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
   	    payServiceLog.setLogType(payserviceDev.getLog_type());
   	    payServiceLog.setMerchantId(merchantId);
