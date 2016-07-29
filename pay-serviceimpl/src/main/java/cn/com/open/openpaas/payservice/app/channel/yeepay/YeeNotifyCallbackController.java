@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
@@ -40,9 +39,9 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/yeepay/order/")
-public class YeeOrderCallbackController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(YeeOrderCallbackController.class);
+@RequestMapping("/yeepay/notify/")
+public class YeeNotifyCallbackController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(YeeNotifyCallbackController.class);
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
@@ -62,7 +61,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public String dirctPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
+	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		long startTime = System.currentTimeMillis();
 		String r0_Cmd 	  = formatString(request.getParameter("r0_Cmd")); // 业务类型
 		String p1_MerId   = formatString(Configuration.getInstance().getValue("p1_MerId"));   // 商户编号
@@ -159,9 +158,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 		}else{
 			backMsg="error";
 		}
-		 model.addAttribute("backMsg", backMsg);
-    	 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
-		 return "pay/callBack";
+		WebUtils.writeJson(response, backMsg);
 	  } 
 	String formatString(String text){ 
 		if(text == null) {

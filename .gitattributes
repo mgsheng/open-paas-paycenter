@@ -272,6 +272,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/PaymentForOnlineService.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/QueryResult.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/RefundResult.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/YeeNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/YeeOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceAdvice.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceSwitcher.java -text

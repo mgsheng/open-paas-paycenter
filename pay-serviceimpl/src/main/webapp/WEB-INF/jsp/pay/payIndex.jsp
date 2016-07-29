@@ -26,11 +26,6 @@
 				<img src="${pageContext.request.contextPath}/images/open-logo.png" />
 				<h3>收银台</h3>
 			</span>
-			<ul class="info">
-				<li>小黄人</li>
-				<li style="margin:0 7px 0 47px">|</li>
-				<li>我的订单</li>
-			</ul>
 		</div>
 		
 	</header>
@@ -69,7 +64,6 @@
 				<dd class="form-info2">
 					<h3>应付总额：<span class="color">${totalFee}</span>元</h3>
 					<p>${goodsName}</p>
-					<p>数量</p>
 				</dd>
 			</dl>
 			<dl>

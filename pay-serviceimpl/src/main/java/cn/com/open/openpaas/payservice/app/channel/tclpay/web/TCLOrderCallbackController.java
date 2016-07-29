@@ -163,8 +163,6 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 						}else{
 							//判断该笔订单是否在商户网站中已经做过处理
 							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-							
-							
 							int notifyStatus=merchantOrderInfo.getNotifyStatus();
 							int payStatus=merchantOrderInfo.getPayStatus();
 							Double payCharge=0.0;
@@ -178,7 +176,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 								merchantOrderInfoService.updateOrder(merchantOrderInfo);
 								if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
 									rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							 }
+							     }
 							}
 							
 							if(notifyStatus!=1){
@@ -189,14 +187,13 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							payServiceLog.setLogName(PayLogName.CALLBACK_END);
 							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);		
 							}
-							
 						}
 				}
               else{
 				backMsg="error";	
 			}
 			model.addAttribute("backMsg", backMsg);
-			model.addAttribute("outTradeNo", out_trade_no);
+			model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
 			return "pay/callBack";	
 		
 	  } 

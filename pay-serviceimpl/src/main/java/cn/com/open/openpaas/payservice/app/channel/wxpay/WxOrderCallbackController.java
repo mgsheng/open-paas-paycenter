@@ -219,12 +219,11 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 			            backMsg="error";
 			    	}
 			    	 model.addAttribute("backMsg", backMsg);
-					 model.addAttribute("outTradeNo", out_trade_no);
+			    	 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
 				   }
 				    //------------------------------
 			        //处理业务完毕
 			        //------------------------------
-				
 				 return "pay/callBack";
 				}
 	

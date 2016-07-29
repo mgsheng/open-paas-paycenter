@@ -67,7 +67,7 @@ public class AliOrderProThread implements Runnable {
 		//拼接发送的加密信息
 		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 		sParaTemp.put("orderId", merchantOrderInfo.getId());
-        sParaTemp.put("outTradeNo", merchantOrderInfo.getChannelOrderId());
+        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
         sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
         sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
 		sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
@@ -112,6 +112,7 @@ public class AliOrderProThread implements Runnable {
 		  do { 
 			      log.info("-----------------------------通知业务方开始--------------------------");
 		    	  String returnValue= sendPost(notifyUrl,sParaTemp);
+		    	  String a="{\"state\":\"error\",\"errorCode\":\"2\",\"errMsg\":\"订单已处理\"}";
 		    	  count+=1;
 		    	  if(returnValue!=null)
 		    	  {

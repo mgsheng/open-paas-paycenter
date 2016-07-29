@@ -128,8 +128,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				backMsg="success";
 				//账户充值操作
 				String rechargeMsg="";
-				if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-				rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+				
 				int notifyStatus=merchantOrderInfo.getNotifyStatus();
 				int payStatus=merchantOrderInfo.getPayStatus();
 				Double payCharge=0.0;
@@ -141,6 +140,9 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 					merchantOrderInfo.setDealDate(new Date());
 					merchantOrderInfo.setPayOrderId(trade_no);
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
+					if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+						rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+					}
 				}
 				if(notifyStatus!=1){
 					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
@@ -161,13 +163,11 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
-	
-	    }
 		}else{
 			backMsg="error";
 		} 
 		 model.addAttribute("backMsg", backMsg);
-		 model.addAttribute("outTradeNo", out_trade_no);
+		 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
 		 return "pay/callBack";
 	}
 }

@@ -359,7 +359,7 @@ public class UnifyPayController extends BaseControllerUtil{
 	        	  model.addAttribute("totalFee",merchantOrderInfo.getOrderAmount());
 	              model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
 	              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
-				 model.addAttribute("outTradeNo", outTradeNo);
+				 model.addAttribute("outTradeNo", merchantOrderInfo.getId());
 				 model.addAttribute("appId", appId);
 				 model.addAttribute("payZhifubao", payZhifubao);
 				 model.addAttribute("payWx", payWx);
