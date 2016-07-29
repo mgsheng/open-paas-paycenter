@@ -21,10 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
-import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;
@@ -35,12 +32,9 @@ import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.tools.WebUtils;
-import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -54,13 +48,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
-	 private MerchantInfoService merchantInfoService;
-	 @Autowired
-	 private UserAccountBalanceService userAccountBalanceService;
-	 @Autowired
 	 private PayserviceDev payserviceDev;
-	 @Autowired
-	 private UserSerialRecordService userSerialRecordService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -120,7 +108,6 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 		orderDataMap.put("ac_date", ac_date);
 		orderDataMap.put("fee", fee);
 		orderDataMap.put("attach", attach);
-		String rechargeMsg="";
 	    String Wsign=HytPacketUtils.map2StrRealURL(orderDataMap);
        
         //添加日志
@@ -163,26 +150,6 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 						}else{
 							//判断该笔订单是否在商户网站中已经做过处理
 							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-							int notifyStatus=merchantOrderInfo.getNotifyStatus();
-							int payStatus=merchantOrderInfo.getPayStatus();
-							Double payCharge=0.0;
-							if(payStatus!=1){
-								merchantOrderInfo.setPayStatus(1);
-								merchantOrderInfo.setPayAmount(Double.valueOf(total_fee)/100-payCharge);
-								merchantOrderInfo.setAmount(Double.valueOf(total_fee)/100);
-								merchantOrderInfo.setPayCharge(0.0);
-								merchantOrderInfo.setDealDate(new Date());
-								merchantOrderInfo.setPayOrderId(trade_no);
-								merchantOrderInfoService.updateOrder(merchantOrderInfo);
-								if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-									rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							     }
-							}
-							
-							if(notifyStatus!=1){
-								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
-								   thread.run();	
-							}
 							backMsg="success";
 							payServiceLog.setLogName(PayLogName.CALLBACK_END);
 							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);		

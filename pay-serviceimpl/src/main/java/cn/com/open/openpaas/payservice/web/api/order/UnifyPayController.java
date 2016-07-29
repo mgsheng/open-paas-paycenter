@@ -135,6 +135,7 @@ public class UnifyPayController extends BaseControllerUtil{
     @RequestMapping("unifyPay")
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime = System.currentTimeMillis();
+    	
     	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
     	String paySwitch []=pay_switch.split("#");
@@ -142,6 +143,10 @@ public class UnifyPayController extends BaseControllerUtil{
     	String payWx=paySwitch[1];
     	String payTcl = paySwitch[2];
     	String payEbank = paySwitch[3];
+    	   log.info("-----------------------payZhifubao-----------------------------------------"+payZhifubao);
+    	   log.info("-----------------------payWx-----------------------------------------"+payWx);
+    	   log.info("-----------------------payTcl-----------------------------------------"+payTcl);
+    	   log.info("-----------------------payEbank-----------------------------------------"+payEbank);
     	String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
     	String userName=request.getParameter("userName");
         String userId = request.getParameter("userId");
@@ -378,7 +383,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		        	}        	
 		        	
 		      //payZhifubao     payWx	 payTcl
-             log.info("-----------------------支付开始-----------------------------------------");
+             log.info("-----------------------pay start-----------------------------------------");
 		     if(String.valueOf(Channel.ALI.getValue()).equals(paymentChannel)){
 		    	 if("0".equals(payZhifubao)){
 				    	//支付宝-即时到账支付

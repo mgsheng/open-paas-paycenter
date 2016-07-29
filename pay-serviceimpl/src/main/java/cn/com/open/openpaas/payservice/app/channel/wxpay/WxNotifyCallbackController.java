@@ -72,7 +72,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 	@RequestMapping("callBack")
 	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		//读取参数
-		        log.info("------------------------------微信回调处理开始------------------------------");
+		        log.info("------------------------------wx callback start------------------------------");
 		        long startTime = System.currentTimeMillis();
 				InputStream inputStream ;
 				StringBuffer sb = new StringBuffer();
@@ -97,7 +97,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 			    	log.info("通知签名验证失败");
 				}else{
 					//(需要修改)
-					log.info("-----------------解析开始----------------------");
+					log.info("-----------------wx analyse start----------------------");
 					try {
 						m = WxXMLUtil.doXMLParse(xml);
 					} catch (JDOMException e) {
@@ -149,7 +149,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 					    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
 					    	String rechargeMsg="";
 					        //处理业务开始
-					    	log.info("----------------------------处理业务开始------------------");
+					    	log.info("----------------------------wx business start------------------");
 					        if("SUCCESS".equals((String)packageParams.get("result_code"))){
 					        	// 这里是支付成功
 					            //////////执行自己的业务逻辑////////////////

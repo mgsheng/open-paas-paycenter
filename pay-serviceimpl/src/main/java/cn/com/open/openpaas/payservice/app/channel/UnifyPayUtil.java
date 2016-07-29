@@ -1,7 +1,6 @@
 package cn.com.open.openpaas.payservice.app.channel;
 
 import java.util.Date;
-
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -37,7 +36,6 @@ public class UnifyPayUtil {
 				  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
 				  rechargeMsg="SUCCESS";
 			     } catch (Exception e) {
-				// TODO Auto-generated catch block
 					e.printStackTrace();
 				 rechargeMsg="ERROR";
 				  }finally{

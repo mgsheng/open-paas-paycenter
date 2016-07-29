@@ -57,7 +57,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 	 @RequestMapping("orderManualSend")
 	 public void orderManualSend(HttpServletRequest request,HttpServletResponse response) throws MalformedURLException, DocumentException, IOException {
 		 log.info("~~~~~~~~~~~~~~~~~~~~~~订单手动补发开始执行~~~~~~~~~~~~~~~~~~~~~~~~");
-		 
+		 //  135-2025-0945
 		String outTradeNo=request.getParameter("orderId");//业务方订单唯一ID
 		String appId=request.getParameter("appId");
 		String signature=request.getParameter("signature");

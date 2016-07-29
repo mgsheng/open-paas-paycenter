@@ -154,44 +154,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 					        //处理业务开始
 					    	log.info("----------------------------处理业务开始------------------");
 					        if("SUCCESS".equals((String)packageParams.get("result_code"))){
-					        	// 这里是支付成功
-					            //////////执行自己的业务逻辑////////////////
-					        	log.info("----------------支付成功执行业务逻辑--------------------------");
-						        	int notifyStatus=merchantOrderInfo.getNotifyStatus();
-									int payStatus=merchantOrderInfo.getPayStatus();
-									Double payCharge=0.0;
-									if(payStatus!=1){
-									merchantOrderInfo.setPayStatus(1);
-									merchantOrderInfo.setPayAmount((total_fees-payCharge)/100);
-									merchantOrderInfo.setAmount(total_fees/100);
-									merchantOrderInfo.setPayCharge(0.0);
-									merchantOrderInfo.setDealDate(new Date());
-									merchantOrderInfo.setPayOrderId(transaction_id);
-									merchantOrderInfoService.updateOrder(merchantOrderInfo);
-									 if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							        		rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							        		
-											}
-									if(notifyStatus!=1){
-										 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
-										   thread.run();	
-									}
-									log.info("支付成功");
-						            //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
-						            resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-						                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-						            payServiceLog.setLogName(PayLogName.CALLBACK_END);
-						            UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					        	}else{
-					        		payServiceLog.setErrorCode("2");
-							        payServiceLog.setStatus("error");
-							        payServiceLog.setLogName(PayLogName.CALLBACK_END);
-							        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					        		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
-						            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-						                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
-					        	}
-									backMsg="success";
+					       	 return "pay/callBack";
 					        } else {
 					        	payServiceLog.setErrorCode("4");
 						        payServiceLog.setStatus("error");
@@ -224,7 +187,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 				    //------------------------------
 			        //处理业务完毕
 			        //------------------------------
-				 return "pay/callBack";
+				 return "pay/errorPayChannel";
 				}
 	
 }

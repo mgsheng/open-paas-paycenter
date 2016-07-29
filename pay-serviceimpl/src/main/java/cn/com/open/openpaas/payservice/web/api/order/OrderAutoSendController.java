@@ -59,8 +59,9 @@ public class OrderAutoSendController extends BaseControllerUtil{
     	//获取payStatus第三方支付状态为成功1且notifyStatus商户接收状态为未处理状态0 订单集合
 	    List<MerchantOrderInfo> merchantOrderInfos=merchantOrderInfoService.findByPayAndNotifyStatus();
 	    for(MerchantOrderInfo orderInfo : merchantOrderInfos){
-    		MerchantInfo merchantInfo = merchantInfoService.findById(orderInfo.getMerchantId());
+    		
 	    	if(orderInfo.getNotifyTimes()==null || orderInfo.getNotifyTimes()<SysUtil.toInt(payserviceDev.getNotify_times())){
+	    		MerchantInfo merchantInfo = merchantInfoService.findById(orderInfo.getMerchantId());
 	    		//DictTradeChannel channel=dictTradeChannelService.findByMAI(orderInfo.getMerchantId()+"", orderInfo.getChannelId());
 	    		SortedMap<Object,Object> params = new TreeMap<Object,Object>();
 	    		params.put("orderId", orderInfo.getId());
@@ -104,6 +105,11 @@ public class OrderAutoSendController extends BaseControllerUtil{
     				orderInfo.setNotifyTimes();//方法中自动+1
     				orderInfo.setNotifyDate(new Date());
     				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
+	    		}
+	    		else{
+	    			orderInfo.setNotifyStatus(2);
+	    			orderInfo.setNotifyTimes();//方法中自动+1
+	    			merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
 	    		}
 	    	}
 	    }
@@ -175,6 +181,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
             System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
+            return null;
         } finally {  
             try {  
                 if (out != null) {  
@@ -183,6 +190,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
                 if (in != null) {  
                     in.close();  
                 }  
+            
             } catch (IOException ex) {  
                 ex.printStackTrace();  
             }  

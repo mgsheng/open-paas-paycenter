@@ -6,13 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import net.sf.json.JSONObject;
 
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
@@ -21,11 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
-import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
-import cn.com.open.openpaas.payservice.app.log.AlipayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -35,7 +28,6 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -49,13 +41,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
-	 private MerchantInfoService merchantInfoService;
-	 @Autowired
-	 private UserAccountBalanceService userAccountBalanceService;
-	 @Autowired
 	 private PayserviceDev payserviceDev;
-	 @Autowired
-	 private UserSerialRecordService userSerialRecordService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -126,35 +112,8 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				backMsg="success";
-				//账户充值操作
-				String rechargeMsg="";
-				
-				int notifyStatus=merchantOrderInfo.getNotifyStatus();
-				int payStatus=merchantOrderInfo.getPayStatus();
-				Double payCharge=0.0;
-				if(payStatus!=1){
-					merchantOrderInfo.setPayStatus(1);
-					merchantOrderInfo.setPayAmount(total_fee-payCharge);
-					merchantOrderInfo.setAmount(total_fee);
-					merchantOrderInfo.setPayCharge(0.0);
-					merchantOrderInfo.setDealDate(new Date());
-					merchantOrderInfo.setPayOrderId(trade_no);
-					merchantOrderInfoService.updateOrder(merchantOrderInfo);
-					if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-						rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-					}
-				}
-				if(notifyStatus!=1){
-					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
-					   thread.run();	
-				}
 					//如果有做过处理，不执行商户的业务程序
 			}
-			//该页面可做页面美工编辑
-			
-			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;
-			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-			//////////////////////////////////////////////////////////////////////////////////////////
 		}else{
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
