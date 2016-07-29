@@ -55,7 +55,7 @@ import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandl
  * 订单查询接口
  */
 @Controller
-@RequestMapping("/user/order")
+@RequestMapping("/user/order/")
 public class UserOrderQueryController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(UserOrderQueryController.class);
 	

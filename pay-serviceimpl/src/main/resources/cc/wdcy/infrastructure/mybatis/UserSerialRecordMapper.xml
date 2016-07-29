@@ -51,7 +51,8 @@
         (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
     </insert>
     <select id="getSerialByTime" resultType="java.util.Map" flushCache="true">
-         select * from USER_SERIAL_RECORD
+         select   SERIAL_NO,USER_NAME,AMOUNT,PAY_TYPE,APP_ID,SOURCE_ID
+	     from USER_SERIAL_RECORD
          where 1=1 
          and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId}
 	</select>

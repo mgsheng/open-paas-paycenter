@@ -480,13 +480,13 @@ public class UserInterfaceController {
  		return "usercenter/user_query_serial";
  	}
  	 /**
-     * 查询流水记录
+     * 统一订单信息
      * @param model
      * @return
      */
      @RequestMapping(value = "querySerialRecord", method = RequestMethod.POST)
-     public String querySerialRecord(UserSerialRecord userSerialRecord) throws Exception {
-    	 String key=map.get(userSerialRecord.getAppId());
+     public String querySerialRecord(String appId,String startTime,String merchantId,String endTime) throws Exception {
+    	 String key=map.get(appId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -494,19 +494,17 @@ public class UserInterfaceController {
 	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 	   		timestamp=DateTools.getSolrDate(new Date());
 	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
-	   		sParaTemp.put("app_id",userSerialRecord.getAppId());
+	   		sParaTemp.put("app_id",appId);
 	   		sParaTemp.put("timestamp", timestamp);
 	   		sParaTemp.put("signatureNonce", signatureNonce);
-	   		sParaTemp.put("source_id", userSerialRecord.getSourceId());
-	   		sParaTemp.put("user_name", userSerialRecord.getUserName());
-	   		sParaTemp.put("amount", userSerialRecord.getAmount());
-	   		sParaTemp.put("serial_no", userSerialRecord.getSerialNo());
-	   		sParaTemp.put("merchantId", userSerialRecord.getMerchantId());
+	   		sParaTemp.put("start_time", startTime);
+	   		sParaTemp.put("end_time", endTime);
+	   		sParaTemp.put("merchantId", merchantId);
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);
 	   	 }
-    	 final String fullUri =userSerialRecord.getFullUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+    	 final String fullUri =querySerialUri+"?app_id="+appId+"&start_time="+startTime+"&end_time="+endTime+"&merchantId="+merchantId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }

@@ -40,7 +40,7 @@ import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandl
  * 
  */
 @Controller
-@RequestMapping("/unify/serial")
+@RequestMapping("/unify/serial/")
 public class QuerySerialRecordController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(QuerySerialRecordController.class);
 	
@@ -93,9 +93,9 @@ public class QuerySerialRecordController extends BaseControllerUtil{
 			writeErrorJson(response,map);
         	return ;
 		} 
-		Date startTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
-		Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
-		List<UserSerialRecord> userSerialList=userSerialRecordService.getSerialByTime(startTime, endTime, appId);
+		//Date startTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
+		//Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
+		List<UserSerialRecord> userSerialList=userSerialRecordService.getSerialByTime(start_time, end_time, appId);
 		map.clear();
 		map.put("status", "ok");
 		map.put("userSerialList", userSerialList);

@@ -11,5 +11,5 @@ import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 public interface UserSerialRecordService {
 
 	void saveUserSerialRecord(UserSerialRecord userSerialRecord);
-	List<UserSerialRecord>getSerialByTime(Date startTime,Date endTime,String appId);
+	List<UserSerialRecord>getSerialByTime(String startTime,String endTime,String appId);
 }

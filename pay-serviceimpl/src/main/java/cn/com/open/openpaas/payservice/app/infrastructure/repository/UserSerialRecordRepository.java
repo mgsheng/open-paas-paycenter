@@ -16,8 +16,8 @@ public interface UserSerialRecordRepository extends Repository {
 
 	void saveUserSerialRecord(UserSerialRecord userSerialRecord);
 	List<UserSerialRecord> getSerialByTime(
-			@Param("startTime")Date startTime,
-			@Param("endTime")Date endTime,
+			@Param("startTime")String startTime,
+			@Param("endTime")String endTime,
 			@Param("appId")String appId
 	);
 

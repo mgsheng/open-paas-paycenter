@@ -25,7 +25,7 @@ public class UserSerialRecordServiceImpl implements UserSerialRecordService {
 	}
 
 	@Override
-	public List<UserSerialRecord> getSerialByTime(Date startTime, Date endTime,
+	public List<UserSerialRecord> getSerialByTime(String startTime, String endTime,
 			String appId) {
 		return userSerialRecordRepository.getSerialByTime(startTime, endTime, appId);
 	}

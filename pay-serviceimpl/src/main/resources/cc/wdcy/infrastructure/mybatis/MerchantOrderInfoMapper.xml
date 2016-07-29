@@ -219,7 +219,7 @@
         (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId})
     </insert>
      <select id="findOrderByTime" resultType="java.util.Map" flushCache="true">
-         select ID,MERCHANT_ORDERID,MERCHANT_PRODUCTNAME,AMOUNT,PAYMENT_ID,CHANNEL_ID,SOURCE_UID,SOURCE_USERNAME,APPID,CREATE_DATE,PAY_STATUS,NOTIFY_STATUS from MERCHANT_ORDER_INFO
+         select ID,MERCHANT_ORDERID,MERCHANT_PRODUCTNAME,AMOUNT,PAYMENT_ID,CHANNEL_ID,SOURCE_UID,SOURCE_USERNAME,APPID,PAY_STATUS,NOTIFY_STATUS from MERCHANT_ORDER_INFO
          where 1=1 
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
 	</select>
