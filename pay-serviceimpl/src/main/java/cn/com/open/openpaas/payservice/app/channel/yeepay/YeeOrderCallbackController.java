@@ -77,80 +77,85 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
-		Double total_fee=0.0;
-		if(nullEmptyBlankJudge(r3_Amt)){
-			total_fee=Double.parseDouble(r3_Amt);
-		}
-		
-		boolean isOK = false;
-		//添加日志
-		 PayServiceLog payServiceLog=new PayServiceLog();
-		 payServiceLog.setAmount(r3_Amt);
-		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
-		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-		 payServiceLog.setLogType(payserviceDev.getLog_type());
-		 payServiceLog.setMerchantId(merchantOrderInfo.getMerchantId()+"");
-		 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-		 payServiceLog.setOrderId(r2_TrxId);
-		 payServiceLog.setPaymentId(merchantOrderInfo.getPaymentId()+"");
-		 payServiceLog.setPayOrderId(r2_TrxId);
-		 payServiceLog.setProductName(r5_Pid);
-		 payServiceLog.setRealAmount(r3_Amt);
-		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
-		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		 payServiceLog.setStatus("ok");
-		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
-		 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-		// 校验返回数据包
-		 
-		isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, 
-				r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
 		String 	backMsg="";
-		if(isOK) {
-			//在接收到支付结果通知后，判断是否进行过业务逻辑处理，不要重复进行业务逻辑处理
-			if(r1_Code.equals("1")) {
-				// 产品通用接口支付成功返回-浏览器重定向
-				if(r9_BType.equals("1")) {
-					//out.println("callback方式:产品通用接口支付成功返回-浏览器重定向");
-					// 产品通用接口支付成功返回-服务器点对点通讯
-				} else if(r9_BType.equals("2")) {
-					// 如果在发起交易请求时	设置使用应答机制时，必须应答以"success"开头的字符串，大小写不敏感
-					
-					backMsg="SUCCESS";
-					
-					//账户充值操作
-					String rechargeMsg="";
-					if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-						
-						rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-						  
-					}
-					int notifyStatus=merchantOrderInfo.getNotifyStatus();
-					int payStatus=merchantOrderInfo.getPayStatus();
-					Double payCharge=0.0;
-					
-					if(payStatus!=1){
-						merchantOrderInfo.setPayStatus(1);
-						merchantOrderInfo.setPayAmount(total_fee-payCharge);
-						merchantOrderInfo.setAmount(total_fee);
-						merchantOrderInfo.setPayCharge(0.0);
-						merchantOrderInfo.setDealDate(new Date());
-						merchantOrderInfo.setPayOrderId(r2_TrxId);
-						merchantOrderInfoService.updateOrder(merchantOrderInfo);
-					}
-					if(notifyStatus!=1){
-						 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
-						 thread.run();	
-					}
-					payServiceLog.setLogName(PayLogName.CALLBACK_END);
-					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				}
+		if(merchantOrderInfo!=null){
+			Double total_fee=0.0;
+			if(nullEmptyBlankJudge(r3_Amt)){
+				total_fee=Double.parseDouble(r3_Amt);
 			}
-		  } else {
-			payServiceLog.setLogName(PayLogName.CALLBACK_END);
-			payServiceLog.setStatus("error");
-			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			
+			boolean isOK = false;
+			//添加日志
+			 PayServiceLog payServiceLog=new PayServiceLog();
+			 payServiceLog.setAmount(r3_Amt);
+			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
+			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			 payServiceLog.setLogType(payserviceDev.getLog_type());
+			 payServiceLog.setMerchantId(merchantOrderInfo.getMerchantId()+"");
+			 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
+			 payServiceLog.setOrderId(r2_TrxId);
+			 payServiceLog.setPaymentId(merchantOrderInfo.getPaymentId()+"");
+			 payServiceLog.setPayOrderId(r2_TrxId);
+			 payServiceLog.setProductName(r5_Pid);
+			 payServiceLog.setRealAmount(r3_Amt);
+			 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+			 payServiceLog.setUsername(merchantOrderInfo.getUserName());
+			 payServiceLog.setStatus("ok");
+			 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			// 校验返回数据包
+			 
+			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, 
+					r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
+			
+			if(isOK) {
+				//在接收到支付结果通知后，判断是否进行过业务逻辑处理，不要重复进行业务逻辑处理
+				if(r1_Code.equals("1")) {
+					// 产品通用接口支付成功返回-浏览器重定向
+					if(r9_BType.equals("1")) {
+						//out.println("callback方式:产品通用接口支付成功返回-浏览器重定向");
+						// 产品通用接口支付成功返回-服务器点对点通讯
+					} else if(r9_BType.equals("2")) {
+						// 如果在发起交易请求时	设置使用应答机制时，必须应答以"success"开头的字符串，大小写不敏感
+						
+						backMsg="SUCCESS";
+						
+						//账户充值操作
+						String rechargeMsg="";
+						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+							
+							rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+							  
+						}
+						int notifyStatus=merchantOrderInfo.getNotifyStatus();
+						int payStatus=merchantOrderInfo.getPayStatus();
+						Double payCharge=0.0;
+						
+						if(payStatus!=1){
+							merchantOrderInfo.setPayStatus(1);
+							merchantOrderInfo.setPayAmount(total_fee-payCharge);
+							merchantOrderInfo.setAmount(total_fee);
+							merchantOrderInfo.setPayCharge(0.0);
+							merchantOrderInfo.setDealDate(new Date());
+							merchantOrderInfo.setPayOrderId(r2_TrxId);
+							merchantOrderInfoService.updateOrder(merchantOrderInfo);
+						}
+						if(notifyStatus!=1){
+							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
+							 thread.run();	
+						}
+						payServiceLog.setLogName(PayLogName.CALLBACK_END);
+						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					}
+				}
+			  } else {
+				payServiceLog.setLogName(PayLogName.CALLBACK_END);
+				payServiceLog.setStatus("error");
+				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				backMsg="error";
+			}	
+		}else{
 			backMsg="error";
 		}
 		WebUtils.writeJson(response, backMsg);

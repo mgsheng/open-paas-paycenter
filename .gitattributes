@@ -81,6 +81,8 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_getorder_query.jsp 
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_refund.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_pay_ditch.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_query_orderInfo.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_query_serial.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_unify_costs.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/log4j.xml -text

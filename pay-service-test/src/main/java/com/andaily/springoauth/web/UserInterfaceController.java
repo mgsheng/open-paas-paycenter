@@ -72,6 +72,10 @@ public class UserInterfaceController {
     private String unifyCostsUri;
     @Value("#{properties['pay-ditch-uri']}")
     private String payditchUri;
+    @Value("#{properties['query-orderInfo-uri']}")
+    private String queryOrderInfoUri;
+    @Value("#{properties['query-serial-uri']}")
+    private String querySerialUri;
     
     
     final static String  SEPARATOR = "&";
@@ -403,7 +407,85 @@ public class UserInterfaceController {
      * @return
      */
      @RequestMapping(value = "unifyCosts", method = RequestMethod.POST)
-     public String unifyCosts(UserSerialRecord userSerialRecord) throws Exception {
+     public String unifyCosts(String appId,String startTime,String merchantId,String endTime) throws Exception {
+    	 String key=map.get(appId);
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("app_id",appId);
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("start_time", startTime);
+	   		sParaTemp.put("end_time", endTime);
+	   		sParaTemp.put("merchantId", merchantId);
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+	   	 }
+    	 final String fullUri =unifyCostsUri+"?app_id="+appId+"&start_time="+startTime+"&end_time="+endTime+"&merchantId="+merchantId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     }
+     /**
+      * 查询订单信息
+      * @param model
+      * @return
+      */
+ 	@RequestMapping(value = "queryOrderInfo", method = RequestMethod.GET)
+ 	public String queryOrderInfo(Model model) {
+ 		model.addAttribute("queryOrderInfoUri", queryOrderInfoUri);
+ 		return "usercenter/user_query_orderInfo";
+ 	}
+ 	 /**
+     * 统一订单信息
+     * @param model
+     * @return
+     */
+     @RequestMapping(value = "queryOrderInfo", method = RequestMethod.POST)
+     public String queryOrderInfo(String appId,String startTime,String merchantId,String endTime) throws Exception {
+    	 String key=map.get(appId);
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("app_id",appId);
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("start_time", startTime);
+	   		sParaTemp.put("end_time", endTime);
+	   		sParaTemp.put("merchantId", merchantId);
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+	   	 }
+    	 final String fullUri =queryOrderInfoUri+"?app_id="+appId+"&start_time="+startTime+"&end_time="+endTime+"&merchantId="+merchantId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     }
+     /**
+      * 查询流水记录
+      * @param model
+      * @return
+      */
+ 	@RequestMapping(value = "querySerialRecord", method = RequestMethod.GET)
+ 	public String querySerialRecord(Model model) {
+ 		model.addAttribute("querySerialUri", querySerialUri);
+ 		return "usercenter/user_query_serial";
+ 	}
+ 	 /**
+     * 查询流水记录
+     * @param model
+     * @return
+     */
+     @RequestMapping(value = "querySerialRecord", method = RequestMethod.POST)
+     public String querySerialRecord(UserSerialRecord userSerialRecord) throws Exception {
     	 String key=map.get(userSerialRecord.getAppId());
    	  	 String signature="";
    	  	 String timestamp="";
@@ -427,7 +509,8 @@ public class UserInterfaceController {
     	 final String fullUri =userSerialRecord.getFullUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
-     } 
+     }
+     
      /** 
       * 发送POST请求 
       *  

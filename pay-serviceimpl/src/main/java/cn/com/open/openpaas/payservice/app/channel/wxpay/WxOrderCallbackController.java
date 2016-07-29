@@ -126,88 +126,92 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 			        String key = payserviceDev.getWx_key(); // key
 			        //log.info(packageParams);
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
-			      //添加日志
-					 PayServiceLog payServiceLog=new PayServiceLog();
-					 payServiceLog.setAmount(total_fee);
-					 payServiceLog.setAppId(merchantOrderInfo.getAppId());
-					 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-					 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-					 payServiceLog.setLogType(payserviceDev.getLog_type());
-					 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
-					 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-					 payServiceLog.setOrderId(out_trade_no);
-					 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-					 payServiceLog.setPayOrderId(transaction_id);
-					 payServiceLog.setRealAmount(total_fee);
-					 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
-					 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-					 payServiceLog.setLogName(PayLogName.CALLBACK_START);
-			         payServiceLog.setStatus("ok");
-			         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			        
-				    //判断签名是否正确
-				    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
-				    	String rechargeMsg="";
-				        //处理业务开始
-				    	log.info("----------------------------处理业务开始------------------");
-				        if("SUCCESS".equals((String)packageParams.get("result_code"))){
-				        	// 这里是支付成功
-				            //////////执行自己的业务逻辑////////////////
-				        	log.info("----------------支付成功执行业务逻辑--------------------------");
-				        
-				        	if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-				        		rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-				        		
-								}
-					        	int notifyStatus=merchantOrderInfo.getNotifyStatus();
-								int payStatus=merchantOrderInfo.getPayStatus();
-								Double payCharge=0.0;
-								if(payStatus!=1){
-								merchantOrderInfo.setPayStatus(1);
-								merchantOrderInfo.setPayAmount((total_fees-payCharge)/100);
-								merchantOrderInfo.setAmount(total_fees/100);
-								merchantOrderInfo.setPayCharge(0.0);
-								merchantOrderInfo.setDealDate(new Date());
-								merchantOrderInfo.setPayOrderId(transaction_id);
-								merchantOrderInfoService.updateOrder(merchantOrderInfo);
-								if(notifyStatus!=1){
-									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
-									   thread.run();	
-								}
-								log.info("支付成功");
-					            //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
-					            resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
-					                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-					            payServiceLog.setLogName(PayLogName.CALLBACK_END);
-					            UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				        	}else{
-				        		payServiceLog.setErrorCode("2");
+			    	if(merchantOrderInfo!=null){
+			    		//添加日志
+						 PayServiceLog payServiceLog=new PayServiceLog();
+						 payServiceLog.setAmount(total_fee);
+						 payServiceLog.setAppId(merchantOrderInfo.getAppId());
+						 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+						 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+						 payServiceLog.setLogType(payserviceDev.getLog_type());
+						 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
+						 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
+						 payServiceLog.setOrderId(out_trade_no);
+						 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+						 payServiceLog.setPayOrderId(transaction_id);
+						 payServiceLog.setRealAmount(total_fee);
+						 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+						 payServiceLog.setUsername(merchantOrderInfo.getUserName());
+						 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+				         payServiceLog.setStatus("ok");
+				         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					    //判断签名是否正确
+					    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
+					    	String rechargeMsg="";
+					        //处理业务开始
+					    	log.info("----------------------------处理业务开始------------------");
+					        if("SUCCESS".equals((String)packageParams.get("result_code"))){
+					        	// 这里是支付成功
+					            //////////执行自己的业务逻辑////////////////
+					        	log.info("----------------支付成功执行业务逻辑--------------------------");
+						        	int notifyStatus=merchantOrderInfo.getNotifyStatus();
+									int payStatus=merchantOrderInfo.getPayStatus();
+									Double payCharge=0.0;
+									if(payStatus!=1){
+									merchantOrderInfo.setPayStatus(1);
+									merchantOrderInfo.setPayAmount((total_fees-payCharge)/100);
+									merchantOrderInfo.setAmount(total_fees/100);
+									merchantOrderInfo.setPayCharge(0.0);
+									merchantOrderInfo.setDealDate(new Date());
+									merchantOrderInfo.setPayOrderId(transaction_id);
+									merchantOrderInfoService.updateOrder(merchantOrderInfo);
+									 if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+							        		rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+							        		
+											}
+									if(notifyStatus!=1){
+										 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
+										   thread.run();	
+									}
+									log.info("支付成功");
+						            //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
+						            resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+						                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
+						            payServiceLog.setLogName(PayLogName.CALLBACK_END);
+						            UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					        	}else{
+					        		payServiceLog.setErrorCode("2");
+							        payServiceLog.setStatus("error");
+							        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+							        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					        		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
+						            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+						                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+					        	}
+					        } else {
+					        	payServiceLog.setErrorCode("4");
 						        payServiceLog.setStatus("error");
 						        payServiceLog.setLogName(PayLogName.CALLBACK_END);
 						        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				        		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
+					        	log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 					            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
-				        	}
-				        } else {
-				        	payServiceLog.setErrorCode("4");
+					        }
+					    } else{
+					    	payServiceLog.setErrorCode("3");
 					        payServiceLog.setStatus("error");
 					        payServiceLog.setLogName(PayLogName.CALLBACK_END);
 					        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				        	log.info("支付失败,错误信息：" + packageParams.get("err_code"));
-				            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-				                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
-				        }
-				      
-				    } else{
-				    	payServiceLog.setErrorCode("3");
-				        payServiceLog.setStatus("error");
-				        payServiceLog.setLogName(PayLogName.CALLBACK_END);
-				        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-				                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
-				    	log.info("通知签名验证失败");
-				    }
+					    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+					    	log.info("通知签名验证失败");
+					    }
+			    	}else{
+			    		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
+			            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+			                    + "<return_msg><![CDATA[订单查询失败]]></return_msg>" + "</xml> ";
+			    	}
+			      
 				   }
 				    //------------------------------
 			        //处理业务完毕

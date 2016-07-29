@@ -163,9 +163,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							//判断该笔订单是否在商户网站中已经做过处理
 							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 							
-							if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-									rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							 }
+							
 							int notifyStatus=merchantOrderInfo.getNotifyStatus();
 							int payStatus=merchantOrderInfo.getPayStatus();
 							Double payCharge=0.0;
@@ -177,6 +175,9 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 								merchantOrderInfo.setDealDate(new Date());
 								merchantOrderInfo.setPayOrderId(trade_no);
 								merchantOrderInfoService.updateOrder(merchantOrderInfo);
+								if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+									rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+							 }
 							}
 							
 							if(notifyStatus!=1){
@@ -189,8 +190,6 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							}
 							
 						}
-			
-					
 				}
               else{
 				backMsg="error";	

@@ -66,7 +66,7 @@
             <p><a href="orderManualSend">订单手动补发</a> <br/>订单手动补发接口</p>
         </li>
          <li>
-            <p><a href="orderQuery">订单查询</a> <br/>订单查询接口</p>
+            <p><a href="orderQuery">订单查询状态</a> <br/>订单查询接口</p>
         </li>
         <li>
             <p><a href="orderRefund">订单退款</a> <br/>订单退款接口</p>
@@ -82,6 +82,12 @@
         </li>
         <li>
             <p><a href="payDitch">支付渠道接口</a> <br/>支付渠道接口</p>
+        </li>
+        <li>
+            <p><a href="queryOrderInfo">查询订单信息</a> <br/>查询订单信息</p>
+        </li>
+        <li>
+            <p><a href="querySerialRecord">查询流水记录</a> <br/>查询流水记录</p>
         </li>
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>

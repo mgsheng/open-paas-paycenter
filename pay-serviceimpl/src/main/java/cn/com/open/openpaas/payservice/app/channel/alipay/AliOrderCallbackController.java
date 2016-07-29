@@ -93,6 +93,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		String body = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
 		Map<String, Object> map=new HashMap<String, Object>();
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		if(merchantOrderInfo!=null){
 		//添加日志
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(request.getParameter("total_fee"));
@@ -150,8 +151,6 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;
 			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
 			//////////////////////////////////////////////////////////////////////////////////////////
-				
-		   
 		}else{
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
@@ -160,9 +159,11 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
-	    payServiceLog.setLogName(PayLogName.CALLBACK_END);
-		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+	
+	    }
+		}else{
+			backMsg="error";
+		} 
 		WebUtils.writeJson(response, backMsg);
-	  } 
 	}
 }

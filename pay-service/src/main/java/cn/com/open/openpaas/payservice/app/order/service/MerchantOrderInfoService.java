@@ -28,6 +28,6 @@ public interface MerchantOrderInfoService {
 	void updateNotifyStatus(MerchantOrderInfo orderInfo);
 
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
-	List<MerchantOrderInfo> findOrderByTime(Date startTime,Date endTime,String appId);
+	List<MerchantOrderInfo> findOrderByTime(String startTime,String endTime,String appId);
 	
 }

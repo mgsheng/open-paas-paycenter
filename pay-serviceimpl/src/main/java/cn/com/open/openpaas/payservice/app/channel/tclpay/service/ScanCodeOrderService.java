@@ -55,8 +55,6 @@ public class ScanCodeOrderService {
 					HytConstants.CHARSET_GBK);
 			System.out.println("==================response===============>>>>"
 					+ response);
-			
-			
 			 Map<String,String> retMap = new LinkedHashMap<String,String>();
              String Wsign=HytUtils.getVertifyFromStr(response,retMap); //获得待签名报文
              String server_sign=retMap.get(HytParamKeys.SERVER_SIGN);

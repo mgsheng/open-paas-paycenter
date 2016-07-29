@@ -80,7 +80,7 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 	}
 
 	@Override
-	public List<MerchantOrderInfo> findOrderByTime(Date startTime, Date endTime,
+	public List<MerchantOrderInfo> findOrderByTime(String startTime, String endTime,
 			String appId) {
 		return merchantOrderInfoRepository.findOrderByTime(startTime, endTime, appId);
 	}

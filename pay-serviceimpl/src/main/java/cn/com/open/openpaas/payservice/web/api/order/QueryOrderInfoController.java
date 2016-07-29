@@ -92,9 +92,9 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 			writeErrorJson(response,map);
         	return ;
 		} 
-		Date startTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
-		Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
-		List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderByTime(startTime, endTime, appId);
+		//Date startTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
+		//Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
+		List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderByTime(start_time, end_time, appId);
 		map.clear();
 		map.put("status", "ok");
 		map.put("merchantOrderInfoList", merchantOrderInfoList);
