@@ -4,13 +4,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
 
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
