@@ -41,7 +41,7 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/alipay/notify/")
+@RequestMapping("/alipay/notify")
 public class AliNotifyCallbackController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(AliNotifyCallbackController.class);
 	 @Autowired
@@ -64,11 +64,12 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+		   log.info("-----------------------callBack  alipay/notify-----------------------------------------");
 		//获取支付宝GET过来反馈信息
 		long startTime = System.currentTimeMillis();
 		Map<String,String> params = new HashMap<String,String>();
 		Map requestParams = request.getParameterMap();
-		String backMsg="";
+		String backMsg="error";
 		for (Iterator iter = requestParams.keySet().iterator(); iter.hasNext();) {
 			String name = (String) iter.next();
 			String[] values = (String[]) requestParams.get(name);
@@ -91,7 +92,6 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
 		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
 		String body = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
-		Map<String, Object> map=new HashMap<String, Object>();
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		if(merchantOrderInfo!=null){
 		//添加日志
@@ -116,7 +116,9 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params);
-		if(verify_result){//验证成功
+		if(verify_result){
+			  log.info("-----------------------callBack:alipay:notify:success-----------------------------------------");
+			//验证成功
 			//////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代码
 			//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
@@ -126,8 +128,6 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 				backMsg="success";
 				//账户充值操作
 				String rechargeMsg="";
-				if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-				rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 				int notifyStatus=merchantOrderInfo.getNotifyStatus();
 				int payStatus=merchantOrderInfo.getPayStatus();
 				Double payCharge=0.0;
@@ -139,13 +139,16 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 					merchantOrderInfo.setDealDate(new Date());
 					merchantOrderInfo.setPayOrderId(trade_no);
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
+					if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+						rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+					}
 				}
 				if(notifyStatus!=1){
 					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
 					   thread.run();	
 				}
 					//如果有做过处理，不执行商户的业务程序
-			}
+		
 			//该页面可做页面美工编辑
 			
 			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;

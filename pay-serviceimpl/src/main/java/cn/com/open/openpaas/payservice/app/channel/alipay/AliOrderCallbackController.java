@@ -35,7 +35,7 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/alipay/order")
+@RequestMapping("/alipay/order/")
 public class AliOrderCallbackController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(AliOrderCallbackController.class);
 	 @Autowired
@@ -52,6 +52,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public String dirctPay(HttpServletRequest request,HttpServletResponse response, Model model) throws MalformedURLException, DocumentException, IOException {
+		   log.info("-----------------------callBack  alipay/order-----------------------------------------");
 		//获取支付宝GET过来反馈信息
 		long startTime = System.currentTimeMillis();
 		Map<String,String> params = new HashMap<String,String>();
@@ -79,7 +80,6 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
 		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
 		String body = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
-		Map<String, Object> map=new HashMap<String, Object>();
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		if(merchantOrderInfo!=null){
 		//添加日志
@@ -99,7 +99,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		 payServiceLog.setRealAmount(request.getParameter("total_fee"));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+		 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
@@ -118,7 +118,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
-	          payServiceLog.setLogName(PayLogName.CALLBACK_END);
+	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
