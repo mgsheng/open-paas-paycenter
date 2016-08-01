@@ -59,6 +59,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public String dirctPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
+		   log.info("-----------------------callBack tcl/order-----------------------------------------");
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
 		long startTime = System.currentTimeMillis();
 		//商户订单号

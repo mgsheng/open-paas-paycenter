@@ -70,6 +70,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+		   log.info("-----------------------callBack tcl/notify-----------------------------------------");
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
 		long startTime = System.currentTimeMillis();
 		//商户订单号
@@ -95,7 +96,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 		String ac_date= request.getParameter("ac_date") ;
 		String fee= request.getParameter("fee") ;
 		String attach= request.getParameter("attach") ;
-		String backMsg="";
+		String backMsg="error";
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		if(merchantOrderInfo!=null){
 		Map<String, String> orderDataMap = new HashMap<String, String>();
