@@ -66,6 +66,21 @@
                             <p class="help-block">结束时间 yyyy-MM-dd HH:mm:ss</p>
                         </div>
                     </div>
+                      <div class="form-group">
+                        <label class="col-sm-2 control-label">payType</label>
+
+                        <div class="col-sm-10">
+                            <!-- <input type="text" name="paymentChannel" id="paymentChannel" size="50" class="form-control"
+                                   ng-model="paymentChannel"/> -->
+							<select name="payType" id="payType" class="form-control" ng-mode="payType">
+							     <option value=""></option>
+								<option value="1">充值</option>
+								<option value="2">扣费</option>
+								<option value="3">全部</option>
+							</select>
+                            <p class="help-block">消费类型</p>
+                        </div>
+                    </div> 
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>
                         <br/>
@@ -88,6 +103,7 @@
 		$scope.merchantId="10001";
 		$scope.startTime="2016-05-18 16:03:25";
 		$scope.endTime="2016-07-28 16:03:25";
+		$scope.payType="1";
 		http://10.96.14.88:53446/pay/payment/PostPayNotice
         $scope.visible = false;
         $scope.showParams = function () {
@@ -102,16 +118,21 @@
 		var merchantId=$("merchantId").val();
 		var endTime=$("endTime").val();
 	    var querySerialRecord=$("#querySerialRecord").val();
+	    var payType=$("#payType").val();
 		if(startTime==''){
 		    alert("请输入开始时间");
 			return;
 		}if(appId==''){
 		    alert("请输入appId");
 			return;
+		}if(payType==''){
+		    alert("请选择消费类型");
+			return;
 		}if(endTime==''){
 		    alert("请输入结束时间");
 			return;
-		}if(merchantId==''){
+		}
+		if(merchantId==''){
 		    alert("请输入商户号");
 			return;
 		}
@@ -125,7 +146,7 @@
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
 				    var signatureNonce=data.signatureNonce;
-				    var regUri=querySerialRecord+"?"+"merchantId="+merchantId+"&app_id="+appId+"&start_time="+startTime+"&end_time="+endTime+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
+				    var regUri=querySerialRecord+"?"+"merchantId="+merchantId+"pay_type="+payType+"&app_id="+appId+"&start_time="+startTime+"&end_time="+endTime+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#userOrderRefundUri").html(regUri);
 				}else{
 				    jQuery("#userOrderRefundUri").html('无效数据，请重新申请');

@@ -212,26 +212,26 @@
     </update>
     <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true" >
        <![CDATA[
-  update MERCHANT_ORDER_INFO set
+        update MERCHANT_ORDER_INFO set
         ID = #{id},
 		CREATE_DATE = #{createDate}
         where MERCHANT_ORDERID = #{merchantOrderId} and APPID=#{appId}
     ]]>
     </update>
 	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE,PAYMENT_ID)
+        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE,PAYMENT_ID,SOURCE_TYPE)
         values
-        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId})
+        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId},#{sourceType})
     </insert>
      <select id="findOrderByTime" resultType="java.util.Map" flushCache="true">
-         select ID,MERCHANT_ORDERID,MERCHANT_PRODUCTNAME,AMOUNT,PAYMENT_ID,CHANNEL_ID,SOURCE_UID,SOURCE_USERNAME,APPID,PAY_STATUS,NOTIFY_STATUS from MERCHANT_ORDER_INFO
+         select ID,MERCHANT_ORDERID merchantOrderId,MERCHANT_PRODUCTNAME merchantProductName,AMOUNT amount,PAYMENT_ID  paymentId,CHANNEL_ID channelId,SOURCE_UID sourceUid,SOURCE_USERNAME sourceUserName,APPID appId,PAY_STATUS payStatus,NOTIFY_STATUS notifyStatus from MERCHANT_ORDER_INFO
          where 1=1 
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
 	</select>
 	<select id="getTotalAmountByTime"  resultType="java.util.Map" flushCache="true">
          select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
          where 1=1 
-         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
 	</select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>

@@ -170,13 +170,7 @@
             <property name="ali_sign_type" value="${ali_sign_type}"></property>
             <property name="ali_service" value="${ali_service}"></property>
             <property name="ali_input_charset" value="${ali_input_charset}"></property>
-            <property name="wx_app_id" value="${wx_app_id}"></property>
-            <property name="wx_mch_id" value="${wx_mch_id}"></property>
-            <property name="wx_key" value="${wx_key}"></property>
-            <property name="wx_spbill_create_ip" value="${wx_spbill_create_ip}"></property>
-            <property name="wx_notify_url" value="${wx_notify_url}"></property>
             <property name="wx_ufdooer_url" value="${wx_ufdooer_url}"></property>
-            <property name="wx_trade_type" value="${wx_trade_type}"></property>
             <property name="server_host" value="${server_host}"></property>
             <property name="tcl_pay_version" value="${tcl_pay_version}"></property>
             <property name="userCenter_getUserId_url" value="${userCenter_getUserId_url}"></property>
@@ -189,6 +183,7 @@
             <property name="kong_log_url" value="${kong_log_url}"></property>
             <property name="log_type" value="${log_type}"></property>
             <property name="yeepayCommonReqURL" value="${yeepayCommonReqURL}"></property>
+             <property name="wx_key" value="${wx_key}"></property>
             
         </bean>
 </beans>

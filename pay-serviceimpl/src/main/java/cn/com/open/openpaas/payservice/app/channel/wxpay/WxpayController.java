@@ -51,9 +51,9 @@ public class WxpayController extends BaseControllerUtil {
 	        String body = payInfo.getBody();   // 商品名称
 	        String out_trade_no = payInfo.getOut_trade_no(); // 订单号
 	        // 获取发起电脑 ip
-	        String spbill_create_ip = payserviceDev.getWx_spbill_create_ip();
+	        String spbill_create_ip = payInfo.getSpbill_create_ip();
 	        // 回调接口 
-	        String notify_url = payserviceDev.getWx_notify_url();
+	        String notify_url = payInfo.getNotify_url();
 	        String trade_type = "NATIVE";
 	        SortedMap<Object,Object> packageParams = new TreeMap<Object,Object>();
 	        packageParams.put("appid", appid);

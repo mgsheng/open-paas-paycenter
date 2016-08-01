@@ -225,6 +225,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5Util.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/Main.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PaymentType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/TestAliOrderDisposeController.java -text

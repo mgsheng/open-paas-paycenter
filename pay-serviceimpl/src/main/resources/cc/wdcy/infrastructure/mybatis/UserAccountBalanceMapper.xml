@@ -65,14 +65,9 @@
     <update id="updateBalanceInfo" parameterType="UserAccountBalance" flushCache="true">
         update USER_ACCOUNT_BALANCE set
         <if test="status != null" >
-        STATUS=#{status},
+        STATUS=#{status}
         </if>
-         <if test="balance != null" >
-        BALANCE=BALANCE+#{balance},
-        </if>
-        VERSION=VERSION+1 
         where Id = #{id}
-        and VERSION=#{version}
     </update>
  
 	<insert id="saveUserAccountBalance" parameterType="UserAccountBalance" useGeneratedKeys="true" keyProperty="id">

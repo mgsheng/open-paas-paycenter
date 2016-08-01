@@ -485,7 +485,7 @@ public class UserInterfaceController {
      * @return
      */
      @RequestMapping(value = "querySerialRecord", method = RequestMethod.POST)
-     public String querySerialRecord(String appId,String startTime,String merchantId,String endTime) throws Exception {
+     public String querySerialRecord(String appId,String startTime,String merchantId,String endTime,String payType) throws Exception {
     	 String key=map.get(appId);
    	  	 String signature="";
    	  	 String timestamp="";
@@ -499,12 +499,13 @@ public class UserInterfaceController {
 	   		sParaTemp.put("signatureNonce", signatureNonce);
 	   		sParaTemp.put("start_time", startTime);
 	   		sParaTemp.put("end_time", endTime);
+	   		sParaTemp.put("pay_type", payType);
 	   		sParaTemp.put("merchantId", merchantId);
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);
 	   	 }
-    	 final String fullUri =querySerialUri+"?app_id="+appId+"&start_time="+startTime+"&end_time="+endTime+"&merchantId="+merchantId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+    	 final String fullUri =querySerialUri+"?app_id="+appId+"&pay_type="+payType+"&start_time="+startTime+"&end_time="+endTime+"&merchantId="+merchantId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }

@@ -97,11 +97,16 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 		//Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
 		List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderByTime(start_time, end_time, appId);
 		HashMap<String, Object> totalAmountMap=merchantOrderInfoService.getTotalAmountByTime(start_time, end_time, appId);
-		BigDecimal  totalAmount=(BigDecimal) totalAmountMap.get("totalAmount");
+		BigDecimal  totalAmount = null;
+		String total_amount="0";
+		if(totalAmountMap!=null){
+			totalAmount=(BigDecimal) totalAmountMap.get("totalAmount");
+			total_amount=totalAmount.stripTrailingZeros().toString();
+		}
 		
 		map.clear();
 		map.put("order_count", merchantOrderInfoList.size());
-		map.put("total_amount", totalAmount.stripTrailingZeros().toString());
+		map.put("total_amount",total_amount );
 		map.put("status", "ok");
 		map.put("merchantOrderInfoList", merchantOrderInfoList);
 		writeErrorJson(response, map);

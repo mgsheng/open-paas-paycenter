@@ -3,6 +3,7 @@ package cn.com.open.openpaas.payservice.app.infrastructure.repository;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -19,8 +20,15 @@ public interface UserSerialRecordRepository extends Repository {
 	List<UserSerialRecord> getSerialByTime(
 			@Param("startTime")String startTime,
 			@Param("endTime")String endTime,
-			@Param("appId")String appId
+			@Param("appId")String appId,
+			@Param("payType")Integer payType
 	);
-	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
-
+	List<UserSerialRecord> getTotalSerialByTime(
+			@Param("startTime")String startTime,
+			@Param("endTime")String endTime,
+			@Param("appId")String appId
+			
+	);
+	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("payType")Integer payType);
+	List<Map<String, Object>> getTotalAmount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 }

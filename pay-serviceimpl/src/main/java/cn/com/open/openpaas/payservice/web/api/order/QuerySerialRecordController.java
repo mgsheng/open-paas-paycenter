@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PayType;
 import cn.com.open.openpaas.payservice.app.log.UnifyCostsControllerLog;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
@@ -65,11 +66,12 @@ public class QuerySerialRecordController extends BaseControllerUtil{
     	String signature=request.getParameter("signature");
   	    String timestamp=request.getParameter("timestamp");
   	    String merchantId=request.getParameter("merchantId");
+  	    String pay_type=request.getParameter("pay_type");
   	    String signatureNonce=request.getParameter("signatureNonce");
   	    log.info("=============query serial record start=========");
     	Map<String ,Object> map=new HashMap<String,Object>();
     	
-        if(!paraMandatoryCheck(Arrays.asList(start_time,appId,end_time))){
+        if(!paraMandatoryCheck(Arrays.asList(start_time,appId,end_time,pay_type))){
         	map=paraMandaChkAndReturnMap(1, response,"必传参数中有空值");
         	writeErrorJson(response,map);
         	return ;
@@ -85,6 +87,7 @@ public class QuerySerialRecordController extends BaseControllerUtil{
    		sParaTemp.put("start_time",start_time);
    		sParaTemp.put("end_time", end_time);
    		sParaTemp.put("merchantId",merchantId);
+   		sParaTemp.put("pay_type", pay_type);
    		sParaTemp.put("timestamp", timestamp);
    		sParaTemp.put("signatureNonce", signatureNonce);
    		String params=createSign(sParaTemp);
@@ -93,19 +96,52 @@ public class QuerySerialRecordController extends BaseControllerUtil{
 			map=paraMandaChkAndReturnMap(3, response,"认证失败");
 			writeErrorJson(response,map);
         	return ;
-		} 
-		//Date startTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
-		//Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
-		List<UserSerialRecord> userSerialList=userSerialRecordService.getSerialByTime(start_time, end_time, appId);
-		HashMap<String, Object> totalAmountMap=userSerialRecordService.getTotalAmountByTime(start_time, end_time, appId);
-		BigDecimal  totalAmount=(BigDecimal) totalAmountMap.get("totalAmount");
+		}
+		BigDecimal  totalAmount = null;
+		List<UserSerialRecord> userSerialList=null;
+		String total_amount="0";
+		if(!pay_type.equals(String.valueOf(PayType.ALL.type))){
+			userSerialList=userSerialRecordService.getSerialByTime(start_time, end_time, appId,Integer.parseInt(pay_type));
+			HashMap<String, Object> totalAmountMap=userSerialRecordService.getTotalAmountByTime(start_time, end_time, appId,Integer.parseInt(pay_type));	
+			//充值 消费
+			if(totalAmountMap!=null){
+				totalAmount=(BigDecimal) totalAmountMap.get("totalAmount");
+				total_amount=totalAmount.stripTrailingZeros().toString();
+			}
+			map.clear();
+			map.put("serial_count",String.valueOf(userSerialList.size()));
+			map.put("total_amount", total_amount);
+			map.put("status", "ok");
+			map.put("userSerialList", userSerialList);
+		}else{
+			//全部
+			userSerialList=userSerialRecordService.getTotalSerialByTime(start_time, end_time, appId);
+			List<Map<String, Object>> getTotalAmount=userSerialRecordService.getTotalAmount(start_time, end_time, appId);
+			String recharge_total_amount="0";
+			String recharge_count="";
+			String costs_total_amount="0";
+			String costs_count="0";
+			for(int i=0;i<getTotalAmount.size();i++){
+			 if(getTotalAmount.get(i).get("payType").equals(String.valueOf(PayType.PAY.type))){
+				 recharge_total_amount= getTotalAmount.get(i).get("totalAmount").toString();
+				 recharge_count=getTotalAmount.get(i).get("count").toString();
+			 }else{
+				 costs_total_amount= getTotalAmount.get(i).get("totalAmount").toString();
+				 costs_count=getTotalAmount.get(i).get("count").toString();
+			 }
+				
+			}
+			map.clear();
+			map.put("recharge_total_amount", recharge_total_amount);
+			map.put("costs_total_amount", costs_total_amount);
+			map.put("recharge_count", recharge_count);
+			map.put("costs_count", costs_count);
+			map.put("status", "ok");
+			map.put("userSerialList", userSerialList);
+		}
 		
-		map.clear();
-		map.put("serial_count",String.valueOf(userSerialList.size()));
-		map.put("total_amount", totalAmount.stripTrailingZeros().toString());
-		map.put("status", "ok");
-		map.put("userSerialList", userSerialList);
 		writeErrorJson(response, map);
+		
         }
       
     

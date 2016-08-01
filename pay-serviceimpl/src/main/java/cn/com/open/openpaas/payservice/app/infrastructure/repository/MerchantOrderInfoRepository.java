@@ -3,6 +3,7 @@ package cn.com.open.openpaas.payservice.app.infrastructure.repository;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -31,5 +32,5 @@ public interface MerchantOrderInfoRepository extends Repository {
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findOrderByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
-
+	
 }

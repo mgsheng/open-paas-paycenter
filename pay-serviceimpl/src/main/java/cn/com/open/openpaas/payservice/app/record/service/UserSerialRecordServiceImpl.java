@@ -3,6 +3,7 @@ package cn.com.open.openpaas.payservice.app.record.service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,15 +28,29 @@ public class UserSerialRecordServiceImpl implements UserSerialRecordService {
 
 	@Override
 	public List<UserSerialRecord> getSerialByTime(String startTime, String endTime,
-			String appId) {
-		return userSerialRecordRepository.getSerialByTime(startTime, endTime, appId);
+			String appId , Integer payType) {
+		return userSerialRecordRepository.getSerialByTime(startTime, endTime, appId,payType);
 	}
 
 	@Override
 	public HashMap<String, Object> getTotalAmountByTime(String startTime,
+			String endTime, String appId,Integer payType) {
+		// TODO Auto-generated method stub
+		return userSerialRecordRepository.getTotalAmountByTime(startTime, endTime, appId,payType);
+	}
+
+	@Override
+	public List<Map<String, Object>> getTotalAmount(String startTime,
 			String endTime, String appId) {
 		// TODO Auto-generated method stub
-		return userSerialRecordRepository.getTotalAmountByTime(startTime, endTime, appId);
+		return userSerialRecordRepository.getTotalAmount(startTime, endTime, appId);
+	}
+
+	@Override
+	public List<UserSerialRecord> getTotalSerialByTime(String startTime,
+			String endTime, String appId) {
+		// TODO Auto-generated method stub
+		return userSerialRecordRepository.getTotalSerialByTime(startTime, endTime, appId);
 	}
 
 

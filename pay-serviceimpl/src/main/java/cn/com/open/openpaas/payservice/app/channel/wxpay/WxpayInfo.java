@@ -19,7 +19,14 @@ public class WxpayInfo implements Serializable{
 		private String trade_type;
 		private String openid;
 		private String product_id;
+		private String wx_key;
 		
+		public String getWx_key() {
+			return wx_key;
+		}
+		public void setWx_key(String wx_key) {
+			this.wx_key = wx_key;
+		}
 		public String getProduct_id() {
 			return product_id;
 		}
