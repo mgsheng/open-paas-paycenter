@@ -183,7 +183,6 @@
             <property name="kong_log_url" value="${kong_log_url}"></property>
             <property name="log_type" value="${log_type}"></property>
             <property name="yeepayCommonReqURL" value="${yeepayCommonReqURL}"></property>
-             <property name="wx_key" value="${wx_key}"></property>
             
         </bean>
 </beans>

@@ -19,15 +19,8 @@ public class PayserviceDev {
 	public String kong_log_url;
 	private String log_type;
 	private String yeepayCommonReqURL;
-	private String wx_key;
 	
 	
-	public String getWx_key() {
-		return wx_key;
-	}
-	public void setWx_key(String wx_key) {
-		this.wx_key = wx_key;
-	}
 	public String getYeepayCommonReqURL() {
 		return yeepayCommonReqURL;
 	}

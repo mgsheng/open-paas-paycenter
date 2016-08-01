@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
+import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -56,6 +59,8 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 	 private UserAccountBalanceService userAccountBalanceService;
 	 @Autowired
 	 private UserSerialRecordService userSerialRecordService;
+	 @Autowired
+	 private DictTradeChannelService dictTradeChannelService;
 	/**
 	 * 微信订单回调接口
 	 * @param request
@@ -118,9 +123,11 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 		        	String total_fee = (String)packageParams.get("total_fee");
 		        	Double total_fees=Double.parseDouble(total_fee);
 					// 账号信息(需要修改)
-			        String key = payserviceDev.getWx_key(); // key
+		        
 			        //log.info(packageParams);
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+			   	   DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
+			        String key = dictTradeChannel.getKeyValue(); // key
 			    	if(merchantOrderInfo!=null){
 			    		//添加日志
 						 PayServiceLog payServiceLog=new PayServiceLog();

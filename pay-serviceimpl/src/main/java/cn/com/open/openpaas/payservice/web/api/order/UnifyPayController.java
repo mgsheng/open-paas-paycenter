@@ -933,6 +933,7 @@ public class UnifyPayController extends BaseControllerUtil{
                    	 payInfo.setSpbill_create_ip(others.get("wx_spbill_create_ip"));
                    	 payInfo.setNotify_url(dictTradeChannel.getNotifyUrl());
                    	 payInfo.setTrade_type(others.get("wx_trade_type"));
+                   	 payInfo.setWx_key(dictTradeChannel.getKeyValue());
                    	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
                     //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
                 	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
