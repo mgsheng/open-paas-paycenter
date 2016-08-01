@@ -13,18 +13,16 @@ import java.util.Map;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.httpclient.util.DateUtil;
 import org.dom4j.DocumentException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
-import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
-import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 public class AlipayController {
-   
+	private static final Logger log = LoggerFactory.getLogger(AlipayController.class);
 	  public static Boolean analysisValue(JSONObject obj ){
 	    	String state = obj.getString("state");
 			if(!state.equals("ok")){
