@@ -62,6 +62,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 	 */
 	@RequestMapping("callBack")
 	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+		   log.info("-----------------------callBack yeepay/notify-----------------------------------------");
 		long startTime = System.currentTimeMillis();
 		String r0_Cmd 	  = formatString(request.getParameter("r0_Cmd")); // 业务类型
 		String p1_MerId   = formatString(Configuration.getInstance().getValue("p1_MerId"));   // 商户编号
@@ -77,7 +78,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
-		String 	backMsg="";
+		String 	backMsg="error";
 		if(merchantOrderInfo!=null){
 			Double total_fee=0.0;
 			if(nullEmptyBlankJudge(r3_Amt)){
@@ -121,15 +122,11 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						
 						backMsg="SUCCESS";
 						
-						//账户充值操作
-						String rechargeMsg="";
-						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-						}
+					
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
 						Double payCharge=0.0;
-						
+						String rechargeMsg="";
 						if(payStatus!=1){
 							merchantOrderInfo.setPayStatus(1);
 							merchantOrderInfo.setPayAmount(total_fee-payCharge);
@@ -138,6 +135,10 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							merchantOrderInfo.setDealDate(new Date());
 							merchantOrderInfo.setPayOrderId(r2_TrxId);
 							merchantOrderInfoService.updateOrder(merchantOrderInfo);
+							//账户充值操作
+							if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+								rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+							}
 						}
 						if(notifyStatus!=1){
 							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
