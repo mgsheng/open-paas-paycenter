@@ -118,36 +118,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 						//out.println("callback方式:产品通用接口支付成功返回-浏览器重定向");
 						// 产品通用接口支付成功返回-服务器点对点通讯
 					} else if(r9_BType.equals("2")) {
-						// 如果在发起交易请求时	设置使用应答机制时，必须应答以"success"开头的字符串，大小写不敏感
-						
-						backMsg="SUCCESS";
-						
-						//账户充值操作
-						String rechargeMsg="";
-						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							
-							rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							  
-						}
-						int notifyStatus=merchantOrderInfo.getNotifyStatus();
-						int payStatus=merchantOrderInfo.getPayStatus();
-						Double payCharge=0.0;
-						
-						if(payStatus!=1){
-							merchantOrderInfo.setPayStatus(1);
-							merchantOrderInfo.setPayAmount(total_fee-payCharge);
-							merchantOrderInfo.setAmount(total_fee);
-							merchantOrderInfo.setPayCharge(0.0);
-							merchantOrderInfo.setDealDate(new Date());
-							merchantOrderInfo.setPayOrderId(r2_TrxId);
-							merchantOrderInfoService.updateOrder(merchantOrderInfo);
-						}
-						if(notifyStatus!=1){
-							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
-							 thread.run();	
-						}
-						payServiceLog.setLogName(PayLogName.CALLBACK_END);
-						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				
 					}
 				}
 			  } else {

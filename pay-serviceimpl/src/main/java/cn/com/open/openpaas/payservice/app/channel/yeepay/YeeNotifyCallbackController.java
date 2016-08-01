@@ -124,9 +124,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						//账户充值操作
 						String rechargeMsg="";
 						if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							
 							rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							  
 						}
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
