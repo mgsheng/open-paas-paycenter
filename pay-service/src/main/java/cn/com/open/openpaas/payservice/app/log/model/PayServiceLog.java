@@ -41,8 +41,16 @@ public class PayServiceLog {
     private String logName;
     //执行时间
     private long executionTime;
+    //支付开关
+    private String paySwitch;
     
     
+	public String getPaySwitch() {
+		return paySwitch;
+	}
+	public void setPaySwitch(String paySwitch) {
+		this.paySwitch = paySwitch;
+	}
 	public long getExecutionTime() {
 		return executionTime;
 	}

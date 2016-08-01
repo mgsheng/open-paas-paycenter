@@ -56,7 +56,7 @@ public class OrderManualSendController extends BaseControllerUtil{
      */
 	 @RequestMapping("orderManualSend")
 	 public void orderManualSend(HttpServletRequest request,HttpServletResponse response) throws MalformedURLException, DocumentException, IOException {
-		 log.info("~~~~~~~~~~~~~~~~~~~~~~订单手动补发开始执行~~~~~~~~~~~~~~~~~~~~~~~~");
+		 log.info("~~~~~~~~~~~~~~~~~~~~~~ordermanualSend start~~~~~~~~~~~~~~~~~~~~~~~~");
 		 //  135-2025-0945
 		String outTradeNo=request.getParameter("orderId");//业务方订单唯一ID
 		String appId=request.getParameter("appId");
@@ -64,7 +64,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 		String timestamp=request.getParameter("timestamp");
 		String signatureNonce=request.getParameter("signatureNonce");
 		
-		log.info("~~~~~~~传入的业务订单号："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		log.info("~~~~~~~outTradeNo："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		
 		String result = "";
     	//获取当前订单
@@ -120,12 +120,12 @@ public class OrderManualSendController extends BaseControllerUtil{
     		params.put("goodsDesc", orderInfo.getMerchantProductDesc());
     		params.put("parameter", orderInfo.getParameter1());
     		
-    		log.info("~~~~~~~~~订单手补发参数："+AlipayCore.createLogString(params));
+    		log.info("~~~~~~~~~orderManualSend params："+AlipayCore.createLogString(params));
     		
     		String secret=PayUtil.createSign(payserviceDev.getAli_input_charset(),params,merchantInfo.getPayKey());
     		params.put("secret", secret);
 
-    		log.info("~~~~~~~~~订单手动补发加密信息："+secret);
+    		log.info("~~~~~~~~~orderManualSend secret："+secret);
     		
     		//向业务方发送订单状态信息
     		if(orderInfo.getNotifyUrl()!=null && !("").equals(orderInfo.getNotifyUrl())){
@@ -136,7 +136,7 @@ public class OrderManualSendController extends BaseControllerUtil{
     			}
     		}
     		if(result != null && !("").equals(result)){
-    			log.info("~~~~~~~~~~~~~~商户返回结果："+result+"~~~~~~~~~~~~~~~~~~~~");
+    			log.info("~~~~~~~~~~~~~~orderManualSend result："+result+"~~~~~~~~~~~~~~~~~~~~");
     			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
     			if("ok".equals(map.get("state"))){//商户处理成功
     				orderInfo.setNotifyStatus(1);
@@ -148,7 +148,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
     		}
 	    }
-	    log.info("~~~~~~~~~~~~~~~订单手动补发结束执行~~~~~~~~~~~~~~~~");
+	    log.info("~~~~~~~~~~~~~~~orderManualSend end~~~~~~~~~~~~~~~~");
     }
 
 	 /** 

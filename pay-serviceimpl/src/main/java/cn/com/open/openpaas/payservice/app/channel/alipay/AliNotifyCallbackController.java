@@ -41,7 +41,7 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/alipay/notify")
+@RequestMapping("/alipay/notify/")
 public class AliNotifyCallbackController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(AliNotifyCallbackController.class);
 	 @Autowired

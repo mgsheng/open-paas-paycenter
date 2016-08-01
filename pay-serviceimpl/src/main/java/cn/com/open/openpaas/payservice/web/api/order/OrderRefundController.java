@@ -49,7 +49,7 @@ public class OrderRefundController extends BaseControllerUtil{
      */
 	 @RequestMapping("refund")
 	public void orderRefund(HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
-		 log.info("~~~~~~~~~~~~~~~~~~~~~~订单退款开始执行~~~~~~~~~~~~~~~~~~~~~~~~");
+		 log.info("~~~~~~~~~~~~~~~~~~~~~~order refund start~~~~~~~~~~~~~~~~~~~~~~~~");
 			String outTradeNo=request.getParameter("outTradeNo");//业务方订单唯一ID
 			String appId=request.getParameter("appId");
 			String refundMoney=request.getParameter("refundMoney");
@@ -64,7 +64,7 @@ public class OrderRefundController extends BaseControllerUtil{
 			String timestamp=request.getParameter("timestamp");
 			String signatureNonce=request.getParameter("signatureNonce");
 			
-			log.info("~~~~~~~传入的业务订单号："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			log.info("~~~~~~~out_trade_np："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 	    	//获取当前订单
 			MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 			if(!paraMandatoryCheck(Arrays.asList(outTradeNo,appId,refundMoney))){

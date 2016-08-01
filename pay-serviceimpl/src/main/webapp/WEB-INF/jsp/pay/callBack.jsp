@@ -24,16 +24,20 @@
 
 		<div class="pay-tips" style="height: 430px">
 			<dl>
-				<dt><img src="${pageContext.request.contextPath}/images/gtanhao.jpg" /></dt>
+				<dt><img src="${pageContext.request.contextPath}/images/success.png" /></dt>
 				<dd class="form-info1"  style="float:left; margin-left: 50px; text-align: left">
 					<h3>订单支付信息！</h3>
-					<p>订  单  号：${outTradeNo}</p>
+					<p>商品名  ：${productName}</p>
 					<p id="backMsg"></p>
 				</dd>
 			</dl>
 		</div>
 
-	<footer class="footer" style="padding-top: 50px;margin-top: 30px;height: 10px">Copyright &copy; 2016</footer>
+	<footer class="footer" style="padding-top: 50px;margin-top: 30px;height: 10px">
+
+版权所有：奥鹏教育 Copyright ©2003-2015 open.com.cn ALL rights reserved
+
+登记序号：京ICP备12003892号-3 京ICP证150086号　公安机关备案号：110102005577号-4 </footer>
 </div>
 </form>
 
@@ -50,9 +54,9 @@
  var backMsg="${backMsg}";
  $(function(){
  if(backMsg=="success"){
- $("#backMsg").text("支付信息:支付成功");
+ $("#backMsg").text("支付信息：支付成功");
  }else{
- $("#backMsg").text("支付信息:支付失败");
+ $("#backMsg").text("支付信息：支付失败");
  }
  
   }); 

@@ -35,7 +35,7 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/alipay/order/")
+@RequestMapping("/alipay/order")
 public class AliOrderCallbackController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(AliOrderCallbackController.class);
 	 @Autowired

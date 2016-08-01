@@ -81,6 +81,7 @@ public class AliOrderProThread implements Runnable {
 		sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
 		sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
 		sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
+		sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
 		sParaTemp.put("rechargeMsg", rechargeMsg);
 		String mySign = PayUtil.createSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 		sParaTemp.put("secret", mySign);
@@ -110,9 +111,8 @@ public class AliOrderProThread implements Runnable {
 		  UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		// sendPost(merchantOrderInfo.getNotifyUrl(),parameters);
 		  do { 
-			      log.info("-----------------------------通知业务方开始--------------------------");
+			      log.info("-----------------------------notify-start--------------------------");
 		    	  String returnValue= sendPost(notifyUrl,sParaTemp);
-		    	  String a="{\"state\":\"error\",\"errorCode\":\"2\",\"errMsg\":\"订单已处理\"}";
 		    	  count+=1;
 		    	  if(returnValue!=null)
 		    	  {
@@ -154,7 +154,7 @@ public class AliOrderProThread implements Runnable {
 					sendMsg="通知失败！";
 		    	  }
 			} while (!callBackSend);
-		  log.info("通知是否成功："+sendMsg);
+		  log.info("notifyStatus："+sendMsg);
 		}
 	  public static Boolean analysisValue(JSONObject obj ){
 	    	String state = obj.getString("state");

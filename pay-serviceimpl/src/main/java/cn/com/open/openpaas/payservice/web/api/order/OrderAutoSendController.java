@@ -54,7 +54,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
      * @return Json
      */
     public void orderAutoSend() {
-    	log.info("~~~~~~~~~~~~~~~~~~~~~~定时订单自动补发开始执行~~~~~~~~~~~~~~~~~~~~~~~~");
+    	log.info("~~~~~~~~~~~~~~~~~~~~~~orderAutoSend start~~~~~~~~~~~~~~~~~~~~~~~~");
     	String result = "";
     	//获取payStatus第三方支付状态为成功1且notifyStatus商户接收状态为未处理状态0 订单集合
 	    List<MerchantOrderInfo> merchantOrderInfos=merchantOrderInfoService.findByPayAndNotifyStatus();
@@ -79,12 +79,12 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    		params.put("goodsDesc", orderInfo.getMerchantProductDesc());
 	    		params.put("parameter", orderInfo.getParameter1());
 	    		
-	    		log.info("~~~~~~~~~订单自动补发参数："+AlipayCore.createLogString(params));
+	    		log.info("~~~~~~~~~orderAutoSend params："+AlipayCore.createLogString(params));
 	    		
 	    		String secret=PayUtil.createSign(payserviceDev.getAli_input_charset(),params,merchantInfo.getPayKey());
 	    		params.put("secret", secret);
 	    		
-	    		log.info("~~~~~~~~~订单自动补发加密信息："+secret);
+	    		log.info("~~~~~~~~~orderAutoSend secret："+secret);
 	    		
 	    		//向业务方发送订单状态信息
 	    		if(orderInfo.getNotifyUrl()!=null && !("").equals(orderInfo.getNotifyUrl())){
@@ -95,7 +95,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    			}
 	    		}
 	    		if(result != null && !("").equals(result)){
-	    			log.info("~~~~~~~~~~~~~~商户返回结果："+result+"~~~~~~~~~~~~~~~~~~~~");
+	    			log.info("~~~~~~~~~~~~~~orderAutoSend result："+result+"~~~~~~~~~~~~~~~~~~~~");
 	    			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
 	    			if("ok".equals(map.get("state"))){//商户处理成功
 	    				orderInfo.setNotifyStatus(1);
@@ -113,7 +113,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    		}
 	    	}
 	    }
-	    log.info("~~~~~~~~~~~~~~~定时订单自动补发结束执行~~~~~~~~~~~~~~~~");
+	    log.info("~~~~~~~~~~~~~~~orderAutoSend end~~~~~~~~~~~~~~~~");
     }
 
 	/** 

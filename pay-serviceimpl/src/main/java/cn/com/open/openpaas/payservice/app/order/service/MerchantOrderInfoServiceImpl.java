@@ -1,6 +1,7 @@
 package cn.com.open.openpaas.payservice.app.order.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,5 +85,18 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 			String appId) {
 		return merchantOrderInfoRepository.findOrderByTime(startTime, endTime, appId);
 	}
+
+	@Override
+	public void updateSourceType(Integer sourceType, String id) {
+		merchantOrderInfoRepository.updateSourceType(sourceType, id);
+		
+	}
+
+	@Override
+	public HashMap<String, Object> getTotalAmountByTime(String startTime,
+			String endTime, String appId) {
+		return merchantOrderInfoRepository.getTotalAmountByTime(startTime, endTime, appId);
+	}
+
 
 }

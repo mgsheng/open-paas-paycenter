@@ -56,4 +56,9 @@
          where 1=1 
          and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId}
 	</select>
+		<select id="getTotalAmountByTime"  resultType="java.util.Map" flushCache="true">
+         select sum(AMOUNT) totalAmount from USER_SERIAL_RECORD
+         where 1=1 
+         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId}
+	</select>
 </mapper>

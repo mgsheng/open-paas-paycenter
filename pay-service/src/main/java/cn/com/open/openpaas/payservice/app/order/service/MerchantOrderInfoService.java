@@ -1,6 +1,7 @@
 package cn.com.open.openpaas.payservice.app.order.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
@@ -22,6 +23,7 @@ public interface MerchantOrderInfoService {
 	void updateOrder(MerchantOrderInfo merchantOrderInfo);
 	void updateNotifyTimes(Integer notifyTimes,String id);
 	void updatePayStatus(Integer payStatus,String id);
+	void updateSourceType(Integer sourceType,String id);
 
 	List<MerchantOrderInfo> findByPayAndNotifyStatus();
 
@@ -29,5 +31,6 @@ public interface MerchantOrderInfoService {
 
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findOrderByTime(String startTime,String endTime,String appId);
+	HashMap<String, Object> getTotalAmountByTime(String startTime,String endTime,String appId);
 	
 }

@@ -385,6 +385,8 @@ public class UnifyPayController extends BaseControllerUtil{
 		      //payZhifubao     payWx	 payTcl
              log.info("-----------------------pay start-----------------------------------------");
 		     if(String.valueOf(Channel.ALI.getValue()).equals(paymentChannel)){
+		    	 merchantOrderInfoService.updateSourceType(Integer.parseInt(payZhifubao), merchantOrderInfo.getId());
+		    	 payServiceLog.setPaySwitch(payZhifubao);
 		    	 if("0".equals(payZhifubao)){
 				    	//支付宝-即时到账支付
 			        		if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
@@ -392,7 +394,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			                	String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
 			                		//response.sendRedirect(url.replace("redirect:", ""));
 			                	 payServiceLog.setLogName(PayLogName.PAY_END);
-			        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
+			        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			        		    
 			                	return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
 			        			
 			            	}//支付宝-即时到账支付
@@ -405,7 +408,6 @@ public class UnifyPayController extends BaseControllerUtil{
 					    	//支付宝-即时到账支付
 				    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 				    	  if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
-				    			
 			         			ScanCodeOrderService scanCode = new ScanCodeOrderService();
 			         			//String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
 			         			/*String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
@@ -419,7 +421,10 @@ public class UnifyPayController extends BaseControllerUtil{
 			              }
 				        } 
 		     }else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){
+		    	 merchantOrderInfoService.updateSourceType(Integer.parseInt(payWx), merchantOrderInfo.getId());
+		    	 payServiceLog.setPaySwitch(payWx);
 		    	 if("0".equals(payWx)){
+		    		
 			    		//微信-扫码支付
 		        		if((PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
 		                	WxpayInfo payInfo=new WxpayInfo();
@@ -445,6 +450,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		        		}
 			     	}  	
 		    	 else if("1".equals(payWx)){
+		    		 
 			    	 if((PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
 			    	 //TCL微信
 			    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
@@ -459,6 +465,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			     	} 
 		    	 
 		     }else if(String.valueOf(Channel.UPOP.getValue()).equals(paymentChannel)){
+		    	 merchantOrderInfoService.updateSourceType(Integer.parseInt(payTcl), merchantOrderInfo.getId());
+		    	 payServiceLog.setPaySwitch(payTcl);
 		    	 if("0".equals(payTcl)){
 			    	 
 			     	}  	
@@ -482,6 +490,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			     }
 		    	 
 		     }else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
+		    	 merchantOrderInfoService.updateSourceType(Integer.parseInt(payEbank), merchantOrderInfo.getId());
+		    	 payServiceLog.setPaySwitch(payEbank);
 		    	 if(!nullEmptyBlankJudge(payEbank)&&"0".equals(payEbank)){
 				    	// 支付宝-网银支付
 				    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
@@ -859,6 +869,8 @@ public class UnifyPayController extends BaseControllerUtil{
          	//支付渠道为支付宝
              if(!nullEmptyBlankJudge(areaCode)&&"1".equals(areaCode)){
             	 if(!nullEmptyBlankJudge(payZhifubao)&&"1".equals(payZhifubao)){
+            		 merchantOrderInfoService.updateSourceType(Integer.parseInt(payZhifubao), merchantOrderInfo.getId());
+    		    	 payServiceLog.setPaySwitch(payZhifubao);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
          			/*String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
          			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
@@ -883,6 +895,8 @@ public class UnifyPayController extends BaseControllerUtil{
              }
              else if(!nullEmptyBlankJudge(areaCode)&&"3".equals(areaCode)){
             	 if(!nullEmptyBlankJudge(payWx)&&"1".equals(payWx)){
+            		 merchantOrderInfoService.updateSourceType(Integer.parseInt(payWx), merchantOrderInfo.getId());
+    		    	 payServiceLog.setPaySwitch(payWx);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
 //             		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
 //             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
@@ -919,6 +933,8 @@ public class UnifyPayController extends BaseControllerUtil{
              		
             } else if(!nullEmptyBlankJudge(areaCode)&&"2".equals(areaCode)){
             	if(!nullEmptyBlankJudge(payTcl)&&"1".equals(payTcl)){
+            		 merchantOrderInfoService.updateSourceType(Integer.parseInt(payTcl), merchantOrderInfo.getId());
+    		    	 payServiceLog.setPaySwitch(payTcl);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
         		/*	String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
@@ -934,6 +950,8 @@ public class UnifyPayController extends BaseControllerUtil{
             	}
               }else{
             	  if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
+            		  merchantOrderInfoService.updateSourceType(Integer.parseInt(payEbank), merchantOrderInfo.getId());
+     		    	 payServiceLog.setPaySwitch(payEbank);
             		  String newareaCode=getAreaCode(areaCode);
                 	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
           			/*  String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels));

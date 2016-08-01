@@ -193,6 +193,11 @@
         PAY_STATUS = #{payStatus}
         where ID = #{id}
     </update>
+      <update id="updateSourceType"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        SOURCE_TYPE = #{sourceType}
+        where ID = #{id}
+    </update>
     <update id="updateOrderInfo" parameterType="MerchantOrderInfo" flushCache="true">
         update MERCHANT_ORDER_INFO set
         CHANNEL_ID = #{channelId}
@@ -223,4 +228,14 @@
          where 1=1 
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
 	</select>
+	<select id="getTotalAmountByTime"  resultType="java.util.Map" flushCache="true">
+         select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
+         where 1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
+	</select>
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
 </mapper>

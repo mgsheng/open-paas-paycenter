@@ -1,6 +1,7 @@
 package cn.com.open.openpaas.payservice.app.infrastructure.repository;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -20,5 +21,6 @@ public interface UserSerialRecordRepository extends Repository {
 			@Param("endTime")String endTime,
 			@Param("appId")String appId
 	);
+	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 
 }

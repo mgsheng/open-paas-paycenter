@@ -1,5 +1,6 @@
 package cn.com.open.openpaas.payservice.web.api.order;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class QueryOrderInfoController extends BaseControllerUtil{
   	    String timestamp=request.getParameter("timestamp");
   	    String merchantId=request.getParameter("merchantId");
   	    String signatureNonce=request.getParameter("signatureNonce");
-  	    log.info("=============扣费开始=========");
+  	    log.info("=============query order info start=========");
     	Map<String ,Object> map=new HashMap<String,Object>();
     	
         if(!paraMandatoryCheck(Arrays.asList(start_time,appId,end_time))){
@@ -95,7 +96,12 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 		//Date startTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
 		//Date endTime=DateTools.stringtoDate(start_time, "yyyy-MM-dd HH:mm:ss");
 		List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderByTime(start_time, end_time, appId);
+		HashMap<String, Object> totalAmountMap=merchantOrderInfoService.getTotalAmountByTime(start_time, end_time, appId);
+		BigDecimal  totalAmount=(BigDecimal) totalAmountMap.get("totalAmount");
+		
 		map.clear();
+		map.put("order_count", merchantOrderInfoList.size());
+		map.put("total_amount", totalAmount.stripTrailingZeros().toString());
 		map.put("status", "ok");
 		map.put("merchantOrderInfoList", merchantOrderInfoList);
 		writeErrorJson(response, map);

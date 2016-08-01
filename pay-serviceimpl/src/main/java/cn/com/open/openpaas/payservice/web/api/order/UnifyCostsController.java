@@ -70,7 +70,7 @@ public class UnifyCostsController extends BaseControllerUtil{
   	    String timestamp=request.getParameter("timestamp");
   	    String signatureNonce=request.getParameter("signatureNonce");
   	    String merchantId = request.getParameter("merchantId");
-  	    log.info("=============扣费开始=========");
+  	    log.info("=============costs-start=========");
   	   //日志添加
     	PayServiceLog payServiceLog=new PayServiceLog();
   	    payServiceLog.setAmount(amount);
