@@ -121,6 +121,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
 						Double payCharge=0.0;
+						String rechargeMsg="";
 						if(payStatus!=1){
 							merchantOrderInfo.setPayStatus(1);
 							merchantOrderInfo.setPayAmount(total_fee-payCharge);
@@ -131,7 +132,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							merchantOrderInfoService.updateOrder(merchantOrderInfo);
 							//账户充值操作
 							if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-								UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+								rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 							}
 						}
 						if(notifyStatus!=1){

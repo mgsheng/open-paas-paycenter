@@ -122,6 +122,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				backMsg="success";
 				//账户充值操作
+				String rechargeMsg="";
 				int notifyStatus=merchantOrderInfo.getNotifyStatus();
 				int payStatus=merchantOrderInfo.getPayStatus();
 				Double payCharge=0.0;
@@ -134,7 +135,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 					merchantOrderInfo.setPayOrderId(trade_no);
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
 					if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-						UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+						rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 					}
 				}
 				if(notifyStatus!=1){

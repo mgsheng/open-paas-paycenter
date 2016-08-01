@@ -150,6 +150,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 					        	log.info("----------------支付成功执行业务逻辑--------------------------");
 						        	int notifyStatus=merchantOrderInfo.getNotifyStatus();
 									int payStatus=merchantOrderInfo.getPayStatus();
+									String rechargeMsg="";
 									Double payCharge=0.0;
 									if(payStatus!=1){
 									merchantOrderInfo.setPayStatus(1);
@@ -160,9 +161,8 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 									merchantOrderInfo.setPayOrderId(transaction_id);
 									merchantOrderInfoService.updateOrder(merchantOrderInfo);
 									 if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							        		UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							        		
-											}
+										 rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+									  }
 									if(notifyStatus!=1){
 										 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 										   thread.run();	
