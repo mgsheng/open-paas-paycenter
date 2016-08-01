@@ -118,12 +118,9 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						// 如果在发起交易请求时	设置使用应答机制时，必须应答以"success"开头的字符串，大小写不敏感
 						
 						backMsg="SUCCESS";
-						
-					
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
 						Double payCharge=0.0;
-						String rechargeMsg="";
 						if(payStatus!=1){
 							merchantOrderInfo.setPayStatus(1);
 							merchantOrderInfo.setPayAmount(total_fee-payCharge);
@@ -134,11 +131,11 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							merchantOrderInfoService.updateOrder(merchantOrderInfo);
 							//账户充值操作
 							if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-								rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+								UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 							}
 						}
 						if(notifyStatus!=1){
-							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
+							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 							 thread.run();	
 						}
 						payServiceLog.setLogName(PayLogName.CALLBACK_END);

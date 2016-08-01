@@ -41,14 +41,12 @@ public class AliOrderProThread implements Runnable {
 	private MerchantOrderInfoService merchantOrderInfoService;
 	private MerchantInfoService merchantInfoService;
 	private MerchantOrderInfo merchantOrderInfo;
-	private String rechargeMsg;
 	private PayserviceDev payserviceDev;
 	
-	public AliOrderProThread(MerchantOrderInfo merchantOrderInfo,MerchantOrderInfoService merchantOrderInfoService,MerchantInfoService merchantInfoService,String rechargeMsg, PayserviceDev payserviceDev){
+	public AliOrderProThread(MerchantOrderInfo merchantOrderInfo,MerchantOrderInfoService merchantOrderInfoService,MerchantInfoService merchantInfoService, PayserviceDev payserviceDev){
 		this.merchantOrderInfoService = merchantOrderInfoService;
 		this.merchantInfoService=merchantInfoService;
 		this.merchantOrderInfo=merchantOrderInfo;
-		this.rechargeMsg=rechargeMsg;
 		this.payserviceDev=payserviceDev;
 	}
 	
@@ -82,7 +80,6 @@ public class AliOrderProThread implements Runnable {
 		sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
 		sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
 		sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
-		sParaTemp.put("rechargeMsg", rechargeMsg);
 		String mySign = PayUtil.createSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 		sParaTemp.put("secret", mySign);
 		Boolean callBackSend=false;

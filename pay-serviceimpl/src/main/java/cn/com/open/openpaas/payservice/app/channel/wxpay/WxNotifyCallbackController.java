@@ -16,8 +16,6 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.dom4j.DocumentException;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
@@ -26,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
@@ -36,11 +33,9 @@ import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.zookeeper.DistributedLock;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -147,7 +142,6 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 				         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					    //判断签名是否正确
 					    if(WxPayCommonUtil.isTenpaySign("UTF-8", packageParams,key)) {
-					    	String rechargeMsg="";
 					        //处理业务开始
 					    	log.info("----------------------------wx business start------------------");
 					        if("SUCCESS".equals((String)packageParams.get("result_code"))){
@@ -166,11 +160,11 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 									merchantOrderInfo.setPayOrderId(transaction_id);
 									merchantOrderInfoService.updateOrder(merchantOrderInfo);
 									 if(!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-							        		rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+							        		UnifyPayUtil.recordAndBalance(Double.parseDouble(total_fee),merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 							        		
 											}
 									if(notifyStatus!=1){
-										 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,rechargeMsg,payserviceDev));
+										 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 										   thread.run();	
 									}
 									log.info("支付成功");

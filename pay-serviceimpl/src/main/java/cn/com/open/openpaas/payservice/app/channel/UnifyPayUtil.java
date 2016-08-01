@@ -11,9 +11,8 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 public class UnifyPayUtil {
 	
-		public static String recordAndBalance(Double total_fee,
+		public static void recordAndBalance(Double total_fee,
 				MerchantOrderInfo merchantOrderInfo,UserSerialRecordService userSerialRecordService,UserAccountBalanceService userAccountBalanceService,PayserviceDev payserviceDev) {
-			String rechargeMsg;
 			String userId=String.valueOf(merchantOrderInfo.getSourceUid());
 			//流水记录
 			UserSerialRecord userSerialRecord=new UserSerialRecord();
@@ -34,10 +33,8 @@ public class UnifyPayUtil {
 				  lock = new DistributedLock(payserviceDev.getZookeeper_config(),userAccountBalance.getSourceId()+userAccountBalance.getAppId());
 				  lock.lock();
 				  userAccountBalanceService.updateBalanceInfo(userAccountBalance);
-				  rechargeMsg="SUCCESS";
 			     } catch (Exception e) {
 					e.printStackTrace();
-				 rechargeMsg="ERROR";
 				  }finally{
 					  lock.unlock(); 
 				  }
@@ -48,9 +45,7 @@ public class UnifyPayUtil {
 				userAccountBalance.setType(1);
 				userAccountBalance.setCreateTime(new Date());
 				userAccountBalanceService.saveUserAccountBalance(userAccountBalance);
-				rechargeMsg="SUCCESS";
 			}
-			return rechargeMsg;
 		}
 
 }
