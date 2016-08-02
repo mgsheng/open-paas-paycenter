@@ -24,6 +24,7 @@ public interface MerchantOrderInfoService {
 	void updateNotifyTimes(Integer notifyTimes,String id);
 	void updatePayStatus(Integer payStatus,String id);
 	void updateSourceType(Integer sourceType,String id);
+	void updatePayWay(MerchantOrderInfo merchantOrderInfo);
 
 	List<MerchantOrderInfo> findByPayAndNotifyStatus();
 
