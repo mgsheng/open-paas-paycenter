@@ -134,7 +134,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 					merchantOrderInfo.setPayStatus(1);
 					merchantOrderInfo.setPayAmount(total_fee-payCharge);
 					merchantOrderInfo.setAmount(total_fee);
-					merchantOrderInfo.setPayCharge(0.0);
+					merchantOrderInfo.setPayCharge(payCharge);
 					merchantOrderInfo.setDealDate(new Date());
 					merchantOrderInfo.setPayOrderId(trade_no);
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);

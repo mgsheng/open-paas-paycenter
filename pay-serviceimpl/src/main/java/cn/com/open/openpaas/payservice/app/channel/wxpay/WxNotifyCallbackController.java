@@ -167,7 +167,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 									merchantOrderInfo.setPayStatus(1);
 									merchantOrderInfo.setPayAmount((total_fees/100)-payCharge);
 									merchantOrderInfo.setAmount(total_fees/100);
-									merchantOrderInfo.setPayCharge(0.0);
+									merchantOrderInfo.setPayCharge(payCharge);
 									merchantOrderInfo.setDealDate(new Date());
 									merchantOrderInfo.setPayOrderId(transaction_id);
 									merchantOrderInfoService.updateOrder(merchantOrderInfo);

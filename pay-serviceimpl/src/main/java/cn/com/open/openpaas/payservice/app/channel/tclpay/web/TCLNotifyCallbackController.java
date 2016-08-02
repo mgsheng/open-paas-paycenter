@@ -168,7 +168,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 								merchantOrderInfo.setPayStatus(1);
 								merchantOrderInfo.setPayAmount(Double.valueOf(total_fee)/100-payCharge);
 								merchantOrderInfo.setAmount(Double.valueOf(total_fee)/100);
-								merchantOrderInfo.setPayCharge(0.0);
+								merchantOrderInfo.setPayCharge(payCharge);
 								merchantOrderInfo.setDealDate(new Date());
 								merchantOrderInfo.setPayOrderId(trade_no);
 								merchantOrderInfoService.updateOrder(merchantOrderInfo);
