@@ -150,8 +150,10 @@ pay-service/src/main/java/cn/com/open/openpaas/payservice/app/app/model/App.java
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/appUser/model/AppUser.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/balance/model/UserAccountBalance.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/balance/service/UserAccountBalanceService.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/model/ChannelRate.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/model/DictTradeChannel.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/model/DirctPayDto.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/ChannelRateService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/ditch/model/DictTradePaymentDitch.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/ditch/service/DictTradePaymentDitchService.java -text
