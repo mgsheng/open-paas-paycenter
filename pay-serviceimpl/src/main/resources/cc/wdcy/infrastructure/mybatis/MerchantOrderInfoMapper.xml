@@ -210,6 +210,12 @@
 	  	NOTIFY_DATE = #{notifyDate}
         where ID = #{id}
     </update>
+    <update id="updatePayWay" parameterType="MerchantOrderInfo" flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAYMENT_ID = #{paymentId},
+        CHANNEL_ID = #{channelId}
+        where ID = #{id}
+    </update>
     <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true" >
        <![CDATA[
         update MERCHANT_ORDER_INFO set

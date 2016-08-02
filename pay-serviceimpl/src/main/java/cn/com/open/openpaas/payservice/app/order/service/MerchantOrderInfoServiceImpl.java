@@ -91,6 +91,12 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		merchantOrderInfoRepository.updateSourceType(sourceType, id);
 		
 	}
+	
+	@Override
+	public void updatePayWay(MerchantOrderInfo merchantOrderInfo) {
+		merchantOrderInfoRepository.updatePayWay(merchantOrderInfo);
+		
+	}
 
 	@Override
 	public HashMap<String, Object> getTotalAmountByTime(String startTime,

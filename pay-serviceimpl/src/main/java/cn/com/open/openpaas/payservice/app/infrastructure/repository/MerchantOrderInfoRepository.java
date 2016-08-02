@@ -30,6 +30,7 @@ public interface MerchantOrderInfoRepository extends Repository {
 	List<MerchantOrderInfo> findByPayAndNotifyStatus();
 	void updateNotifyStatus(MerchantOrderInfo orderInfo);
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
+	void updatePayWay(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findOrderByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 	

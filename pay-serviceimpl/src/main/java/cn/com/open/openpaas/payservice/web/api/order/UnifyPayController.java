@@ -865,11 +865,30 @@ public class UnifyPayController extends BaseControllerUtil{
     	String payEbank = paySwitch[3];
     	
     	String areaCode=request.getParameter("areaCode");
+    	int paymentId=0;
+    	int channelId=0;
+    	if(areaCode.equals("1")){
+    		paymentId = 10012;
+    		channelId = Channel.ALI.getValue();
+    	}else if(areaCode.equals("2")){
+    		paymentId = 10014;
+    		channelId = Channel.UPOP.getValue();
+    	}else if(areaCode.equals("3")){
+    		paymentId = 10013;
+    		channelId = Channel.WEIXIN.getValue();
+    	}else{
+    		paymentId = Integer.parseInt(areaCode);
+    		channelId = Channel.EBANK.getValue();
+    	}
     	String outTradeNo=request.getParameter("outTradeNo");
     	String merchantOrderId=request.getParameter("merchantOrderId");
     	String appId=request.getParameter("appId");
     	
     	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(merchantOrderId, appId);
+    	//添加支付方式与支付渠道
+    	merchantOrderInfo.setChannelId(channelId);
+    	merchantOrderInfo.setPaymentId(paymentId);
+    	merchantOrderInfoService.updatePayWay(merchantOrderInfo);
     	//日志添加
     	PayServiceLog payServiceLog=new PayServiceLog();
   	    payServiceLog.setAmount(totalFee);
@@ -933,7 +952,8 @@ public class UnifyPayController extends BaseControllerUtil{
             	 if(!nullEmptyBlankJudge(payWx)&&"1".equals(payWx)){
             		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
             		 merchantOrderInfoService.updateSourceType(Integer.parseInt(payWx), merchantOrderInfo.getId());
-    		    	 payServiceLog.setPaySwitch(payWx);
+//            		 updatePayWay
+            		 payServiceLog.setPaySwitch(payWx);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
 //             		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
 //             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
