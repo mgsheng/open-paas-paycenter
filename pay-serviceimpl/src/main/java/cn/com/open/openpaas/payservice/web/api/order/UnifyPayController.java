@@ -876,13 +876,13 @@ public class UnifyPayController extends BaseControllerUtil{
     	int paymentId=0;
     	int channelId=0;
     	if(areaCode.equals("1")){
-    		paymentId = 10012;
+    		paymentId = PaymentType.ALIPAY.getType();
     		channelId = Channel.ALI.getValue();
     	}else if(areaCode.equals("2")){
-    		paymentId = 10014;
+    		paymentId = PaymentType.UPOP.getType();
     		channelId = Channel.UPOP.getValue();
     	}else if(areaCode.equals("3")){
-    		paymentId = 10013;
+    		paymentId = PaymentType.WEIXIN.getType();
     		channelId = Channel.WEIXIN.getValue();
     	}else{
     		paymentId = Integer.parseInt(areaCode);
