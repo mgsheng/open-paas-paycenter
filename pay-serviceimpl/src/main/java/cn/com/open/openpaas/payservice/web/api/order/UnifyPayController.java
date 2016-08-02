@@ -286,10 +286,27 @@ public class UnifyPayController extends BaseControllerUtil{
 		newId=SysUtil.careatePayOrderId();
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
-			//更新现有订单信息
+			/*//更新现有订单信息
 			merchantOrderInfo.setId(newId);
 			merchantOrderInfo.setCreateDate(new Date());
-			merchantOrderInfoService.updateOrderId(merchantOrderInfo);			
+			merchantOrderInfoService.updateOrderId(merchantOrderInfo);	*/	
+			if(merchantOrderInfo.getPayStatus()!=1){
+				//订单处理中或者订单处理失败
+				//paraMandaChkAndReturn(3, response,"认证失败");
+				payServiceLog.setErrorCode("6");
+				payServiceLog.setStatus("error");
+				payServiceLog.setLogName(PayLogName.PAY_END);
+				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"6";
+ 			}else{
+ 				//订单已经提交
+ 				//paraMandaChkAndReturn(3, response,"认证失败");
+ 				payServiceLog.setErrorCode("7");
+ 				payServiceLog.setStatus("error");
+ 				payServiceLog.setLogName(PayLogName.PAY_END);
+ 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+ 	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"7";
+ 			}
 		}else{ 
 			//创建订单
 			merchantOrderInfo=new MerchantOrderInfo();
@@ -716,6 +733,10 @@ public class UnifyPayController extends BaseControllerUtil{
     		errorMsg="商户ID不存在";
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
     		errorMsg="订单金额格式有误";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+    		errorMsg="订单处理失败，请重新提交！";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+    		errorMsg="订单已处理，请勿重复提交！";
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);
