@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
+import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;
@@ -53,6 +54,8 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 	 private PayserviceDev payserviceDev;
 	 @Autowired
 	 private UserSerialRecordService userSerialRecordService;
+	 @Autowired
+	 private ChannelRateService channelRateService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -160,6 +163,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 							int notifyStatus=merchantOrderInfo.getNotifyStatus();
 							int payStatus=merchantOrderInfo.getPayStatus();
 							Double payCharge=0.0;
+							payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
 							if(payStatus!=1){
 								merchantOrderInfo.setPayStatus(1);
 								merchantOrderInfo.setPayAmount(Double.valueOf(total_fee)/100-payCharge);

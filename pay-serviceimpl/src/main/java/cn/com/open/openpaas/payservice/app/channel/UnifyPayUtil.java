@@ -1,8 +1,13 @@
 package cn.com.open.openpaas.payservice.app.channel;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
+import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PayChannelRate;
+import cn.com.open.openpaas.payservice.app.channel.model.ChannelRate;
+import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
@@ -51,6 +56,45 @@ public class UnifyPayUtil {
 				rechargeMsg="SUCCESS";
 			}
 			return rechargeMsg;
+		}
+		/**
+		 * 计算获取手续费(结果为元)
+		 * @param merchantOrderInfo
+		 * @return
+		 */
+		public static Double getPayCharge(MerchantOrderInfo merchantOrderInfo,ChannelRateService channelRateService){
+			Double returnValue=0.0;
+		    String payChannelCode="";
+		    Double rete=0.0;
+			if(merchantOrderInfo.getSourceType()==0){
+				//直连支付宝
+				if(merchantOrderInfo.getChannelId().equals(Channel.ALI.getValue())){
+					//即时到账
+					payChannelCode=PayChannelRate.ALIPAY.value;
+				}
+				else if(merchantOrderInfo.getChannelId().equals(Channel.EBANK.getValue())){
+					//网银支付
+					payChannelCode=PayChannelRate.ALIEBAKN.value;
+				}else if(merchantOrderInfo.getChannelId().equals(Channel.WEIXIN.getValue())){
+					//网银支付
+					payChannelCode=PayChannelRate.WEIXIN.value;
+				}	
+			}else if(merchantOrderInfo.getSourceType()==1){
+				//tcl支付
+				payChannelCode=PayChannelRate.TCLPAY.value;
+			}else if(merchantOrderInfo.getSourceType()==2){
+				//易宝支付
+				payChannelCode=PayChannelRate.YEEPAY.value;
+			}
+			ChannelRate channelRate=channelRateService.getChannelRate(String.valueOf(merchantOrderInfo.getMerchantId()), payChannelCode);
+			if(channelRate!=null){
+				//Double amount=200.00;
+				rete=merchantOrderInfo.getAmount()* 100 * Double.parseDouble(channelRate.getPayRate());
+				//rete=amount* Double.parseDouble(channelRate.getPayRate());
+				BigDecimal b =new BigDecimal(rete/100);  
+				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();  
+			}
+			return returnValue;
 		}
 
 }

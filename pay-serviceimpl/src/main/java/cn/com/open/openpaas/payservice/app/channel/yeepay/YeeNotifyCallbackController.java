@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
+import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -49,6 +50,8 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 	 private UserAccountBalanceService userAccountBalanceService;
 	 @Autowired
 	 private UserSerialRecordService userSerialRecordService;
+	 @Autowired
+	 private ChannelRateService channelRateService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -121,6 +124,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
 						Double payCharge=0.0;
+						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
 						String rechargeMsg="";
 						if(payStatus!=1){
 							merchantOrderInfo.setPayStatus(1);

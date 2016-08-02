@@ -225,11 +225,13 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5Util.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/Main.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayChannelRate.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PaymentType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/TestAliOrderDisposeController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/TestAlipayController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/ChannelRateServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/CommonConfig.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/HytConstants.java -text
@@ -279,6 +281,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/Dat
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceSwitcher.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DynamicDataSource.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/ditch/service/DictTradePaymentTypeDitchServiceImpl.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/ChannelRateRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradeChannelRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradePaymentDitchRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/DictTradePaymentRepositoryMyBatis.java -text
@@ -289,6 +292,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserAccuntBalanceRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserSerialRecordRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/AppRepository.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/ChannelRateRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradeChannelRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradePaymentDitchRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/DictTradePaymentRepository.java -text
@@ -331,6 +335,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/Unif
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserAccountBalanceController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserOrderQueryController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserPayDitchController.java -text
+pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/ChannelRateMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradePaymentDitchMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradePaymentMapper.xml -text

@@ -46,13 +46,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
-	 private MerchantInfoService merchantInfoService;
-	 @Autowired
 	 private PayserviceDev payserviceDev;
-	 @Autowired
-	 private UserAccountBalanceService userAccountBalanceService;
-	 @Autowired
-	 private UserSerialRecordService userSerialRecordService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request

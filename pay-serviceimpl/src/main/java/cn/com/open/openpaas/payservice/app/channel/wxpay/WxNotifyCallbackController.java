@@ -29,6 +29,7 @@ import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
@@ -61,6 +62,8 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 	 private UserSerialRecordService userSerialRecordService;
 	 @Autowired
 	 private DictTradeChannelService dictTradeChannelService;
+	 @Autowired
+	 private ChannelRateService channelRateService;
 	/**
 	 * 微信订单回调接口
 	 * @param request
@@ -159,9 +162,10 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 									int payStatus=merchantOrderInfo.getPayStatus();
 									String rechargeMsg="";
 									Double payCharge=0.0;
+									payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
 									if(payStatus!=1){
 									merchantOrderInfo.setPayStatus(1);
-									merchantOrderInfo.setPayAmount((total_fees-payCharge)/100);
+									merchantOrderInfo.setPayAmount((total_fees/100)-payCharge);
 									merchantOrderInfo.setAmount(total_fees/100);
 									merchantOrderInfo.setPayCharge(0.0);
 									merchantOrderInfo.setDealDate(new Date());

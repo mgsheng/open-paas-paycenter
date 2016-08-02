@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.ChannelRateRepositoryMyBatis">
+	<resultMap type="ChannelRate" id="ChannelRatelMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="MERCHANT_ID" property="merchantId" jdbcType="VARCHAR" />
+		<result column="PAY_CHANNEL_CODE" property="payChannelCode" jdbcType="VARCHAR" />
+		<result column="PAY_NAME" property="payName" jdbcType="VARCHAR" />
+		<result column="PAY_RATE" property="payRate" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+		MERCHANT_ID,
+		PAY_CHANNEL_CODE,
+		PAY_NAME,
+		PAY_RATE
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.channel.model.ChannelRate">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into PAY_CHANNEL_RATE
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{merchantId, jdbcType=VARCHAR},
+			#{payChannelCode, jdbcType=VARCHAR},
+			#{payName,jdbcType=VARCHAR},
+			#{payRate,jdbcType=VARCHAR}
+		)
+	</insert>
+	<select id="getChannelRate" resultMap="ChannelRatelMap">
+         select * from PAY_CHANNEL_RATE
+         where  MERCHANT_ID = #{merchantId} and PAY_CHANNEL_CODE=#{payChannelCode} 
+	</select>
+</mapper>
