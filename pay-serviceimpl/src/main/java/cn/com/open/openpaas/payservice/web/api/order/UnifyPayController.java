@@ -135,9 +135,7 @@ public class UnifyPayController extends BaseControllerUtil{
     @RequestMapping("unifyPay")
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime = System.currentTimeMillis();
-    	response.setHeader("Access-Control-Allow-Origin", "*");
-    	response.setHeader("Access-Control-Allow-Headers", "*");
-        response.setCharacterEncoding("UTF-8");
+    	
     	
     	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
@@ -290,10 +288,13 @@ public class UnifyPayController extends BaseControllerUtil{
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
 			/*//更新现有订单信息
-			merchantOrderInfo.setId(newId);
-			merchantOrderInfo.setCreateDate(new Date());
-			merchantOrderInfoService.updateOrderId(merchantOrderInfo);	*/	
-			if(merchantOrderInfo.getPayStatus()!=1){
+				*/	
+			if(merchantOrderInfo.getPayStatus()==0){
+				merchantOrderInfo.setId(newId);
+				merchantOrderInfo.setCreateDate(new Date());
+				merchantOrderInfoService.updateOrderId(merchantOrderInfo);
+ 			}
+		       else if(merchantOrderInfo.getPayStatus()==2){
 				//订单处理中或者订单处理失败
 				//paraMandaChkAndReturn(3, response,"认证失败");
 				payServiceLog.setErrorCode("6");
@@ -855,9 +856,6 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping(value = "selectChannelPay", method = RequestMethod.POST)
     public String payChannel(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
-    	response.setHeader("Access-Control-Allow-Origin", "*");
-    	response.setHeader("Access-Control-Allow-Headers", "*");
-        response.setCharacterEncoding("UTF-8");
     	long startTime = System.currentTimeMillis();
     	String goodsName=request.getParameter("goodsName");
     	String totalFee=request.getParameter("totalFee");
