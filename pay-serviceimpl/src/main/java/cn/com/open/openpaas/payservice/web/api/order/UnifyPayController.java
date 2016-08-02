@@ -135,6 +135,9 @@ public class UnifyPayController extends BaseControllerUtil{
     @RequestMapping("unifyPay")
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime = System.currentTimeMillis();
+    	response.setHeader("Access-Control-Allow-Origin", "*");
+    	response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setCharacterEncoding("UTF-8");
     	
     	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
@@ -401,6 +404,8 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("goodsId", goodsId);
 				 model.addAttribute("merchantId", merchantId);
 				 model.addAttribute("paymentType", paymentType);
+				 payServiceLog.setLogName(PayLogName.PAY_END);
+    		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	
 				 return "pay/payIndex";
 		        }else{
 		        	
@@ -446,7 +451,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		    	 if("0".equals(payWx)){
 		    		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
 			    		//微信-扫码支付
-		        		if((PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
+		        		if(String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
 		                	WxpayInfo payInfo=new WxpayInfo();
 		                	String other= dictTradeChannels.getOther();
 		            		Map<String, String> others = new HashMap<String, String>();
@@ -475,7 +480,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		        		}
 			     	}  	
 		    	 else if("1".equals(payWx)){
-			    	 if((PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
+			    	 if(String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
 			    	 //TCL微信
 			    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 	           		ScanCodeOrderService scanCode = new ScanCodeOrderService();
@@ -495,7 +500,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			     	}  	
 		    	 else if("1".equals(payTcl)){
 			    	 //TCL微信
-			    	if((PaymentType.UPOP.getValue()+"").equals(paymentType)){ 
+			    	if(String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)){ 
 			    	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 			   	 //银联支付
 	             	ScanCodeOrderService scanCode = new ScanCodeOrderService();
@@ -516,7 +521,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		    	 payServiceLog.setPaySwitch(payEbank);
 		    	 if(!nullEmptyBlankJudge(payEbank)&&"0".equals(payEbank)){
 				    	// 支付宝-网银支付
-				    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
+				    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
 		         		String defaultbank=getDefaultbank(paymentType);
 		         		String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
 		         		 payServiceLog.setLogName(PayLogName.PAY_END);
@@ -526,7 +531,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				     	}  	
 		    	 else if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
 				  	   //TCL直连银行
-				    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
+				    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
 				    		 
 				    	if(PaymentType.SPDB.getValue().equals(paymentType)){
 				    		String defaultbank=getDefaultbank(paymentType);
@@ -550,7 +555,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				      } 
 				  }else if(!nullEmptyBlankJudge(payEbank)&&"2".equals(payEbank)){
 					  	   //易宝支付
-					    	 if(!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){ 
+					    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
 					    		totalFee=AmountUtil.changeF2Y(totalFee);
 					    		 String res = getYeePayUrl(totalFee,
 										merchantOrderInfo,paymentType);
@@ -686,28 +691,28 @@ public class UnifyPayController extends BaseControllerUtil{
     	if(nullEmptyBlankJudge(paymentChannel)&&nullEmptyBlankJudge(paymentType)){
     		 returnValue=true;	
     	}
-    	if(paymentChannel!=null&&paymentChannel.equals(Channel.ALI.getValue()+"")){
+    	if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.ALI.getValue()))){
     	 if(paymentType!=null&&(PaymentType.ALIPAY.getValue()).equals(paymentType)){
     		 returnValue=true;
     	 }else{
     		 returnValue=false; 
     	 }
     	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(Channel.WEIXIN.getValue()+"")){
-    	 if(paymentType!=null&&(PaymentType.WEIXIN.getValue()+"").equals(paymentType)){
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WEIXIN.getValue()))){
+    	 if(paymentType!=null&&String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
     		 returnValue=true;
     	 }else{
     		 returnValue=false; 
     	 }
     	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(Channel.EBANK.getValue()+"")){
-    		if(paymentType!=null&&!(PaymentType.WEIXIN.getValue()+"").equals(paymentType)&&!(PaymentType.UPOP.getValue()+"").equals(paymentType)&&!(PaymentType.ALIPAY.getValue()+"").equals(paymentType)){
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EBANK.getValue()))){
+    		if(paymentType!=null&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){
        		 returnValue=true;
        	 }else{
        		 returnValue=false; 
        	 }
     	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(Channel.UPOP.getValue()+"")){
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.UPOP.getValue()))){
     		if(paymentType!=null&&PaymentType.UPOP.getValue().equals(paymentType)){
           		 returnValue=true;
           	 }else{
@@ -850,6 +855,9 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping(value = "selectChannelPay", method = RequestMethod.POST)
     public String payChannel(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception{
+    	response.setHeader("Access-Control-Allow-Origin", "*");
+    	response.setHeader("Access-Control-Allow-Headers", "*");
+        response.setCharacterEncoding("UTF-8");
     	long startTime = System.currentTimeMillis();
     	String goodsName=request.getParameter("goodsName");
     	String totalFee=request.getParameter("totalFee");
@@ -1038,7 +1046,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			         		 return "pay/payRedirect";
 			      }else{
             		// 支付宝-网银支付
-     		    	 if(!(PaymentType.UPOP.getValue()+"").equals(areaCode)&&!(PaymentType.WEIXIN.getValue()+"").equals(areaCode)&&!(PaymentType.ALIPAY.getValue()+"").equals(areaCode)){ 
+     		    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(areaCode)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(areaCode)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(areaCode)){ 
      		    		 String defaultbank=getDefaultbank(areaCode);
      		    		 String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
 //     		    		 String fullUri=payserviceDev.getAli_pay_url()+"?"+url;
