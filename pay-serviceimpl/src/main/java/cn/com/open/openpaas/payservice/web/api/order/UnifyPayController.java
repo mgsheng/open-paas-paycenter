@@ -892,6 +892,17 @@ public class UnifyPayController extends BaseControllerUtil{
         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
     	if(merchantOrderInfo!=null){
     		
+    		
+    		if(merchantOrderInfo.getPayStatus()!=0){
+				//订单处理中或者订单处理失败
+				//paraMandaChkAndReturn(3, response,"认证失败");
+				payServiceLog.setErrorCode("6");
+				payServiceLog.setStatus("error");
+				payServiceLog.setLogName(PayLogName.PAY_END);
+				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        	return "redirect:" + payserviceDev.getServer_host()+"alipay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"6";
+ 			}else{
+ 				
          	//支付渠道为支付宝
              if(!nullEmptyBlankJudge(areaCode)&&"1".equals(areaCode)){
             	 if(!nullEmptyBlankJudge(payZhifubao)&&"1".equals(payZhifubao)){
@@ -916,8 +927,6 @@ public class UnifyPayController extends BaseControllerUtil{
             		  payServiceLog.setLogName(PayLogName.PAY_END);
                       UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
             		 return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
-            		
-            		 
             	 }
              }
              else if(!nullEmptyBlankJudge(areaCode)&&"3".equals(areaCode)){
@@ -1021,6 +1030,7 @@ public class UnifyPayController extends BaseControllerUtil{
             	  }
             	  
               }
+ 			}
            
     	}
 		return "";
@@ -1034,7 +1044,7 @@ public class UnifyPayController extends BaseControllerUtil{
     @RequestMapping(value = "selectAccomplish", method = RequestMethod.POST)
     public void payAccomplish(HttpServletRequest request,HttpServletResponse response) throws Exception{
     	try{
-    		String outTradeNo=request.getParameter("outTradeNo");
+    		String outTradeNo=request.getParameter("merchantOrderId");
         	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo);
         	int payStatus = merchantOrderInfo.getPayStatus();
         	String backMsg="";

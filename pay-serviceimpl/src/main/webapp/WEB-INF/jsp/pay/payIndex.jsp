@@ -152,7 +152,7 @@
 			<img class="icon icon-ecom" src="${pageContext.request.contextPath}/images/gtanhao.jpg" />
 			<div class="modal-contentw"><h3>请您在新打开的页面上完成付款。</h3><p>付款完成前请不要关闭此窗口。<br>完成付款后请根据您的情况点击下面的按钮：</p>
 				<div class="modal-btn-group">
-					<button class="btn1 modal-btn-ok" onclick="accompLish('${outTradeNo}')">已完成付款</button>
+					<button class="btn1 modal-btn-ok" onclick="accompLish('${merchantOrderId}')">已完成付款</button>
 					<button class="btn1 modal-btn-cancel" onclick="outBtu()">付款遇到问题</button>
 				</div>
 				<span class="modal-back" onclick="closeBtu()">返回选择其他支付方式</span>
@@ -272,11 +272,11 @@
 	$("form").submit();
 	}
 	
-	function accompLish(outTradeNo){
+	function accompLish(merchantOrderId){
 		 $.ajax({
 			 type: 'post',
 			 dataType:'text',
-			 url: "${pageContext.request.contextPath}/alipay/selectAccomplish?outTradeNo="+outTradeNo,
+			 url: "${pageContext.request.contextPath}/alipay/selectAccomplish?merchantOrderId="+merchantOrderId,
 			 success: function(date){
 				  if(date=="success"){
 					  $("#confirm-modal").hide();
