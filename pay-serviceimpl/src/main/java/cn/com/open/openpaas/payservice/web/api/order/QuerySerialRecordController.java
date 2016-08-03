@@ -122,7 +122,7 @@ public class QuerySerialRecordController extends BaseControllerUtil{
 			String costs_total_amount="0";
 			String costs_count="0";
 			for(int i=0;i<getTotalAmount.size();i++){
-			 if(getTotalAmount.get(i).get("payType").equals(String.valueOf(PayType.PAY.type))){
+			 if(getTotalAmount.get(i).get("payType").toString().equals(String.valueOf(PayType.PAY.type))){
 				 recharge_total_amount= getTotalAmount.get(i).get("totalAmount").toString();
 				 recharge_count=getTotalAmount.get(i).get("count").toString();
 			 }else{

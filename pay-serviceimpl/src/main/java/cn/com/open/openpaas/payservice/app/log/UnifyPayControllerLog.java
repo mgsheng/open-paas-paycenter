@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import cn.com.open.openpaas.payservice.app.app.model.App;
 import cn.com.open.openpaas.payservice.app.log.model.LogMonitor;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
+import cn.com.open.openpaas.payservice.app.thread.SendLogToServerThread;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.HttpTools;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
@@ -48,7 +49,12 @@ public class UnifyPayControllerLog {
 			Map <String,String>logMap=new HashMap<String,String>();
 			logMap.put("tag", "payservice");
 			logMap.put("logData", JSONObject.toJSONString(log));
-			HttpTools.URLPost(payserviceDev.getKong_log_url(), logMap,"UTF-8");
+			try {
+				Thread thread = new Thread(new SendLogToServerThread(logMap, payserviceDev));
+				thread.run();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			
 			ex = null;
 		} catch (Exception e) {
