@@ -97,7 +97,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		if(merchantOrderInfo!=null){
 		//添加日志
 		 PayServiceLog payServiceLog=new PayServiceLog();
-		 payServiceLog.setAmount(request.getParameter("total_fee"));
+		 payServiceLog.setAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -109,7 +109,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		 payServiceLog.setPayOrderId(trade_no);
 		 payServiceLog.setProductDesc(body);
 		 payServiceLog.setProductName(subject);
-		 payServiceLog.setRealAmount(request.getParameter("total_fee"));
+		 payServiceLog.setRealAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
 		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
