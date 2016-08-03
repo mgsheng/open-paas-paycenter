@@ -61,7 +61,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+	public void notifyCallBack(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		   log.info("-----------------------callBack  alipay/notify-----------------------------------------");
 		//获取支付宝GET过来反馈信息
 		long startTime = System.currentTimeMillis();
@@ -90,9 +90,9 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
 		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
 		String body = "";
-		if(!nullEmptyBlankJudge(request.getParameter("body"))){
-			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
-		}
+//		if(!nullEmptyBlankJudge(request.getParameter("body"))){
+//			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
+//		}
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		if(merchantOrderInfo!=null){
 		//添加日志
@@ -112,7 +112,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		 payServiceLog.setRealAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+		 payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
@@ -160,7 +160,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
-	          payServiceLog.setLogName(PayLogName.CALLBACK_END);
+	          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}

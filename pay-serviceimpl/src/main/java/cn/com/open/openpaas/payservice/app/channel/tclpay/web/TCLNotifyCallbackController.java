@@ -65,7 +65,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+	public void tclNotifyCallBack(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		   log.info("-----------------------callBack tcl/notify-----------------------------------------");
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
 		long startTime = System.currentTimeMillis();
@@ -134,7 +134,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 		 payServiceLog.setRealAmount(total_fee);
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+		 payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
           // -- 验证签名
@@ -152,7 +152,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 							  backMsg="error";
 							  payServiceLog.setErrorCode("2");
 					          payServiceLog.setStatus("error");
-					          payServiceLog.setLogName(PayLogName.CALLBACK_END);
+					          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 					          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 							
 						}else{
@@ -182,7 +182,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 								   thread.run();	
 							}
 							backMsg="success";
-							payServiceLog.setLogName(PayLogName.CALLBACK_END);
+							payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);		
 							}
 							

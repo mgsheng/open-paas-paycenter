@@ -61,7 +61,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public String dirctPay(HttpServletRequest request,HttpServletResponse response, Model model) throws MalformedURLException, DocumentException, IOException {
+	public String callBack(HttpServletRequest request,HttpServletResponse response, Model model) throws MalformedURLException, DocumentException, IOException {
 		   log.info("-----------------------callBack  alipay/order-----------------------------------------");
 		//获取支付宝GET过来反馈信息
 		long startTime = System.currentTimeMillis();

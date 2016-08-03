@@ -56,7 +56,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public String dirctPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
+	public String yeeCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
 		long startTime = System.currentTimeMillis();
 		String r0_Cmd 	  = formatString(request.getParameter("r0_Cmd")); // 业务类型
 		String p1_MerId   = formatString(Configuration.getInstance().getValue("p1_MerId"));   // 商户编号
@@ -97,7 +97,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 			 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 			 payServiceLog.setUsername(merchantOrderInfo.getUserName());
 			 payServiceLog.setStatus("ok");
-			 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+			 payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			// 校验返回数据包
 			 
@@ -116,7 +116,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 					}
 				}
 			  } else {
-				payServiceLog.setLogName(PayLogName.CALLBACK_END);
+				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 				payServiceLog.setStatus("error");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				backMsg="error";

@@ -61,7 +61,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+	public void yeeNotifyCallBack(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		   log.info("-----------------------callBack yeepay/notify-----------------------------------------");
 		long startTime = System.currentTimeMillis();
 		String r0_Cmd 	  = formatString(request.getParameter("r0_Cmd")); // 业务类型
@@ -143,12 +143,12 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 							 thread.run();	
 						}
-						payServiceLog.setLogName(PayLogName.CALLBACK_END);
+						payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
 						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					}
 				}
 			  } else {
-				payServiceLog.setLogName(PayLogName.CALLBACK_END);
+				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
 				payServiceLog.setStatus("error");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				backMsg="error";

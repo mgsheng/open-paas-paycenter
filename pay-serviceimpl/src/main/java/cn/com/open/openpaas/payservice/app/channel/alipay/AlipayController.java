@@ -81,7 +81,7 @@ public class AlipayController {
 		//subject = URLEncoder.encode(subject,"UTF-8");
 		sParaTemp.put("subject", subject);
 		sParaTemp.put("total_fee",total_fee);
-		sParaTemp.put("body", body);
+		//sParaTemp.put("body", body);
 		 Map<String, String> parameters = buildRequestPara(sParaTemp,payserviceDev);
             StringBuffer sb = new StringBuffer();// 处理请求参数  
             String params = "";// 编码之后的参数  
