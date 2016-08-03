@@ -191,7 +191,9 @@ public class UnifyPayController extends BaseControllerUtil{
 	    payServiceLog.setLogType(payserviceDev.getLog_type());
 	    payServiceLog.setMerchantId(merchantId);
 	    payServiceLog.setMerchantOrderId(outTradeNo);
-	    payServiceLog.setPaymentId(paymentType);
+	    if(!nullEmptyBlankJudge(paymentType)){
+	    	 payServiceLog.setPaymentId(String.valueOf(getPaymentId(paymentType)));
+	    }
 	    payServiceLog.setProductDesc(goodsDesc);
 	    payServiceLog.setProductName(goodsName);
 	    payServiceLog.setRealAmount(totalFee);
@@ -786,7 +788,48 @@ public class UnifyPayController extends BaseControllerUtil{
     	 // WebUtils.writeJson(response, urlCode);
     	   
     }
- 
+    public Integer getPaymentId(String areaCode){
+    	int returnValue=0;
+    	if(PaymentType.CMB.getValue().equals(areaCode)){
+    		returnValue=PaymentType.CMB.getType();
+    	}
+		else if(PaymentType.ICBC.getValue().equals(areaCode)){
+			returnValue=PaymentType.ICBC.getType();
+    	}
+		else if(PaymentType.CCB.getValue().equals(areaCode)){
+			returnValue=PaymentType.CCB.getType();
+    	}
+		else if(PaymentType.ABC.getValue().equals(areaCode)){
+			returnValue=PaymentType.ABC.getType();
+    	}
+		else if(PaymentType.BOC.getValue().equals(areaCode)){
+			returnValue=PaymentType.BOC.getType();
+    	}
+		else if(PaymentType.BCOM.getValue().equals(areaCode)){
+			returnValue=PaymentType.BCOM.getType();
+    	}
+		else if(PaymentType.PSBC.getValue().equals(areaCode)){
+			returnValue=PaymentType.PSBC.getType();
+    	}
+		else if(PaymentType.CGB.getValue().equals(areaCode)){
+			returnValue=PaymentType.CGB.getType();
+    	}
+		else if(PaymentType.SPDB.getValue().equals(areaCode)){
+			returnValue=PaymentType.SPDB.getType();
+    	}
+		else if(PaymentType.CEB.getValue().equals(areaCode)){
+			returnValue=PaymentType.CEB.getType();
+    	}
+		else if(PaymentType.PAB.getValue().equals(areaCode)){
+			returnValue=PaymentType.PAB.getType();
+    	}else if(PaymentType.ALIPAY.getValue().equals(areaCode)){
+			returnValue=PaymentType.ALIPAY.getType();
+    	}else if(PaymentType.UPOP.getValue().equals(areaCode)){
+			returnValue=PaymentType.UPOP.getType();
+    	}
+    	return returnValue;
+    	
+    }
     /**
      * 跳转到wxpay页面
      */
