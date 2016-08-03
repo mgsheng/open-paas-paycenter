@@ -26,8 +26,8 @@
 			<dl>
 				<dt><img src="${pageContext.request.contextPath}/images/success.png" /></dt>
 				<dd class="form-info1"  style="float:left; margin-left: 50px; text-align: left">
-					<h3>订单支付信息！</h3>
-					<p>商品名  ：${productName}</p>
+					<h3>订单支付成功！</h3>
+					<p>商 品 名  ：${productName}</p>
 					<p id="backMsg"></p>
 				</dd>
 			</dl>

@@ -89,7 +89,10 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		//交易状态
 		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
 		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
-		String body = new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");
+		String body = "";
+		if(!nullEmptyBlankJudge(request.getParameter("body"))){
+			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
+		}
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		if(merchantOrderInfo!=null){
 		//添加日志
