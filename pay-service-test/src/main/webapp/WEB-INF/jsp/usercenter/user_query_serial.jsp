@@ -76,7 +76,7 @@
 							     <option value=""></option>
 								<option value="1">充值</option>
 								<option value="2">扣费</option>
-								<option value="3">全部</option>
+								<option value="0">全部</option>
 							</select>
                             <p class="help-block">消费类型</p>
                         </div>
