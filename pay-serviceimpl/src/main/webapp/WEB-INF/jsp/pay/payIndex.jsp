@@ -111,17 +111,19 @@
 				<li value="10009"><img src="${pageContext.request.contextPath}/images/pufa.jpg" /></li>
 				<li value="10010"><img src="${pageContext.request.contextPath}/images/guangda.jpg" /></li>
 				<li value="10011"><img src="${pageContext.request.contextPath}/images/pingan.jpg" /></li>
-				<li>查看更多</li>
 			</ul>
 			<div class="box" >
 				<p>
 					<span class="confirm" onclick="submitCheck('confirm-modal');">确认</span>
-					<span class="cancel">取消</span>
 				</p>
 			</div>
 		</div>
 
-	<footer class="footer">Copyright &copy; 2016</footer>
+		<footer class="footer" style="padding-top: 10px;margin-top: 30px;height: 50px">
+
+版权所有：奥鹏教育 Copyright ©2003-2015 open.com.cn ALL rights reserved
+
+<br>登记序号：京ICP备12003892号-3 京ICP证150086号　公安机关备案号：110102005577号-4 </footer>
 </div>
 </form>
 <!--弹出窗扣-->
