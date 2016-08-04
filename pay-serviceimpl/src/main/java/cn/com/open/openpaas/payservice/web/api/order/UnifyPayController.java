@@ -926,7 +926,8 @@ public class UnifyPayController extends BaseControllerUtil{
     		paymentId = PaymentType.WEIXIN.getType();
     		channelId = Channel.WEIXIN.getValue();
     	}else{
-    		paymentId = Integer.parseInt(areaCode);
+//    		paymentId = Integer.parseInt(areaCode);
+    		paymentId = getPaymentId(areaCode);
     		channelId = Channel.EBANK.getValue();
     	}
     	String outTradeNo=request.getParameter("outTradeNo");
