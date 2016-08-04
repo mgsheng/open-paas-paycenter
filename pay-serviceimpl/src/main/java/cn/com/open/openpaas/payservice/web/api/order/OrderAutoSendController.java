@@ -130,7 +130,12 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
 	    			if("ok".equals(map.get("state"))){//商户处理成功
 	    				orderInfo.setNotifyStatus(1);
+	    				payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
+	       		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    
 	    			}else{
+	    				payServiceLog.setStatus("error");
+	    				payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
+	       		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    
 	    				orderInfo.setNotifyStatus(2);
 	    			}
     				orderInfo.setNotifyTimes();//方法中自动+1
@@ -138,8 +143,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
     				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
     				
     			
-    		        payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
-    		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    				
+    		     				
 	    		}
 	    		else{
 	    			
