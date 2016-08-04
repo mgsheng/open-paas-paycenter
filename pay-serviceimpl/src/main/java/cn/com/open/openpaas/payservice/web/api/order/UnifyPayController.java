@@ -913,28 +913,34 @@ public class UnifyPayController extends BaseControllerUtil{
     	String payTcl = paySwitch[2];
     	String payEbank = paySwitch[3];
     	
+    	
     	String areaCode=request.getParameter("areaCode");
-    	int paymentId=0;
-    	int channelId=0;
-    	if(areaCode.equals("1")){
-    		paymentId = PaymentType.ALIPAY.getType();
-    		channelId = Channel.ALI.getValue();
-    	}else if(areaCode.equals("2")){
-    		paymentId = PaymentType.UPOP.getType();
-    		channelId = Channel.UPOP.getValue();
-    	}else if(areaCode.equals("3")){
-    		paymentId = PaymentType.WEIXIN.getType();
-    		channelId = Channel.WEIXIN.getValue();
-    	}else{
-//    		paymentId = Integer.parseInt(areaCode);
-    		paymentId = getPaymentId(areaCode);
-    		channelId = Channel.EBANK.getValue();
-    	}
+    	
     	String outTradeNo=request.getParameter("outTradeNo");
     	String merchantOrderId=request.getParameter("merchantOrderId");
     	String appId=request.getParameter("appId");
     	
     	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(merchantOrderId, appId);
+    	int paymentId=0;
+    	int channelId=0;
+    	if(areaCode.equals("1")){
+    		paymentId = PaymentType.ALIPAY.getType();
+    		channelId = Channel.ALI.getValue();
+    		merchantOrderInfo.setSourceType(Integer.parseInt(payZhifubao));	
+    	}else if(areaCode.equals("2")){
+    		paymentId = PaymentType.UPOP.getType();
+    		channelId = Channel.UPOP.getValue();
+    		merchantOrderInfo.setSourceType(Integer.parseInt(payTcl));	
+    	}else if(areaCode.equals("3")){
+    		paymentId = PaymentType.WEIXIN.getType();
+    		channelId = Channel.WEIXIN.getValue();
+    		merchantOrderInfo.setSourceType(Integer.parseInt(payWx));
+    	}else{
+//    		paymentId = Integer.parseInt(areaCode);
+    		paymentId = getPaymentId(areaCode);
+    		channelId = Channel.EBANK.getValue();
+    		merchantOrderInfo.setSourceType(Integer.parseInt(payEbank));
+    	}
     	//添加支付方式与支付渠道
     	merchantOrderInfo.setChannelId(channelId);
     	merchantOrderInfo.setPaymentId(paymentId);

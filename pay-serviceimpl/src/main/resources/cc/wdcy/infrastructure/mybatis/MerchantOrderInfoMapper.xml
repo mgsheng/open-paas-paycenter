@@ -213,7 +213,8 @@
     <update id="updatePayWay" parameterType="MerchantOrderInfo" flushCache="true">
         update MERCHANT_ORDER_INFO set
         PAYMENT_ID = #{paymentId},
-        CHANNEL_ID = #{channelId}
+        CHANNEL_ID = #{channelId},
+        SOURCE_TYPE = #{sourceType}
         where ID = #{id}
     </update>
     <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true" >
