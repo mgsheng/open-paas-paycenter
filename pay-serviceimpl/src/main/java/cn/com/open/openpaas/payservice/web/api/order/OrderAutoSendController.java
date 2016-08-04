@@ -94,10 +94,10 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    		
 	    		//向业务方发送订单状态信息
 	    		if(orderInfo.getNotifyUrl()!=null && !("").equals(orderInfo.getNotifyUrl())){
-	    			result = sendPost(orderInfo.getNotifyUrl(),params);
+	    			result = sendOrderPost(orderInfo.getNotifyUrl(),params);
 	    		}else{
 	    			if(merchantInfo!=null){
-	    				result = sendPost(merchantInfo.getNotifyUrl(),params);
+	    				result = sendOrderPost(merchantInfo.getNotifyUrl(),params);
 	    			}
 	    		}
 	    		if(result != null && !("").equals(result)){
@@ -121,83 +121,5 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    }
 	    log.info("~~~~~~~~~~~~~~~orderAutoSend end~~~~~~~~~~~~~~~~");
     }
-	 /** 
-     * 发送POST请求 
-     *  
-     * @param url 
-     *            目的地址 
-     * @param parameters 
-     *            请求参数，Map类型。 
-     * @return 远程响应结果 
-     */  
-    public static String sendPost(String url, SortedMap<Object,Object> sParaTemp) {  
-        String result = "";// 返回的结果  
-        BufferedReader in = null;// 读取响应输入流  
-        PrintWriter out = null;  
-        StringBuffer sb = new StringBuffer();// 处理请求参数  
-        String params="";
-        try {  
-		Set es = sParaTemp.entrySet();//所有参与传参的参数按照accsii排序（升序）
-		Iterator it = es.iterator();
-		while(it.hasNext()) {
-			Map.Entry entry = (Map.Entry)it.next();
-			String k = (String)entry.getKey();
-			Object v = entry.getValue();
-			if(null != v && !"".equals(v) 
-					&& !"sign".equals(k) && !"key".equals(k)) {
-				String value=URLEncoder.encode((String)v, "UTF-8");
-				sb.append(k + "=" + value + "&");
-			}
-		  }
-		   String temp_params = sb.toString(); 
-		   params = temp_params.substring(0, temp_params.length() - 1);  
-		   log.info("发送参数："+params);
-            // 创建URL对象  
-            java.net.URL connURL = new java.net.URL(url);  
-            // 打开URL连接  
-            java.net.HttpURLConnection httpConn = (java.net.HttpURLConnection) connURL  
-                    .openConnection();  
-            // 设置通用属性  
-            httpConn.setRequestProperty("Accept", "*/*");  
-            httpConn.setRequestProperty("Connection", "Keep-Alive");  
-            httpConn.setRequestProperty("User-Agent",  
-                    "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");  
-            // 设置POST方式  
-            httpConn.setDoInput(true);  
-            httpConn.setDoOutput(true);  
-            // 获取HttpURLConnection对象对应的输出流  
-            out = new PrintWriter(httpConn.getOutputStream());  
-            // 发送请求参数  
-            //out.write(params); 
-            out.write(params);  
-            // flush输出流的缓冲  
-            out.flush();  
-            // 定义BufferedReader输入流来读取URL的响应，设置编码方式  
-            in = new BufferedReader(new InputStreamReader(httpConn  
-                    .getInputStream(), "UTF-8"));  
-            String line;  
-            // 读取返回的内容  
-            while ((line = in.readLine()) != null) {  
-                result += line;  
-                
-            }  
-            System.out.println(result);
-        } catch (Exception e) {  
-            e.printStackTrace();  
-            return null;
-        } finally {  
-            try {  
-                if (out != null) {  
-                    out.close();  
-                }  
-                if (in != null) {  
-                    in.close();  
-                }  
-            } catch (IOException ex) {  
-                ex.printStackTrace();  
-            }  
-        }  
-        return result;  
-    }  	
-
+	
 }
