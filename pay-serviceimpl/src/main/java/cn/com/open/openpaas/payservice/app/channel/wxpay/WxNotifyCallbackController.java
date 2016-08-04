@@ -73,7 +73,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public void dirctPay(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+	public void wxCallBack(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		//读取参数
 		        log.info("------------------------------wx callback start------------------------------");
 		        long startTime = System.currentTimeMillis();
@@ -129,11 +129,12 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 		        
 			        //log.info(packageParams);
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
-			   	   DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
-			        String key = dictTradeChannel.getKeyValue(); // key
+			    	 PayServiceLog payServiceLog=new PayServiceLog();
 			    	if(merchantOrderInfo!=null){
 			    		//添加日志
-						 PayServiceLog payServiceLog=new PayServiceLog();
+			    		  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
+					        String key = dictTradeChannel.getKeyValue(); // key
+						
 						 payServiceLog.setAmount(total_fee);
 						 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 						 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
@@ -212,6 +213,10 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 					    	log.info("通知签名验证失败");
 					    }
 			    	}else{
+			    		payServiceLog.setErrorCode("4");
+				        payServiceLog.setStatus("error");
+				        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+				        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			    		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 			            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 			                    + "<return_msg><![CDATA[订单查询失败]]></return_msg>" + "</xml> ";

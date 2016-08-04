@@ -61,7 +61,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public void notifyCallBack(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
+	public void aliNotifyCallBack(HttpServletRequest request,HttpServletResponse response,Map<String,Object> model) throws MalformedURLException, DocumentException, IOException {
 		   log.info("-----------------------callBack  alipay/notify-----------------------------------------");
 		//获取支付宝GET过来反馈信息
 		long startTime = System.currentTimeMillis();

@@ -1,11 +1,17 @@
 package cn.com.open.openpaas.payservice.app.channel.alipay;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -94,9 +100,9 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
 		}
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		 PayServiceLog payServiceLog=new PayServiceLog();
 		if(merchantOrderInfo!=null){
 		//添加日志
-		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
@@ -125,6 +131,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			if(trade_status.equals("TRADE_FINISHED") || trade_status.equals("TRADE_SUCCESS")){
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 				backMsg="success";
 					//如果有做过处理，不执行商户的业务程序
 			}
@@ -137,10 +144,92 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			backMsg="error";
 		}
 		}else{
+			  payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 			backMsg="error";
 		} 
 		 model.addAttribute("backMsg", backMsg);
 		 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
 		 return "pay/callBack";
 	}
+	 /** 
+     * 发送POST请求 
+     *  
+     * @param url 
+     *            目的地址 
+     * @param parameters 
+     *            请求参数，Map类型。 
+     * @return 远程响应结果 
+     */  
+    public static String sendPost(String url, SortedMap<Object,Object> sParaTemp) {  
+        String result = "";// 返回的结果  
+        BufferedReader in = null;// 读取响应输入流  
+        PrintWriter out = null;  
+        StringBuffer sb = new StringBuffer();// 处理请求参数  
+        String params="";
+        try {  
+		Set es = sParaTemp.entrySet();//所有参与传参的参数按照accsii排序（升序）
+		Iterator it = es.iterator();
+		while(it.hasNext()) {
+			Map.Entry entry = (Map.Entry)it.next();
+			String k = (String)entry.getKey();
+			Object v = entry.getValue();
+			if(null != v && !"".equals(v) 
+					&& !"sign".equals(k) && !"key".equals(k)) {
+				String value=URLEncoder.encode((String)v, "UTF-8");
+				sb.append(k + "=" + value + "&");
+			}
+		  }
+		   String temp_params = sb.toString(); 
+		   params = temp_params.substring(0, temp_params.length() - 1);  
+		   log.info("发送参数："+params);
+            // 创建URL对象  
+            java.net.URL connURL = new java.net.URL(url);  
+            // 打开URL连接  
+            java.net.HttpURLConnection httpConn = (java.net.HttpURLConnection) connURL  
+                    .openConnection();  
+            // 设置通用属性  
+            httpConn.setRequestProperty("Accept", "*/*");  
+            httpConn.setRequestProperty("Connection", "Keep-Alive");  
+            httpConn.setRequestProperty("User-Agent",  
+                    "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");  
+            // 设置POST方式  
+            httpConn.setDoInput(true);  
+            httpConn.setDoOutput(true);  
+            // 获取HttpURLConnection对象对应的输出流  
+            out = new PrintWriter(httpConn.getOutputStream());  
+            // 发送请求参数  
+            //out.write(params); 
+            out.write(params);  
+            // flush输出流的缓冲  
+            out.flush();  
+            // 定义BufferedReader输入流来读取URL的响应，设置编码方式  
+            in = new BufferedReader(new InputStreamReader(httpConn  
+                    .getInputStream(), "UTF-8"));  
+            String line;  
+            // 读取返回的内容  
+            while ((line = in.readLine()) != null) {  
+                result += line;  
+                
+            }  
+            System.out.println(result);
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            return null;
+        } finally {  
+            try {  
+                if (out != null) {  
+                    out.close();  
+                }  
+                if (in != null) {  
+                    in.close();  
+                }  
+            } catch (IOException ex) {  
+                ex.printStackTrace();  
+            }  
+        }  
+        return result;  
+    }  	
+
 }

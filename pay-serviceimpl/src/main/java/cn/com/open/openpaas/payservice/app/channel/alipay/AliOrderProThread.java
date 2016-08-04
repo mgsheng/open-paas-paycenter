@@ -100,7 +100,7 @@ public class AliOrderProThread implements Runnable {
 		 payServiceLog.setPayOrderId(String.valueOf(merchantOrderInfo.getPayOrderId()));
 		 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
 		 payServiceLog.setProductName(merchantOrderInfo.getMerchantProductName());
-		 payServiceLog.setRealAmount(String.valueOf(merchantOrderInfo.getPayAmount()));
+		 payServiceLog.setRealAmount(String.valueOf(merchantOrderInfo.getPayAmount()*100));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
 		 payServiceLog.setLogName(PayLogName.NOTIFY_START);
