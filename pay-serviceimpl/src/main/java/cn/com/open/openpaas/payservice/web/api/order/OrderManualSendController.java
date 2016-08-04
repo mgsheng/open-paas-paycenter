@@ -185,15 +185,20 @@ public class OrderManualSendController extends BaseControllerUtil{
     			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
     			if("ok".equals(map.get("state"))){//商户处理成功
     				orderInfo.setNotifyStatus(1);
+    				 payServiceLog.setStatus("ok");
+    			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+    			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     			}else{
+    				    payServiceLog.setStatus("error");
+    				    payServiceLog.setErrorCode(map.get("errorCode").toString());
+    			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+    			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     				orderInfo.setNotifyStatus(2);
     			}
 				orderInfo.setNotifyTimes();
 				orderInfo.setNotifyDate(new Date());
 				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
-		        payServiceLog.setStatus("ok");
-		        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
-		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+		       
     		}
 	    }
 	    log.info("~~~~~~~~~~~~~~~orderManualSend end~~~~~~~~~~~~~~~~");
