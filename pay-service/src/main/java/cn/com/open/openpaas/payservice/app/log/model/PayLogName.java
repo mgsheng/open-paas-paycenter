@@ -13,6 +13,11 @@ public interface PayLogName {
 	public static String CALLBACK_START = "callback_start";
 	//第三方回调结束
 	public static String CALLBACK_END = "callback_end";
+	
+	//第三方回调开始
+	public static String CALLBACK_NOTIFY_START = "callback_notify_start";
+	//第三方回调结束
+	public static String CALLBACK_NOTIFY_END = "callback_notify_end";
 	//支付宝页面回调开始
 	public static String ALIPAY_RETURN_START = "alipay_return_start";
 	//支付宝页面回调结束
