@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -17,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.httpclient.util.DateUtil;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,20 +109,22 @@ public class OrderManualSendController extends BaseControllerUtil{
 		if(orderInfo.getPayStatus()==1){
 			//DictTradeChannel channel=dictTradeChannelService.findByMAI(orderInfo.getMerchantId()+"", orderInfo.getChannelId());
 			SortedMap<Object, Object> params = new TreeMap<Object,Object>();
-    		params.put("orderId", orderInfo.getId());
-    		params.put("outTradeNo", orderInfo.getMerchantOrderId());
-    		params.put("merchantId", orderInfo.getMerchantId());
-    		params.put("paymentChannel", orderInfo.getChannelId());
-    		params.put("paymentType", orderInfo.getPaymentId());
-    		params.put("feeType", "CNY");
-    		params.put("guid", orderInfo.getGuid());
-    		params.put("appUid", orderInfo.getSourceUid());
-    		params.put("timeEnd", orderInfo.getDealDate());
-    		params.put("totalFee", orderInfo.getOrderAmount());
-    		params.put("goodsId", orderInfo.getMerchantProductId());
-    		params.put("goodsName", orderInfo.getMerchantProductName());
-    		params.put("goodsDesc", orderInfo.getMerchantProductDesc());
-    		params.put("parameter", orderInfo.getParameter1());
+			params.put("orderId", orderInfo.getId());
+			params.put("outTradeNo", orderInfo.getMerchantOrderId());
+			params.put("merchantId", String.valueOf(orderInfo.getMerchantId()));
+			params.put("paymentType", String.valueOf(orderInfo.getPaymentId()));
+			params.put("paymentChannel", String.valueOf(orderInfo.getChannelId()));
+			params.put("feeType", "CNY");
+			params.put("guid", orderInfo.getGuid());
+			params.put("appUid",String.valueOf(orderInfo.getSourceUid()));
+			//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+			params.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+			params.put("totalFee", String.valueOf((int)(orderInfo.getPayAmount()*100)));
+			params.put("goodsId", orderInfo.getMerchantProductId());
+			params.put("goodsName",orderInfo.getMerchantProductName());
+			params.put("goodsDesc", orderInfo.getMerchantProductDesc());
+			params.put("parameter", orderInfo.getParameter1());
+			params.put("userName", orderInfo.getSourceUserName());
     		
     		log.info("~~~~~~~~~orderManualSend params："+AlipayCore.createLogString(params));
     		
@@ -150,84 +156,4 @@ public class OrderManualSendController extends BaseControllerUtil{
 	    }
 	    log.info("~~~~~~~~~~~~~~~orderManualSend end~~~~~~~~~~~~~~~~");
     }
-
-	 /** 
-     * 发送POST请求 
-     *  
-     * @param url 
-     *            目的地址 
-     * @param parameters 
-     *            请求参数，Map类型。 
-     * @return 远程响应结果 
-     */  
-    public static String sendPost(String url, SortedMap<Object, Object> params2) {  
-        String result = "";// 返回的结果  
-        BufferedReader in = null;// 读取响应输入流  
-        PrintWriter out = null;  
-        StringBuffer sb = new StringBuffer();// 处理请求参数  
-        String params = "";// 编码之后的参数  
-        SortedMap<Object, Object> parameters = params2;
-        try {  
-            // 编码请求参数  
-            if (parameters.size() == 1) {  
-                for (Object name : parameters.keySet()) {  
-                    sb.append(name).append("=").append(  
-                            java.net.URLEncoder.encode((String) parameters.get(name),  
-                                    "UTF-8"));  
-                }  
-                params = sb.toString();  
-            } else {  
-                for (Object name : parameters.keySet()) {  
-                    sb.append(name).append("=").append(  
-                           parameters.get(name)).append("&");  
-                }  
-                String temp_params = sb.toString();  
-                params = temp_params.substring(0, temp_params.length() - 1);  
-            }  
-            // 创建URL对象  
-            java.net.URL connURL = new java.net.URL(url);  
-            // 打开URL连接  
-            java.net.HttpURLConnection httpConn = (java.net.HttpURLConnection) connURL  
-                    .openConnection();  
-            // 设置通用属性  
-            httpConn.setRequestProperty("Accept", "*/*");  
-            httpConn.setRequestProperty("Connection", "Keep-Alive");  
-            httpConn.setRequestProperty("User-Agent",  
-                    "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");  
-            // 设置POST方式  
-            httpConn.setDoInput(true);  
-            httpConn.setDoOutput(true);  
-            // 获取HttpURLConnection对象对应的输出流  
-            out = new PrintWriter(httpConn.getOutputStream());  
-            // 发送请求参数  
-            //out.write(params); 
-            out.write(params);  
-            // flush输出流的缓冲  
-            out.flush();  
-            // 定义BufferedReader输入流来读取URL的响应，设置编码方式  
-            in = new BufferedReader(new InputStreamReader(httpConn  
-                    .getInputStream(), "gb2312"));  
-            String line;  
-            // 读取返回的内容  
-            while ((line = in.readLine()) != null) {  
-                result += line;  
-                
-            }  
-            System.out.println(result);
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        } finally {  
-            try {  
-                if (out != null) {  
-                    out.close();  
-                }  
-                if (in != null) {  
-                    in.close();  
-                }  
-            } catch (IOException ex) {  
-                ex.printStackTrace();  
-            }  
-        }  
-        return result;  
-    }  	   
 }
