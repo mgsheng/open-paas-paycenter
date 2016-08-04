@@ -24,16 +24,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
-import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
-import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
-import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
@@ -49,15 +46,9 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
-	 private MerchantInfoService merchantInfoService;
-	 @Autowired
-	 private UserAccountBalanceService userAccountBalanceService;
-	 @Autowired
 	 private PayserviceDev payserviceDev;
 	 @Autowired
-	 private UserSerialRecordService userSerialRecordService;
-	 @Autowired
-	 private ChannelRateService channelRateService;
+	 private DictTradeChannelService dictTradeChannelService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -102,6 +93,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		if(merchantOrderInfo!=null){
+			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		//添加日志
 		 payServiceLog.setAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
@@ -122,7 +114,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
-		boolean verify_result = AlipayNotify.verify(params);
+		boolean verify_result = AlipayNotify.verify(params,dictTradeChannel.getKeyValue(),dictTradeChannel.getInputCharset());
 		
 		if(verify_result){//验证成功
 			//////////////////////////////////////////////////////////////////////////////////////////

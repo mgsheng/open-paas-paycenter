@@ -31,11 +31,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayConfig;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayCore;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PayUtil;
+import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
 
@@ -61,6 +65,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 	 @RequestMapping("orderManualSend")
 	 public void orderManualSend(HttpServletRequest request,HttpServletResponse response) throws MalformedURLException, DocumentException, IOException {
 		 log.info("~~~~~~~~~~~~~~~~~~~~~~ordermanualSend start~~~~~~~~~~~~~~~~~~~~~~~~");
+		 long startTime = System.currentTimeMillis();
 		 //  135-2025-0945
 		String outTradeNo=request.getParameter("orderId");//业务方订单唯一ID
 		String appId=request.getParameter("appId");
@@ -69,19 +74,41 @@ public class OrderManualSendController extends BaseControllerUtil{
 		String signatureNonce=request.getParameter("signatureNonce");
 		
 		log.info("~~~~~~~outTradeNo："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setAppId(appId);
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setLogType(payserviceDev.getLog_type());
+		 payServiceLog.setMerchantOrderId(outTradeNo);
+		 payServiceLog.setLogName(PayLogName.ORDER_MANUAL_START);
+         payServiceLog.setStatus("ok");
+         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		
 		String result = "";
     	//获取当前订单
 		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(!paraMandatoryCheck(Arrays.asList(outTradeNo,appId))){
+			  payServiceLog.setErrorCode("4");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	paraMandaChkAndReturn(4, response,"必传参数中有空值");
             return;
         }
 		if(orderInfo==null){
+			  payServiceLog.setErrorCode("3");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
 			paraMandaChkAndReturn(3, response,"业务方订单号不存在");
+			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
             return;
 		}
-		
+		payServiceLog.setAmount(String.valueOf(orderInfo.getPayAmount()*100));
+		payServiceLog.setRealAmount(String.valueOf(orderInfo.getPayAmount()*100));
+		payServiceLog.setProductName(orderInfo.getMerchantProductName());
+		payServiceLog.setOrderId(orderInfo.getId());
+		payServiceLog.setChannelId(String.valueOf(orderInfo.getChannelId()));
+		payServiceLog.setPaymentId(String.valueOf(orderInfo.getPaymentId()));
+		payServiceLog.setPaySwitch(String.valueOf(orderInfo.getSourceType()));
 		MerchantInfo merchantInfo=merchantInfoService.findById(orderInfo.getMerchantId());
 		//认证
 	 	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
@@ -94,15 +121,27 @@ public class OrderManualSendController extends BaseControllerUtil{
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,param,merchantInfo.getPayKey());
         //Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
 		if(!hmacSHA1Verification){
+			 payServiceLog.setErrorCode("1");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			paraMandaChkAndReturn(1, response,"认证失败");
 			return;
 		} 
 		
 		if(orderInfo.getPayStatus()==null || orderInfo.getPayStatus()==0){
+			 payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	paraMandaChkAndReturn(2, response,"第三方未处理");
             return;
 		}
 		if(orderInfo.getPayStatus()==2){
+			 payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	paraMandaChkAndReturn(2, response,"第三方处理失败");
             return;
 		}
@@ -152,6 +191,9 @@ public class OrderManualSendController extends BaseControllerUtil{
 				orderInfo.setNotifyTimes();
 				orderInfo.setNotifyDate(new Date());
 				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
+		        payServiceLog.setStatus("ok");
+		        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     		}
 	    }
 	    log.info("~~~~~~~~~~~~~~~orderManualSend end~~~~~~~~~~~~~~~~");

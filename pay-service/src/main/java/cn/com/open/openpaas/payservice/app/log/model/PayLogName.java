@@ -26,4 +26,12 @@ public interface PayLogName {
 	public static String COSTS_START = "costs_start";
 	//扣费结束
 	public static String COSTS_END = "costs_end";
+	//订单补发开始
+	public static String ORDER_MANUAL_START = "order_manual_start";
+	//订单补发结束
+	public static String ORDER_MANUAL_END = "order_manual_end";
+	//订单补发开始
+	public static String ORDER_AUTO_START = "order_auto_start";
+	//订单补发结束
+	public static String ORDER_AUTO_END = "order_auto_end";
 }

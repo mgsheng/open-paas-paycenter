@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
+import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -52,6 +54,8 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 	 private UserSerialRecordService userSerialRecordService;
 	 @Autowired
 	 private ChannelRateService channelRateService;
+	 @Autowired
+	 private DictTradeChannelService dictTradeChannelService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -97,6 +101,8 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 //		}
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		if(merchantOrderInfo!=null){
+			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
+		        String key = dictTradeChannel.getKeyValue(); // key
 		//添加日志
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(String.valueOf(total_fee*100));
@@ -118,7 +124,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
-		boolean verify_result = AlipayNotify.verify(params);
+		boolean verify_result = AlipayNotify.verify(params,key,dictTradeChannel.getInputCharset());
 		  log.info("-----------------------callBack:alipay:notify sign result:-----------------------------------------"+verify_result+",orderId:"+out_trade_no);
 		if(verify_result){
 			  log.info("-----------------------callBack:alipay:notify:success-----------------------------------------");

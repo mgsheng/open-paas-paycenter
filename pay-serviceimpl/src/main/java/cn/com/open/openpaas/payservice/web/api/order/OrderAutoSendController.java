@@ -29,11 +29,15 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayCore;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PayUtil;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
+import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
+import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
+import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.PropertiesTool;
 import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
@@ -60,8 +64,15 @@ public class OrderAutoSendController extends BaseControllerUtil{
     public void orderAutoSend() {
     	log.info("~~~~~~~~~~~~~~~~~~~~~~orderAutoSend start~~~~~~~~~~~~~~~~~~~~~~~~");
     	String result = "";
+    	 long startTime = System.currentTimeMillis();
     	//获取payStatus第三方支付状态为成功1且notifyStatus商户接收状态为未处理状态0 订单集合
 	    List<MerchantOrderInfo> merchantOrderInfos=merchantOrderInfoService.findByPayAndNotifyStatus();
+	    PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setLogType(payserviceDev.getLog_type());
+		 payServiceLog.setLogName(PayLogName.ORDER_AUTO_START);
+        payServiceLog.setStatus("ok");
+        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 	    for(MerchantOrderInfo orderInfo : merchantOrderInfos){
     		
 	    	if(orderInfo.getNotifyTimes()==null || orderInfo.getNotifyTimes()<SysUtil.toInt(payserviceDev.getNotify_times())){
@@ -84,8 +95,22 @@ public class OrderAutoSendController extends BaseControllerUtil{
 				params.put("goodsDesc", orderInfo.getMerchantProductDesc());
 				params.put("parameter", orderInfo.getParameter1());
 				params.put("userName", orderInfo.getSourceUserName());
-	    		
+			
 	    		log.info("~~~~~~~~~orderAutoSend params："+AlipayCore.createLogString(params));
+	    		
+	    		 payServiceLog.setAmount(String.valueOf(orderInfo.getAmount()*100));
+	    		 payServiceLog.setAppId(orderInfo.getAppId());
+	    		 payServiceLog.setChannelId(String.valueOf(orderInfo.getChannelId()));
+	    		 payServiceLog.setMerchantId(String.valueOf(orderInfo.getMerchantId()));
+	    		 payServiceLog.setMerchantOrderId(String.valueOf(orderInfo.getMerchantOrderId()));
+	    		 payServiceLog.setOrderId(orderInfo.getId());
+	    		 payServiceLog.setPaymentId(String.valueOf(orderInfo.getPaymentId()));
+	    		 payServiceLog.setPayOrderId(String.valueOf(orderInfo.getPayOrderId()));
+	    		 payServiceLog.setProductDesc(orderInfo.getMerchantProductDesc());
+	    		 payServiceLog.setProductName(orderInfo.getMerchantProductName());
+	    		 payServiceLog.setRealAmount(String.valueOf(orderInfo.getPayAmount()*100));
+	    		 payServiceLog.setSourceUid(orderInfo.getSourceUid());
+	    		 payServiceLog.setUsername(orderInfo.getUserName());
 	    		
 	    		String secret=PayUtil.createSign(payserviceDev.getAli_input_charset(),params,merchantInfo.getPayKey());
 	    		params.put("secret", secret);
@@ -111,11 +136,19 @@ public class OrderAutoSendController extends BaseControllerUtil{
     				orderInfo.setNotifyTimes();//方法中自动+1
     				orderInfo.setNotifyDate(new Date());
     				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
+    				
+    			
+    		        payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
+    		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    				
 	    		}
 	    		else{
+	    			
 	    			orderInfo.setNotifyStatus(2);
 	    			orderInfo.setNotifyTimes();//方法中自动+1
 	    			merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
+	    			  payServiceLog.setStatus("error");
+	    			  payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
+	    		      UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev); 
 	    		}
 	    	}
 	    }
