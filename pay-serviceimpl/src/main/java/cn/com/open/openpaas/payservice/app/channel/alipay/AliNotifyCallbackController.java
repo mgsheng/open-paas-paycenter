@@ -77,7 +77,8 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 						: valueStr + values[i] + ",";
 			}
 			//乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
-			valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+			  log.info("-----------------------callBack:alipay:notify params:-----------------------------------------"+valueStr);
+		//	valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
 			params.put(name, valueStr);
 		}
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
@@ -88,7 +89,8 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
         Double total_fee=Double .valueOf(request.getParameter("total_fee"));
 		//交易状态
 		String trade_status = new String(request.getParameter("trade_status").getBytes("ISO-8859-1"),"UTF-8");
-		String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
+	//	String subject = new String(request.getParameter("subject").getBytes("ISO-8859-1"),"UTF-8");
+		String subject = request.getParameter("subject");
 		String body = "";
 //		if(!nullEmptyBlankJudge(request.getParameter("body"))){
 //			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
@@ -117,6 +119,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params);
+		  log.info("-----------------------callBack:alipay:notify sign result:-----------------------------------------"+verify_result+",orderId:"+out_trade_no);
 		if(verify_result){
 			  log.info("-----------------------callBack:alipay:notify:success-----------------------------------------");
 			//验证成功
