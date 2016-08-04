@@ -47,9 +47,9 @@ import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandl
  * 
  */
 @Controller
-@RequestMapping("/alipay/")
-public class OrderManualSendController extends BaseControllerUtil{
-	private static final Logger log = LoggerFactory.getLogger(OrderManualSendController.class);
+@RequestMapping("/alipay/test")
+public class TestOrderManualSendController extends BaseControllerUtil{
+	private static final Logger log = LoggerFactory.getLogger(TestOrderManualSendController.class);
 	
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
@@ -185,7 +185,7 @@ public class OrderManualSendController extends BaseControllerUtil{
     			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
     			if("ok".equals(map.get("state"))){//商户处理成功
     				orderInfo.setNotifyStatus(1);
-    				 payServiceLog.setStatus("ok");
+    				    payServiceLog.setStatus("ok");
     			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
     			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     			}else{
@@ -198,7 +198,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 				orderInfo.setNotifyTimes();
 				orderInfo.setNotifyDate(new Date());
 				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
-		       
+				writeSuccessJson(response, map);
     		}
 	    }
 	    log.info("~~~~~~~~~~~~~~~orderManualSend end~~~~~~~~~~~~~~~~");
