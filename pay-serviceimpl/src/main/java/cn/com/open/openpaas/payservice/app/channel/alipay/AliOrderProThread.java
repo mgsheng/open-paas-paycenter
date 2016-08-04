@@ -88,7 +88,7 @@ public class AliOrderProThread implements Runnable {
 		
 		//添加日志
 		 PayServiceLog payServiceLog=new PayServiceLog();
-		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getAmount()));
+		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getAmount()*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
