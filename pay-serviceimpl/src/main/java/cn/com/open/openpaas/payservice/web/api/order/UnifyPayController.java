@@ -463,14 +463,14 @@ public class UnifyPayController extends BaseControllerUtil{
 		                   	 //payInfo.setDevice_info("WEB");
 		                   	 payInfo.setMch_id(others.get("wx_mch_id"));
 		                   	 payInfo.setNonce_str(WxPayCommonUtil.create_nonce_str());
-		                   	 payInfo.setBody(goodsDesc);
+		                   	 payInfo.setBody(goodsName);
 		                   	 //payInfo.setAttach("某某分店");
 		                   	 payInfo.setOut_trade_no(merchantOrderInfo.getId());
 		                   	 payInfo.setProduct_id(goodsId);
 		                   	 payInfo.setTotal_fee(Integer.parseInt(totalFee));
 		                   	 payInfo.setSpbill_create_ip(others.get("wx_spbill_create_ip"));
 		                   	 payInfo.setNotify_url(dictTradeChannels.getNotifyUrl());
-		                   	payInfo.setWx_key(others.get("wx_key"));
+		                   	 payInfo.setWx_key(others.get("wx_key"));
 		                   	 payInfo.setTrade_type(others.get("wx_trade_type"));
 		                   	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
 		                   	
@@ -1031,7 +1031,7 @@ public class UnifyPayController extends BaseControllerUtil{
                    	 //payInfo.setDevice_info("WEB");
                    	 payInfo.setMch_id(others.get("wx_mch_id"));
                    	 payInfo.setNonce_str(WxPayCommonUtil.create_nonce_str());
-                   	 payInfo.setBody(goodsDesc);
+                   	 payInfo.setBody(goodsName);
                    	 //payInfo.setAttach("某某分店");
                    	 payInfo.setOut_trade_no(merchantOrderInfo.getId());
                    	 payInfo.setProduct_id(goodsId);
