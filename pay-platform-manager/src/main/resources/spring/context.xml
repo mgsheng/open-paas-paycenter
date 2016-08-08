@@ -26,9 +26,9 @@
         </property>
     </bean>
 
-     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+   <!--   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties" ref="properties"/>
-    </bean>
+    </bean> -->
        <!--dataSource-->
  <bean id="parentDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
  <!-- 初始化连接大小 -->
