@@ -2,10 +2,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.statistics</groupId>
-	<artifactId>pay-data-statistics</artifactId>
+	<artifactId>pay-platform-manager</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
-	<name>pay-data-statistics</name>
+	<name>pay-platform-manager</name>
 	<description>Pay data stats</description>
 
 	<properties>
@@ -42,7 +42,7 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.0.2</version>
 				<configuration>
-					<warSourceExcludes>*/classes/pay-data-statistics.properties</warSourceExcludes>
+					<warSourceExcludes>*/classes/pay-platform-manager.properties</warSourceExcludes>
 					<archive>
 						<manifestEntries>
 							<Implementation-BuildNumber>
