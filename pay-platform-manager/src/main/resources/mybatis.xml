@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias alias="User" type="cn.com.open.pay.platform.manager.login.model.User"/>
+       
+    </typeAliases>
+
+    <mappers>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/UserMapper.xml"/>
+       
+    </mappers>
+
+</configuration>
