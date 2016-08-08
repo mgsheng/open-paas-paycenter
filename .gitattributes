@@ -50,11 +50,12 @@ pay-platform-manager/src/main/resources/emailtemplate/activation.html -text
 pay-platform-manager/src/main/resources/emailtemplate/resetpassword.html -text
 pay-platform-manager/src/main/resources/mybatis.xml -text
 pay-platform-manager/src/main/resources/pay-platform-manager.properties -text
-pay-platform-manager/src/main/resources/spring/appCtx-disconf.xml -text
 pay-platform-manager/src/main/resources/spring/context.xml -text
-pay-platform-manager/src/main/resources/spring/job.xml -text
 pay-platform-manager/src/main/resources/spring/transaction.xml -text
 pay-platform-manager/src/main/webapp/META-INF/MANIFEST.MF -text
+pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
+pay-platform-manager/src/main/webapp/WEB-INF/log4j.xml -text
+pay-platform-manager/src/main/webapp/WEB-INF/soc-servlet.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/web.xml -text
 pay-platform-manager/src/main/webapp/index.jsp -text
 pay-service-test/.classpath -text

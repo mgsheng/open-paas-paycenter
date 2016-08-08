@@ -26,9 +26,9 @@
         </property>
     </bean>
 
-   <!--  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties" ref="properties"/>
-    </bean>-->
+    </bean>
        <!--dataSource-->
  <bean id="parentDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
  <!-- 初始化连接大小 -->
@@ -89,7 +89,7 @@
         </property>  
         <property name="defaultTargetDataSource" ref="masterDataSource" />  
     </bean> -->  
-    <bean id="dataSource" class="cn.com.open.openpaas.payservice.app.datasource.DynamicDataSource">  
+    <bean id="dataSource" class="cn.com.open.pay.platform.manager.datasource.DynamicDataSource">  
         <property name="targetDataSources">  
             <map key-type="java.lang.String">  
                 <entry key="slave" value-ref="slaveDataSource" />  
@@ -120,7 +120,7 @@
     </bean>
 
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.com.open.openpaas.payservice.app.infrastructure.mybatis"/>
+        <property name="basePackage" value="cn.com.open.pay.platform.manager.infrastructure.mybatis"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
@@ -154,7 +154,7 @@
             </list>
         </constructor-arg>
     </bean>
-       <bean id="payserviceDev" class="cn.com.open.openpaas.payservice.dev.PayserviceDev">
+       <bean id="payserviceDev" class="cn.com.open.pay.platform.manager.dev.PayManagerDev">
             <property name="server_host" value="${server_host}"></property>
             
         </bean>

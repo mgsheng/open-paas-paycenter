@@ -29,7 +29,7 @@ public class UserLoginController extends BaseControllerUtil {
 	 @RequestMapping("login")
 	 public String  login(HttpServletRequest request,HttpServletResponse response) {
 		 log.info("-----------------------login start----------------");
-		 
+	    
 	   return null;
 	 }	
    

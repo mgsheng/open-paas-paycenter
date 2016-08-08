@@ -12,7 +12,7 @@
     <!--aop-->
     
      <!-- <bean id="dataSourceAdvice" class="cc.wdcy.datasource.DataSourceAdvice" />  -->
-     <bean id="dataSourceAdvice" class="cn.com.open.openpaas.payservice.app.datasource.DataSourceAdvice" />  
+     <bean id="dataSourceAdvice" class="cn.com.open.pay.platform.manager.datasource.DataSourceAdvice" />  
     <!-- <aop:config>  
         <aop:advisor  
             pointcut="execution(* cc.wdcy.infrastructure.mybatis.*.*(..))"  
@@ -29,7 +29,7 @@
          <aop:advisor  
             pointcut="execution(* org.springframework.security.oauth2.provider.token.JdbcTokenStore.*(..))"  
             advice-ref="dataSourceAdvice" />  
-         <aop:advisor advice-ref="dataSourceAdvice" pointcut="execution(* cn.com.open.pay.platform.manager.login.model.*.*(..))"/>
+         <aop:advisor advice-ref="dataSourceAdvice" pointcut="execution(* cn.com.open.pay.platform.manager.*.model.*.*(..))"/>
     </aop:config> 
     <!-- <aop:config>
         <aop:advisor advice-ref="applicationAdvisor" pointcut="execution(* cc.wdcy.service.*.*(..))"/>

@@ -10,6 +10,7 @@
     </settings>
     <typeAliases>
         <typeAlias alias="User" type="cn.com.open.pay.platform.manager.login.model.User"/>
+        <typeAlias alias="Privilege" type="cn.com.open.pay.platform.manager.login.model.Privilege"/>
        
     </typeAliases>
 
