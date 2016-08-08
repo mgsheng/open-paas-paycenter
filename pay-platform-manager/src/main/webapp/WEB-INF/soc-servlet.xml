@@ -12,7 +12,7 @@
 
     <!--annotation configuration -->
     <context:annotation-config/>
-    <context:component-scan base-package="com.andaily.springoauth.web"/>
+    <context:component-scan base-package="cn.com.open.pay.platform.manager.web"/>
 
     <!--static resource-->
     <mvc:resources mapping="/index.jsp*" location="/index.jsp"/>

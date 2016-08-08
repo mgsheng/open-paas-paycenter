@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
+import cn.com.open.pay.platform.manager.tools.WebUtils;
 
 
 
@@ -29,8 +31,22 @@ public class UserLoginController extends BaseControllerUtil {
 	 @RequestMapping("login")
 	 public String  login(HttpServletRequest request,HttpServletResponse response) {
 		 log.info("-----------------------login start----------------");
-	    
-	   return null;
+		/* String backMsg="";
+		 String username=request.getParameter("username");
+	     String password=request.getParameter("password");
+	     User user = null;
+	     user=checkUsername(username,userService);
+	     if(user!=null){
+	    	  if(user.checkPasswod(password)){
+	    		  backMsg="ok"; 
+				}else{
+				  backMsg="error"; 
+				}
+	    	
+	     }else{
+	    	 backMsg="error"; 
+	     }
+	     WebUtils.writeJson(response,backMsg);*/
+	     return "decorators/main";
 	 }	
-   
 }

@@ -24,6 +24,10 @@ import net.sf.json.JSONObject;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 
+import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.login.service.UserService;
+
+
 public class BaseControllerUtil {
 	
 	/**
@@ -619,6 +623,39 @@ public class BaseControllerUtil {
 		 String temp_params = sb.toString();  
 		return sb.toString().substring(0, temp_params.length()-1);
 	}
-
+	 /**判断登录账号是Email或Phone或奥鹏卡号
+     * 
+     * @param username
+     * @return
+     */
+    public User checkUsername(String username, UserService userService){//flag=1:email   flag=2:phone
+    	User user=null;
+        //先校验用户名字段
+    	user=userService.findByUsername(username);
+    	if(user==null) {
+            //邮箱
+//    		String check1="^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
+        	//String check1="^([a-zA-Z0-9_\\-\\.]+)@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.)|(([a-zA-Z0-9\\-]+\\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\\]?)$";
+            //手机//check="^[1][3,4,5,8][0-9]{9}$";
+            String check2="^[1][1-9]{1}[0-9]{9}$";
+            //Pattern regex1 = Pattern.compile(check1);
+            Pattern regex2 = Pattern.compile(check2);
+    		List<User> userList = null;
+    		if(regex2.matcher(username).matches()){//手机
+    			String desPhone=Help_Encrypt.encrypt(username);
+				userList=userService.findByPhone(desPhone);
+			}if(userList==null||userList.size()==0){//邮箱
+				userList=userService.findByEmail(username);
+			}
+			if(userList==null||userList.size()==0){//纯数字可能为奥鹏卡号
+				userList = userService.findByCardNo(username);
+			}
+			//有且只有一个手机号、邮箱、卡号的用户，否则不能算是有效用户
+			if(userList!=null && userList.size()==1){
+				user = userList.get(0);
+			}
+    	}
+        return user;
+    }
 
 }

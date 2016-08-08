@@ -7,18 +7,9 @@
         <pattern>/*</pattern>
     </decorator>
 
+
     <excludes>
-        <pattern>/login.jsp</pattern>
-        <pattern>/index.jsp</pattern>
-        <pattern>/main*</pattern>
-        <pattern>/findpwd*</pattern>
-        <pattern>/index_images_detail*</pattern>
-        <pattern>/dev*</pattern>
-        <pattern>/login.jsp?authentication_error=1</pattern>
-        <pattern>/user/*</pattern>
-        <pattern>/oauth/*</pattern>
-        <pattern>/legalnotice.jsp</pattern>
-        <pattern>/login.jsp?appname=*</pattern>
+        <pattern>/reg.do*</pattern>
     </excludes>
 
 </decorators>
