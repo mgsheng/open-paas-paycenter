@@ -49,7 +49,7 @@ pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/UserMappe
 pay-platform-manager/src/main/resources/emailtemplate/activation.html -text
 pay-platform-manager/src/main/resources/emailtemplate/resetpassword.html -text
 pay-platform-manager/src/main/resources/mybatis.xml -text
-pay-platform-manager/src/main/resources/pay-data-statistics.properties -text
+pay-platform-manager/src/main/resources/pay-platform-manager.properties -text
 pay-platform-manager/src/main/resources/spring/appCtx-disconf.xml -text
 pay-platform-manager/src/main/resources/spring/context.xml -text
 pay-platform-manager/src/main/resources/spring/job.xml -text

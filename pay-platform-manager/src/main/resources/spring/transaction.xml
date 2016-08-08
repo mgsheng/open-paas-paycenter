@@ -24,18 +24,18 @@
     </aop:config>  -->
     <aop:config>  
         <aop:advisor  
-            pointcut="execution(* cn.com.open.openpaas.payservice.app.infrastructure.mybatis.*.*(..))"  
+            pointcut="execution(* cn.com.open.pay.platform.manager.infrastructure.mybatis.*.*(..))"  
             advice-ref="dataSourceAdvice" />  
          <aop:advisor  
             pointcut="execution(* org.springframework.security.oauth2.provider.token.JdbcTokenStore.*(..))"  
             advice-ref="dataSourceAdvice" />  
-         <aop:advisor advice-ref="dataSourceAdvice" pointcut="execution(* cn.com.open.openpaas.payservice.app.user.model.*.*(..))"/>
+         <aop:advisor advice-ref="dataSourceAdvice" pointcut="execution(* cn.com.open.pay.platform.manager.login.model.*.*(..))"/>
     </aop:config> 
     <!-- <aop:config>
         <aop:advisor advice-ref="applicationAdvisor" pointcut="execution(* cc.wdcy.service.*.*(..))"/>
     </aop:config> -->
     <aop:config>
-        <aop:advisor advice-ref="applicationAdvisor" pointcut="execution(* cn.com.open.openpaas.payservice.app.*.service.*.*(..))"/>
+        <aop:advisor advice-ref="applicationAdvisor" pointcut="execution(* cn.com.open.pay.platform.manager.*.service.*.*(..))"/>
     </aop:config>
     <!--advisor-->
     <tx:advice id="applicationAdvisor" transaction-manager="transactionManager">
