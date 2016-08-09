@@ -47,6 +47,6 @@ public class UserLoginController extends BaseControllerUtil {
 	    	 backMsg="error"; 
 	     }
 	     WebUtils.writeJson(response,backMsg);*/
-	     return "decorators/main";
+	     return "login/main";
 	 }	
 }
