@@ -33,14 +33,14 @@
 
 
     <!-- sitemesh filter-->
-    <filter>
+  <!--   <filter>
         <filter-name>sitemesh</filter-name>
         <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>sitemesh</filter-name>
         <url-pattern>/*</url-pattern>
-    </filter-mapping>
+    </filter-mapping> -->
 
     <mime-mapping>
         <extension>ico</extension>

@@ -17,7 +17,7 @@
 <body>
 
 <div class="wrap">
-    <form action="/login.action" method="post" onsubmit="return login.loginSubmit(this, event);">
+    <form action="${pageContext.request.contextPath}/user/login" method="post" onsubmit="return login.loginSubmit(this, event);">
 
     <div class="login_box">
         <div class="login_title">登录</div>

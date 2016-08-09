@@ -66,7 +66,7 @@ pay-platform-manager/src/main/resources/spring/transaction.xml -text
 pay-platform-manager/src/main/webapp/META-INF/MANIFEST.MF -text
 pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
-pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/main.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/log4j.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/soc-servlet.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/web.xml -text
