@@ -17,6 +17,7 @@
     <context:component-scan base-package="cc.wdcy.job"/> -->
     <context:component-scan base-package="cn.com.open.pay.platform.manager.redis"/>
     <context:component-scan base-package="cn.com.open.pay.platform.manager.login.service"/>
+    <context:component-scan base-package="cn.com.open.pay.platform.manager.order.service"/>
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
