@@ -16,12 +16,17 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/datasource/D
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/datasource/DataSourceSwitcher.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/datasource/DynamicDataSource.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/dev/PayManagerDev.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/UserRepositoryMyBatis.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderInfoRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/UserRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/model/Privilege.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/model/User.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/UserService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/impl/UserServiceImpl.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderInfo.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/MerchantOrderInfoService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderInfoServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/redis/RedisDataSource.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/redis/impl/RedisClientTemplate.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/redis/impl/RedisConstant.java -text
