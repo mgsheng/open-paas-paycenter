@@ -4,7 +4,6 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 public class DateTools {
@@ -17,8 +16,7 @@ public class DateTools {
 
     // 格式：年月日 小时分钟秒
     public static final String FORMAT_THREE = "yyyyMMdd-HHmmss";
-      // 格式：年－月－日 小时：分钟：秒
-    public static final String FORMAT_FOUR = "yyyyMMddHHmmss";
+
     // 格式：年－月－日
     public static final String LONG_DATE_FORMAT = "yyyy-MM-dd";
 
@@ -30,7 +28,6 @@ public class DateTools {
 
     //格式：年-月
     public static final String MONTG_DATE_FORMAT = "yyyy-MM";
-    
 
     // 年的加减
     public static final int SUB_YEAR = Calendar.YEAR;
@@ -112,39 +109,19 @@ public class DateTools {
     public static String getCurrDate(String format) {
         return dateToString(new Date(), format);
     }
-    
     /**
-     * 获得昨天的指定格式
-     * 
+     * 获取上一周的时间
+     * @param format
      * @return
      */
-    public static String getYesterDay(String format) {
-    	Calendar c = Calendar.getInstance();
-	    c.add(Calendar.DATE,-1);
-	    return new SimpleDateFormat(format).format(c.getTime());
-    }
-    
-    /**
-     * 获得昨天的开始时间
-     * 
-     * @return
-     */
-    public static Date getYesterDayStartTime() {
-    	Calendar c = getYesterDayInstance();
-	    String yesterdayStart = new SimpleDateFormat( "yyyy-MM-dd 00:00:00").format(c.getTime());
-        return stringtoDate(yesterdayStart, "yyyy-MM-dd HH:mm:ss");
-    }
-    
-    /**
-     * 获得昨天的结束时间
-     * 
-     * @return
-     */
-    public static Date getYesterDayEndTime() {
-    	Calendar c = getYesterDayInstance();
-	    String yesterdayEnd = new SimpleDateFormat( "yyyy-MM-dd 23:59:59").format(c.getTime());
-        return stringtoDate(yesterdayEnd, "yyyy-MM-dd HH:mm:ss");
-    }
+    public  static String getStatetime(String format) {
+    	  SimpleDateFormat sdf = new SimpleDateFormat(format);
+    	        Calendar c = Calendar.getInstance();  
+    	        c.add(Calendar.DATE, - 7);  
+    	        Date monday = c.getTime();
+    	        String preMonday = sdf.format(monday);
+    	        return preMonday;
+    	   } 
 
     /**
      * 日期计算返回String
@@ -202,15 +179,6 @@ public class DateTools {
     public static long timeSub(String firstTime, String secTime) {
         long first = stringtoDate(firstTime, FORMAT_ONE).getTime();
         long second = stringtoDate(secTime, FORMAT_ONE).getTime();
-        return (second - first) / 1000;
-    }
-    /**
-     * 两个日期相减
-     * @return 相减得到的秒数
-     */
-    public static long timeSub2(String firstTime, String secTime) {
-        long first = stringtoDate(firstTime, FORMAT_FOUR).getTime();
-        long second = stringtoDate(secTime, FORMAT_FOUR).getTime();
         return (second - first) / 1000;
     }
 
@@ -450,23 +418,5 @@ public class DateTools {
 				return dayNum;
 		}
 		return 0;
-	}
-	/**
-	 * 获取UTC时间 格式：YYYY-MM-DDThh:mm:ssZ
-	 * @param date
-	 * @return
-	 */
-	public static String getSolrDate(Date date) {  
-		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");  
-		SimpleDateFormat sdf2 = new SimpleDateFormat("HH:mm:ss");  
-		sdf2.setTimeZone(TimeZone.getTimeZone("UTC"));  
-		String result = sdf1.format(date) + "T" + sdf2.format(date) + "Z";  
-		return result; 
-    }
-	private static Calendar getYesterDayInstance(){
-		Calendar c = Calendar.getInstance();
-	    c.add(Calendar.DATE,-1);
-	    return c;
-	}
-	
+	}	
 }

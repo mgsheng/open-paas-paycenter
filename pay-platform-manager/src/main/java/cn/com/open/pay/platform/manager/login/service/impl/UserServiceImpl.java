@@ -1,5 +1,6 @@
 package cn.com.open.pay.platform.manager.login.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,37 @@ public class UserServiceImpl implements UserService {
 	public List<User> findByCardNo(String cardNo) {
 		// TODO Auto-generated method stub
 		return userRepository.findByCardNo(cardNo);
+	}
+
+	@Override
+	public List<User> getPayCount(String startTime, String endTime) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> findByMonth(String startTime, String endTime) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> findByWeek(String startTime, String endTime) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<User> findByYear(String startTime, String endTime) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, Object> getTotalAmountByTime(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
   
 

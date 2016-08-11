@@ -64,7 +64,7 @@ public class User extends AbstractDomain {
     
     private String desPassword;
     
-    private List<Privilege> privileges = new ArrayList<Privilege>();
+   /* private List<Privilege> privileges = new ArrayList<Privilege>();*/
 
     public User() {
     }
@@ -153,10 +153,6 @@ public class User extends AbstractDomain {
 
     public boolean defaultUser() {
         return defaultUser;
-    }
-
-    public List<Privilege> privileges() {
-        return privileges;
     }
 
 	public Date getUpdatePwdTime() {
@@ -279,10 +275,6 @@ public class User extends AbstractDomain {
 
 	public void userSercure(Integer userSercure) {
 		this.userSercure = userSercure;
-	}
-
-	public List<Privilege> getPrivileges() {
-		return privileges;
 	}
 	
 	public String passwordSalt(){
@@ -464,9 +456,6 @@ public class User extends AbstractDomain {
 		this.userSercure = userSercure;
 	}
 
-	public void setPrivileges(List<Privilege> privileges) {
-		this.privileges = privileges;
-	}
 
 	public Integer getId() {
 		return id;

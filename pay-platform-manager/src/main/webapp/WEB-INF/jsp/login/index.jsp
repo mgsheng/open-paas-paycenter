@@ -7,9 +7,9 @@
 <link href="${pageContext.request.contextPath}/css/default.css"
 	rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/js/themes/default/easyui.css" />
+	href="${pageContext.request.contextPath}/css/themes/default/easyui.css" />
 <link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/js/themes/icon.css" />
+	href="${pageContext.request.contextPath}/css/themes/icon.css" />
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript"
@@ -20,7 +20,7 @@
 	 var _menus = {"menus":[
 						{"menuid":"1","icon":"icon-sys","menuname":"经营分析",
 							"menus":[
-									{"menuid":"15","menuname":"交易数据","icon":"icon-set","url":"demo.html"}
+									{"menuid":"15","menuname":"交易数据","icon":"icon-set","url":"${pageContext.request.contextPath}/user/stats"}
 								]
 						},{"menuid":"8","icon":"icon-sys","menuname":"订单查询",
 							"menus":[{"menuid":"21","menuname":"交易明细","icon":"icon-nav","url":"demo.html"},
@@ -117,11 +117,12 @@
 		style="overflow: hidden; height: 50px;
         background: url(images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
         line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
-		<span style="float:right; padding-right:20px;padding-top: 20px;"
-			class="head">欢迎 管理员 <a href="#" id="editpass">修改密码</a> <a
-			href="#" id="loginOut">安全退出</a>
-		</span> <span style="padding-left:10px; font-size: 16px;  "><img
-			src="${pageContext.request.contextPath}/images/open_logo.png"
+		<span style="float:right; padding-right:20px;padding-top: 20px;"class="head">
+		           欢迎 管理员 <a href="#" id="editpass">修改密码</a> 
+			<a href="#" id="loginOut">安全退出</a>
+		</span> 
+		<span style="padding-left:10px; font-size: 16px;  ">
+		<img  src="${pageContext.request.contextPath}/images/open_logo.png"
 			width="140" height="45" align="absmiddle" />
 		</span>
 	</div>
@@ -144,8 +145,7 @@
 		style="background: #eee; overflow-y:hidden">
 		<div id="tabs" class="easyui-tabs" fit="true" border="false">
 			<div title="首页" style="padding:20px;overflow:hidden; color:red; ">
-				<h1 style="font-size:24px;">首页</h1>
-
+				 <img src="${pageContext.request.contextPath}/images/welcome1.png" style="display: block;width: 80%;margin:20px auto;">
 			</div>
 		</div>
 	</div>

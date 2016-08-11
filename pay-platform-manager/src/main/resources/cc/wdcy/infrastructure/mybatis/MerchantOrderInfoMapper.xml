@@ -246,6 +246,137 @@
          where 1=1 
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
 	</select>
+	
+	<select id="getPayCount"  resultType="java.util.Map" flushCache="true">
+     <![CDATA[
+         select count(MERCHANT_ORDERID) payCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+           ]]>
+	</select>
+	<select id="getTotalPayCount"  resultType="java.util.Map" flushCache="true">
+     <![CDATA[
+         select count(MERCHANT_ORDERID) payCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+           ]]>
+	</select>
+	<select id="getPayAmount"  resultType="java.util.Map" flushCache="true" >
+	<![CDATA[
+         select sum(PAY_AMOUNT) payAmount from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+           ]]>
+	</select>
+	
+	<select id="getTotalPayAmount"  resultType="java.util.Map" flushCache="true" >
+	<![CDATA[
+         select sum(PAY_AMOUNT) payAmount from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+           ]]>
+	</select>
+	<select id="getUserCount"  resultType="java.util.Map" flushCache="true">
+      <![CDATA[
+         select count(SOURCE_UID) userCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+           ]]>
+	</select>
+	
+	<select id="getTotalUserCount"  resultType="java.util.Map" flushCache="true">
+      <![CDATA[
+         select count(SOURCE_UID) userCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+           ]]>
+	</select>
+	<select id="payCharge"  resultType="java.util.Map" flushCache="true">
+        <![CDATA[
+         select sum(PAY_CHARGE) payCharge  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+           ]]>
+	</select>
+	<select id="payTotalCharge"  resultType="java.util.Map" flushCache="true">
+        <![CDATA[
+         select sum(PAY_CHARGE) payCharge  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+           ]]>
+	</select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
     </resultMap>

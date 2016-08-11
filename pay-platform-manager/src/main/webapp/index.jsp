@@ -7,6 +7,7 @@
     <title>登录</title>
     <meta charset="utf-8">
     <link href="${pageContext.request.contextPath}/css/login.css" rel="stylesheet" type="text/css">
+    <script src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js" type="text/javascript"></script>
     <script language="JavaScript">
         if(window != top){
             top.location.href="/";
@@ -29,14 +30,12 @@
                 <input id="password" name="password" placeholder="请输入密码" class="pwd" type="password">
             </li>
             <li>
-                <div style="color: red;text-align: center;padding: 10px 0px 0px"></div>
-            </li>
-            <li class="placeHolder login_btn">
-                <input id="login_button" name="login_button" value="登 录" type="submit">
+                <div style="color: red;text-align: center;padding: 10px 0px 0px" id="error_code"></div>
             </li>
             
-                
-                
+            <li class="placeHolder login_btn">
+                <input id="login_button" name="login_button" value="登 录" onclick="btnSubmit()" style="text-align: center;"  >
+            </li>
             
 
         </ul>
@@ -73,6 +72,23 @@
         return true;
     };
     login.init("username");
+    
+    	function btnSubmit(){
+				var username=$('#username').val();
+				var password=$('#password').val();
+				$.post("${pageContext.request.contextPath}/user/verify",
+					{username:username,password:password},
+	   				function(data){
+	   					if(data.flag){
+	   						window.location.href="${pageContext.request.contextPath}/user/login";
+	   						// location.href="${pageContext.request.contextPath}/login/index.jsp"
+	   					}
+	   					else{
+	   						jQuery('#error_code').html('用户名密码错误，请重新获取！');
+	   					}
+	   				}
+   				);
+			}
 </script>
 
 

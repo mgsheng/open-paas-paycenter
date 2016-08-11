@@ -1,5 +1,8 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,26 +30,45 @@ public class UserLoginController extends BaseControllerUtil {
 	 @Autowired
 	 private UserService userService;
 	
-
-	 @RequestMapping("login")
-	 public String  login(HttpServletRequest request,HttpServletResponse response) {
+     /**
+      * 登录验证
+      * @param request
+      * @param response
+      * @param username
+      * @param password
+      */
+	 @RequestMapping("verify")
+	 public void  verify(HttpServletRequest request,HttpServletResponse response,String username,String password) {
 		 log.info("-----------------------login start----------------");
-		/* String backMsg="";
-		 String username=request.getParameter("username");
-	     String password=request.getParameter("password");
+		 boolean flag = false;
+	     String errorCode = "";
 	     User user = null;
+	     Map<String, Object> map = new LinkedHashMap<String, Object>();
 	     user=checkUsername(username,userService);
 	     if(user!=null){
 	    	  if(user.checkPasswod(password)){
-	    		  backMsg="ok"; 
+	    		  flag = true;
+	    		  errorCode="ok"; 
 				}else{
-				  backMsg="error"; 
+					errorCode="error"; 
 				}
 	    	
 	     }else{
-	    	 backMsg="error"; 
+	    	 errorCode="error"; 
 	     }
-	     WebUtils.writeJson(response,backMsg);*/
-	     return "login/index";
-	 }	
+	     map.put("flag",flag);
+	     map.put("errorCode",errorCode);
+		 WebUtils.writeJsonToMap(response, map);
+	 }
+	 /**
+	     * 登录跳转页面
+	     * @param request
+	     * @param model
+	     * @param bool
+	     * @return
+	     */
+	    @RequestMapping(value = "login")
+		public String login(HttpServletRequest request,HttpServletResponse response) {
+	    	return "login/index";
+	    }
 }

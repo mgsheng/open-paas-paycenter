@@ -3,6 +3,7 @@ package cn.com.open.pay.platform.manager.order.service.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,6 +113,62 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 			MerchantOrderInfo merchantOrderInfo) {
 		List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoRepository.findQueryMerchant(merchantOrderInfo);
 		return merchantOrderInfoList;
+	}
+
+	@Override
+	public List<Map<String, Object>> getPayCount(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getPayCount(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getPayAmount(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getPayAmount(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public List<Map<String, Object>> getUserCount(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getUserCount(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public List<Map<String, Object>> payCharge(String startTime, String endTime,
+			String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.payCharge(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public HashMap<String, Object> getTotalPayCount(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getTotalPayCount(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public HashMap<String, Object> getTotalPayAmount(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public HashMap<String, Object> getTotalUserCount(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getTotalUserCount(startTime, endTime, appId, paymentId, channelId);
+	}
+
+	@Override
+	public HashMap<String, Object> payTotalCharge(String startTime,
+			String endTime, String appId, String paymentId, String channelId) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.payTotalCharge(startTime, endTime, appId, paymentId, channelId);
 	}
 
 

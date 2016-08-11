@@ -32,8 +32,8 @@
         <result property="emailActivation" column="email_activation" />
 		<result property="updatePwdTime" column="update_pwd_time"/>
 		<result property="desPassword" column="des_password"/>
-        <collection property="privileges" column="id" select="findPrivilegesByUserId" ofType="Privilege"/>
-
+<!--         <collection property="privileges" column="id" select="findPrivilegesByUserId" ofType="Privilege"/>
+ -->
     </resultMap>
     
     <sql id="Column_List">
@@ -78,9 +78,9 @@
          select <include refid="Column_List" /> from user_account where id = #{id}
 	</select>
 
-    <select id="findPrivilegesByUserId" parameterType="Integer" resultType="Privilege">
+ <!--    <select id="findPrivilegesByUserId" parameterType="Integer" resultType="Privilege">
          select privilege from user_privilege where user_id = #{userId}
-	</select>
+	</select> -->
 
     <!-- <select id="findByUsername" parameterType="String" resultMap="userMap">
          select * from user_account
@@ -227,7 +227,11 @@
         email_activation = #{emailActivation}
         where id = #{id}
     </update>
-    
+    <select id="getPayAmount"  resultType="java.util.Map" flushCache="true">
+         select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
+         where 1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
+	</select>
     <select id="connectionTest" resultType="Integer">
          select 1
 	</select>
