@@ -23,7 +23,7 @@
 									{"menuid":"15","menuname":"交易数据","icon":"icon-set","url":"${pageContext.request.contextPath}/user/stats"}
 								]
 						},{"menuid":"8","icon":"icon-sys","menuname":"订单查询",
-							"menus":[{"menuid":"21","menuname":"交易明细","icon":"icon-nav","url":"demo.html"},
+							"menus":[{"menuid":"21","menuname":"交易明细","icon":"icon-nav","url":"${pageContext.request.contextPath}/manage/skipPages"},
 									{"menuid":"22","menuname":"账单下载","icon":"icon-nav","url":"demo1.html"}
 								]
 						}
