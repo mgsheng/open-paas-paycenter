@@ -122,6 +122,19 @@ public class DateTools {
     	        String preMonday = sdf.format(monday);
     	        return preMonday;
     	   } 
+    /**
+     * 获取钱sanshitia的时间
+     * @param format
+     * @return
+     */
+    public  static String getStatetimeByMonth(String format) {
+    	  SimpleDateFormat sdf = new SimpleDateFormat(format);
+    	        Calendar c = Calendar.getInstance();  
+    	        c.add(Calendar.DATE, - 30);  
+    	        Date monday = c.getTime();
+    	        String preMonday = sdf.format(monday);
+    	        return preMonday;
+    	   }
 
     /**
      * 日期计算返回String

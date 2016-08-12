@@ -26,6 +26,7 @@ import cn.com.open.pay.platform.manager.stats.model.UserStatistics;
 import cn.com.open.pay.platform.manager.stats.model.UserStatisticsParams;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.DateTools;
+import cn.com.open.pay.platform.manager.tools.WebUtils;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -69,14 +70,21 @@ public class UserDataStatsController extends BaseControllerUtil {
 				String paymentId,
 				String channelId,
 				String appId,
-				String startTime,String endTime) throws UnsupportedEncodingException {
+				String payClient,
+				String startTime,String endTime,String timeType) throws UnsupportedEncodingException {
 			//时间范围默认值
-			if(StringUtils.isBlank(startTime)){
-				
-				//startTime=DateTools.getCurrDate("yyyy-MM-dd");
+			if(!nullEmptyBlankJudge(timeType)){
+				if(timeType.equals("1")){
+					//三十天内
+					startTime=DateTools.getStatetimeByMonth("yyyy-MM-dd");
+					endTime=DateTools.getCurrDate("yyyy-MM-dd");
+				}else{
+					//七天内
+					startTime=DateTools.getStatetime("yyyy-MM-dd");
+					endTime=DateTools.getCurrDate("yyyy-MM-dd");
+				}
+			}else if(nullEmptyBlankJudge(timeType)&&nullEmptyBlankJudge(startTime)&&nullEmptyBlankJudge(endTime)){
 				startTime=DateTools.getStatetime("yyyy-MM-dd");
-			}
-			if(StringUtils.isBlank(endTime)){
 				endTime=DateTools.getCurrDate("yyyy-MM-dd");
 				
 			}
@@ -95,12 +103,12 @@ public class UserDataStatsController extends BaseControllerUtil {
 				}
 			//查询成交金额
 			List<Map<String, Object>> payAmountList=merchantOrderInfoService.getPayAmount(startTime, endTime, appId, paymentId, channelId);
-			List<Map<String, Object>>getPayCountList=merchantOrderInfoService.getUserCount(startTime, endTime, appId, paymentId, channelId);
+			List<Map<String, Object>>getPayCountList=merchantOrderInfoService.getPayCount(startTime, endTime, appId, paymentId, channelId);
 			List<Map<String, Object>>userCountList=merchantOrderInfoService.getUserCount(startTime, endTime, appId, paymentId, channelId);
 			List<Map<String, Object>>payChargeList=merchantOrderInfoService.payCharge(startTime, endTime, appId, paymentId, channelId);
 			//查询总的金额
 			HashMap<String, Object> totalPayAmountMap=merchantOrderInfoService.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId);
-			HashMap<String, Object> totalPayCountMap=merchantOrderInfoService.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId);
+			HashMap<String, Object> totalPayCountMap=merchantOrderInfoService.getTotalPayCount(startTime, endTime, appId, paymentId, channelId);
 			HashMap<String, Object> totalUserCountMap=merchantOrderInfoService.getTotalUserCount(startTime, endTime, appId, paymentId, channelId);
 			HashMap<String, Object> totalPayChargeMap=merchantOrderInfoService.payTotalCharge(startTime, endTime, appId, paymentId, channelId);
 			
@@ -115,25 +123,25 @@ public class UserDataStatsController extends BaseControllerUtil {
 			Map<String,Object> payChargeMap = null;//手续费Map
 			//获取每个app查询的条数，根据日期决定
 			int appCount=dateString.toString().split(",").length;
-			int[] payAmountTotal = new int[appCount];//成交金额数组
+			Double[] payAmountTotal = new Double[appCount];//成交金额数组
 			int[] payCountTotal=new int[appCount];//成交笔数
 			int[] userCountTotal=new int[appCount];//缴费人数
-			int[] payChargeTotal=new int[appCount];//手续费
+			Double[] payChargeTotal=new Double[appCount];//手续费
 			//数组赋值
 			for(int i=0;i<appCount;i++){
-				payAmountTotal[i]=0;
+				payAmountTotal[i]=0.0;
 				payCountTotal[i]=0;
 				userCountTotal[i]=0;
-				payChargeTotal[i]=0;
+				payChargeTotal[i]=0.0;
 			}
 			int usCount=0;//集合数量
-			if(payAmountList!=null && appCount>0){
+			if(payAmountList!=null && appCount>0&&payAmountList.size()>0){
 				usCount=payAmountList.size();//集合数量
 				//循环所有的数据
 				for(int i =0;i<payAmountList.size();i++){
 						payAmountMap = new LinkedHashMap<String, Object>();
 						try {
-							payAmountTotal[i]=Integer.parseInt(payAmountList.get(i).get("payAmount").toString());
+							payAmountTotal[i]=Double.parseDouble(payAmountList.get(i).get("payAmount").toString());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -142,7 +150,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				payAmountMap.put("data",payAmountTotal);
 				payAmountListMap.add(payAmountMap);
 			}
-			if(getPayCountList!=null && appCount>0){
+			if(getPayCountList!=null && appCount>0&&getPayCountList.size()>0){
 				usCount=payAmountList.size();//集合数量
 				//循环所有的数据
 				for(int i =0;i<payAmountList.size();i++){
@@ -156,10 +164,10 @@ public class UserDataStatsController extends BaseControllerUtil {
 					}
 				payCountMap.put("data",payCountTotal);
 				payCountListMap.add(payAmountMap);
-			}if(userCountList!=null && appCount>0){
-				usCount=payAmountList.size();//集合数量
+			}if(userCountList!=null && appCount>0&&userCountList.size()>0){
+				usCount=userCountList.size();//集合数量
 				//循环所有的数据
-				for(int i =0;i<payAmountList.size();i++){
+				for(int i =0;i<userCountList.size();i++){
 					   userCountMap = new LinkedHashMap<String, Object>();
 						try {
 							userCountTotal[i]=Integer.parseInt(userCountList.get(i).get("userCount").toString());
@@ -171,13 +179,13 @@ public class UserDataStatsController extends BaseControllerUtil {
 				userCountMap.put("data",userCountTotal);
 				userCountListMap.add(payAmountMap);
 			}
-			if(payChargeList!=null && appCount>0){
-				usCount=payAmountList.size();//集合数量
+			if(payChargeList!=null && appCount>0&&payChargeList.size()>0){
+				usCount=payChargeList.size();//集合数量
 				//循环所有的数据
-				for(int i =0;i<payAmountList.size();i++){
+				for(int i =0;i<payChargeList.size();i++){
 					payChargeMap = new LinkedHashMap<String, Object>();
 						try {
-							payChargeTotal[i]=Integer.parseInt(payChargeList.get(i).get("payCharge").toString());
+							payChargeTotal[i]=Double.parseDouble(payChargeList.get(i).get("payCharge").toString());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -191,14 +199,31 @@ public class UserDataStatsController extends BaseControllerUtil {
 			map.put("count", usCount);//查询数据数量
 			map.put("payAmountListMap", payAmountListMap);
 			map.put("payCountListMap", payCountListMap);
-			map.put("payCountMap", userCountListMap);
+			map.put("userCountListMap", userCountListMap);
 			map.put("payChargeListMap", payChargeListMap);
 			map.put("timeData", dateString.toString().split(","));
 			//总的值
-			map.put("totalPayAmount",totalPayAmountMap.get("payAmount") );
-			map.put("totalPayCount",totalPayCountMap.get("payCount") );
-			map.put("totalUserCount",totalUserCountMap.get("userCount") );
-			map.put("totalPayCharge",totalPayChargeMap.get("payCharge") );
+			String totalPayAmount="0.0";
+			String totalPayCount="0";
+			String totalUserCount="0";
+			String totalPayCharge="0.0";
+			if(totalPayAmountMap!=null&&!nullEmptyBlankJudge(totalPayAmountMap.get("payAmount").toString())){
+				totalPayAmount=totalPayAmountMap.get("payAmount").toString();	
+			}
+			if(totalPayCountMap!=null&&!nullEmptyBlankJudge(totalPayCountMap.get("payCount").toString())){
+				totalPayCount=totalPayCountMap.get("payCount").toString();	
+			}
+			if(totalUserCountMap!=null&&!nullEmptyBlankJudge(totalUserCountMap.get("userCount").toString())){
+				totalUserCount=totalUserCountMap.get("userCount").toString();	
+			}
+			if(totalPayChargeMap!=null&&!nullEmptyBlankJudge(totalPayChargeMap.get("payCharge").toString())){
+				totalPayCharge=totalPayChargeMap.get("payCharge").toString();	
+			}
+			map.put("totalPayAmount",totalPayAmount);
+			map.put("totalPayCount",totalPayCount);
+			map.put("totalUserCount",totalUserCount );
+			map.put("totalPayCharge",totalPayCharge);
+			
 			JsonUtil.writeJson(response,JsonUtil.getContentData(map));
 		}
 }
