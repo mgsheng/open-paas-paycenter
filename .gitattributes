@@ -81,6 +81,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/log4j.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/soc-servlet.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/web.xml -text
