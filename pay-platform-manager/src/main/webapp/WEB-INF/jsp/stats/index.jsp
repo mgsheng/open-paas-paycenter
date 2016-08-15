@@ -192,13 +192,6 @@ table {
 				numericSymbols : []
 			}
 		});
-		console.log($("input[name='paymentId']").val());
-		console.log($("input[name='appId']").val());
-		console.log($("input[name='payClient']").val());
-		console.log($("input[name='channelId']").val());
-		console.log(startTime);
-		console.log(endTime);
-		console.log(timeType);
 		$.post("${pageContext.request.contextPath}/user/admin/userstatistics/chart.json", {
 			paymentId : $("input[name='paymentId']").val(),
 			appId : $("input[name='appId']").val(),
