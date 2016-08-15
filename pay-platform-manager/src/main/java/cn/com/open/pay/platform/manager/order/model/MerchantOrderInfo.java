@@ -102,6 +102,10 @@ public class MerchantOrderInfo implements Serializable {
 	
 	private String startDate;
 	private String endDate;
+	private String foundDate;
+	private String channelName;
+	private String payStatusName;
+	
 	
 
 	public Integer getBusinessType() {
@@ -489,6 +493,30 @@ public class MerchantOrderInfo implements Serializable {
 
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
+	}
+
+	public String getFoundDate() {
+		return foundDate;
+	}
+
+	public void setFoundDate(String foundDate) {
+		this.foundDate = foundDate;
+	}
+
+	public String getChannelName() {
+		return channelName;
+	}
+
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
+	}
+
+	public String getPayStatusName() {
+		return payStatusName;
+	}
+
+	public void setPayStatusName(String payStatusName) {
+		this.payStatusName = payStatusName;
 	}
 	
 }
