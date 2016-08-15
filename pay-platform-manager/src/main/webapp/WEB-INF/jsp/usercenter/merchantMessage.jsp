@@ -88,45 +88,72 @@
 	</div>
 	
 	</div>
-	<!--  <div class="botton" style="width: 100%;height: 90px">
-		<table class="easyui-datagrid" title="查询结果" style="width:1000px;height:250px"
-			data-options="singleSelect:true,collapsible:true,url:'datagrid_data1.json',method:'get'">
+	  <div class="botton" style="width: 100%;height: 90px">
+		<table  id="dg" class="easyui-datagrid"  style="width:1000px;height:250px"
+			data-options="singleSelect:true,collapsible:true,method:'get'">
 		<thead>
 			<tr>
-				<th data-options="field:'itemid',width:80">下单时间</th>
-				<th data-options="field:'productid',width:100">交易时间</th>
-				<th data-options="field:'listprice',width:80,align:'right'">商户订单号</th>
-				<th data-options="field:'unitcost',width:80,align:'right'">第三方订单号</th>
-				<th data-options="field:'attr1',width:250">支付方式</th>
-				<th data-options="field:'status',width:60,align:'center'">业务类型</th>
-				<th data-options="field:'itemid',width:80">发卡行</th>
-				<th data-options="field:'productid',width:100">卡类型</th>
-				<th data-options="field:'listprice',width:80,align:'right'">缴费来源</th>
-				<th data-options="field:'unitcost',width:80,align:'right'">交易状态</th>
-				<th data-options="field:'attr1',width:250">缴费金额</th>
-				<th data-options="field:'status',width:60,align:'center'">实收金额</th>
-				<th data-options="field:'status',width:60,align:'center'">手续费</th>
+				<th data-options="field:'merchantOrderDate',width:80">下单时间</th>
+				<th data-options="field:'createDate',width:100">交易时间</th>
+				<th data-options="field:'merchantOrderId',width:150">商户订单号</th>
+				<th data-options="field:'payOrderId',width:150">第三方订单号</th>
+				<th data-options="field:'channelId',width:80">支付方式</th>
+				<th data-options="field:'businessType',width:60,align:'center'">业务类型</th>
+				<th data-options="field:'openingBank',width:80">发卡行</th>
+				<th data-options="field:'openingBank',width:100">卡类型</th><!-- 不确定字段 -->
+				<th data-options="field:'source',width:80,align:'right'">缴费来源</th>
+				<th data-options="field:'payStatus',width:80,align:'right'">交易状态</th>
+				<th data-options="field:'amount',width:80">缴费金额</th>
+				<th data-options="field:'payAmount',width:60,align:'center'">实收金额</th>
+				<th data-options="field:'payCharge',width:60,align:'center'">手续费</th>
 			</tr>
 		</thead>
+		
 	</table>
 	</div>
-	-->
+	
 <div id="cc" class="easyui-calendar"></div>
 <div style="width: 100%;height: 500px;">
-	<table id="cxdm" style="border: 1px solid; border-color: red">234567</table> 
+	<!-- <table id="cxdm" style="border: 1px solid; border-color: red; display：none">234567</table>  -->
 </div>
 </body>
 <script>
+
+		$(function () {  
+		    $('#dg').datagrid({  
+		        title: '测试表格',  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant",  
+		        //pagination: true,显示分页工具栏              
+		    });  
+		});  
+
 		function submitForm(){
+			var merchantOrderDate = $("input[name='merchantOrderDate']").val();//下单时间
+			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号
+			var payOrderId = $("input[name='payOrderId']").val();//第三方订单号
+			var channelId = $("input[name='channelId']").val();//支付方式
+			var businessType = $("input[name='businessType']").val();//业务类型
+			var openingBank = $("input[name='openingBank']").val();//发卡行
+			var source = $("input[name='source']").val();//缴费来源
+			var payStatus = $("input[name='payStatus']").val();//缴费状态
+			var createDate = $("input[name='createDate']").val();//交易时间
+			var startDate = $("input[name='startDate']").val();//开始时间
+			var endDate = $("input[name='endDate']").val();//结束时间
 			
-			$.ajax({
-		       	url:"${pageContext.request.contextPath}/manage/queryMerchant",
-		       	data:$('#ff').serialize(),
-		       	type:'post',
-		       	success: function(data) {
+			$('#dg').datagrid({  
+		        title: '测试表格',  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderDate="+merchantOrderDate+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&businessType="+businessType+"&openingBank="+openingBank+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
+		        //pagination: true,显示分页工具栏              
+		    }); 
+			
+//			$.ajax({
+//		       	url:"${pageContext.request.contextPath}/manage/queryMerchant",
+//		       	data:$('#ff').serialize(),
+//		       	type:'post',
+//		       	success: function(data) {
 		       	 
-		       	}
-		    });
+//		       	}
+//		    });
 			$('#ff').form('submit');
 			
 		}
@@ -134,15 +161,15 @@
 			$('#ff').form('clear');
 		}
 		function downloadSubmit(){
-			$.ajax({
-		       	url:"${pageContext.request.contextPath}/manage/downloadSubmit",
-		       	data:$('#ff').serialize(),
-		       	type:'post',
-		       	success: function(data) {
-		       	 
-		       	}
-		    });
-			$('#ff').form('submit');
+			
+		//	var action ="${pageContext.request.contextPath}/manage/skipPages1";
+
+		//	document.all.form.action = action;
+
+		//	document.all.form.submit();
+			
+			document.getElementById("ff").action="${pageContext.request.contextPath}/manage/downloadSubmit";
+		    document.getElementById("ff").submit();
 			
 		}
 		
@@ -156,7 +183,6 @@
 		function loadGrid()  
 		{  
 		    //加载数据  
-		    alert("ss");
 		    $('#cxdm').datagrid({  
 		                width: 'auto',  
 		                height:300,               
