@@ -39,9 +39,6 @@ import org.apache.commons.lang.StringUtils;
 @RequestMapping("/user/")
 public class UserDataStatsController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserDataStatsController.class);
-	
-	 @Autowired
-	 private UserService userService;
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 /**
@@ -163,7 +160,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 						
 					}
 				payCountMap.put("data",payCountTotal);
-				payCountListMap.add(payAmountMap);
+				payCountListMap.add(payCountMap);
 			}if(userCountList!=null && appCount>0&&userCountList.size()>0){
 				usCount=userCountList.size();//集合数量
 				//循环所有的数据
@@ -177,7 +174,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 						
 					}
 				userCountMap.put("data",userCountTotal);
-				userCountListMap.add(payAmountMap);
+				userCountListMap.add(userCountMap);
 			}
 			if(payChargeList!=null && appCount>0&&payChargeList.size()>0){
 				usCount=payChargeList.size();//集合数量
@@ -192,7 +189,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 						
 					}
 				payChargeMap.put("data",payChargeTotal);
-				payChargeListMap.add(payAmountMap);
+				payChargeListMap.add(payChargeMap);
 			}
 			//返回
 			Map<String, Object> map = new LinkedHashMap<String, Object>();
