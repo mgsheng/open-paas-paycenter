@@ -60,8 +60,8 @@
 				<select class="easyui-combobox" name="payStatus" style="width:100%">
 					<option value=""></option>
 					<option value="0">处理中</option>
-					<option value="1">第三方成功</option>
-					<option value="2">第三方失败</option>
+					<option value="1">成功</option>
+					<option value="2">失败</option>
 				</select>
 			
 			</td>
@@ -69,14 +69,15 @@
 		<tr>
 			<td style="text-align: right;">交易时间：</td>
 			<td style="text-align: center;">
-				<label><input name="createDate" type="radio" value="0" />今天</label>
+				<!--  --><label><input type="hidden" name="createDate"  value="-2"  /></label>
+				<label><input name="createDate" type="radio" value="0" checked="checked"/>今天</label>
 				<label><input name="createDate" type="radio" value="1" />昨天</label>
 				<label><input name="createDate" type="radio" value="7" />7天</label>
 				<label><input name="createDate" type="radio" value="30" />30天</label>
 				<label><input name="createDate" type="radio" value="-1" />自定义</label>
 			</td>
-			<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">—到—</td>
-			<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'"></td>
+				<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">—到—</td>
+				<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'"></td>
 		</tr>
 		</table>
 		</form>
@@ -94,15 +95,15 @@
 		<thead>
 			<tr>
 				<th data-options="field:'merchantOrderDate',width:80">下单时间</th>
-				<th data-options="field:'createDate',width:100">交易时间</th>
+				<th data-options="field:'foundDate',width:150">交易时间</th>
 				<th data-options="field:'merchantOrderId',width:150">商户订单号</th>
 				<th data-options="field:'payOrderId',width:150">第三方订单号</th>
-				<th data-options="field:'channelId',width:80">支付方式</th>
+				<th data-options="field:'channelName',width:80">支付方式</th>
 				<th data-options="field:'businessType',width:60,align:'center'">业务类型</th>
 				<th data-options="field:'openingBank',width:80">发卡行</th>
 				<th data-options="field:'openingBank',width:100">卡类型</th><!-- 不确定字段 -->
 				<th data-options="field:'source',width:80,align:'right'">缴费来源</th>
-				<th data-options="field:'payStatus',width:80,align:'right'">交易状态</th>
+				<th data-options="field:'payStatusName',width:80,align:'right'">交易状态</th>
 				<th data-options="field:'amount',width:80">缴费金额</th>
 				<th data-options="field:'payAmount',width:60,align:'center'">实收金额</th>
 				<th data-options="field:'payCharge',width:60,align:'center'">手续费</th>
@@ -113,19 +114,10 @@
 	</div>
 	
 <div id="cc" class="easyui-calendar"></div>
-<div style="width: 100%;height: 500px;">
-	<!-- <table id="cxdm" style="border: 1px solid; border-color: red; display：none">234567</table>  -->
-</div>
+
 </body>
 <script>
 
-		$(function () {  
-		    $('#dg').datagrid({  
-		        title: '测试表格',  
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant",  
-		        //pagination: true,显示分页工具栏              
-		    });  
-		});  
 
 		function submitForm(){
 			var merchantOrderDate = $("input[name='merchantOrderDate']").val();//下单时间
@@ -179,42 +171,6 @@
 		            loadGrid();  
 		});  
 		  
-		//加载表格datagrid  
-		function loadGrid()  
-		{  
-		    //加载数据  
-		    $('#cxdm').datagrid({  
-		                width: 'auto',  
-		                height:300,               
-		                striped: true,  
-		                singleSelect : true,  
-		                url:'${pageContext.request.contextPath}/manage/queryMerchant', 
-		                //queryParams:{},  
-		                loadMsg:'数据加载中请稍后……',  
-		                pagination: true,  
-		                rownumbers: true,     
-		                columns:[[  
-		                    {field:'adviceid',title: '来文号111111111111',align: 'center',width: getWidth(0.2)},  
-		                    {field:'consulter',title: '案由',align: 'center',width: getWidth(0.45),  
-		                        //添加超级链，并将来文号作为参数传入  
-		                        formatter:function(val,rec){  
-		                            //alert(rec.adviceid);  
-		                            return "<a href='jsp/proposal/psconsultview.jsp?id="+rec.adviceid+"'>"+val+"</a>";  
-		                       }  
-		                    },  
-		                    {field:'content',title: '状态',align: 'center',width: getWidth(0.2)},  
-		                    {field:'replynumber',title: '回复数',align: 'center',width: getWidth(0.05)}                                                          
-		                ]]  
-		            });  
-		}  
-		  
-		//为loadGrid()添加参数  
-		        var queryParams = $('#cxdm').datagrid('options').queryParams;  
-		        queryParams.who = who.value;  
-		        queryParams.type = type.value;  
-		        queryParams.searchtype = searchtype.value;  
-		        queryParams.keyword = keyword.value;  
-		        //重新加载datagrid的数据  
-		        $("#cxdm").datagrid('reload'); 
+		
 	</script>
 </html>
