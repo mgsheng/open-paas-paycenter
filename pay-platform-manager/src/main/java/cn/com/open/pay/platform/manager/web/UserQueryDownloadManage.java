@@ -1,5 +1,6 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,6 +9,9 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,7 +86,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 String dateDay=request.getParameter("createDate"); //交易时间天数
 		 String startDate1 = null;
 		 String endDate1 =null;
-		 if(dateDay!=null){
+		 if(dateDay!=null&&!dateDay.equals("-2")){
 			 createDate=Integer.parseInt(dateDay);	 
 			 if(dateDay!=null&&createDate<0){
 				 String startDate=request.getParameter("startDate"); //交易时间开始时间
@@ -132,26 +136,49 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
-		 
-		 
-//		 OrderMessageExport.exportChuBei(response, merchantOrderInfoList);
-		 
-		 /* String backMsg="";
-		 String username=request.getParameter("username");
-	     String password=request.getParameter("password");
-	     User user = null;
-	     user=checkUsername(username,userService);
-	     if(user!=null){
-	    	  if(user.checkPasswod(password)){
-	    		  backMsg="ok"; 
-				}else{
-				  backMsg="error"; 
-				}
-	    	
-	     }else{
-	    	 backMsg="error"; 
-	     }
-	     WebUtils.writeJson(response,backMsg);*/
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		 for(int i=0;i<merchantOrderInfoList.size();i++){
+			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
+			 Date createDate1 = merchantOrderInfo1.getCreateDate();
+			 merchantOrderInfo1.setFoundDate(df.format(createDate1));//交易时间
+			 
+			 Integer channeId = merchantOrderInfo1.getChannelId();
+			 if(channeId!=null){
+				 if(channeId==10001){
+					 merchantOrderInfo1.setChannelName("支付宝");
+				 }else if(channeId==10002){
+					 merchantOrderInfo1.setChannelName("微信");
+				 }else if(channeId==10004){
+					 merchantOrderInfo1.setChannelName("TCL-支付");
+				 }else if(channeId==10005){
+					 merchantOrderInfo1.setChannelName("支付宝");
+				 }else if(channeId==10006){
+					 merchantOrderInfo1.setChannelName("TCL-支付");
+				 }else if(channeId==10007){
+					 merchantOrderInfo1.setChannelName("易宝支付");
+				 }else if(channeId==10008){
+					 merchantOrderInfo1.setChannelName("易宝支付");
+				 }else{
+					 merchantOrderInfo1.setChannelName("待定");
+				 }
+			 }
+			 Integer status = merchantOrderInfo1.getPayStatus();
+			 if(status!=null){
+				 if(status==0){
+					 merchantOrderInfo1.setPayStatusName("处理中"); 
+				 }else if(status==1){
+					 merchantOrderInfo1.setPayStatusName("成功"); 
+				 }else if(status==2){
+					 merchantOrderInfo1.setPayStatusName("失败"); 
+				 }
+			 }
+		 }
+		 JSONArray jsonArr = JSONArray.fromObject(merchantOrderInfoList);
+		 JSONObject jsonObjArr = new JSONObject();  
+		 jsonObjArr.put("total", 28);
+		 jsonObjArr.put("rows", jsonArr);
+		 System.out.println(jsonArr);
+	     WebUtils.writeJson(response,jsonObjArr);
 	     return "usercenter/merchantMessage";
 	 }	
 	 
