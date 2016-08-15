@@ -190,9 +190,77 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  */
 	 @RequestMapping("downloadSubmit")
 	 public String  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
+		 int channelId=0;
+		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
+		 String merchantOrderId=request.getParameter("merchantOrderId");//商户订单号
+		 String payOrderId=request.getParameter("payOrderId");//第三方订单号
+		 String CI=request.getParameter("channelId"); //支付方式
+		 if(CI!=null&&!CI.equals("")){
+			 channelId=Integer.parseInt(CI);
+		 }
+		 String businessType=request.getParameter("businessType");//业务类型  字段暂时不确定
+		 String openingBank=request.getParameter("openingBank"); //发卡行 字段暂时不确定
+		 String source=request.getParameter("source"); //缴费来源 1、pc端2、移动端
+		 String PS=request.getParameter("payStatus"); //交易状态
+		 int payStatus=0;
+		 if(PS!=null&&!PS.equals("")){
+			 payStatus=Integer.parseInt(PS);
+		 }
+		 
+		 
+//		 int createDate=0;
+		 Integer createDate = null;
+		 String dateDay=request.getParameter("createDate"); //交易时间天数
+		 String startDate1 = null;
+		 String endDate1 =null;
+		 if(dateDay!=null&&!dateDay.equals("-2")){
+			 createDate=Integer.parseInt(dateDay);	 
+			 if(dateDay!=null&&createDate<0){
+				 String startDate=request.getParameter("startDate"); //交易时间开始时间
+				 String endDate=request.getParameter("endDate"); //交易时间结束时间
+				 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+				 Date Date1 = null;
+				 Date Date2 = null;
+				try {
+					Date1 = format1.parse(startDate);
+					Date2 = format1.parse(endDate);
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				 format1 = new SimpleDateFormat("yyyy-MM-dd");
+				 startDate1 = format1.format(Date1)+" 00:00:00";
+				 endDate1 = format1.format(Date2)+" 23:59:59";
+			 }else{
+	//			 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				 if(createDate==0){
+					    String date = df.format(new Date());
+						startDate1 = date+" 00:00:00";
+						endDate1 = date+" 23:59:59";
+				 }else if(createDate>0){
+					 endDate1 = df.format(new Date());
+					 Date dat = null;
+					 Calendar cd = Calendar.getInstance();
+					 cd.add(Calendar.DATE, (createDate > 0) ? -createDate : createDate);
+					 dat = cd.getTime();
+					 startDate1 = df.format(dat);
+					 startDate1 = startDate1+" 00:00:00";
+					 endDate1 = endDate1+" 23:59:59";
+				 } 
+			 }
+		 }
+		 System.out.println(startDate1+"**************************"+endDate1);
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
-		 merchantOrderInfo.setMerchantOrderId("");
-		 merchantOrderInfo.setPayOrderId("");   //第三方订单号
+		 
+		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
+		 merchantOrderInfo.setStartDate(startDate1);
+		 merchantOrderInfo.setEndDate(endDate1);
+		 
+		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
+		 merchantOrderInfo.setPayOrderId(payOrderId);   //第三方订单号
+		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
+		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 OrderDeriveExport.exportChuBei(response, merchantOrderInfoList);
 	     return "usercenter/merchantMessage";
