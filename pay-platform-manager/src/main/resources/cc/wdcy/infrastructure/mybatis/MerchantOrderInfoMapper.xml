@@ -274,7 +274,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
@@ -288,7 +288,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
@@ -302,7 +302,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
@@ -317,7 +317,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
@@ -331,7 +331,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
@@ -346,7 +346,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
           
@@ -361,7 +361,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
@@ -375,7 +375,7 @@
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
           </if>
-           <if test="paymentId != null and paymentId !=''" >
+           <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 

@@ -32,18 +32,21 @@ table {
 			<div>
 				<span> <select class="easyui-combobox" name="channelId" id="channelId"
 					label="支付方式" style="width:200px">
-						<option value="10001" selected="selected">支付宝</option>
+					    <option value="" selected="selected">全部</option>
+						<option value="10001">支付宝</option>
 						<option value="10002">微信</option>
 						<option value="10005">直连银行</option>
 						<option value="10003">银联</option>
 				</select> </span> <span style="margin-left: 180px"> <select
 					class="easyui-combobox" id="payClient"name="payClient" label="缴费来源"
 					style="width:230px;">
+					    <option value="" selected="selected">全部</option>
 						<option value="pc">PC端</option>
-						<option value="mobile" selected="selected">移动端</option>
+						<option value="mobile" >移动端</option>
 				</select> </span> <span style="margin-left: 170px"> <select
 					class="easyui-combobox" id="paymentId"name="paymentId" label="缴费银行"
-					style="width:200px" > 
+					style="width:200px" >
+					    <option value="" selected="selected">全部</option>
 						<option value="10012">支付宝-即时到账</option>
 						<option value="10013">微信-扫码支付</option>
 						<option value="10014">银联</option>
@@ -63,8 +66,9 @@ table {
 			<div style="margin-top: 5px">
 				<span style=""> <select class="easyui-combobox" name="appId" id="appId"
 					label="业务类型" style="width:200px">
+					   <option value="" selected="selected">全部</option>
 						<option value="1">OES学历</option>
-						<option value="10026" selected="selected">mooc2u</option>
+						<option value="10026" >mooc2u</option>
 				</select> </span>
 				<div style="margin-left: 180px; display: inline-block;">
 					<a href="#" class="easyui-linkbutton" data-options="plain:true"
@@ -78,7 +82,7 @@ table {
 					&nbsp;至&nbsp;
 					<div style="display:inline-block;">
 						<input class="easyui-datebox" data-options="onSelect:onEndSelect"
-							style="width:150px;">
+							style="width:150px; "id="bb">
 					</div>
 					<div style="display:inline-block; margin-left: 65px">
 						<a href="#" class="easyui-linkbutton" onclick="queryData()"
@@ -136,9 +140,8 @@ table {
 		//var d = new Date(date);
 		//console.log(d.toLocaleString());
 		//alert(d.toLocaleString().replace("日","").replace(/[年月]/g,"-"));
-
 		startTime=format(date, 'yyyy-MM-dd');
-
+		timeType="";
 	}
 	//获取结束时间
 	function onEndSelect(date) {
@@ -146,19 +149,42 @@ table {
 		//var d = new Date(date);
 		//console.log(d.toLocaleString());
 		//alert(d.toLocaleString().replace("日","").replace(/[年月]/g,"-"));
-
 	  endTime=format(date, 'yyyy-MM-dd');
-
+	  timeType="";
 	}
 	function getDayType(date) {
+	var input6=getnowtime();
 	if(date=="thirty"){
 	//判断点击三十天
 	timeType="1";
+	var d=new Date();
+    var n=new Date(d.getTime()-86400000*30);
+    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
 	}else{
 	//判断点击七天
 	timeType="2";
+	var d=new Date();
+    var n=new Date(d.getTime()-86400000*7);
+    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
 	}
+	$("#_easyui_textbox_input5").val(input5);
+	$("#_easyui_textbox_input6").val(input6);
 	}
+	function getnowtime() {
+            var nowtime = new Date();
+            var year = nowtime.getFullYear();
+            var month = padleft0(nowtime.getMonth() + 1);
+            var day = padleft0(nowtime.getDate());
+            var hour = padleft0(nowtime.getHours());
+            var minute = padleft0(nowtime.getMinutes());
+            var second = padleft0(nowtime.getSeconds());
+            var millisecond = nowtime.getMilliseconds(); millisecond = millisecond.toString().length == 1 ? "00" + millisecond : millisecond.toString().length == 2 ? "0" + millisecond : millisecond;
+            return month + "/" + day + "/"+ year;
+        }
+        //补齐两位数
+        function padleft0(obj) {
+            return obj.toString().replace(/^[0-9]{1}$/, "0" + obj);
+        }
 	function queryData() {
 		//去除Y轴的单位k、m
 		Highcharts.setOptions({
@@ -166,6 +192,13 @@ table {
 				numericSymbols : []
 			}
 		});
+		console.log($("input[name='paymentId']").val());
+		console.log($("input[name='appId']").val());
+		console.log($("input[name='payClient']").val());
+		console.log($("input[name='channelId']").val());
+		console.log(startTime);
+		console.log(endTime);
+		console.log(timeType);
 		$.post("${pageContext.request.contextPath}/user/admin/userstatistics/chart.json", {
 			paymentId : $("input[name='paymentId']").val(),
 			appId : $("input[name='appId']").val(),
