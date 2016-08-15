@@ -21,7 +21,7 @@ import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
-import cn.com.open.pay.platform.manager.tools.orderMessageExport;
+import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
 
 
 
@@ -50,6 +50,12 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	     return "usercenter/merchantMessage";
 	 }	
 
+	 /**
+	  * 查询信息
+	  * @param request
+	  * @param response
+	  * @return
+	  */
 	 @RequestMapping("queryMerchant")
 	 public String  queryMerchant(HttpServletRequest request,HttpServletResponse response) {
 		 log.info("-----------------------login start----------------");
@@ -128,7 +134,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 
 		 
-//		 orderMessageExport.exportChuBei(response, merchantOrderInfoList);
+//		 OrderMessageExport.exportChuBei(response, merchantOrderInfoList);
 		 
 		 /* String backMsg="";
 		 String username=request.getParameter("username");
@@ -149,57 +155,74 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	     return "usercenter/merchantMessage";
 	 }	
 	 
+	 /**
+	  * 页面跳转
+	  * @param request
+	  * @param response
+	  * @return
+	  */
 	 @RequestMapping("downloadSubmit")
 	 public String  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
-		 log.info("-----------------------login start----------------");
-//		 String e="";//下单时间 
-		 String merchantOrderDate="1";//交易时间 (今日，昨日，最近7天，最近30天，自定义日期)
-		 String merchantOrderId="";//商户订单号、
-		 String payOrderId="";//第三方订单号、
-		 int paymentId=0;//支付方式（支付宝、微信、银联、易宝、易宝POS和TCL汇银通）、
-//		 String //业务类型（学历教育、慕课中国…）、发卡行、缴费来源（PC端和移动端）、
-		 int payStatus=0;//交易状态
-		 
-		 
-		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		 String startDate="";
-		 String endDate="";
-		 int day=30;
-//		 String date = df.format(new Date());
-//			startDate = date+" 00:00:00";
-		 if(merchantOrderDate.equals("2")){
-			    String date = df.format(new Date());
-				startDate = date+" 00:00:00";
-				endDate = date+" 23:59:59";
-		 }else if(merchantOrderDate.equals("1")){
-			 String date = df.format(new Date());
-			 Date dat = null;
-			 Calendar cd = Calendar.getInstance();
-			 cd.add(Calendar.DATE, (day > 0) ? -day : day);
-			 dat = cd.getTime();
-			 String date1 = df.format(dat);
-			 System.out.println(date);
-			 startDate = date1+" 00:00:00";
-			 endDate = date+" 23:59:59";
-		 }
-		 System.out.println(startDate+"**************************"+endDate);
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
-		 
-		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
-		 merchantOrderInfo.setStartDate(startDate);
-		 merchantOrderInfo.setEndDate(endDate);
-		 
-		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
-		 merchantOrderInfo.setPayOrderId(payOrderId);
-		 merchantOrderInfo.setPaymentId(paymentId);
-		 merchantOrderInfo.setPayStatus(payStatus);
-		 
+		 merchantOrderInfo.setMerchantOrderId("");
+		 merchantOrderInfo.setPayOrderId("");   //第三方订单号
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
-		 
-		 
-		 orderMessageExport.exportChuBei(response, merchantOrderInfoList);
-		 
-		 return "usercenter/merchantMessage";
-	 }	
+		 OrderDeriveExport.exportChuBei(response, merchantOrderInfoList);
+	     return "usercenter/merchantMessage";
+	 }
+	 
+//	 @RequestMapping("downloadSubmit")
+//	 public void  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
+//		 log.info("-----------------------login start----------------");
+////		 String e="";//下单时间 
+//		 String merchantOrderDate="1";//交易时间 (今日，昨日，最近7天，最近30天，自定义日期)
+//		 String merchantOrderId="";//商户订单号、
+//		 String payOrderId="";//第三方订单号、
+//		 int paymentId=0;//支付方式（支付宝、微信、银联、易宝、易宝POS和TCL汇银通）、
+////		 String //业务类型（学历教育、慕课中国…）、发卡行、缴费来源（PC端和移动端）、
+//		 int payStatus=0;//交易状态
+//		 
+//		 
+//		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+//		 String startDate="";
+//		 String endDate="";
+//		 int day=30;
+////		 String date = df.format(new Date());
+////			startDate = date+" 00:00:00";
+//		 if(merchantOrderDate.equals("2")){
+//			    String date = df.format(new Date());
+//				startDate = date+" 00:00:00";
+//				endDate = date+" 23:59:59";
+//		 }else if(merchantOrderDate.equals("1")){
+//			 String date = df.format(new Date());
+//			 Date dat = null;
+//			 Calendar cd = Calendar.getInstance();
+//			 cd.add(Calendar.DATE, (day > 0) ? -day : day);
+//			 dat = cd.getTime();
+//			 String date1 = df.format(dat);
+//			 System.out.println(date);
+//			 startDate = date1+" 00:00:00";
+//			 endDate = date+" 23:59:59";
+//		 }
+//		 System.out.println(startDate+"**************************"+endDate);
+//		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
+//		 
+//		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
+//		 merchantOrderInfo.setStartDate(startDate);
+//		 merchantOrderInfo.setEndDate(endDate);
+//		 
+//		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
+//		 merchantOrderInfo.setPayOrderId(payOrderId);
+//		 merchantOrderInfo.setPaymentId(paymentId);
+//		 merchantOrderInfo.setPayStatus(payStatus);
+//		 
+//		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
+//		 
+//		 
+//		 orderMessageExport.exportChuBei(response, merchantOrderInfoList);
+//		 
+//	 }	
+	 
+	 	
 }
