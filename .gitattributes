@@ -58,7 +58,6 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/SmsToo
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/StringTool.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/ValidateUtil.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/WebUtils.java -text
-pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/orderMessageExport.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/test.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/test1.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/testDemo.java -text
