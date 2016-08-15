@@ -89,7 +89,7 @@
 	</div>
 	
 	</div>
-	  <div class="botton" style="width: 100%;height: 90px">
+	  <div class="botton" style="width: 100%;height: 300px">
 		<table  id="dg" class="easyui-datagrid"  style="width:1000px;height:250px"
 			data-options="singleSelect:true,collapsible:true,method:'get'">
 		<thead>
