@@ -188,6 +188,12 @@
         <if test="payStatus != null and payStatus !=''" >
            and PAY_STATUS=#{payStatus} 
         </if>
+        <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+        </if>
+        <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+        </if>
         <if test="startDate != null and startDate !=''" >
            and DEAL_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
         </if>
@@ -332,7 +338,7 @@
            and PAYMENT_ID=#{paymentId} 
           </if>
            <if test="channelId != null and channelId !=''" >
-           and CHANNEL_ID=#{channelId} 
+           and paymentId=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
