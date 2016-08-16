@@ -82,13 +82,13 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 
 		 
 //		 int createDate=0;
-		 Integer createDate = null;
-		 String dateDay=request.getParameter("createDate"); //交易时间天数
+		 Integer dealDate = null;
+		 String dateDay=request.getParameter("dealDate"); //交易时间天数
 		 String startDate1 = null;
 		 String endDate1 =null;
 		 if(dateDay!=null&&!dateDay.equals("-2")){
-			 createDate=Integer.parseInt(dateDay);	 
-			 if(dateDay!=null&&createDate<0){
+			 dealDate=Integer.parseInt(dateDay);	 
+			 if(dateDay!=null&&dealDate<0){
 				 String startDate=request.getParameter("startDate"); //交易时间开始时间
 				 String endDate=request.getParameter("endDate"); //交易时间结束时间
 				 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
@@ -107,15 +107,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }else{
 	//			 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				 if(createDate==0){
+				 if(dealDate==0){
 					    String date = df.format(new Date());
 						startDate1 = date+" 00:00:00";
 						endDate1 = date+" 23:59:59";
-				 }else if(createDate>0){
+				 }else if(dealDate>0){
 					 endDate1 = df.format(new Date());
 					 Date dat = null;
 					 Calendar cd = Calendar.getInstance();
-					 cd.add(Calendar.DATE, (createDate > 0) ? -createDate : createDate);
+					 cd.add(Calendar.DATE, (dealDate > 0) ? -dealDate : dealDate);
 					 dat = cd.getTime();
 					 startDate1 = df.format(dat);
 					 startDate1 = startDate1+" 00:00:00";
@@ -141,6 +141,12 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
 			 merchantOrderInfo1.setFoundDate(df.format(createDate1));//交易时间
+			 
+			 Date dealDate1 = merchantOrderInfo1.getDealDate();
+			 if(dealDate1!=null){
+				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
+			 }
+			
 			 
 			 Integer channeId = merchantOrderInfo1.getChannelId();
 			 if(channeId!=null){

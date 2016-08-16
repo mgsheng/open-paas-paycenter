@@ -15,12 +15,18 @@
 		<form id="ff" method="post">
 		<table>
 		<tr>
-			<td style="text-align: right;">下单时间：</td>
-			<td><input id="merchantOrderDate" name="merchantOrderDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" value=""></td>
 			<td style="text-align: right;">商户订单号：</td>
-			
 			<td>
 				<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:100%;height:32px">
+			</td>
+			<td style="text-align: right;">交易状态：</td>
+			<td>
+				<select class="easyui-combobox" name="payStatus" style="width:100%">
+					<option value="">全部</option>
+					<option value="0">处理中</option>
+					<option value="1">成功</option>
+					<option value="2">失败</option>
+				</select>
 			</td>
 		</tr>
 		
@@ -30,7 +36,7 @@
 			<td style="text-align: right;">支付方式：</td>
 			<td>
 				<select class="easyui-combobox" id="channelId" name="channelId" style="width:100%">
-					<option value=""></option>
+					<option value="">全部</option>
 					<option value="10001">支付宝</option>
 					<option value="10002">微信</option>
 					<option value="10003">银联</option>
@@ -50,31 +56,22 @@
 			<td style="text-align: right;">缴费来源：</td>
 			<td>
 				<select class="easyui-combobox" name="source" style="width:100%">
-					<option value=""></option>
+					<option value="">全部</option>
 					<option value="1">pc端</option>
 					<option value="2">移动端</option>
 				</select>
 			</td>
-			<td style="text-align: right;">交易状态：</td>
-			<td>
-				<select class="easyui-combobox" name="payStatus" style="width:100%">
-					<option value=""></option>
-					<option value="0">处理中</option>
-					<option value="1">成功</option>
-					<option value="2">失败</option>
-				</select>
 			
-			</td>
 		</tr>
 		<tr>
 			<td style="text-align: right;">交易时间：</td>
 			<td style="text-align: center;">
-				<!--  --><label><input type="hidden" name="createDate"  value="-2"  /></label>
-				<label><input name="createDate" type="radio" value="0" checked="checked"/>今天</label>
-				<label><input name="createDate" type="radio" value="1" />昨天</label>
-				<label><input name="createDate" type="radio" value="7" />7天</label>
-				<label><input name="createDate" type="radio" value="30" />30天</label>
-				<label><input name="createDate" type="radio" value="-1" />自定义</label>
+				<!--  --><label><input type="radio" name="dealDate" checked="checked" value="-2"  />全部</label>
+				<label><input name="dealDate" type="radio" value="0" />今天</label>
+				<label><input name="dealDate" type="radio" value="1" />昨天</label>
+				<label><input name="dealDate" type="radio" value="7" />7天</label>
+				<label><input name="dealDate" type="radio" value="30" />30天</label>
+				<label><input name="dealDate" type="radio" value="-1" />自定义</label>
 			</td>
 				<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">—到—</td>
 				<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'"></td>
@@ -94,8 +91,8 @@
 			data-options="singleSelect:true,collapsible:true,method:'get'">
 		<thead>
 			<tr>
-				<th data-options="field:'merchantOrderDate',width:80">下单时间</th>
-				<th data-options="field:'foundDate',width:150">交易时间</th>
+				<th data-options="field:'foundDate',width:150">下单时间</th>
+				<th data-options="field:'businessDate',width:150">交易时间</th>
 				<th data-options="field:'merchantOrderId',width:150">商户订单号</th>
 				<th data-options="field:'payOrderId',width:150">第三方订单号</th>
 				<th data-options="field:'channelName',width:80">支付方式</th>
@@ -120,7 +117,6 @@
 
 
 		function submitForm(){
-			var merchantOrderDate = $("input[name='merchantOrderDate']").val();//下单时间
 			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号
 			var payOrderId = $("input[name='payOrderId']").val();//第三方订单号
 			var channelId = $("input[name='channelId']").val();//支付方式
@@ -128,13 +124,13 @@
 			var openingBank = $("input[name='openingBank']").val();//发卡行
 			var source = $("input[name='source']").val();//缴费来源
 			var payStatus = $("input[name='payStatus']").val();//缴费状态
-			var createDate = $("input[name='createDate']").val();//交易时间
+			var dealDate = $("input[name='dealDate']").val();//交易时间
 			var startDate = $("input[name='startDate']").val();//开始时间
 			var endDate = $("input[name='endDate']").val();//结束时间
 			
 			$('#dg').datagrid({  
 		        title: '测试表格',  
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderDate="+merchantOrderDate+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&businessType="+businessType+"&openingBank="+openingBank+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&businessType="+businessType+"&openingBank="+openingBank+"&source="+source+"&payStatus="+payStatus+"&dealDate="+dealDate+"&startDate="+startDate+"&endDate="+endDate,  
 		        //pagination: true,显示分页工具栏              
 		    }); 
 			

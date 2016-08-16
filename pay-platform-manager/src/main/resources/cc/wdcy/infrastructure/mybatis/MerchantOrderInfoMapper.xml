@@ -189,10 +189,10 @@
            and PAY_STATUS=#{payStatus} 
         </if>
         <if test="startDate != null and startDate !=''" >
-           and CREATE_DATE &gt; #{startDate} 
+           and DEAL_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
         </if>
         <if test="endDate != null and endDate !=''" >
-           and CREATE_DATE &lt; #{endDate} 
+           and #{endDate, jdbcType=TIMESTAMP}
         </if>
        
     </select>
