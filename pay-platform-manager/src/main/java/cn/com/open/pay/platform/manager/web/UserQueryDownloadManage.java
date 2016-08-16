@@ -71,9 +71,14 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 if(CI!=null&&!CI.equals("")){
 			 channelId=Integer.parseInt(CI);
 		 }
-		 String businessType=request.getParameter("businessType");//业务类型  字段暂时不确定
-		 String openingBank=request.getParameter("openingBank"); //发卡行 字段暂时不确定
+		 String appId=request.getParameter("appId");//业务类型  字段暂时不确定
 		 String source=request.getParameter("source"); //缴费来源 1、pc端2、移动端
+		 int paymentId=0;
+		 String pt=request.getParameter("paymentId"); //发卡行 字段暂时不确定
+		 if(pt!=null&&!pt.equals("")){
+			 paymentId=Integer.parseInt(pt);
+		 }
+		 
 		 String PS=request.getParameter("payStatus"); //交易状态
 		 int payStatus=0;
 		 if(PS!=null&&!PS.equals("")){
@@ -134,6 +139,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setPayOrderId(payOrderId);   //第三方订单号
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
+		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+		 merchantOrderInfo.setAppId(appId);				//业务类型
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
@@ -146,7 +153,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 if(dealDate1!=null){
 				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
 			 }
-			
 			 
 			 Integer channeId = merchantOrderInfo1.getChannelId();
 			 if(channeId!=null){
@@ -168,6 +174,21 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 					 merchantOrderInfo1.setChannelName("待定");
 				 }
 			 }
+			 Integer pMid = merchantOrderInfo1.getPaymentId();
+			 String paymentName = payChange(pMid);
+			 merchantOrderInfo1.setPaymentName(paymentName);
+			 String appValue = merchantOrderInfo1.getAppId();
+			 String appName="";
+			 if(appValue!=null){
+				 if(appValue.equals("1")){
+					 appName = "OES学历";
+				 }else if(appValue.equals("10026")){
+					 appName = "mooc2u";
+				 }else{
+					 appName = "未定";
+				 }
+			 }
+			 merchantOrderInfo1.setAppId(appName);
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
 				 if(status==0){
@@ -187,6 +208,43 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	     WebUtils.writeJson(response,jsonObjArr);
 	     return "usercenter/merchantMessage";
 	 }	
+	 
+	 
+	 public String payChange(Integer pMid){
+		 String paymentName="";
+		 if(pMid!=null){
+			 if(pMid==10012){
+				 paymentName="支付宝-即时到账";
+			 }else if(pMid==10013){
+				 paymentName="微信-扫码支付";
+			 }else if(pMid==10014){
+				 paymentName="银联";
+			 }else if(pMid==10001){
+				 paymentName="招商银行";
+			 }else if(pMid==10002){
+				 paymentName="工商银行";
+			 }else if(pMid==10003){
+				 paymentName="建设银行";
+			 }else if(pMid==10004){
+				 paymentName="农业银行";
+			 }else if(pMid==10005){
+				 paymentName="中国银行";
+			 }else if(pMid==10006){
+				 paymentName="交通银行";
+			 }else if(pMid==10007){
+				 paymentName="中国邮政银行";
+			 }else if(pMid==10008){
+				 paymentName="广发银行";
+			 }else if(pMid==10009){
+				 paymentName="浦发银行";
+			 }else if(pMid==10010){
+				 paymentName="中国光大银行";
+			 }else if(pMid==10011){
+				 paymentName="中国平安银行";
+			 }
+		 }
+		 return paymentName;
+	 }
 	 
 	 /**
 	  * 页面跳转
