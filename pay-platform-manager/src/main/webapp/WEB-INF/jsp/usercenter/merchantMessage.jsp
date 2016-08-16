@@ -48,9 +48,35 @@
 		</tr>
 		<tr>
 			<td style="text-align: right;">业务类型：</td>
-			<td><input id="businessType" name="businessType" class="easyui-textbox" style="width:100%;height:32px"></td>
+			<td>
+				<select class="easyui-combobox" name="appId" style="width:100%">
+						<option value="" selected="selected">全部</option>
+						<option value="1">OES学历</option>
+						<option value="10026" >mooc2u</option>
+				</select>
+			</td>
 			<td style="text-align: right;">发卡行：</td>
-			<td><input id="openingBank" name="openingBank" class="easyui-textbox" style="width:100%;height:32px"></td>
+			<!-- <td><input id="openingBank" name="openingBank" class="easyui-textbox" style="width:100%;height:32px"></td> -->
+			<td>
+				<select class="easyui-combobox" name="paymentId" style="width:100%">
+					<option value="" selected="selected">全部</option>
+						<option value="10012">支付宝-即时到账</option>
+						<option value="10013">微信-扫码支付</option>
+						<option value="10014">银联</option>
+						<option value="10001">招商银行</option>
+						<option value="10002">工商银行</option>
+						<option value="10003">建设银行</option>
+						<option value="10004">农业银行</option>
+						<option value="10005">中国银行</option>
+						<option value="10006">交通银行</option>
+						<option value="10007">中国邮政银行</option>
+						<option value="10008">广发银行</option>
+						<option value="10009">浦发银行</option>
+						<option value="10010">中国光大银行</option>
+						<option value="10011">中国平安银行</option>
+				</select>
+			
+			</td>
 		</tr>
 		<tr>
 			<td style="text-align: right;">缴费来源：</td>
@@ -87,8 +113,8 @@
 	
 	</div>
 	  <div class="botton" style="width: 100%;height: 300px">
-		<table  id="dg" class="easyui-datagrid"  style="width:1000px;height:250px"
-			data-options="singleSelect:true,collapsible:true,method:'get'">
+		<table  id="dg"  class="easyui-datagrid" title="查询结果"   style="width:1000px;height:250px"
+			data-options="singleSelect:true,method:'get'">
 		<thead>
 			<tr>
 				<th data-options="field:'foundDate',width:150">下单时间</th>
@@ -96,8 +122,8 @@
 				<th data-options="field:'merchantOrderId',width:150">商户订单号</th>
 				<th data-options="field:'payOrderId',width:150">第三方订单号</th>
 				<th data-options="field:'channelName',width:80">支付方式</th>
-				<th data-options="field:'businessType',width:60,align:'center'">业务类型</th>
-				<th data-options="field:'openingBank',width:80">发卡行</th>
+				<th data-options="field:'appId',width:60,align:'center'">业务类型</th>
+				<th data-options="field:'paymentName',width:80">发卡行</th>
 				<th data-options="field:'openingBank',width:100">卡类型</th><!-- 不确定字段 -->
 				<th data-options="field:'source',width:80,align:'right'">缴费来源</th>
 				<th data-options="field:'payStatusName',width:80,align:'right'">交易状态</th>
@@ -120,20 +146,37 @@
 			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号
 			var payOrderId = $("input[name='payOrderId']").val();//第三方订单号
 			var channelId = $("input[name='channelId']").val();//支付方式
-			var businessType = $("input[name='businessType']").val();//业务类型
-			var openingBank = $("input[name='openingBank']").val();//发卡行
+			var appId = $("input[name='appId']").val();//业务类型
+			var paymentId = $("input[name='paymentId']").val();//发卡行
 			var source = $("input[name='source']").val();//缴费来源
 			var payStatus = $("input[name='payStatus']").val();//缴费状态
 			var dealDate = $("input[name='dealDate']").val();//交易时间
 			var startDate = $("input[name='startDate']").val();//开始时间
 			var endDate = $("input[name='endDate']").val();//结束时间
 			
-			$('#dg').datagrid({  
-		        title: '测试表格',  
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&businessType="+businessType+"&openingBank="+openingBank+"&source="+source+"&payStatus="+payStatus+"&dealDate="+dealDate+"&startDate="+startDate+"&endDate="+endDate,  
-		        //pagination: true,显示分页工具栏              
+			$('#dg').datagrid({
+				collapsible:true,
+				rownumbers:true,
+				pagination:true,
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&dealDate="+dealDate+"&startDate="+startDate+"&endDate="+endDate,  
+		        //pagination: true,显示分页工具栏
+		        
+		     
 		    }); 
-			
+			 //设置分页控件 
+		    var p = $('#dg').datagrid('getPager'); 
+		    $(p).pagination({ 
+		        pageSize: 10,//每页显示的记录条数，默认为10 
+		        pageList: [5,10,15],//可以设置每页记录条数的列表 
+		        beforePageText: '第',//页数文本框前显示的汉字 
+		        afterPageText: '页    共 {pages} 页', 
+		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+		        /*onBeforeRefresh:function(){
+		            $(this).pagination('loading');
+		            alert('before refresh');
+		            $(this).pagination('loaded');
+		        }*/ 
+		    }); 
 //			$.ajax({
 //		       	url:"${pageContext.request.contextPath}/manage/queryMerchant",
 //		       	data:$('#ff').serialize(),
@@ -166,6 +209,8 @@
 		$(document).ready(function(){  
 		            loadGrid();  
 		});  
+		  
+		
 		  
 		
 	</script>
