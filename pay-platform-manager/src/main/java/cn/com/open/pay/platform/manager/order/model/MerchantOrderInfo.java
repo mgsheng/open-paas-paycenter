@@ -106,6 +106,7 @@ public class MerchantOrderInfo implements Serializable {
 	private String businessDate;
 	private String channelName;
 	private String payStatusName;
+	private String paymentName;
 	
 	
 
@@ -526,6 +527,14 @@ public class MerchantOrderInfo implements Serializable {
 
 	public void setBusinessDate(String businessDate) {
 		this.businessDate = businessDate;
+	}
+
+	public String getPaymentName() {
+		return paymentName;
+	}
+
+	public void setPaymentName(String paymentName) {
+		this.paymentName = paymentName;
 	}
 	
 	
