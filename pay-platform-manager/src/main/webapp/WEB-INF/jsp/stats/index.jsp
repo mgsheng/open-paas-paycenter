@@ -16,6 +16,8 @@
 	src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 
 <style type="text/css">
 table {
@@ -24,7 +26,7 @@ table {
 }
 </style>
 </head>
-<body>
+<body >
 	<div
 		style="border:0px solid;border-radius:8px;margin-bottom:10px;height: 150px; width: 1000px">
 		<div
@@ -114,7 +116,7 @@ table {
 
 	<div
 		style="border:1px solid;margin-top: 25px;border-radius:8px;margin-bottom: 10px; border-color:grey;background-color:#DDDDDD;height: 30px; width: 988px;padding-top: 10px;padding-left: 10px ;">趋势</div>
-	<div class="easyui-tabs" style="width:1000px;height:300px">
+	<div class="easyui-tabs" style="width:1000px;height:445px">
 		<div title="成交金额" style="padding:10px">
 			<div id="payAmount" style=""></div>
 		</div>

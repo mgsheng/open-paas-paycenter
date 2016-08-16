@@ -14,6 +14,9 @@
 	src="${pageContext.request.contextPath}/js/jquery-1.4.4.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/jquery.easyui.min.1.2.2.js"></script>
+	
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 <script type="text/javascript"
 	src='${pageContext.request.contextPath}/js/outlook2.js'> </script>
 <script type="text/javascript">
