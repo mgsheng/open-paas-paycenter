@@ -102,7 +102,8 @@ public class MerchantOrderInfo implements Serializable {
 	
 	private String startDate;
 	private String endDate;
-	private String foundDate;
+	private String foundDate; //创建时间
+	private String businessDate;
 	private String channelName;
 	private String payStatusName;
 	
@@ -518,5 +519,15 @@ public class MerchantOrderInfo implements Serializable {
 	public void setPayStatusName(String payStatusName) {
 		this.payStatusName = payStatusName;
 	}
+
+	public String getBusinessDate() {
+		return businessDate;
+	}
+
+	public void setBusinessDate(String businessDate) {
+		this.businessDate = businessDate;
+	}
+	
+	
 	
 }
