@@ -62,6 +62,18 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  */
 	 @RequestMapping("queryMerchant")
 	 public String  queryMerchant(HttpServletRequest request,HttpServletResponse response) {
+		 
+		
+		  //当前第几页
+		  String page=request.getParameter("page");
+		  //每页显示的记录数
+		  String rows=request.getParameter("rows"); 
+		  //当前页  
+		        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+		        //每页显示条数  
+		        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+		        //每页的开始记录  第一页为1  第二页为number +1   
+		        int startRow = (currentPage-1)*pageSize;
 		 log.info("-----------------------login start----------------");
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
@@ -84,13 +96,13 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 if(PS!=null&&!PS.equals("")){
 			 payStatus=Integer.parseInt(PS);
 		 }
-		 Integer dealDate = null;
-		 String dateDay=request.getParameter("dealDate"); //交易时间天数
+		 Integer createDate = null;
+		 String dateDay=request.getParameter("createDate"); //交易时间天数
 		 String startDate1 = null;
 		 String endDate1 =null;
-		 if(dateDay!=null&&!dateDay.equals("-2")){
-			 dealDate=Integer.parseInt(dateDay);	 
-			 if(dateDay!=null&&dealDate<0){
+		 if(dateDay!=null&&!dateDay.equals("undefined")){
+			 createDate=Integer.parseInt(dateDay);	 
+			 if(dateDay!=null&&createDate<0){
 				 String startDate=request.getParameter("startDate"); //交易时间开始时间
 				 String endDate=request.getParameter("endDate"); //交易时间结束时间
 				 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
@@ -109,15 +121,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }else{
 	//			 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				 if(dealDate==0){
+				 if(createDate==0){
 					    String date = df.format(new Date());
 						startDate1 = date+" 00:00:00";
 						endDate1 = date+" 23:59:59";
-				 }else if(dealDate>0){
+				 }else if(createDate>0){
 					 endDate1 = df.format(new Date());
 					 Date dat = null;
 					 Calendar cd = Calendar.getInstance();
-					 cd.add(Calendar.DATE, (dealDate > 0) ? -dealDate : dealDate);
+					 cd.add(Calendar.DATE, (createDate > 0) ? -createDate : createDate);
 					 dat = cd.getTime();
 					 startDate1 = df.format(dat);
 					 startDate1 = startDate1+" 00:00:00";
@@ -138,8 +150,12 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
 		 merchantOrderInfo.setAppId(appId);				//业务类型
+		 merchantOrderInfo.setPageSize(pageSize); //结束条数
+//		 merchantOrderInfo.setStartRow(startRow); //开始条数
+		 merchantOrderInfo.setStartRow(startRow); //开始条数
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
+		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
@@ -199,7 +215,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 }
 		 JSONArray jsonArr = JSONArray.fromObject(merchantOrderInfoList);
 		 JSONObject jsonObjArr = new JSONObject();  
-		 jsonObjArr.put("total", 28);
+		 jsonObjArr.put("total", queryCount);
 		 jsonObjArr.put("rows", jsonArr);
 		 System.out.println(jsonArr);
 	     WebUtils.writeJson(response,jsonObjArr);

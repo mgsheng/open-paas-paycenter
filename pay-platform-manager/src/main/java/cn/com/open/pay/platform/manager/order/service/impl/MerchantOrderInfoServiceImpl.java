@@ -171,5 +171,13 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		return merchantOrderInfoRepository.payTotalCharge(startTime, endTime, appId, paymentId, channelId);
 	}
 
+	@Override
+	public int findQueryCount(MerchantOrderInfo merchantOrderInfo) {
+		// TODO Auto-generated method stub
+	int merchantOrderInfoList = merchantOrderInfoRepository.findQueryCount(merchantOrderInfo);
+	return merchantOrderInfoList;
+	
+	}
+
 
 }

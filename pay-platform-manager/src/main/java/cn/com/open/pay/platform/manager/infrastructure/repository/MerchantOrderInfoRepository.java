@@ -48,5 +48,6 @@ public interface MerchantOrderInfoRepository extends Repository {
 	
 	List<MerchantOrderInfo> findQueryMerchant(
 			MerchantOrderInfo merchantOrderInfo);
+	int findQueryCount(MerchantOrderInfo merchantOrderInfo);
 	
 }
