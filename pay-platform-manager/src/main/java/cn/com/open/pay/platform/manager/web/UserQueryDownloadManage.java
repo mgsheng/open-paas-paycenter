@@ -84,9 +84,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 if(PS!=null&&!PS.equals("")){
 			 payStatus=Integer.parseInt(PS);
 		 }
-		 
-		 
-//		 int createDate=0;
 		 Integer dealDate = null;
 		 String dateDay=request.getParameter("dealDate"); //交易时间天数
 		 String startDate1 = null;
