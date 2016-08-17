@@ -114,6 +114,14 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoRepository.findQueryMerchant(merchantOrderInfo);
 		return merchantOrderInfoList;
 	}
+	
+	@Override
+	public List<MerchantOrderInfo> findDownloadMerchant(
+			MerchantOrderInfo merchantOrderInfo) {
+		List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoRepository.findDownloadMerchant(merchantOrderInfo);
+		return merchantOrderInfoList;
+	}
+	
 
 	@Override
 	public List<Map<String, Object>> getPayCount(String startTime,
