@@ -187,18 +187,12 @@
 		}
 		function downloadSubmit(){
 			
-		//	var action ="${pageContext.request.contextPath}/manage/skipPages1";
-
-		//	document.all.form.action = action;
-
-		//	document.all.form.submit();
+			var startDate = $("#_easyui_textbox_input8").val();
+			var endDate = $("#_easyui_textbox_input9").val();
 			
-			document.getElementById("ff").action="${pageContext.request.contextPath}/manage/downloadSubmit";
+			document.getElementById("ff").action="${pageContext.request.contextPath}/manage/downloadSubmit?startDate="+startDate+"&endDate="+endDate;
 		    document.getElementById("ff").submit();
-			
 		}
-		
-		
 		//页面加载  
 		$(document).ready(function(){  
 		            loadGrid();  

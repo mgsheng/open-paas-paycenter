@@ -202,6 +202,33 @@
         </if>
        limit #{startRow},#{pageSize} 
     </select>
+    <select id="findDownloadMerchant" resultMap="merchantOrderInfoMap" >
+        select * from  MERCHANT_ORDER_INFO where 1=1
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="payOrderId != null and payOrderId !=''" >
+           and PAY_ORDERID=#{payOrderId} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="payStatus != null and payStatus !=''" >
+           and PAY_STATUS=#{payStatus} 
+        </if>
+        <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+        </if>
+        <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+    </select>
     <select id="findQueryCount" resultType="int">
         select count(*) from  MERCHANT_ORDER_INFO where 1=1
         <if test="merchantOrderId != null and merchantOrderId !=''" >

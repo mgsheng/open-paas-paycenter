@@ -194,6 +194,129 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	     return "usercenter/merchantMessage";
 	 }	
 	 
+	 /**
+	  * 查询信息
+	  * @param request
+	  * @param response
+	  * @return
+	  */
+	 @RequestMapping("downloadSubmit")
+	 public String  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
+		
+		  
+		 log.info("-----------------------login start----------------");
+		 int channelId=0;
+		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
+		 String merchantOrderId=request.getParameter("merchantOrderId");//商户订单号
+		 String payOrderId=request.getParameter("payOrderId");//第三方订单号
+		 String CI=request.getParameter("channelId"); //支付方式
+		 if(CI!=null&&!CI.equals("")){
+			 channelId=Integer.parseInt(CI);
+		 }
+		 String appId=request.getParameter("appId");//业务类型  字段暂时不确定
+		 String source=request.getParameter("source"); //缴费来源 1、pc端2、移动端
+		 int paymentId=0;
+		 String pt=request.getParameter("paymentId"); //发卡行 字段暂时不确定
+		 if(pt!=null&&!pt.equals("")){
+			 paymentId=Integer.parseInt(pt);
+		 }
+		 String PS=request.getParameter("payStatus"); //交易状态
+		 int payStatus=0;
+		 if(PS!=null&&!PS.equals("")){
+			 payStatus=Integer.parseInt(PS);
+		 }
+		 String startDate=request.getParameter("startDate"); //交易时间开始时间
+		 String endDate=request.getParameter("endDate"); //交易时间结束时间
+		 String startDate1 = null;
+		 String endDate1 = null;
+		 if(!startDate.equals("")&&!endDate.equals("")){
+			 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+			 Date Date1=null;
+			 Date Date2=null;
+			try {
+				Date1 = format1.parse(startDate);
+				Date2 = format1.parse(endDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			format1 = new SimpleDateFormat("yyyy-MM-dd");
+			 startDate1 = format1.format(Date1)+" 00:00:00";
+			 endDate1 = format1.format(Date2)+" 23:59:59";
+			 
+		 }
+		
+		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
+		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
+		 merchantOrderInfo.setStartDate(startDate1);
+		 merchantOrderInfo.setEndDate(endDate1);
+		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
+		 merchantOrderInfo.setPayOrderId(payOrderId);   //第三方订单号
+		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
+		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
+		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+		 merchantOrderInfo.setAppId(appId);				//业务类型
+		 
+		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findDownloadMerchant(merchantOrderInfo);
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		 for(int i=0;i<merchantOrderInfoList.size();i++){
+			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
+			 Date createDate1 = merchantOrderInfo1.getCreateDate();
+			 merchantOrderInfo1.setFoundDate(df.format(createDate1));//交易时间
+			 Date dealDate1 = merchantOrderInfo1.getDealDate();
+			 if(dealDate1!=null){
+				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
+			 }
+			 Integer channeId = merchantOrderInfo1.getChannelId();
+			 if(channeId!=null){
+				 if(channeId==10001){
+					 merchantOrderInfo1.setChannelName("支付宝");
+				 }else if(channeId==10002){
+					 merchantOrderInfo1.setChannelName("微信");
+				 }else if(channeId==10004){
+					 merchantOrderInfo1.setChannelName("TCL-支付");
+				 }else if(channeId==10005){
+					 merchantOrderInfo1.setChannelName("支付宝");
+				 }else if(channeId==10006){
+					 merchantOrderInfo1.setChannelName("TCL-支付");
+				 }else if(channeId==10007){
+					 merchantOrderInfo1.setChannelName("易宝支付");
+				 }else if(channeId==10008){
+					 merchantOrderInfo1.setChannelName("易宝支付");
+				 }else{
+					 merchantOrderInfo1.setChannelName("待定");
+				 }
+			 }
+			 Integer pMid = merchantOrderInfo1.getPaymentId();
+			 String paymentName = payChange(pMid);
+			 merchantOrderInfo1.setPaymentName(paymentName);
+			 String appValue = merchantOrderInfo1.getAppId();
+			 String appName="";
+			 if(appValue!=null){
+				 if(appValue.equals("1")){
+					 appName = "OES学历";
+				 }else if(appValue.equals("10026")){
+					 appName = "mooc2u";
+				 }else{
+					 appName = "未定";
+				 }
+			 }
+			 merchantOrderInfo1.setAppId(appName);
+			 Integer status = merchantOrderInfo1.getPayStatus();
+			 if(status!=null){
+				 if(status==0){
+					 merchantOrderInfo1.setPayStatusName("处理中"); 
+				 }else if(status==1){
+					 merchantOrderInfo1.setPayStatusName("成功"); 
+				 }else if(status==2){
+					 merchantOrderInfo1.setPayStatusName("失败"); 
+				 }
+			 }
+		 }
+		 OrderDeriveExport.exportChuBei(response, merchantOrderInfoList);
+	     return "usercenter/merchantMessage";
+	 }	
+	 
 	 
 	 public String payChange(Integer pMid){
 		 String paymentName="";
@@ -237,8 +360,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  * @param response
 	  * @return
 	  */
-	 @RequestMapping("downloadSubmit")
-	 public String  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
+	 @RequestMapping("downloadSubmit1")
+	 public String  downloadSubmit1(HttpServletRequest request,HttpServletResponse response) {
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
 		 String merchantOrderId=request.getParameter("merchantOrderId");//商户订单号
