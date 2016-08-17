@@ -62,7 +62,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  */
 	 @RequestMapping("queryMerchant")
 	 public String  queryMerchant(HttpServletRequest request,HttpServletResponse response) {
-		 
 		
 		  //当前第几页
 		  String page=request.getParameter("page");
@@ -90,60 +89,36 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 if(pt!=null&&!pt.equals("")){
 			 paymentId=Integer.parseInt(pt);
 		 }
-		 
 		 String PS=request.getParameter("payStatus"); //交易状态
 		 int payStatus=0;
 		 if(PS!=null&&!PS.equals("")){
 			 payStatus=Integer.parseInt(PS);
 		 }
-		 Integer createDate = null;
-		 String dateDay=request.getParameter("createDate"); //交易时间天数
+		 String startDate=request.getParameter("startDate"); //交易时间开始时间
+		 String endDate=request.getParameter("endDate"); //交易时间结束时间
 		 String startDate1 = null;
-		 String endDate1 =null;
-		 if(dateDay!=null&&!dateDay.equals("undefined")){
-			 createDate=Integer.parseInt(dateDay);	 
-			 if(dateDay!=null&&createDate<0){
-				 String startDate=request.getParameter("startDate"); //交易时间开始时间
-				 String endDate=request.getParameter("endDate"); //交易时间结束时间
-				 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-				 Date Date1 = null;
-				 Date Date2 = null;
-				try {
-					Date1 = format1.parse(startDate);
-					Date2 = format1.parse(endDate);
-				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				 format1 = new SimpleDateFormat("yyyy-MM-dd");
-				 startDate1 = format1.format(Date1)+" 00:00:00";
-				 endDate1 = format1.format(Date2)+" 23:59:59";
-			 }else{
-	//			 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-				 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-				 if(createDate==0){
-					    String date = df.format(new Date());
-						startDate1 = date+" 00:00:00";
-						endDate1 = date+" 23:59:59";
-				 }else if(createDate>0){
-					 endDate1 = df.format(new Date());
-					 Date dat = null;
-					 Calendar cd = Calendar.getInstance();
-					 cd.add(Calendar.DATE, (createDate > 0) ? -createDate : createDate);
-					 dat = cd.getTime();
-					 startDate1 = df.format(dat);
-					 startDate1 = startDate1+" 00:00:00";
-					 endDate1 = endDate1+" 23:59:59";
-				 } 
-			 }
+		 String endDate1 = null;
+		 if(!startDate.equals("")&&!endDate.equals("")){
+			 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+			 Date Date1=null;
+			 Date Date2=null;
+			try {
+				Date1 = format1.parse(startDate);
+				Date2 = format1.parse(endDate);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			format1 = new SimpleDateFormat("yyyy-MM-dd");
+			 startDate1 = format1.format(Date1)+" 00:00:00";
+			 endDate1 = format1.format(Date2)+" 23:59:59";
+			 
 		 }
-		 System.out.println(startDate1+"**************************"+endDate1);
+		
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
-		 
 		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
 		 merchantOrderInfo.setStartDate(startDate1);
 		 merchantOrderInfo.setEndDate(endDate1);
-		 
 		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
 		 merchantOrderInfo.setPayOrderId(payOrderId);   //第三方订单号
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
@@ -151,7 +126,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
 		 merchantOrderInfo.setAppId(appId);				//业务类型
 		 merchantOrderInfo.setPageSize(pageSize); //结束条数
-//		 merchantOrderInfo.setStartRow(startRow); //开始条数
 		 merchantOrderInfo.setStartRow(startRow); //开始条数
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
@@ -161,12 +135,10 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
 			 merchantOrderInfo1.setFoundDate(df.format(createDate1));//交易时间
-			 
 			 Date dealDate1 = merchantOrderInfo1.getDealDate();
 			 if(dealDate1!=null){
 				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
 			 }
-			 
 			 Integer channeId = merchantOrderInfo1.getChannelId();
 			 if(channeId!=null){
 				 if(channeId==10001){

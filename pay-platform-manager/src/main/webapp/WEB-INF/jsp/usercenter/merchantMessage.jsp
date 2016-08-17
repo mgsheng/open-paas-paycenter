@@ -11,7 +11,7 @@
 <body>
 	<div class="top" style="width: 100%;height: 300px">
 	<div style="margin:20px 0;"></div>
-	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:1000px;padding:30px 60px;">
+	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:1000px;padding:20px 60px;">
 		<form id="ff" method="post">
 		<table>
 		<tr>
@@ -89,19 +89,20 @@
 			</td>
 			
 		</tr>
+		
 		<tr>
-			<td style="text-align: right;">交易时间：</td>
-			<td style="text-align: center;">
-				<!--  --><label><input type="radio" name="dealDate" checked="checked" value="-2"  />全部</label>
-				<label><input name="dealDate" type="radio" value="0" />今天</label>
-				<label><input name="dealDate" type="radio" value="1" />昨天</label>
-				<label><input name="dealDate" type="radio" value="7" />7天</label>
-				<label><input name="dealDate" type="radio" value="30" />30天</label>
-				<label><input name="dealDate" type="radio" value="-1" />自定义</label>
+			<td style="text-align: right;">下单时间：</td>
+			<td>
+				<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('today')">今天</a>
+				<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('both')">2天</a>
+				<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('seven')">7天</a>
+				<a href="#" class="easyui-linkbutton" data-options="plain:true" onclick="getDayType('thirty')">30天</a>
 			</td>
-				<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">—到—</td>
-				<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'"></td>
+			
+			<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">—到—</td>
+			<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'"></td>
 		</tr>
+		
 		</table>
 		</form>
 		<div style="text-align:center;padding:5px 0">
@@ -117,10 +118,11 @@
 			data-options="singleSelect:true,method:'get'">
 		<thead>
 			<tr>
-				<th data-options="field:'foundDate',width:150">下单时间</th>
-				<th data-options="field:'businessDate',width:150">交易时间</th>
+				<th data-options="field:'id',width:180">订单号</th>
 				<th data-options="field:'merchantOrderId',width:150">商户订单号</th>
 				<th data-options="field:'payOrderId',width:150">第三方订单号</th>
+				<th data-options="field:'foundDate',width:150">下单时间</th>
+				<th data-options="field:'businessDate',width:150">交易时间</th>
 				<th data-options="field:'channelName',width:80">支付方式</th>
 				<th data-options="field:'appId',width:60,align:'center'">业务类型</th>
 				<th data-options="field:'paymentName',width:80">发卡行</th>
@@ -150,15 +152,15 @@
 			var paymentId = $("input[name='paymentId']").val();//发卡行
 			var source = $("input[name='source']").val();//缴费来源
 			var payStatus = $("input[name='payStatus']").val();//缴费状态
-			var dealDate = $("input[name='dealDate']").val();//交易时间
-			var startDate = $("input[name='startDate']").val();//开始时间
-			var endDate = $("input[name='endDate']").val();//结束时间
+			var createDate =$("input[name='createDate']:checked").val(); 
+			var startDate = $("#_easyui_textbox_input8").val();
+			var endDate = $("#_easyui_textbox_input9").val();
 			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&dealDate="+dealDate+"&startDate="+startDate+"&endDate="+endDate,  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
 		        //pagination: true,显示分页工具栏
 		        
 		     
@@ -171,21 +173,13 @@
 		        beforePageText: '第',//页数文本框前显示的汉字 
 		        afterPageText: '页    共 {pages} 页', 
 		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        /*onBeforeRefresh:function(){
+		        onBeforeRefresh:function(){
 		            $(this).pagination('loading');
 		            alert('before refresh');
 		            $(this).pagination('loaded');
-		        }*/ 
+		        } 
 		    }); 
-//			$.ajax({
-//		       	url:"${pageContext.request.contextPath}/manage/queryMerchant",
-//		       	data:$('#ff').serialize(),
-//		       	type:'post',
-//		       	success: function(data) {
-		       	 
-//		       	}
-//		    });
-			$('#ff').form('submit');
+
 			
 		}
 		function clearForm(){
@@ -211,7 +205,51 @@
 		});  
 		  
 		
-		  
-		
+		function getDayType(date) {
+			var input6=getnowtime();
+			if(date=="thirty"){
+			//判断点击三十天
+			timeType="1";
+			var d=new Date();
+		    var n=new Date(d.getTime()-86400000*30);
+		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+			}else if(date=="seven"){
+			//判断点击七天
+			timeType="2";
+			var d=new Date();
+		    var n=new Date(d.getTime()-86400000*7);
+		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+			}else if(date=="both"){
+			//判断点击二天
+			timeType="3";
+			var d=new Date();
+		    var n=new Date(d.getTime()-86400000*2);
+		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+			}else{
+			//判断点击一天
+			timeType="3";
+			var d=new Date();
+		    var n=new Date(d.getTime()-86400000*0);
+		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+			}
+			
+			$("#_easyui_textbox_input8").val(input5);
+			$("#_easyui_textbox_input9").val(input6);
+			}
+		function getnowtime() {
+            var nowtime = new Date();
+            var year = nowtime.getFullYear();
+            var month = padleft0(nowtime.getMonth() + 1);
+            var day = padleft0(nowtime.getDate());
+            var hour = padleft0(nowtime.getHours());
+            var minute = padleft0(nowtime.getMinutes());
+            var second = padleft0(nowtime.getSeconds());
+            var millisecond = nowtime.getMilliseconds(); millisecond = millisecond.toString().length == 1 ? "00" + millisecond : millisecond.toString().length == 2 ? "0" + millisecond : millisecond;
+            return month + "/" + day + "/"+ year;
+        }
+        //补齐两位数
+        function padleft0(obj) {
+            return obj.toString().replace(/^[0-9]{1}$/, "0" + obj);
+        }
 	</script>
 </html>
