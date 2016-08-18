@@ -114,7 +114,7 @@
 	
 	</div>
 	  <div class="botton" style="width: 100%;height: 300px">
-		<table  id="dg"  class="easyui-datagrid" title="查询结果"   style="width:1000px;height:400px"
+		<table  id="dg"  class="easyui-datagrid" title="查询结果"   style="width:1000px"
 			data-options="singleSelect:true,method:'get'">
 		<thead>
 			<tr>
