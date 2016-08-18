@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Basic DataGrid - jQuery EasyUI Demo</title>
+<title>经营分析</title>
 <link rel="stylesheet" type="text/css"
 	href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css"

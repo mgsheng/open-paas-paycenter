@@ -3,7 +3,6 @@ package cn.com.open.pay.platform.manager.web;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,21 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.smthjava.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
-import cn.com.open.pay.platform.manager.stats.model.UserStatistics;
-import cn.com.open.pay.platform.manager.stats.model.UserStatisticsParams;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.DateTools;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
-
-import org.apache.commons.lang.StringUtils;
 
 
 
@@ -186,7 +179,6 @@ public class UserDataStatsController extends BaseControllerUtil {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
-						
 					}
 				payChargeMap.put("data",payChargeTotal);
 				payChargeListMap.add(payChargeMap);
@@ -218,9 +210,9 @@ public class UserDataStatsController extends BaseControllerUtil {
 			}
 			map.put("totalPayAmount",totalPayAmount);
 			map.put("totalPayCount",totalPayCount);
-			map.put("totalUserCount",totalUserCount );
+			map.put("totalUserCount",totalUserCount);
 			map.put("totalPayCharge",totalPayCharge);
-			
-			JsonUtil.writeJson(response,JsonUtil.getContentData(map));
+			WebUtils.writeSuccessJson(response, map);
+			//JsonUtil.writeJson(response,JsonUtil.getContentData(map));
 		}
 }
