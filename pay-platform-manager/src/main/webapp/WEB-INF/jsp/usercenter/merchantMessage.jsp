@@ -17,7 +17,7 @@
 		<tr>
 			<td style="text-align: right;">商户订单号：</td>
 			<td>
-				<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:100%;height:32px">
+				<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:100%">
 			</td>
 			<td style="text-align: right;">交易状态：</td>
 			<td>
@@ -32,7 +32,7 @@
 		
 		<tr>
 			<td style="text-align: right;">第三方订单号：</td>
-			<td><input id="payOrderId" name="payOrderId" class="easyui-textbox" style="width:100%;height:32px"></td>
+			<td><input id="payOrderId" name="payOrderId" class="easyui-textbox" style="width:100%"></td>
 			<td style="text-align: right;">支付方式：</td>
 			<td>
 				<select class="easyui-combobox" id="channelId" name="channelId" style="width:100%">
