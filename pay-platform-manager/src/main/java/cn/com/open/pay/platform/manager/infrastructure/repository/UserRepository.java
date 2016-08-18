@@ -15,7 +15,7 @@ public interface UserRepository extends Repository {
 	List<User> findByEmail(String email);
 
 	List<User> findByPhone(String phone);
-	
+	 void updateUser(User user);
 	List<User> findByCardNo(String cardNo);
 	HashMap<String, Object> getPayCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
 	HashMap<String, Object> getPayAmount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);

@@ -23,5 +23,6 @@ public interface UserService {
 	List<User>findByWeek(String startTime,String endTime);
 	List<User>findByYear(String startTime,String endTime);
 	HashMap<String, Object> getTotalAmountByTime(String startTime, String endTime,String appId,String paymentId,String channelId);
+	Boolean updateUser(User user);
 	
 }

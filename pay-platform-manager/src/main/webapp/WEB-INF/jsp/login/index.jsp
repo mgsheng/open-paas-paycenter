@@ -68,12 +68,13 @@
                 msgShow('系统提示', '两次密码不一至！请重新输入', 'warning');
                 return false;
             }
-
-            $.post('/ajax/editpassword.ashx?newpass=' + $newpass.val(), function(msg) {
-                msgShow('系统提示', '恭喜，密码修改成功！<br>您的新密码为：' + msg, 'info');
+            var userName="${userName}";
+            $.post('${pageContext.request.contextPath}//user/updatePassword?newpass=' + $newpass.val()+'&userName='+userName, function(msg) {
+                msgShow('系统提示', '恭喜，密码修改成功！', 'info');
                 $newpass.val('');
                 $rePass.val('');
                 close();
+                $('#w').window('close');
             });
             
         }
@@ -96,7 +97,7 @@
                 $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
 
                     if (r) {
-                        location.href = '/ajax/loginout.ashx';
+                        location.href = '${pageContext.request.contextPath}/index.jsp';
                     }
                 });
             });
@@ -121,7 +122,8 @@
         background: url(images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
         line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
 		<span style="float:right; padding-right:20px;padding-top: 20px;"class="head">
-		           欢迎 管理员 <a href="#" id="editpass">修改密码</a> 
+		
+		           欢迎您 ${realName} <a href="#" id="editpass">修改密码</a> 
 			<a href="#" id="loginOut">安全退出</a>
 		</span> 
 		<span style="padding-left:10px; font-size: 16px;  ">

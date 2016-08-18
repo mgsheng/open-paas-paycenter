@@ -1,17 +1,16 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
@@ -60,15 +59,37 @@ public class UserLoginController extends BaseControllerUtil {
 	     map.put("errorCode",errorCode);
 		 WebUtils.writeJsonToMap(response, map);
 	 }
-	 /**
-	     * 登录跳转页面
-	     * @param request
-	     * @param model
-	     * @param bool
-	     * @return
-	     */
+	  /**
+	   * 登录跳转
+	   * @param request
+	   * @param response
+	   * @param model
+	   * @return
+	   */
 	    @RequestMapping(value = "login")
-		public String login(HttpServletRequest request,HttpServletResponse response) {
+		public String login(HttpServletRequest request,HttpServletResponse response,Model model) {
+	    	   String username = request.getParameter("userName");
+				User user=null;
+				 user=userService.findByUsername(username);
+	    	model.addAttribute("userName",username);
+	    	model.addAttribute("realName",user.getRealName());
 	    	return "login/index";
 	    }
+	    /**
+	     * 修改密码
+	     * @param request
+	     * @param response
+	     */
+	    @RequestMapping(value = "updatePassword")
+		public void updatePassword(HttpServletRequest request,HttpServletResponse response) {
+	    	String password=request.getParameter("newpass");
+	        String username = request.getParameter("userName");
+					User user=null;
+					user=userService.findByUsername(username);
+					//刷新盐值，重新加密
+		    		user.buildPasswordSalt();
+		    		user.setPlanPassword(password);
+		    		user.setUpdatePwdTime(new Date());
+		    		userService.updateUser(user);
+	     }
 }

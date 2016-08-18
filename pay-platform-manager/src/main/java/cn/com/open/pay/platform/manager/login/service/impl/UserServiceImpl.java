@@ -73,7 +73,15 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-  
+	@Override
+	public Boolean updateUser(User user) {
+		try{
+			userRepository.updateUser(user);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
 
   
 }

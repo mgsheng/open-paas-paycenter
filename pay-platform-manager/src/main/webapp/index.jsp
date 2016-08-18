@@ -34,7 +34,7 @@
             </li>
             
             <li class="placeHolder login_btn">
-                <input id="login_button" name="login_button" value="登 录" onclick="btnSubmit()" style="text-align: center;"  >
+                <input id="login_button" name="login_button"  type="button"value="登 录" onclick="btnSubmit()" style="text-align: center;"  >
             </li>
             
 
@@ -80,7 +80,7 @@
 					{username:username,password:password},
 	   				function(data){
 	   					if(data.flag){
-	   						window.location.href="${pageContext.request.contextPath}/user/login";
+	   						window.location.href="${pageContext.request.contextPath}/user/login?userName="+username;
 	   						// location.href="${pageContext.request.contextPath}/login/index.jsp"
 	   					}
 	   					else{
