@@ -149,7 +149,7 @@ public class OrderDeriveExport {
 			ServletOutputStream out = response.getOutputStream();
 			wb.write(out);                                                      
 			out.close();
-			JOptionPane.showMessageDialog(null, "导出成功!");
+//			JOptionPane.showMessageDialog(null, "导出成功!");
 		} catch (FileNotFoundException e) {
 			JOptionPane.showMessageDialog(null, "导出失败!");
 			e.printStackTrace();
