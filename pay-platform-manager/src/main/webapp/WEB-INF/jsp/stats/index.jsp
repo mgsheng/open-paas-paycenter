@@ -161,14 +161,16 @@ table {
 	timeType="1";
 	var d=new Date();
     var n=new Date(d.getTime()-86400000*30);
-    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 	}else{
 	//判断点击七天
 	timeType="2";
 	var d=new Date();
     var n=new Date(d.getTime()-86400000*7);
-    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 	}
+	startTime=input5;
+	endTime=input6;
 	$("#_easyui_textbox_input5").val(input5);
 	$("#_easyui_textbox_input6").val(input6);
 	}
@@ -181,7 +183,7 @@ table {
             var minute = padleft0(nowtime.getMinutes());
             var second = padleft0(nowtime.getSeconds());
             var millisecond = nowtime.getMilliseconds(); millisecond = millisecond.toString().length == 1 ? "00" + millisecond : millisecond.toString().length == 2 ? "0" + millisecond : millisecond;
-            return month + "/" + day + "/"+ year;
+            return year+"-"+month + "-" + day;
         }
         //补齐两位数
         function padleft0(obj) {
