@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
 	<div class="top" style="width: 100%;height: 300px">
@@ -108,7 +110,7 @@
 		<div style="text-align:center;padding:5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">提交</a>
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="downloadSubmit()" style="width:80px">下载</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="downloadSubmit()" style="width:80px">下载</a>
 		</div>
 	</div>
 	
@@ -205,25 +207,25 @@
 			timeType="1";
 			var d=new Date();
 		    var n=new Date(d.getTime()-86400000*30);
-		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 			}else if(date=="seven"){
 			//判断点击七天
 			timeType="2";
 			var d=new Date();
 		    var n=new Date(d.getTime()-86400000*7);
-		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 			}else if(date=="both"){
 			//判断点击二天
 			timeType="3";
 			var d=new Date();
 		    var n=new Date(d.getTime()-86400000*2);
-		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 			}else{
 			//判断点击一天
 			timeType="3";
 			var d=new Date();
 		    var n=new Date(d.getTime()-86400000*0);
-		    var input5=padleft0(n.getMonth()+1)+"/"+padleft0(n.getDate())+"/"+n.getFullYear();
+		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 			}
 			
 			$("#_easyui_textbox_input8").val(input5);
@@ -238,7 +240,7 @@
             var minute = padleft0(nowtime.getMinutes());
             var second = padleft0(nowtime.getSeconds());
             var millisecond = nowtime.getMilliseconds(); millisecond = millisecond.toString().length == 1 ? "00" + millisecond : millisecond.toString().length == 2 ? "0" + millisecond : millisecond;
-            return month + "/" + day + "/"+ year;
+            return year+"-"+month + "-" + day;
         }
         //补齐两位数
         function padleft0(obj) {

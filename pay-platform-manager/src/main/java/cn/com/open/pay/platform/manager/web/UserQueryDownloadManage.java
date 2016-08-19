@@ -99,20 +99,21 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 String startDate1 = null;
 		 String endDate1 = null;
 		 if(!startDate.equals("")&&!endDate.equals("")){
-			 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-			 Date Date1=null;
-			 Date Date2=null;
-			try {
-				Date1 = format1.parse(startDate);
-				Date2 = format1.parse(endDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			format1 = new SimpleDateFormat("yyyy-MM-dd");
-			 startDate1 = format1.format(Date1)+" 00:00:00";
-			 endDate1 = format1.format(Date2)+" 23:59:59";
-			 
+//			 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
+//			 Date Date1=null;
+//			 Date Date2=null;
+//			try {
+//				Date1 = format1.parse(startDate);
+//				Date2 = format1.parse(endDate);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			format1 = new SimpleDateFormat("yyyy-MM-dd");
+//			 startDate1 = format1.format(Date1)+" 00:00:00";
+//			 endDate1 = format1.format(Date2)+" 23:59:59";
+			 startDate1 = startDate+" 00:00:00";
+			 endDate1 = endDate+" 23:59:59";
 		 }
 		
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
