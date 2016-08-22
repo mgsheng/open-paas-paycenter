@@ -13,15 +13,19 @@
 <body>
 	<div class="top" style="width: 100%;height: 300px">
 	<div style="margin:20px 0;"></div>
-	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:1000px;padding:20px 60px;">
+	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:1200px;padding:20px 30px;">
 		<form id="ff" method="post">
-		<table>
+		<table >
 		<tr>
+			<td style="text-align: right;">订单号：</td>
+			<td>
+				<input class="easyui-textbox" name="orderId" id="orderId" style="width:100%">
+			</td>
 			<td style="text-align: right;">商户订单号：</td>
 			<td>
 				<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:100%">
 			</td>
-			<td style="text-align: right;">交易状态：</td>
+			<td style="text-align: right;width: 120px">交易状态：</td>
 			<td>
 				<select class="easyui-combobox" name="payStatus" style="width:100%">
 					<option value="">全部</option>
@@ -47,8 +51,6 @@
 					<option value="10004">TCL汇银通</option>
 				</select>
 			</td>
-		</tr>
-		<tr>
 			<td style="text-align: right;">业务类型：</td>
 			<td>
 				<select class="easyui-combobox" name="appId" style="width:100%">
@@ -57,6 +59,8 @@
 						<option value="10026" >mooc2u</option>
 				</select>
 			</td>
+		</tr>
+		<tr>
 			<td style="text-align: right;">发卡行：</td>
 			<!-- <td><input id="openingBank" name="openingBank" class="easyui-textbox" style="width:100%;height:32px"></td> -->
 			<td>
@@ -79,8 +83,6 @@
 				</select>
 			
 			</td>
-		</tr>
-		<tr>
 			<td style="text-align: right;">缴费来源：</td>
 			<td>
 				<select class="easyui-combobox" name="source" style="width:100%">
@@ -89,7 +91,6 @@
 					<option value="2">移动端</option>
 				</select>
 			</td>
-			
 		</tr>
 		
 		<tr>
@@ -116,7 +117,7 @@
 	
 	</div>
 	  <div class="botton" style="width: 100%;height: 300px">
-		<table  id="dg"  class="easyui-datagrid" title="查询结果"   style="width:1000px"
+		<table  id="dg"  class="easyui-datagrid" title="查询结果"    style="width:100%;max-width:1200px;padding:20px 30px;"
 			data-options="singleSelect:true,method:'get'">
 		<thead>
 			<tr>
@@ -147,6 +148,7 @@
 
 
 		function submitForm(){
+			var orderId = $("input[name='orderId']").val();//商户订单号
 			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号
 			var payOrderId = $("input[name='payOrderId']").val();//第三方订单号
 			var channelId = $("input[name='channelId']").val();//支付方式
@@ -155,14 +157,14 @@
 			var source = $("input[name='source']").val();//缴费来源
 			var payStatus = $("input[name='payStatus']").val();//缴费状态
 			var createDate =$("input[name='createDate']:checked").val(); 
-			var startDate = $("#_easyui_textbox_input8").val();
-			var endDate = $("#_easyui_textbox_input9").val();
+			var startDate = $("#_easyui_textbox_input9").val();
+			var endDate = $("#_easyui_textbox_input10").val();
 			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant?merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
 		        //pagination: true,显示分页工具栏
 		        
 		     
@@ -188,14 +190,16 @@
 		}
 		function downloadSubmit(){
 			
-			var startDate = $("#_easyui_textbox_input8").val();
-			var endDate = $("#_easyui_textbox_input9").val();
+			var startDate = $("#_easyui_textbox_input9").val();
+			var endDate = $("#_easyui_textbox_input10").val();
 			
 			document.getElementById("ff").action="${pageContext.request.contextPath}/manage/downloadSubmit?startDate="+startDate+"&endDate="+endDate;
 		    document.getElementById("ff").submit();
 		}
 		//页面加载  
-		$(document).ready(function(){  
+		$(document).ready(function(){ 
+					var hy="seven";
+					getDayType(hy);
 		            loadGrid();  
 		});  
 		  
@@ -228,8 +232,8 @@
 		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 			}
 			
-			$("#_easyui_textbox_input8").val(input5);
-			$("#_easyui_textbox_input9").val(input6);
+			$("#_easyui_textbox_input9").val(input5);
+			$("#_easyui_textbox_input10").val(input6);
 			}
 		function getnowtime() {
             var nowtime = new Date();
