@@ -150,7 +150,7 @@
 		style="background: #eee; overflow-y:hidden">
 		<div id="tabs" class="easyui-tabs" fit="true" border="false">
 			<div title="首页" style="padding:20px;overflow:hidden; color:red; ">
-				 <img src="${pageContext.request.contextPath}/images/welcome1.png" style="display: block;width: 80%;margin:20px auto;">
+				 <img src="${pageContext.request.contextPath}/images/welcome_1.png" style="display: block;width: 40%;margin:20px auto;">
 			</div>
 		</div>
 	</div>
