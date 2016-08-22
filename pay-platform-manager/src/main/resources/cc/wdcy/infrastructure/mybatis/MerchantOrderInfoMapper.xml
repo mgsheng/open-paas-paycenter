@@ -176,6 +176,9 @@
 	
 	<select id="findQueryMerchant" resultMap="merchantOrderInfoMap" >
         select * from  MERCHANT_ORDER_INFO where 1=1
+        <if test="id != null and id !=''" >
+           and ID=#{id} 
+        </if>
         <if test="merchantOrderId != null and merchantOrderId !=''" >
            and MERCHANT_ORDERID=#{merchantOrderId} 
         </if>
@@ -204,6 +207,9 @@
     </select>
     <select id="findDownloadMerchant" resultMap="merchantOrderInfoMap" >
         select * from  MERCHANT_ORDER_INFO where 1=1
+        <if test="id != null and id !=''" >
+           and ID=#{id} 
+        </if>
         <if test="merchantOrderId != null and merchantOrderId !=''" >
            and MERCHANT_ORDERID=#{merchantOrderId} 
         </if>
