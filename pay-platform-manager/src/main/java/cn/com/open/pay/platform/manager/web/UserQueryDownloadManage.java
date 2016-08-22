@@ -76,6 +76,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 log.info("-----------------------login start----------------");
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
+		 String orderId=request.getParameter("orderId");//订单号
 		 String merchantOrderId=request.getParameter("merchantOrderId");//商户订单号
 		 String payOrderId=request.getParameter("payOrderId");//第三方订单号
 		 String CI=request.getParameter("channelId"); //支付方式
@@ -121,6 +122,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setStartDate(startDate1);
 		 merchantOrderInfo.setEndDate(endDate1);
 		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
+		 merchantOrderInfo.setId(orderId);//订单号
 		 merchantOrderInfo.setPayOrderId(payOrderId);   //第三方订单号
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
@@ -205,9 +207,20 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	 public String  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
 		
 		  
+		//当前第几页
+		  String page=request.getParameter("page");
+		  //每页显示的记录数
+		  String rows=request.getParameter("rows"); 
+		  //当前页  
+		        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+		        //每页显示条数  
+		        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+		        //每页的开始记录  第一页为1  第二页为number +1   
+		        int startRow = (currentPage-1)*pageSize;
 		 log.info("-----------------------login start----------------");
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
+		 String orderId=request.getParameter("orderId");//订单号
 		 String merchantOrderId=request.getParameter("merchantOrderId");//商户订单号
 		 String payOrderId=request.getParameter("payOrderId");//第三方订单号
 		 String CI=request.getParameter("channelId"); //支付方式
@@ -231,20 +244,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 String startDate1 = null;
 		 String endDate1 = null;
 		 if(!startDate.equals("")&&!endDate.equals("")){
-			 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-			 Date Date1=null;
-			 Date Date2=null;
-			try {
-				Date1 = format1.parse(startDate);
-				Date2 = format1.parse(endDate);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			format1 = new SimpleDateFormat("yyyy-MM-dd");
-			 startDate1 = format1.format(Date1)+" 00:00:00";
-			 endDate1 = format1.format(Date2)+" 23:59:59";
-			 
+			 startDate1 = startDate+" 00:00:00";
+			 endDate1 = endDate+" 23:59:59";
 		 }
 		
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
@@ -252,6 +253,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setStartDate(startDate1);
 		 merchantOrderInfo.setEndDate(endDate1);
 		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
+		 merchantOrderInfo.setId(orderId);//订单号
 		 merchantOrderInfo.setPayOrderId(payOrderId);   //第三方订单号
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
