@@ -461,6 +461,7 @@ pay-platform-manager/src/main/webapp/images/ShowCustomPropertiesPage.png -text
 pay-platform-manager/src/main/webapp/images/TableDrawTable.png -text
 pay-platform-manager/src/main/webapp/images/blocks.gif -text
 pay-platform-manager/src/main/webapp/images/directory.png -text
+pay-platform-manager/src/main/webapp/images/index_bg.jpg -text
 pay-platform-manager/src/main/webapp/images/layout-browser-hd-bg.gif -text
 pay-platform-manager/src/main/webapp/images/login_bg.png -text
 pay-platform-manager/src/main/webapp/images/login_bg1.png -text
@@ -475,6 +476,7 @@ pay-platform-manager/src/main/webapp/images/tools-sprites-trans.gif -text
 pay-platform-manager/src/main/webapp/images/userIcon.png -text
 pay-platform-manager/src/main/webapp/images/welcome.png -text
 pay-platform-manager/src/main/webapp/images/welcome1.png -text
+pay-platform-manager/src/main/webapp/images/welcome_1.png -text
 pay-platform-manager/src/main/webapp/index.jsp -text
 pay-platform-manager/src/main/webapp/js/easyloader.js -text
 pay-platform-manager/src/main/webapp/js/highcharts/adapters/mootools-adapter.js -text
