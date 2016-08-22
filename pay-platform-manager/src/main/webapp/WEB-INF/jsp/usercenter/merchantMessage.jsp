@@ -11,7 +11,7 @@
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
-	<div class="top" style="width: 100%;height: 300px">
+	<div class="top" style="width: 100%;height: 240px">
 	<div style="margin:20px 0;"></div>
 	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:1200px;padding:20px 30px;">
 		<form id="ff" method="post">
