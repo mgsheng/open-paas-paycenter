@@ -11,9 +11,9 @@
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
-	<div class="top" style="width: 100%;height: 240px">
+	<div class="top" style="width: 100%">
 	<div style="margin:20px 0;"></div>
-	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:1200px;padding:20px 30px;">
+	<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 30px;">
 		<form id="ff" method="post">
 		<table >
 		<tr>
@@ -27,7 +27,7 @@
 			</td>
 			<td style="text-align: right;width: 120px">交易状态：</td>
 			<td>
-				<select class="easyui-combobox" name="payStatus" style="width:100%">
+				<select class="easyui-combobox" data-options="editable:false"  name="payStatus" style="width:100%">
 					<option value="">全部</option>
 					<option value="0">处理中</option>
 					<option value="1">成功</option>
@@ -41,7 +41,7 @@
 			<td><input id="payOrderId" name="payOrderId" class="easyui-textbox" style="width:100%"></td>
 			<td style="text-align: right;">支付方式：</td>
 			<td>
-				<select class="easyui-combobox" id="channelId" name="channelId" style="width:100%">
+				<select class="easyui-combobox" data-options="editable:false" id="channelId" name="channelId" style="width:100%">
 					<option value="">全部</option>
 					<option value="10001">支付宝</option>
 					<option value="10002">微信</option>
@@ -54,7 +54,7 @@
 			<td style="text-align: right;">业务类型：</td>
 			<td>
 				<select class="easyui-combobox" name="appId" style="width:100%">
-						<option value="" selected="selected">全部</option>
+						<option value="" data-options="editable:false" selected="selected">全部</option>
 						<option value="1">OES学历</option>
 						<option value="10026" >mooc2u</option>
 				</select>
@@ -64,7 +64,7 @@
 			<td style="text-align: right;">发卡行：</td>
 			<!-- <td><input id="openingBank" name="openingBank" class="easyui-textbox" style="width:100%;height:32px"></td> -->
 			<td>
-				<select class="easyui-combobox" name="paymentId" style="width:100%">
+				<select class="easyui-combobox" data-options="editable:false" name="paymentId" style="width:100%">
 					<option value="" selected="selected">全部</option>
 						<option value="10012">支付宝-即时到账</option>
 						<option value="10013">微信-扫码支付</option>
@@ -85,7 +85,7 @@
 			</td>
 			<td style="text-align: right;">缴费来源：</td>
 			<td>
-				<select class="easyui-combobox" name="source" style="width:100%">
+				<select class="easyui-combobox" data-options="editable:false" name="source" style="width:100%">
 					<option value="">全部</option>
 					<option value="1">pc端</option>
 					<option value="2">移动端</option>
@@ -102,22 +102,23 @@
 				<a href="#" class="easyui-linkbutton" data-options="plain:true" onclick="getDayType('thirty')">30天</a>
 			</td>
 			
-			<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'">—到—</td>
-			<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'"></td>
+			<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">—到—</td>
+			<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false"></td>
+			<td style="text-align: right;"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">提交</a></td>
+			<td>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="downloadSubmit()" style="width:80px">下载</a>
+			</td>
 		</tr>
 		
 		</table>
 		</form>
-		<div style="text-align:center;padding:5px 0">
-			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">提交</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="downloadSubmit()" style="width:80px">下载</a>
-		</div>
+		
 	</div>
 	
 	</div>
 	  <div class="botton" style="width: 100%;height: 300px">
-		<table  id="dg"  class="easyui-datagrid" title="查询结果"    style="width:100%;max-width:1200px;padding:20px 30px;"
+		<table  id="dg"  class="easyui-datagrid" title="查询结果"    style="width:100%;max-width:100%;padding:20px 30px;"
 			data-options="singleSelect:true,method:'get'">
 		<thead>
 			<tr>
@@ -159,7 +160,10 @@
 			var createDate =$("input[name='createDate']:checked").val(); 
 			var startDate = $("#_easyui_textbox_input9").val();
 			var endDate = $("#_easyui_textbox_input10").val();
-			
+			if(startDate>endDate){
+				alert("开始时间大于结束时间！");
+				return;
+			}
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
