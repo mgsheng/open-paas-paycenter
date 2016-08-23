@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JOptionPane;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -194,6 +195,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 jsonObjArr.put("rows", jsonArr);
 		 System.out.println(jsonArr);
 	     WebUtils.writeJson(response,jsonObjArr);
+	     if(merchantOrderInfoList.size()==0){
+	    	 JOptionPane.showMessageDialog(null, "没有查到相应的数据!");
+	     }
 	     return "usercenter/merchantMessage";
 	 }	
 	 
