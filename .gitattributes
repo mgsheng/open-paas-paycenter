@@ -582,11 +582,11 @@ pay-service-message/src/main/resources/emailtemplate/resetpassword.html -text
 pay-service-message/src/main/resources/log4j.properties -text
 pay-service-message/src/main/resources/logging.properties -text
 pay-service-message/src/main/resources/mybatis.xml -text
+pay-service-message/src/main/resources/pay-service-message.properties -text
 pay-service-message/src/main/resources/spring/appCtx-disconf.xml -text
 pay-service-message/src/main/resources/spring/context.xml -text
 pay-service-message/src/main/resources/spring/job.xml -text
 pay-service-message/src/main/resources/spring/transaction.xml -text
-pay-service-message/src/main/resources/user-platform-manager.properties -text
 pay-service-message/src/main/webapp/META-INF/MANIFEST.MF -text
 pay-service-message/src/main/webapp/WEB-INF/decorators.xml -text
 pay-service-message/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text

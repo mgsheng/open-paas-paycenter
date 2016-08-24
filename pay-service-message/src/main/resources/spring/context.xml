@@ -21,7 +21,7 @@
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>classpath:user-platform-manager.properties</value>
+                <value>classpath:pay-service-message.properties</value>
             </list>
         </property>
     </bean>

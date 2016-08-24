@@ -4,7 +4,7 @@
   <distributable/>
   <context-param>
     <param-name>webAppRootKey</param-name>
-    <param-value>user-platform-manager</param-value>
+    <param-value>pay-service-message</param-value>
   </context-param>
   <filter>
     <filter-name>encodingFilter</filter-name>
