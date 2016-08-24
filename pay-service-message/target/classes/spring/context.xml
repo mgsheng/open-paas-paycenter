@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		  http://www.springframework.org/schema/tx
+		  http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+		  http://www.springframework.org/schema/context 
+		  http://www.springframework.org/schema/context/spring-context-3.1.xsd ">
+
+    <!--annotation configuration -->
+    <context:annotation-config/>
+    <!-- <context:component-scan base-package="cc.wdcy.service"/>
+    <context:component-scan base-package="cc.wdcy.redis"/>
+    <context:component-scan base-package="cc.wdcy.logic"/>
+    <context:component-scan base-package="cc.wdcy.job"/> -->
+    <context:component-scan base-package="cn.com.open.user.platform.manager.redis"/>
+    <context:component-scan base-package="cn.com.open.user.platform.manager.user.service"/>
+    <!-- property configuration -->
+    <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:user-platform-manager.properties</value>
+            </list>
+        </property>
+    </bean>
+
+   <!--   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="properties"/>
+    </bean> -->
+       <!--dataSource-->
+ <bean id="parentDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
+ <!-- 初始化连接大小 -->
+		<property name="initialSize" value="0" />
+		<!-- 连接池最大使用连接数量 -->
+		<property name="maxActive" value="50" />
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="20" />
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="0" />
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- <property name="poolPreparedStatements" value="true" /> <property 
+			name="maxPoolPreparedStatementPerConnectionSize" value="33" /> -->
+
+		<property name="validationQuery" value="select 1" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+		<property name="testWhileIdle" value="true" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="25200000" />
+
+		<!-- 打开removeAbandoned功能 -->
+		<property name="removeAbandoned" value="true" />
+		<!-- 1800秒，也就是30分钟 -->
+		<property name="removeAbandonedTimeout" value="300" />
+		<!-- 关闭abanded连接时输出错误日志 -->
+		<property name="logAbandoned" value="true" />
+
+		<!-- 监控数据库 -->
+		<!-- <property name="filters" value="stat" /> -->
+    </bean>  
+    
+     <!-- 主数据源-->  
+    <bean id="masterDataSource" parent="parentDataSource">  
+        <property name="driverClassName" value="${master.jdbc.driverClassName}" />  
+        <property name="url" value="${master.jdbc.url}" />  
+        <property name="username" value="${master.jdbc.username}" />  
+        <property name="password" value="${master.jdbc.password}" />  
+    </bean>  
+    <!-- 从数据源-->  
+    <bean id="slaveDataSource" parent="parentDataSource">  
+        <property name="driverClassName" value="${slave.jdbc.driverClassName}" />  
+        <property name="url" value="${slave.jdbc.url}" />  
+        <property name="username" value="${slave.jdbc.username}" />  
+        <property name="password" value="${slave.jdbc.password}" />  
+    </bean>  
+  
+    <!-- <bean id="dataSource" class="cc.wdcy.datasource.DynamicDataSource">  
+        <property name="targetDataSources">  
+            <map key-type="java.lang.String">  
+                <entry key="slave" value-ref="slaveDataSource" />  
+            </map>  
+        </property>  
+        <property name="defaultTargetDataSource" ref="masterDataSource" />  
+    </bean> -->  
+    <bean id="dataSource" class="cn.com.open.user.platform.manager.datasource.DynamicDataSource">  
+        <property name="targetDataSources">  
+            <map key-type="java.lang.String">  
+                <entry key="slave" value-ref="slaveDataSource" />  
+            </map>  
+        </property>  
+        <property name="defaultTargetDataSource" ref="masterDataSource" />  
+    </bean>
+ 
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+        <constructor-arg index="1" value="BATCH"/>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.com.open.user.platform.manager.infrastructure.mybatis"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxActive" value="1000" />
+        <property name="maxIdle" value="8" />
+        <property name="maxWait" value="1000" />
+        <property name="testOnBorrow" value="true"/>
+        <property name="testOnReturn" value="true"/>
+        <!-- <property name="testWhileIdle" value="true"/> -->
+    </bean>
+    <!--  <bean id="shardedJedisPool" class="redis.clients.jedis.JedisPool"  scope="singleton">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1" value="${redis.host}"/>
+        <constructor-arg index="2" value="${redis.port}"/>
+         <constructor-arg index="3" value="${redis.timeout}"/>
+          <constructor-arg index="4" value="${redis.password}"/>
+        </bean>-->
+   <!--  final String host, int port,
+            int timeout, final String password-->
+    <bean id="shardedJedisPool" class="redis.clients.jedis.ShardedJedisPool"  scope="singleton">
+        <constructor-arg index="0" ref="jedisPoolConfig" />
+        <constructor-arg index="1">
+            <list>
+                <bean class="redis.clients.jedis.JedisShardInfo">
+                    <constructor-arg name="host" value="${redis.host}" />
+                    <constructor-arg name="port" value="${redis.port}" />
+                    <constructor-arg name="timeout" value="${redis.timeout}" />
+                    <constructor-arg name="weight" value="1" />
+                     <property  name="password" value="${redis.password}"></property>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+       <bean id="userManagerDev" class="cn.com.open.user.platform.manager.dev.UserManagerDev">
+            <property name="server_host" value="${server_host}"></property>
+            <property name="kafka_topic" value="${kafka_topic}"></property>
+            <property name="kafka_group" value="${kafka_group}"></property>
+            
+        </bean>
+</beans>

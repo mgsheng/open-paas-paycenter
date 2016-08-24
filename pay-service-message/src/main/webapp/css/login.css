@@ -1,0 +1,82 @@
+@charset "utf-8";
+html, body {
+    font: 14px/1.5 "Microsoft Yahei", "Hiragino Sans GB", Helvetica, "Helvetica Neue", "微软雅黑", Tahoma, Arial, sans-serif;
+    color: #14191e;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #fff;
+}
+* {margin: 0;padding: 0;}
+li {list-style:none;}
+input, textarea, select {border: none; outline:none;}
+a{ text-decoration:none;}
+a:hover{ text-decoration:underline;}
+
+/*======================登录 start=======================*/
+.wrap {
+	width:100%;
+	height:100%;
+	background:url(../images/index_bg.jpg) no-repeat center 0;
+	background-size:cover;
+}
+.login_box {
+    padding: 0 30px 68px;
+    background: rgba(255,255,255,0.6);
+	position: absolute;
+    margin: 0 auto;
+    top: 15%;
+    right: 15%;
+    z-index: 120;
+}
+.login_title {
+	font-size: 15px;
+	color:#1683f1;
+	margin: 47px 0 12px 0;
+	font-weight: bold;
+}
+.placeHolder {
+    width: 203px;
+    height: 40px;
+    position: relative;
+    display: block;
+    background: #FFF;
+    margin-top: 17px;
+    padding-left:37px;
+}
+.userIcon {
+	background: url(../images/userIcon.png) no-repeat 10px center #FFF;
+	background-size: 14px 20px;
+}
+.pwdIcon {
+	background: url(../images/pwdIcon.png) no-repeat 10px center #FFF;
+	background-size: 13px 20px;
+}
+.placeHolder input {
+	width: 100%;
+	height:100%;
+}
+.login_btn {
+	margin: 38px 0 20px;
+    padding-left:0;
+    width:240px;
+}
+.login_btn input {
+	background: #459df5;
+	font-size: 15px;
+	color: #fff;
+	cursor: pointer;
+}
+.point .forget {
+	float: left;
+	color: #808080;
+	cursor: pointer;
+}
+.register{
+	float: right;
+	color: #1683f1;
+	cursor: pointer;
+}
+/*======================登录 end=======================*/
