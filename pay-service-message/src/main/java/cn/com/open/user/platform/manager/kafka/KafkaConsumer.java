@@ -52,6 +52,7 @@ public class KafkaConsumer extends Thread{
                      String type = reqjson.getString("type");
                      UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
                      if(userAccountBalance==null){
+                    	 userAccountBalance=new UserAccountBalance();
                     	  if(!nullEmptyBlankJudge(appId)){
                          	 userAccountBalance.setAppId(Integer.parseInt(appId));	 
                             }
