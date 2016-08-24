@@ -1,20 +1,19 @@
 package cn.com.open.user.platform.manager.kafka;
 import java.util.Date;
-import java.util.HashMap;  
-import java.util.List;  
-import java.util.Map;  
-import java.util.Properties;  
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
+import kafka.consumer.Consumer;
+import kafka.consumer.ConsumerConfig;
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.KafkaStream;
+import kafka.javaapi.consumer.ConsumerConnector;
+import net.sf.json.JSONObject;
 import cn.com.open.user.platform.manager.dev.UserManagerDev;
 import cn.com.open.user.platform.manager.user.model.UserAccountBalance;
 import cn.com.open.user.platform.manager.user.service.UserAccountBalanceService;
-  
-import kafka.consumer.Consumer;  
-import kafka.consumer.ConsumerConfig;  
-import kafka.consumer.ConsumerIterator;  
-import kafka.consumer.KafkaStream;  
-import kafka.javaapi.consumer.ConsumerConnector;
-import net.sf.json.JSONObject;
 public class KafkaConsumer extends Thread{  
   
     private UserAccountBalanceService userAccountBalanceService;
@@ -40,25 +39,33 @@ public class KafkaConsumer extends Thread{
          while(iterator.hasNext()){  
              String message = new String(iterator.next().message());
              //保存账户表中
+             //message: {"appId":1,"userId":80012553,"userName":"testsendpay11","type":"1","sourceId":"21292111111"}
+            
              if(!nullEmptyBlankJudge(message)){
-            	 JSONObject reqjson = JSONObject.fromObject(message);
-                 String userId = reqjson.getString("userId");
-                 String appId = reqjson.getString("appId");
-                 String sourceId = reqjson.getString("sourceId");
-                 String userName = reqjson.getString("userName");
-                 String type = reqjson.getString("type");
-                 UserAccountBalance userAccountBalance=new UserAccountBalance();
-                 if(!nullEmptyBlankJudge(appId)){
-                	 userAccountBalance.setAppId(Integer.parseInt(appId));	 
-                   }
-                 userAccountBalance.setUserId(userId);
-                 userAccountBalance.setSourceId(sourceId);
-                 if(!nullEmptyBlankJudge(type)){
-                  userAccountBalance.setType(Integer.parseInt(type));	 
+                 String balanceMsg=message.substring(9, message.length());
+                 if(!nullEmptyBlankJudge(balanceMsg)){
+                	 JSONObject reqjson = JSONObject.fromObject(balanceMsg);
+                     String userId = reqjson.getString("userId");
+                     String appId = reqjson.getString("appId");
+                     String sourceId = reqjson.getString("sourceId");
+                     String userName = reqjson.getString("userName");
+                     String type = reqjson.getString("type");
+                     UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
+                     if(userAccountBalance==null){
+                    	  if(!nullEmptyBlankJudge(appId)){
+                         	 userAccountBalance.setAppId(Integer.parseInt(appId));	 
+                            }
+                          userAccountBalance.setUserId(userId);
+                          userAccountBalance.setSourceId(sourceId);
+                          if(!nullEmptyBlankJudge(type)){
+                           userAccountBalance.setType(Integer.parseInt(type));	 
+                          }
+                          userAccountBalance.setUserName(userName);
+                          userAccountBalance.setCreateTime(new Date());
+                          userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
+                     }
                  }
-                 userAccountBalance.setUserName(userName);
-                 userAccountBalance.setCreateTime(new Date());
-                 userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
+            	 
              }
              i++;
              System.out.println("接收到: " + message+","+"i="+i); 
