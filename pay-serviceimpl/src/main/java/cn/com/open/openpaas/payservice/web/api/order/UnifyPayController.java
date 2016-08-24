@@ -409,8 +409,9 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("paymentType", paymentType);
 				 payServiceLog.setLogName(PayLogName.PAY_END);
     		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	
-				 return payserviceDev.getPayIndex_url();
+//				 return payserviceDev.getPayIndex_url();
 //    		     return "/pay/payIndex";
+    		     return "redirect:" + "http://localhost:8080/pay-service/alipay/payIndex";
 		        }else{
 		        	
 		      //payZhifubao     payWx	 payTcl
@@ -861,7 +862,7 @@ public class UnifyPayController extends BaseControllerUtil{
               model.addAttribute("appId",appId);
           }
         
-    	return payserviceDev.getPayIndex_url();
+          return "redirect:" + "http://localhost:8080/pay-service/alipay/payIndex";
     }	
     /**
      * 跳转选择支付渠道页面
