@@ -409,8 +409,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("paymentType", paymentType);
 				 payServiceLog.setLogName(PayLogName.PAY_END);
     		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	
-//				 return payserviceDev.getPayIndex_url();
-//    		     return "/pay/payIndex";
+//    		     return "redirect:" +payserviceDev.getPayIndex_url();
     		     return "redirect:" + "http://localhost:8080/pay-service/alipay/payIndex";
 		        }else{
 		        	
@@ -861,7 +860,7 @@ public class UnifyPayController extends BaseControllerUtil{
               model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
               model.addAttribute("appId",appId);
           }
-        
+//          return "redirect:" +payserviceDev.getPayIndex_url();
           return "redirect:" + "http://localhost:8080/pay-service/alipay/payIndex";
     }	
     /**
