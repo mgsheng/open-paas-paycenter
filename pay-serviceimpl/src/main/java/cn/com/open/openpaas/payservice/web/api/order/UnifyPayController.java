@@ -409,7 +409,8 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("paymentType", paymentType);
 				 payServiceLog.setLogName(PayLogName.PAY_END);
     		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	
-				 return "pay/payIndex";
+				 return payserviceDev.getPayIndex_url();
+//    		     return "/pay/payIndex";
 		        }else{
 		        	
 		      //payZhifubao     payWx	 payTcl
@@ -860,7 +861,7 @@ public class UnifyPayController extends BaseControllerUtil{
               model.addAttribute("appId",appId);
           }
         
-    	return "pay/payIndex";
+    	return payserviceDev.getPayIndex_url();
     }	
     /**
      * 跳转选择支付渠道页面
