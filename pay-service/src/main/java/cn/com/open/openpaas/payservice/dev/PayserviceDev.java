@@ -19,8 +19,15 @@ public class PayserviceDev {
 	public String kong_log_url;
 	private String log_type;
 	private String yeepayCommonReqURL;
+	private String payIndex_url;
 	
 	
+	public String getPayIndex_url() {
+		return payIndex_url;
+	}
+	public void setPayIndex_url(String payIndex_url) {
+		this.payIndex_url = payIndex_url;
+	}
 	public String getYeepayCommonReqURL() {
 		return yeepayCommonReqURL;
 	}
