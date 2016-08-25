@@ -20,7 +20,7 @@
 		style="width: 1000px"align="center"></div>
 	<script>
   var content=$("#urlCode").val();
-  console.log(content);
+  //console.log(content);
   $("#qrcode").qrcode({
            render: "table",
            text: content

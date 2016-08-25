@@ -94,7 +94,6 @@ public class DistributedLock implements Lock, Watcher{
             throw new LockException(e);
         } 
     }
- 
     public boolean tryLock() {
         try {
             String splitStr = "_lock_";

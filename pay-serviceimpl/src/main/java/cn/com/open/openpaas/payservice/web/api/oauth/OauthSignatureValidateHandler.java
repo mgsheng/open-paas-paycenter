@@ -1,8 +1,6 @@
 package cn.com.open.openpaas.payservice.web.api.oauth;
 
 
-import java.util.SortedMap;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -10,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
-import cn.com.open.openpaas.payservice.web.api.order.UnifyPayController;
 
 
 public class OauthSignatureValidateHandler {

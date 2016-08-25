@@ -211,7 +211,7 @@
 		}else if(areaCode=="10011"){
 			$("#areaCode").val("PAB");
 		}
-		console.log(areaCode+"==areaCode");
+		//console.log(areaCode+"==areaCode");
 	});
 	$("#weixinPay").bind("click",function(){
 	       var appId=$("#appId").val();
@@ -250,7 +250,7 @@
 					 url: "${pageContext.request.contextPath}/alipay/selectChannelPay?areaCode="+areaCode+"&outTradeNo="+outTradeNo+"&appId="+appId+"&payWx="+payWx+"&totalFee="+totalFee+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&merchantOrderId="+merchantOrderId,
 					 success: function(date){
 						   urlCode=date;
-						   console.log(urlCode+"==urlCode");
+						   //console.log(urlCode+"==urlCode");
 					       $("#payCode").empty();
 						   var urlDu = date.split(",")[1];
 						   var url=urlDu.slice(10,urlDu.length-1);

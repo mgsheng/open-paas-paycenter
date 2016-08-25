@@ -19,10 +19,10 @@ Checking = {
 	// 初始化
 	init : function() {
 		if (this.isIE()) {// 如果是ie内核
-			console.log("sssss");
+			//console.log("sssss");
 			this.drawIE();
 		} else {
-			console.log("sssss");
+			//console.log("sssss");
 			this.drawCanvas();
 		
 		}

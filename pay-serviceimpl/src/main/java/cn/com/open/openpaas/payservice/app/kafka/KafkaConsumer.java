@@ -21,6 +21,7 @@ public class KafkaConsumer extends Thread{
       
     @Override  
     public void run() {  
+    	int i=0;
         ConsumerConnector consumer = createConsumer();  
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();  
         topicCountMap.put(topic, 1); // 一次从主题中获取一个数据  
@@ -28,8 +29,9 @@ public class KafkaConsumer extends Thread{
          KafkaStream<byte[], byte[]> stream = messageStreams.get(topic).get(0);// 获取每次接收到的这个数据  
          ConsumerIterator<byte[], byte[]> iterator =  stream.iterator();  
          while(iterator.hasNext()){  
-             String message = new String(iterator.next().message());  
-             System.out.println("接收到: " + message);  
+             String message = new String(iterator.next().message()); 
+             i++;
+             System.out.println("接收到: " + message+","+"i="+i); 
          }  
     }  
   

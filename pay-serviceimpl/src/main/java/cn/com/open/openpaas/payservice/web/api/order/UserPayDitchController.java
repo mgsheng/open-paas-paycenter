@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.ditch.model.DictTradePaymentDitch;
 import cn.com.open.openpaas.payservice.app.ditch.service.DictTradePaymentDitchService;
-import cn.com.open.openpaas.payservice.app.payment.model.DictTradePayment;
-import cn.com.open.openpaas.payservice.app.payment.service.DictTradePaymentService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
