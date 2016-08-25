@@ -196,6 +196,10 @@
 			
 			var startDate = $("#_easyui_textbox_input9").val();
 			var endDate = $("#_easyui_textbox_input10").val();
+			if(startDate>endDate){
+				alert("开始时间大于结束时间！");
+				return;
+			}
 			
 			document.getElementById("ff").action="${pageContext.request.contextPath}/manage/downloadSubmit?startDate="+startDate+"&endDate="+endDate;
 		    document.getElementById("ff").submit();
