@@ -42,9 +42,7 @@ public class KafkaConsumer extends Thread{
              //message: {"appId":1,"userId":80012553,"userName":"testsendpay11","type":"1","sourceId":"21292111111"}
             
              if(!nullEmptyBlankJudge(message)){
-                 String balanceMsg=message.substring(9, message.length());
-                 if(!nullEmptyBlankJudge(balanceMsg)){
-                	 JSONObject reqjson = JSONObject.fromObject(balanceMsg);
+                	 JSONObject reqjson = JSONObject.fromObject(message);
                      String userId = reqjson.getString("userId");
                      String appId = reqjson.getString("appId");
                      String sourceId = reqjson.getString("sourceId");
@@ -65,8 +63,6 @@ public class KafkaConsumer extends Thread{
                           userAccountBalance.setCreateTime(new Date());
                           userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
                      }
-                 }
-            	 
              }
              i++;
              System.out.println("接收到: " + message+","+"i="+i); 
