@@ -174,7 +174,7 @@ null,null, now(), 0, 0);
 
         // hash
         var hash = location.hash.substring(1);
-        console.log(hash + ",  " + hash.length);
+        //console.log(hash + ",  " + hash.length);
         if (hash.length > 0) {
             var regex = /([^&=]+)=([^&]*)/g;
             var keyValue;
