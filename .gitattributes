@@ -1,4 +1,7 @@
 * text=auto !eol
+lib/QRCode.jar -text
+lib/alipay-sdk-java20151021120052.jar -text
+lib/alipay-trade-sdk.jar -text
 pay-platform-manager/.classpath -text
 pay-platform-manager/.mymetadata -text
 pay-platform-manager/.project -text
