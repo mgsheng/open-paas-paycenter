@@ -1,4 +1,4 @@
-﻿package cn.com.open.openpaas.payservice.app.channel.yeepay;
+package cn.com.open.openpaas.payservice.app.channel.yeepay;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
