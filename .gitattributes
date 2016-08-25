@@ -1,4 +1,5 @@
 * text=auto !eol
+/build.gradle -text
 lib/QRCode.jar -text
 lib/alipay-sdk-java20151021120052.jar -text
 lib/alipay-trade-sdk.jar -text
@@ -1596,3 +1597,4 @@ pay-serviceimpl/target/classes/spring/transaction.xml -text
 pay-serviceimpl/target/test-classes/log4j.properties -text
 pay-serviceimpl/target/test-classes/test.properties -text
 pay-serviceimpl/target/test-classes/testApplicationContext.xml -text
+/settings.gradle -text
