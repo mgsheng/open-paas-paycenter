@@ -12,14 +12,14 @@
         <typeAlias alias="User" type="cn.com.open.pay.platform.manager.login.model.User"/>
         <typeAlias alias="Privilege" type="cn.com.open.pay.platform.manager.login.model.Privilege"/>
         <typeAlias alias="MerchantOrderInfo" type="cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo"/> 
-       		 
+       	<typeAlias alias="UserSerialRecord" type="cn.com.open.pay.platform.manager.order.model.UserSerialRecord"/>	 
        
     </typeAliases>
 
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/UserMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml"/>
-       
+      	<mapper resource="cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml"/>
     </mappers>
 
 </configuration>

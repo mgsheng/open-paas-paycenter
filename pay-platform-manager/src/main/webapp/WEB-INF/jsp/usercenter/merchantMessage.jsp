@@ -53,12 +53,13 @@
 			</td>
 			<td style="text-align: right;">业务类型：</td>
 			<td>
-				<select class="easyui-combobox" name="appId" style="width:100%">
-						<option value="" data-options="editable:false" selected="selected">全部</option>
+				<select class="easyui-combobox" data-options="editable:false"  name="appId" style="width:100%">
+						<option value="" selected="selected">全部</option>
 						<option value="1">OES学历</option>
 						<option value="10026" >mooc2u</option>
 				</select>
 			</td>
+			
 		</tr>
 		<tr>
 			<td style="text-align: right;">发卡行：</td>
@@ -160,10 +161,32 @@
 			var createDate =$("input[name='createDate']:checked").val(); 
 			var startDate = $("#_easyui_textbox_input9").val();
 			var endDate = $("#_easyui_textbox_input10").val();
-			if(startDate>endDate){
-				alert("开始时间大于结束时间！");
-				return;
+			if(orderId==""&&merchantOrderId==""&&payOrderId==""&&channelId==""&&appId==""&&paymentId==""&&source==""&&payStatus==""){
+				if(startDate==""||endDate==""){
+					alert("请选择时间段");
+					return;
+				}
 			}
+			if(!startDate==""){
+				if(endDate==""){
+					alert("请选择结束时间");
+					return;
+				}
+			}
+			if(!endDate==""){
+				if(startDate==""){
+					alert("请选择开始时间");
+					return;
+				}
+			}
+			if(!startDate==""&&!endDate==""){
+				if(startDate>endDate){
+					alert("开始时间大于结束时间！");
+					return;
+				}
+			}
+			
+			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -177,7 +200,7 @@
 		    var p = $('#dg').datagrid('getPager'); 
 		    $(p).pagination({ 
 		        pageSize: 10,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15],//可以设置每页记录条数的列表 
+		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
 		        beforePageText: '第',//页数文本框前显示的汉字 
 		        afterPageText: '页    共 {pages} 页', 
 		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
