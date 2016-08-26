@@ -1,6 +1,7 @@
 package cn.com.open.openpaas.payservice.web.api.order;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -392,25 +393,50 @@ public class UnifyPayController extends BaseControllerUtil{
 			}			
 			 if(paymentChannel==null || ("").equals(paymentChannel)){
 				 //跳转到收银台
-				 //response.sendRedirect("selectPayChannel?outTradeNo="+outTradeNo+"&appId="+appId);
-	        	  model.addAttribute("totalFee",merchantOrderInfo.getOrderAmount());
-	              model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
-	              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
-				 model.addAttribute("outTradeNo", merchantOrderInfo.getId());
-				 model.addAttribute("merchantOrderId", merchantOrderInfo.getMerchantOrderId());
-				 model.addAttribute("appId", appId);
-				 model.addAttribute("payZhifubao", payZhifubao);
-				 model.addAttribute("payWx", payWx);
-				 model.addAttribute("payTcl", payTcl);
-				 model.addAttribute("totalFeeValue", totalFee);
-				 model.addAttribute("goodsDesc", goodsDesc);
-				 model.addAttribute("goodsId", goodsId);
+//		        	  model.addAttribute("totalFee",merchantOrderInfo.getOrderAmount());
+//		              model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
+//		              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
+//					  model.addAttribute("outTradeNo", merchantOrderInfo.getId());
+//					  model.addAttribute("merchantOrderId", merchantOrderInfo.getMerchantOrderId());
+//					  model.addAttribute("appId", appId);
+//					  model.addAttribute("payZhifubao", payZhifubao);
+//					  model.addAttribute("payWx", payWx);
+//					  model.addAttribute("payTcl", payTcl);
+//					  model.addAttribute("totalFeeValue", totalFee);
+//					  model.addAttribute("goodsDesc", goodsDesc);
+//					  model.addAttribute("goodsId", goodsId);
+//					  model.addAttribute("merchantId", merchantId);
+//					  model.addAttribute("paymentType", paymentType);
+//					  model.addAttribute("signature", signature);
+				 model.addAttribute("appId",appId);
+				 model.addAttribute("timestamp", timestamp);
+				 model.addAttribute("signatureNonce", signatureNonce);
+				 model.addAttribute("outTradeNo",outTradeNo );
+				 model.addAttribute("userId", userId);
+				 model.addAttribute("goodsName", goodsName);
+				 model.addAttribute("totalFee", totalFee);
 				 model.addAttribute("merchantId", merchantId);
+				 model.addAttribute("businessType", merchantId);
+				 model.addAttribute("userName", userName);
+				 model.addAttribute("merchantId", merchantId);
+				 model.addAttribute("goodsId", goodsId);
+				 model.addAttribute("businessType", businessType);
+				 model.addAttribute("goodsDesc", goodsDesc);
+				 model.addAttribute("goodsTag", goodsTag);
+				 model.addAttribute("showUrl", showUrl);
+				 model.addAttribute("buyerRealName",buyerRealName);
+				 model.addAttribute("buyerCertNo",buyerCertNo);
+				 model.addAttribute("inputCharset", inputCharset);
+				 model.addAttribute("paymentOutTime", paymentOutTime);
 				 model.addAttribute("paymentType", paymentType);
-				 payServiceLog.setLogName(PayLogName.PAY_END);
-    		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	
-//    		     return "redirect:" +payserviceDev.getPayIndex_url();
-    		     return "redirect:" + "http://localhost:8080/pay-service/alipay/payIndex";
+				 model.addAttribute("paymentChannel",paymentChannel);
+				 model.addAttribute("feeType", feeType);
+				 model.addAttribute("clientIp", clientIp);
+				 model.addAttribute("parameter", parameter);
+				 model.addAttribute("signature", signature);
+				  payServiceLog.setLogName(PayLogName.PAY_END);
+    		      UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+    		     return "redirect:" + "http://localhost:8080/pay-service/alipay/skipPayIndex";
 		        }else{
 		        	
 		      //payZhifubao     payWx	 payTcl
@@ -574,6 +600,128 @@ public class UnifyPayController extends BaseControllerUtil{
 		}
 		  
        	  return "redirect:" + fullUri;
+    }
+    
+    /**
+     * 跳转收银台页面
+     * @throws  
+     */
+    @RequestMapping(value = "skipPayIndex", method = RequestMethod.GET)
+    public String skipPayIndex(HttpServletRequest request, Model model) throws MalformedURLException, DocumentException, IOException, Exception{
+    	long startTime = System.currentTimeMillis();
+    	  String signature=request.getParameter("signature");
+    	  String outTradeNo = request.getParameter("outTradeNo");
+          String totalFee = request.getParameter("totalFee");
+          String goodsName=request.getParameter("goodsName");
+          String orderCreateTime=request.getParameter("orderCreateTime");
+          String merchantOrderId=request.getParameter("merchantOrderId");
+          String appId=request.getParameter("appId");
+          String payZhifubao=request.getParameter("payZhifubao");
+          String payWx=request.getParameter("payWx");
+          String payTcl=request.getParameter("payTcl");
+          String totalFeeValue=request.getParameter("totalFeeValue");
+          String goodsDesc=request.getParameter("goodsDesc");
+          String goodsId=request.getParameter("goodsId");
+          String merchantId=request.getParameter("merchantId");
+          String paymentType=request.getParameter("paymentType");
+          String timestamp=request.getParameter("timestamp");
+          String signatureNonce=request.getParameter("signatureNonce");
+          String userId = request.getParameter("userId");
+          String userName=request.getParameter("userName");
+          String businessType=request.getParameter("businessType");
+          String goodsTag="";
+	      if (!nullEmptyBlankJudge(request.getParameter("goodsTag"))){
+	      		goodsTag=new String(request.getParameter("goodsTag").getBytes("iso-8859-1"),"utf-8");
+	      }
+	      String showUrl=request.getParameter("showUrl");
+	      String buyerRealName="";
+	      if (!nullEmptyBlankJudge(request.getParameter("buyerRealName"))){
+	    	  buyerRealName=new String(request.getParameter("buyerRealName").getBytes("iso-8859-1"),"utf-8");
+	      }
+	      
+	      String buyerCertNo=request.getParameter("buyerCertNo");
+	      String inputCharset=request.getParameter("inputCharset");
+	      String paymentOutTime=request.getParameter("paymentOutTime");
+	      String paymentChannel=request.getParameter("paymentChannel");
+	      String feeType=request.getParameter("feeType");
+	      String clientIp=request.getParameter("clientIp");
+	      String parameter="";
+    	  if (!nullEmptyBlankJudge(request.getParameter("parameter"))){
+    		parameter=new String(request.getParameter("parameter").getBytes("iso-8859-1"),"utf-8");
+    	  }
+    	  String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
+    	  PayServiceLog payServiceLog=new PayServiceLog();
+    	//判断用户是否存在
+          /*if(userId!=null && !("").equals(userId)){
+          	//调用用户中心接口判断用户是否存在
+          }*/
+      	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
+      	if(merchantInfo==null){
+          	//paraMandaChkAndReturn(2, response,"商户ID不存在");
+      		payServiceLog.setErrorCode("2");
+      		payServiceLog.setStatus("error");
+      		payServiceLog.setLogName(PayLogName.PAY_END);
+      		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+          	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
+          }
+          payServiceLog.setLogName(PayLogName.PAY_END);
+          SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+      		sParaTemp.put("appId",appId);
+     		sParaTemp.put("timestamp", timestamp);
+     		sParaTemp.put("signatureNonce", signatureNonce);
+     		sParaTemp.put("outTradeNo",outTradeNo );
+     		sParaTemp.put("userId", userId);
+     		sParaTemp.put("goodsName", goodsName);
+     		sParaTemp.put("totalFee", totalFee);
+     		sParaTemp.put("merchantId", merchantId);
+     		sParaTemp.put("businessType", merchantId);
+     		sParaTemp.put("userName", userName);
+     		sParaTemp.put("merchantId", merchantId);
+     		sParaTemp.put("goodsId", goodsId);
+     		sParaTemp.put("businessType", businessType);
+     		sParaTemp.put("goodsDesc", goodsDesc);
+     		sParaTemp.put("goodsTag", goodsTag);
+     		sParaTemp.put("showUrl", showUrl);
+     		sParaTemp.put("buyerRealName",buyerRealName);
+     		sParaTemp.put("buyerCertNo",buyerCertNo);
+     		sParaTemp.put("inputCharset", inputCharset);
+     		sParaTemp.put("paymentOutTime", paymentOutTime);
+     		sParaTemp.put("paymentType", paymentType);
+     		sParaTemp.put("paymentChannel",paymentChannel);
+     		sParaTemp.put("feeType", feeType);
+     		sParaTemp.put("clientIp", clientIp);
+     		sParaTemp.put("parameter", parameter);
+     		String params=createSign(sParaTemp);
+     	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+          //认证
+         // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
+     	
+  		if(!hmacSHA1Verification){
+  			//paraMandaChkAndReturn(3, response,"认证失败");
+  			payServiceLog.setErrorCode("3");
+  			payServiceLog.setStatus("error");
+  			payServiceLog.setLogName(PayLogName.PAY_END);
+  			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+          	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
+  		}
+  		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
+          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+
+          model.addAttribute("totalFee",merchantOrderInfo.getOrderAmount());
+          model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
+          model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
+		  model.addAttribute("outTradeNo", merchantOrderInfo.getId());
+		  model.addAttribute("merchantOrderId", merchantOrderInfo.getMerchantOrderId());
+		  model.addAttribute("appId", appId);
+		  model.addAttribute("payZhifubao", payZhifubao);
+		  model.addAttribute("payWx", payWx);
+		  model.addAttribute("payTcl", payTcl);
+		  model.addAttribute("totalFeeValue", totalFee);
+		  model.addAttribute("goodsDesc", goodsDesc);
+		  model.addAttribute("goodsId", goodsId);
+		  model.addAttribute("merchantId", merchantId);
+		  model.addAttribute("paymentType", paymentType);
+    	return "pay/payIndex";
     }
     /**
      * 获取易宝支付地址
@@ -861,7 +1009,7 @@ public class UnifyPayController extends BaseControllerUtil{
               model.addAttribute("appId",appId);
           }
 //          return "redirect:" +payserviceDev.getPayIndex_url();
-          return "redirect:" + "http://localhost:8080/pay-service/alipay/payIndex";
+          return "pay/payIndex";
     }	
     /**
      * 跳转选择支付渠道页面
