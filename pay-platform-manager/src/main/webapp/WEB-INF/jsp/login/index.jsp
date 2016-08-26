@@ -27,7 +27,8 @@
 								]
 						},{"menuid":"8","icon":"icon-sys","menuname":"订单查询",
 							"menus":[{"menuid":"21","menuname":"交易明细","icon":"icon-nav","url":"${pageContext.request.contextPath}/manage/skipPages"},
-									{"menuid":"22","menuname":"账单下载","icon":"icon-nav","url":"demo1.html"}
+									{"menuid":"22","menuname":"用户订单查询","icon":"icon-nav","url":"${pageContext.request.contextPath}/manage/userOrderPages"},
+									{"menuid":"23","menuname":"账户流水记录查询","icon":"icon-nav","url":"${pageContext.request.contextPath}/running/accountRunningPages"}
 								]
 						}
 				]};
