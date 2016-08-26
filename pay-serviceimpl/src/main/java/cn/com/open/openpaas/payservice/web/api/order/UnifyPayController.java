@@ -436,7 +436,8 @@ public class UnifyPayController extends BaseControllerUtil{
 				 model.addAttribute("signature", signature);
 				  payServiceLog.setLogName(PayLogName.PAY_END);
     		      UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-    		     return "redirect:" + "http://localhost:8080/pay-service/alipay/skipPayIndex";
+    		     return "redirect:" +payserviceDev.getPayIndex_url(); 
+    		     //"http://localhost:8080/pay-service/alipay/skipPayIndex";
 		        }else{
 		        	
 		      //payZhifubao     payWx	 payTcl
