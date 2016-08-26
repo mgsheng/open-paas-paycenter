@@ -158,6 +158,8 @@
             <property name="server_host" value="${server_host}"></property>
             <property name="kafka_topic" value="${kafka_topic}"></property>
             <property name="kafka_group" value="${kafka_group}"></property>
+            <property name="zookeeper_connect" value="${zookeeper_connect}"></property>
+            <property name="metadata_broker_list" value="${metadata_broker_list}"></property>
             
         </bean>
 </beans>
