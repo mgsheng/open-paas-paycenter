@@ -77,6 +77,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQuer
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/accountRunningManage.java -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/UserMapper.xml -text
+pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml -text
 pay-platform-manager/src/main/resources/disconf.properties -text
 pay-platform-manager/src/main/resources/emailtemplate/activation.html -text
 pay-platform-manager/src/main/resources/emailtemplate/resetpassword.html -text
@@ -91,7 +92,9 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/accountRunningMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantMessage.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/userQueryMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/log4j.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/soc-servlet.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/web.xml -text

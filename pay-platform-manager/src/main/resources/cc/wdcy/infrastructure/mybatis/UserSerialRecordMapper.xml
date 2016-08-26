@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.UserSerialRecordRepositoryMyBatis">
+	<resultMap type="UserSerialRecord" id="userSerialRecordMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="PAY_TYPE" property="payType" jdbcType="INTEGER" />
+		<result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SERIAL_NO" property="serialNo" jdbcType="VARCHAR" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="APP_ID" property="appId" jdbcType="INTEGER" />
+		<result column="SOURCE_ID" property="sourceId" jdbcType="VARCHAR" />
+		<result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  SERIAL_NO,
+	  USER_NAME,
+	  AMOUNT,
+	  PAY_TYPE,
+	  APP_ID,
+	  SOURCE_ID,
+	  CREATE_TIME
+	</sql>
+	<sql id="Base_Column_List">
+		Id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.order.model.UserSerialRecord">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into USER_SERIAL_RECORD
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{serialNo, jdbcType=VARCHAR},
+			#{userName, jdbcType=VARCHAR},
+			#{amount, jdbcType=DECIMAL},
+			#{payType, jdbcType=INTEGER},
+			#{appId, jdbcType=INTEGER},
+			#{sourceId, jdbcType=VARCHAR},
+			#{createTime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+ 
+	<insert id="saveUserSerialRecord" parameterType="UserSerialRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into USER_SERIAL_RECORD(Id,USER_NAME,AMOUNT,SERIAL_NO,PAY_TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+        values
+        (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
+    </insert>
+    <select id="getSerialByTime" resultType="java.util.Map" flushCache="true">
+         select   SERIAL_NO serialNo,USER_NAME userName,AMOUNT amount,PAY_TYPE payType,APP_ID appId,SOURCE_ID sourceId
+	     from USER_SERIAL_RECORD
+         where 1=1 
+         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId} and PAY_TYPE=#{payType}
+	</select>
+	 <select id="getTotalSerialByTime" resultType="java.util.Map" flushCache="true">
+         select   SERIAL_NO serialNo,USER_NAME userName,AMOUNT amount,PAY_TYPE payType,APP_ID appId,SOURCE_ID sourceId
+	     from USER_SERIAL_RECORD
+         where 1=1 
+         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId}
+	</select>
+		<select id="getTotalAmountByTime"  resultType="java.util.Map" flushCache="true">
+         select sum(AMOUNT) totalAmount  from USER_SERIAL_RECORD
+         where 1=1 
+         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId} and PAY_TYPE=#{payType}
+	</select>
+		<select id="getTotalAmount"  resultType="java.util.Map" flushCache="true">
+         select sum(AMOUNT) totalAmount ,PAY_TYPE payType ,count(*) count  from USER_SERIAL_RECORD
+         where 1=1 
+         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId} group by PAY_TYPE
+	</select>
+	
+	
+	<select id="findQueryRunning" resultMap="userSerialRecordMap" >
+        select * from  USER_SERIAL_RECORD where 1=1
+        <if test="appId != null and appId !=''" >
+           and APP_ID=#{appId} 
+        </if>
+        <if test="payType != null and payType !=''" >
+           and PAY_TYPE=#{payType} 
+        </if>
+        <if test="serialNo != null and serialNo !=''" >
+           and SERIAL_NO=#{serialNo} 
+        </if>
+        <if test="userName != null and userName !=''" >
+           and USER_NAME=#{userName} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+       limit #{startRow},#{pageSize} 
+    </select>
+    
+     <select id="findRunningCount" resultType="int">
+        select count(*) from  USER_SERIAL_RECORD where 1=1
+        <if test="appId != null and appId !=''" >
+           and APP_ID=#{appId} 
+        </if>
+        <if test="payType != null and payType !=''" >
+           and PAY_TYPE=#{payType} 
+        </if>
+        <if test="serialNo != null and serialNo !=''" >
+           and SERIAL_NO=#{serialNo} 
+        </if>
+        <if test="userName != null and userName !=''" >
+           and USER_NAME=#{userName} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+    </select>
+    
+</mapper>
