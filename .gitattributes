@@ -1036,13 +1036,6 @@ pay-serviceimpl/src/main/webapp/css/style.css -text
 pay-serviceimpl/src/main/webapp/css/style1.css -text
 pay-serviceimpl/src/main/webapp/css/style2.css -text
 pay-serviceimpl/src/main/webapp/css/style3.css -text
-pay-serviceimpl/src/main/webapp/dev_foot.jsp -text
-pay-serviceimpl/src/main/webapp/dev_head.jsp -text
-pay-serviceimpl/src/main/webapp/findpwd.jsp -text
-pay-serviceimpl/src/main/webapp/findpwdemail.jsp -text
-pay-serviceimpl/src/main/webapp/findpwdphone.jsp -text
-pay-serviceimpl/src/main/webapp/findpwdproblem.jsp -text
-pay-serviceimpl/src/main/webapp/findpwdreset.jsp -text
 pay-serviceimpl/src/main/webapp/images/PF99920150828112335593pli.jpg -text
 pay-serviceimpl/src/main/webapp/images/PF99920150828112553384tgd.jpg -text
 pay-serviceimpl/src/main/webapp/images/close.png -text
@@ -1092,8 +1085,6 @@ pay-serviceimpl/src/main/webapp/images/zaixian.jpg -text
 pay-serviceimpl/src/main/webapp/images/zhaohang.jpg -text
 pay-serviceimpl/src/main/webapp/images/zhifubao.jpg -text
 pay-serviceimpl/src/main/webapp/images/zhonghang.jpg -text
-pay-serviceimpl/src/main/webapp/index.jsp -text
-pay-serviceimpl/src/main/webapp/index_images_detail.jsp -text
 pay-serviceimpl/src/main/webapp/js/calendar/WdatePicker.js -text
 pay-serviceimpl/src/main/webapp/js/calendar/calendar.js -text
 pay-serviceimpl/src/main/webapp/js/calendar/config.js -text
@@ -1144,9 +1135,6 @@ pay-serviceimpl/src/main/webapp/js/password.js -text
 pay-serviceimpl/src/main/webapp/js/user_bind.js -text
 pay-serviceimpl/src/main/webapp/js/user_register.js -text
 pay-serviceimpl/src/main/webapp/js/user_reset_pwd.js -text
-pay-serviceimpl/src/main/webapp/login-mobile.jsp -text
-pay-serviceimpl/src/main/webapp/login.jsp -text
-pay-serviceimpl/src/main/webapp/main.jsp -text
 pay-serviceimpl/src/main/webapp/notify_url.jsp -text
 pay-serviceimpl/src/main/webapp/return_fail_url.jsp -text
 pay-serviceimpl/src/main/webapp/return_success_url.jsp -text
