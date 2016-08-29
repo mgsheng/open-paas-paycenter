@@ -185,15 +185,18 @@
 					return;
 				}
 			}
-			
-			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
+				
 		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
-		        //pagination: true,显示分页工具栏
-		        
+                onLoadSuccess:function(data){
+                    if (data.total<1){
+                       $.messager.alert("提示","表单无数据!");
+                  }
+                   
+                }
 		     
 		    }); 
 			 //设置分页控件 
@@ -210,7 +213,7 @@
 		        } 
 		    }); 
 
-			
+		    
 		}
 		function clearForm(){
 			$('#ff').form('clear');
@@ -281,5 +284,8 @@
         function padleft0(obj) {
             return obj.toString().replace(/^[0-9]{1}$/, "0" + obj);
         }
+        
+        
+       
 	</script>
 </html>

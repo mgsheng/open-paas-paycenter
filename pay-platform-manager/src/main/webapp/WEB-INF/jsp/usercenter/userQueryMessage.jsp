@@ -155,7 +155,12 @@
 				pagination:true,
 		        url: "${pageContext.request.contextPath}/manage/userQueryMessage?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&userName="+userName,  
 		        //pagination: true,显示分页工具栏
-		        
+		        onLoadSuccess:function(data){
+                    if (data.total<1){
+                       $.messager.alert("提示","表单无数据!");
+                  }
+                   
+                }
 		     
 		    }); 
 			 //设置分页控件 

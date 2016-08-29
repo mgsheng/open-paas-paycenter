@@ -132,7 +132,12 @@
 				pagination:true,
 		        url: "${pageContext.request.contextPath}/running/accountQueryMerchant?serialNo="+serialNo+"&userName="+userName+"&payType="+payType+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate,  
 		        //pagination: true,显示分页工具栏
-		        
+		        onLoadSuccess:function(data){
+                    if (data.total<1){
+                       $.messager.alert("提示","表单无数据!");
+                  }
+                   
+                }
 		     
 		    }); 
 			 //设置分页控件 
