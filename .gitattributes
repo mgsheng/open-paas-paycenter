@@ -74,7 +74,6 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/testDe
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserDataStatsController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserLoginController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQueryDownloadManage.java -text
-pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/accountRunningManage.java -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/UserMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml -text
