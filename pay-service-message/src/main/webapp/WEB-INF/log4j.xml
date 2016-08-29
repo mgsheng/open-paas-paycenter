@@ -4,7 +4,6 @@
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
     <root>
         <level value="INFO"/>
-        <appender-ref ref="dailyRollingFile" />    
         <appender-ref ref="Console"/>
     </root>
     
@@ -12,13 +11,11 @@
     <logger name="org.springframework" additivity="false">
         <level value="WARN"/>
         <appender-ref ref="Console"/>
-        <appender-ref ref="dailyRollingFile" />    
     </logger>
     
     <!-- spring页面异常只有DEBUG才会输出 -->
     <logger name="org.springframework.web.servlet" additivity="false">
         <level value="DEBUG"/>
-        <appender-ref ref="dailyRollingFile" />    
     </logger>
 
     <!-- 输出日志到控制台  ConsoleAppender -->   
