@@ -71,6 +71,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/WebUti
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/test.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/test1.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/testDemo.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/AccountRunningManage.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserDataStatsController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserLoginController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQueryDownloadManage.java -text
