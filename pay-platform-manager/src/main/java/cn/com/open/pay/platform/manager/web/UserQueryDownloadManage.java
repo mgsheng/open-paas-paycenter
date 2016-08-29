@@ -211,9 +211,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 jsonObjArr.put("rows", jsonArr);
 		 System.out.println(jsonArr);
 	     WebUtils.writeJson(response,jsonObjArr);
-	     if(merchantOrderInfoList.size()==0){
-	    	 JOptionPane.showMessageDialog(null, "没有查到相应的数据!");
-	     }
+	     
 	     return "usercenter/merchantMessage";
 	 }	
 	
