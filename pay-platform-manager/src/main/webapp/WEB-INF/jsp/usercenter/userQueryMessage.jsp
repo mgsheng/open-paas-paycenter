@@ -144,7 +144,10 @@
 					return;
 				}
 			}
-			
+			if(orderId==""&&merchantOrderId==""&&userName==""){
+				alert("请填写订单号或用户名！");
+				return;
+			}
 			
 			
 			
