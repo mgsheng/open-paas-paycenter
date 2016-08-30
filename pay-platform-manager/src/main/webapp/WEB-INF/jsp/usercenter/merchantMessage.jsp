@@ -185,6 +185,16 @@
 					return;
 				}
 			}
+		   aDate  =  startDate.split("-");
+	       oDate1  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]);    //转换为12-18-2002格式 
+	       aDate  =  endDate.split("-"); 
+	       oDate2  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]); 
+	       iDays  =  parseInt(Math.abs(oDate1-oDate2)/1000/60/60/24);    //把相差的毫秒数转换为天数 
+	       if(iDays>30){
+	    	  alert("请选择30天以内的日期"); 
+	    	  return;
+	       }
+			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -193,7 +203,7 @@
 		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
                 onLoadSuccess:function(data){
                     if (data.total<1){
-                       $.messager.alert("提示","表单无数据!");
+                       $.messager.alert("提示","没有符合查询条件的数据!");
                   }
                    
                 }

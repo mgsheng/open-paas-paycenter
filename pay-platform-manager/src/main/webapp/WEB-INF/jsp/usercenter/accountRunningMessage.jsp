@@ -134,7 +134,7 @@
 		        //pagination: true,显示分页工具栏
 		        onLoadSuccess:function(data){
                     if (data.total<1){
-                       $.messager.alert("提示","表单无数据!");
+                       $.messager.alert("提示","没有符合查询条件的数据!");
                   }
                    
                 }

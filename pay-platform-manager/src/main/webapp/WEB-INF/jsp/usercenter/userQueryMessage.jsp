@@ -25,7 +25,7 @@
 			<td>
 				<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:100%">
 			</td>
-			<td style="text-align: right;">第三方订单号：</td>
+			<td style="text-align: right;width: 150px">第三方订单号：</td>
 			<td><input id="payOrderId" name="payOrderId" class="easyui-textbox" style="width:100%"></td>
 		</tr>
 		<tr>
@@ -157,7 +157,7 @@
 		        //pagination: true,显示分页工具栏
 		        onLoadSuccess:function(data){
                     if (data.total<1){
-                       $.messager.alert("提示","表单无数据!");
+                       $.messager.alert("提示","没有符合查询条件的数据!");
                   }
                    
                 }
