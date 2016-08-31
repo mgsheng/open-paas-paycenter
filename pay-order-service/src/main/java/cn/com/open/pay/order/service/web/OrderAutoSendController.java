@@ -22,7 +22,7 @@ import cn.com.open.pay.order.service.log.UnifyPayControllerLog;
 import cn.com.open.pay.order.service.merchant.model.MerchantInfo;
 import cn.com.open.pay.order.service.merchant.service.MerchantInfoService;
 import cn.com.open.pay.order.service.order.model.MerchantOrderInfo;
-import cn.com.open.pay.order.service.order.serivce.MerchantOrderInfoService;
+import cn.com.open.pay.order.service.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.order.service.tools.AlipayCore;
 import cn.com.open.pay.order.service.tools.BaseControllerUtil;
 import cn.com.open.pay.order.service.tools.DateTools;

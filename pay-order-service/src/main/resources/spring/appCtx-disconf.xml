@@ -17,7 +17,7 @@
 	<!-- 使用disconf必须添加以下配置 -->
 	<bean id="disconfMgrBean" class="com.baidu.disconf.client.DisconfMgrBean"
       destroy-method="destroy">
-    	<property name="scanPackage" value="cn.com.open.openpaas.payservice"/>
+    	<property name="scanPackage" value="cn.com.open.pay.order.service"/>
 	</bean>
 	<bean id="disconfMgrBean2" class="com.baidu.disconf.client.DisconfMgrBeanSecond"
       init-method="init" destroy-method="destroy">
@@ -27,7 +27,7 @@
 		class="com.baidu.disconf.client.addons.properties.ReloadablePropertiesFactoryBean">
 		<property name="locations">
 			<list>
-				<value>pay-service-message.properties</value>
+				<value>pay-order-service.properties</value>
 				</list>
 		</property>
 	</bean>

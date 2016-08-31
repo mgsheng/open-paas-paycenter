@@ -1,4 +1,4 @@
-package cn.com.open.pay.order.service.order.serivce.impl;
+package cn.com.open.pay.order.service.order.service.impl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.pay.order.service.infrastructure.repository.MerchantOrderInfoRepository;
 import cn.com.open.pay.order.service.order.model.MerchantOrderInfo;
-import cn.com.open.pay.order.service.order.serivce.MerchantOrderInfoService;
+import cn.com.open.pay.order.service.order.service.MerchantOrderInfoService;
 
 /**
  * 

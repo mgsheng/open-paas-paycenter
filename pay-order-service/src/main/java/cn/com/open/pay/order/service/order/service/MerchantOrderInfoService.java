@@ -1,4 +1,4 @@
-package cn.com.open.pay.order.service.order.serivce;
+package cn.com.open.pay.order.service.order.service;
 
 import java.util.HashMap;
 import java.util.List;

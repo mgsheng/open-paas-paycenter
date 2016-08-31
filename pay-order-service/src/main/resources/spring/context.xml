@@ -15,8 +15,9 @@
     <context:component-scan base-package="cc.wdcy.redis"/>
     <context:component-scan base-package="cc.wdcy.logic"/>
     <context:component-scan base-package="cc.wdcy.job"/> -->
-    <context:component-scan base-package="cn.com.open.user.platform.manager.redis"/>
-    <context:component-scan base-package="cn.com.open.user.platform.manager.user.service"/>
+    <context:component-scan base-package="cn.com.open.pay.order.service.redis"/>
+    <context:component-scan base-package="cn.com.open.pay.order.service.merchant.service"/>
+    <context:component-scan base-package="cn.com.open.pay.order.service.order.service"/>
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
@@ -164,7 +165,6 @@
             <property name="server_host" value="${server_host}"></property>
             <property name="tcl_pay_version" value="${tcl_pay_version}"></property>
             <property name="userCenter_getUserId_url" value="${userCenter_getUserId_url}"></property>
-            <property name="zookeeper_config" value="${zookeeper_config}"></property>
             <property name="pay_switch" value="${pay_switch}"></property>
             <property name="pay_channle" value="${pay_channle}"></property>
             <property name="tcl_pay_url" value="${tcl_pay_url}"></property>

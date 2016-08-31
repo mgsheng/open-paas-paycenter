@@ -12,8 +12,17 @@
 	<!-- 当Spring容器启动完成后执行下面的这个Bean -->
 	
 	<!-- 订单自动补发定时任务配置开始 -->
-	<bean id="orderAutoSendJob" class="cn.com.open.openpaas.payservice.web.api.order.OrderAutoSendController"></bean><!-- 定义调用对象和调用对象的方法 -->
+	<bean id="orderAutoSendJob" class="cn.com.open.pay.order.service.web.OrderAutoSendController"></bean><!-- 定义调用对象和调用对象的方法 -->
 	<!-- 【订单自动补发】调用类配置-->
+	<!-- 【订单自动补发】调用类配置-->
+	<bean id="orderAutoSendTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"><!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="orderAutoSendJob" />
+		</property>
+		<property name="targetMethod">
+			<value>orderAutoSend</value>
+		</property>
+	</bean>
 	<bean id="doOrderAutoSendTask" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
 			<ref bean="orderAutoSendTask" />
@@ -23,11 +32,11 @@
 			<value>0 0 0/1 * * ?</value>
 		</property>
 	</bean>
+		
 	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
 	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="doAnalyticalLogTask" />
 				<ref bean="doOrderAutoSendTask" />
 			</list>
 		</property>
