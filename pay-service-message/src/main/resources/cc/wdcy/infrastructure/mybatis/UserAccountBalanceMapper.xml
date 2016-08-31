@@ -71,8 +71,8 @@
     </update>
  
 	<insert id="saveUserAccountBalance" parameterType="UserAccountBalance" useGeneratedKeys="true" keyProperty="id">
-        insert into USER_ACCOUNT_BALANCE(Id,USER_ID,USER_NAME,BALANCE,STATUS,TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+        insert into USER_ACCOUNT_BALANCE(Id,USER_ID,USER_NAME,TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
         values
-        (#{id},#{userId},#{userName},#{balance},#{status},#{type},#{createTime},#{appId},#{sourceId})
+        (#{id},#{userId},#{userName},#{type},#{createTime},#{appId},#{sourceId})
     </insert>
 </mapper>
