@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <settings>
+        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="useGeneratedKeys" value="true"/>
+    </settings>
+    <typeAliases>
+        <typeAlias alias="MerchantInfo" type="cn.com.open.pay.order.service.merchant.model.MerchantInfo"/>
+        <typeAlias alias="MerchantOrderInfo" type="cn.com.open.pay.order.service.order.model.MerchantOrderInfo"/>
+    </typeAliases>
+
+    <mappers>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml"/>
+    </mappers>
+
+</configuration>

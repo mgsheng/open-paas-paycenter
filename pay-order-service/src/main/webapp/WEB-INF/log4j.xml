@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="Console"/>
+    </root>
+    
+	<!--spring logger-->
+    <logger name="org.springframework" additivity="false">
+        <level value="WARN"/>
+        <appender-ref ref="Console"/>
+    </logger>
+    
+    <!-- spring页面异常只有DEBUG才会输出 -->
+    <logger name="org.springframework.web.servlet" additivity="false">
+        <level value="DEBUG"/>
+    </logger>
+     <!-- UnifyPayControllerLog -->
+    <logger name="cn.com.open.pay.order.service.log.UnifyPayControllerLog" additivity="false">
+        <level value="info" />
+        <appender-ref ref="Console" />
+        <appender-ref ref="dailyRollingFileUnifyPayControllerLog" />    
+    </logger>
+
+    <!-- 输出日志到控制台  ConsoleAppender -->   
+    <appender name="Console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %p [%c] - %m%n"/>
+        </layout>
+    </appender>
+  
+    <!-- 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFile"  
+        class="org.apache.log4j.DailyRollingFileAppender"> 
+        <param name="ImmediateFlush" value="true"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_client.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="[%d{yyyy-MM-dd HH:mm:ss\} %-5p] [%t] {%c:%L}-%m%n"></param>  
+        </layout>  
+    </appender>
+    
+    
+       <!-- UnifyPayControllerLog 输出日志到文件  每天一个文件 -->  
+    <appender name="dailyRollingFileUnifyPayControllerLog"  
+        class="org.apache.log4j.DailyRollingFileAppender"> 
+        <param name="ImmediateFlush" value="true"></param>  
+        <param name="File" value="${catalina.home}/logs/catalina_server_unify_pay_controller.log"></param>  
+        <param name="DatePattern" value="'.'yyyy-MM-dd"></param>  
+        <layout class="org.apache.log4j.PatternLayout">  
+            <param name="ConversionPattern" value="%m%n"></param>  
+        </layout>  
+    </appender>
+      
+</log4j:configuration>

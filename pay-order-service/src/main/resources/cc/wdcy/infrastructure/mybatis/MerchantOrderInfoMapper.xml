@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.order.service.infrastructure.mybatis.MerchantOrderInfoRepositoryMyBatis">
+	<resultMap type="MerchantOrderInfo" id="merchantOrderInfoMap">
+		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<result column="CHANNEL_ORDERID" property="channelOrderId" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ID" property="merchantId" jdbcType="INTEGER" />
+		<result column="MERCHANT_VERSION" property="merchantVersion" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ORDERID" property="merchantOrderId" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ORDERDATE" property="merchantOrderDate" jdbcType="VARCHAR" />
+		<result column="MERCHANT_PRODUCTNAME" property="merchantProductName" jdbcType="VARCHAR" />
+		<result column="MERCHANT_PRODUCTID" property="merchantProductId" jdbcType="VARCHAR" />
+		<result column="MERCHANT_PRODUCTDESC" property="merchantProductDesc" jdbcType="VARCHAR" />
+		<result column="ORDER_AMOUNT" property="orderAmount" jdbcType="DECIMAL" />
+		<result column="AMOUNT" property="amount" jdbcType="DECIMAL" />
+		<result column="PAY_CHARGE" property="payCharge" jdbcType="DECIMAL" />
+		<result column="PAY_BASE" property="payBash" jdbcType="DECIMAL" />
+		<result column="PAY_AMOUNT" property="payAmount" jdbcType="DECIMAL" />
+		<result column="PAY_DIVIDE" property="payDivide" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
+		<result column="STATUS_CODE" property="statusCode" jdbcType="VARCHAR" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="DEAL_DATE" property="dealDate" jdbcType="TIMESTAMP" />	
+		<result column="PAY_ORDERID" property="payOrderId" jdbcType="VARCHAR" />
+		<result column="PAY_STATUS" property="payStatus" jdbcType="INTEGER" />
+		<result column="PAY_STATUSCODE" property="payStatusCode" jdbcType="VARCHAR" />
+		<result column="NOTIFY_STATUS" property="notifyStatus" jdbcType="INTEGER" />
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+		<result column="RETURN_URL" property="returnUrl" jdbcType="VARCHAR" />
+		<result column="PARAMETER1" property="parameter1" jdbcType="VARCHAR" />
+		<result column="APP_CHANNELID" property="appChannelId" jdbcType="VARCHAR" />
+		<result column="NOTIFY_TIMES" property="notifyTimes" jdbcType="INTEGER" />
+		<result column="NOTIFY_DATE" property="notifyDate" jdbcType="TIMESTAMP" />
+		<result column="PAYMENT_ID" property="paymentId" jdbcType="INTEGER" />
+		<result column="CHANNEL_ID" property="channelId" jdbcType="INTEGER" />
+		<result column="SOURCE_TYPE" property="sourceType" jdbcType="INTEGER" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="GUID" property="guid" jdbcType="VARCHAR" />
+		<result column="USERNAME" property="userName" jdbcType="VARCHAR" />
+		<result column="SOURCE_UID" property="sourceUid" jdbcType="VARCHAR" />
+		<result column="SOURCE_USERNAME" property="sourceUserName" jdbcType="VARCHAR" />
+		<result column="CLIENTOSTYPE" property="clientostype" jdbcType="VARCHAR" />
+		<result column="CLIENTOSVERSION" property="clientosversion" jdbcType="VARCHAR" />
+		<result column="IP" property="ip" jdbcType="VARCHAR" />
+		<result column="IMEI" property="imei" jdbcType="VARCHAR" />
+		<result column="MAC" property="mac" jdbcType="VARCHAR" />
+		<result column="APPID" property="appId" jdbcType="VARCHAR" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="INTEGER" />
+		<result column="STATUS_MESSAGE" property="statusMessage" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  CHANNEL_ORDERID,
+	  MERCHANT_ID,
+	  MERCHANT_VERSION,
+	  MERCHANT_ORDERID,
+	  MERCHANT_ORDERDATE,
+	  MERCHANT_PRODUCTNAME,
+	  MERCHANT_PRODUCTID,
+	  MERCHANT_PRODUCTDESC,
+	  ORDER_AMOUNT,
+	  AMOUNT,
+	  PAY_CHARGE,
+	  PAY_BASE,
+	  PAY_AMOUNT,
+	  PAY_DIVIDE,
+	  STATUS,
+	  STATUS_CODE,
+	  CREATE_DATE,
+	  DEAL_DATE,
+	  PAY_ORDERID,
+	  PAY_STATUS,
+	  PAY_STATUSCODE,
+	  NOTIFY_STATUS,
+	  NOTIFY_URL,
+	  RETURN_URL,
+	  PARAMETER1,
+	  APP_CHANNELID,
+	  NOTIFY_TIMES,
+	  NOTIFY_DATE,
+	  PAYMENT_ID,
+	  CHANNEL_ID,
+	  SOURCE_TYPE,
+	  MEMO,
+	  GUID,
+	  USERNAME,
+	  SOURCE_UID,
+	  SOURCE_USERNAME,
+	  CLIENTOSTYPE,
+	  CLIENTOSVERSION,
+	  IP,
+	  IMEI,
+	  MAC,
+	  APPID,
+	  STATUS_MESSAGE,
+	  BUSINESS_TYPE
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.order.service.order.model.MerchantOrderInfo">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into MERCHANT_ORDER_INFO
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{channelOrderId, jdbcType=VARCHAR},
+			#{merchantId, jdbcType=INTEGER},
+			#{merchantVersion, jdbcType=VARCHAR},
+			#{merchantOrderId, jdbcType=VARCHAR},
+			#{merchantOrderDate, jdbcType=VARCHAR},
+			#{merchatProductName, jdbcType=VARCHAR},
+			#{merchatProductId, jdbcType=VARCHAR},
+			#{merchatProductDesc, jdbcType=VARCHAR},
+			#{orderAmount, jdbcType=DECIMAL},
+			#{amount, jdbcType=DECIMAL},
+			#{payCharge, jdbcType=DECIMAL},
+			#{payBase, jdbcType=DECIMAL},
+			#{payAmount, jdbcType=DECIMAL},
+			#{payDivide, jdbcType=DECIMAL},
+			#{status, jdbcType=INTEGER},
+			#{statusCode, jdbcType=VARCHAR},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{dealDate, jdbcType=TIMESTAMP},
+			#{payOrderId, jdbcType=VARCHAR},
+			#{payStatus, jdbcType=INTEGER},
+			#{payStatusCode, jdbcType=VARCHAR},
+			#{notifyStatus, jdbcType=INTEGER},
+			#{nodifyUrl, jdbcType=VARCHAR},
+			#{returnUrl, jdbcType=VARCHAR},
+			#{parameter1, jdbcType=VARCHAR},
+			#{appChannelId, jdbcType=VARCHAR},
+			#{notifyTimes, jdbcType=INTEGER},
+			#{notifyDate, jdbcType=TIMESTAMP},
+			#{paymentId, jdbcType=INTEGER},
+			#{channelId, jdbcType=INTEGER},
+			#{sourceType, jdbcType=DECIMAL},
+			#{memo, jdbcType=VARCHAR},		 
+			#{guid, jdbcType=VARCHAR},			
+			#{userName, jdbcType=VARCHAR},			
+			#{sourceUid, jdbcType=VARCHAR},			
+			#{sourceUserName, jdbcType=VARCHAR},			
+			#{clientostype, jdbcType=VARCHAR},			
+			#{clientosversion, jdbcType=VARCHAR},			
+			#{ip, jdbcType=VARCHAR},			
+			#{imei, jdbcType=VARCHAR},			
+			#{mac, jdbcType=VARCHAR},			
+			#{appId, jdbcType=VARCHAR},	
+			#{businessType, jdbcType=INTEGER},			
+			#{statusMessage, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="findByMerchantOrderId" resultMap="merchantOrderInfoMap">
+         select * from MERCHANT_ORDER_INFO
+         where  MERCHANT_ORDERID = #{merchantOrderId}
+	</select>
+	<select id="findByMidAndAppId" resultMap="merchantOrderInfoMap">
+         select * from MERCHANT_ORDER_INFO
+         where  MERCHANT_ORDERID = #{merchantOrderId}
+         and APPID=#{appId}
+	</select>	
+	
+	<select id="findById" resultMap="merchantOrderInfoMap">
+         select * from MERCHANT_ORDER_INFO
+         where  ID = #{id}
+	</select>
+	<select id="findByPayAndNotifyStatus" resultMap="merchantOrderInfoMap">
+         select * from MERCHANT_ORDER_INFO
+         where  PAY_STATUS = 1 and NOTIFY_STATUS != 1
+	</select>
+	
+	<select id="findQueryMerchant" resultMap="merchantOrderInfoMap" >
+        select * from  MERCHANT_ORDER_INFO where 1=1
+        <if test="id != null and id !=''" >
+           and ID=#{id} 
+        </if>
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="payOrderId != null and payOrderId !=''" >
+           and PAY_ORDERID=#{payOrderId} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="payStatus != null and payStatus !=''" >
+           and PAY_STATUS=#{payStatus} 
+        </if>
+        <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+        </if>
+        <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+       limit #{startRow},#{pageSize} 
+    </select>
+    <select id="findDownloadMerchant" resultMap="merchantOrderInfoMap" >
+        select * from  MERCHANT_ORDER_INFO where 1=1
+        <if test="id != null and id !=''" >
+           and ID=#{id} 
+        </if>
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="payOrderId != null and payOrderId !=''" >
+           and PAY_ORDERID=#{payOrderId} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="payStatus != null and payStatus !=''" >
+           and PAY_STATUS=#{payStatus} 
+        </if>
+        <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+        </if>
+        <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+    </select>
+    <select id="findQueryCount" resultType="int">
+        select count(*) from  MERCHANT_ORDER_INFO where 1=1
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="payOrderId != null and payOrderId !=''" >
+           and PAY_ORDERID=#{payOrderId} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="payStatus != null and payStatus !=''" >
+           and PAY_STATUS=#{payStatus} 
+        </if>
+        <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+        </if>
+        <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+    </select>
+    
+	
+	<update id="updateNotifyTimes"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        NOTIFY_TIMES = #{notifyTimes}
+        where ID = #{id}
+    </update>
+    <update id="updateOrder" parameterType="MerchantOrderInfo" flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAY_STATUS = #{payStatus},
+        PAY_AMOUNT=#{payAmount},
+        PAY_ORDERID=#{payOrderId},
+        PAY_CHARGE=#{payCharge},
+        DEAL_DATE=#{dealDate},
+        AMOUNT=#{amount}
+        where ID = #{id}
+    </update>
+     <update id="updatePayStatus"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAY_STATUS = #{payStatus}
+        where ID = #{id}
+    </update>
+      <update id="updateSourceType"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        SOURCE_TYPE = #{sourceType}
+        where ID = #{id}
+    </update>
+    <update id="updateOrderInfo" parameterType="MerchantOrderInfo" flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        CHANNEL_ID = #{channelId}
+        where ID = #{id} 
+    </update>
+    <update id="updateNotifyStatus" parameterType="MerchantOrderInfo" flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        NOTIFY_STATUS = #{notifyStatus},
+        NOTIFY_TIMES = #{notifyTimes},
+	  	NOTIFY_DATE = #{notifyDate}
+        where ID = #{id}
+    </update>
+    <update id="updatePayWay" parameterType="MerchantOrderInfo" flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAYMENT_ID = #{paymentId},
+        CHANNEL_ID = #{channelId},
+        SOURCE_TYPE = #{sourceType}
+        where ID = #{id}
+    </update>
+    <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true" >
+       <![CDATA[
+        update MERCHANT_ORDER_INFO set
+        ID = #{id},
+		CREATE_DATE = #{createDate}
+        where MERCHANT_ORDERID = #{merchantOrderId} and APPID=#{appId}
+    ]]>
+    </update>
+	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE,PAYMENT_ID,SOURCE_TYPE)
+        values
+        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId},#{sourceType})
+    </insert>
+     <select id="findOrderByTime" resultType="java.util.Map" flushCache="true">
+         select ID,MERCHANT_ORDERID merchantOrderId,MERCHANT_PRODUCTNAME merchantProductName,AMOUNT amount,PAYMENT_ID  paymentId,CHANNEL_ID channelId,SOURCE_UID sourceUid,SOURCE_USERNAME sourceUserName,APPID appId,PAY_STATUS payStatus,NOTIFY_STATUS notifyStatus from MERCHANT_ORDER_INFO
+         where 1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
+	</select>
+	<select id="getTotalAmountByTime"  resultType="java.util.Map" flushCache="true">
+         select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
+         where 1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
+	</select>
+	
+	<select id="getPayCount"  resultType="java.util.Map" flushCache="true">
+         select count(MERCHANT_ORDERID) payCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+	</select>
+	<select id="getTotalPayCount"  resultType="java.util.Map" flushCache="true">
+         select count(MERCHANT_ORDERID) payCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+	</select>
+	<select id="getPayAmount"  resultType="java.util.Map" flushCache="true" >
+         select sum(PAY_AMOUNT) payAmount from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+	</select>
+	
+	<select id="getTotalPayAmount"  resultType="java.util.Map" flushCache="true" >
+         select sum(PAY_AMOUNT) payAmount from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+	</select>
+	<select id="getUserCount"  resultType="java.util.Map" flushCache="true">
+         select count(SOURCE_UID) userCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+	</select>
+	
+	<select id="getTotalUserCount"  resultType="java.util.Map" flushCache="true">
+         select count(SOURCE_UID) userCount  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+          
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1  
+	</select>
+	<select id="payCharge"  resultType="java.util.Map" flushCache="true">
+         select sum(PAY_CHARGE) payCharge  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
+	</select>
+	<select id="payTotalCharge"  resultType="java.util.Map" flushCache="true">
+         select sum(PAY_CHARGE) payCharge  from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+	</select>
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
+</mapper>
