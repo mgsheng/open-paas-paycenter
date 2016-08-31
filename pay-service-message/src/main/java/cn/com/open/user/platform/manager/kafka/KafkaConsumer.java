@@ -46,8 +46,10 @@ public class KafkaConsumer extends Thread{
                      String userId = reqjson.getString("userId");
                      String appId = reqjson.getString("appId");
                      String sourceId = reqjson.getString("sourceId");
+                     Double balance=0.0;
                      String userName = reqjson.getString("userName");
                      String type = reqjson.getString("type");
+                     int  status=1;
                      UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
                      if(userAccountBalance==null){
                     	 userAccountBalance=new UserAccountBalance();
@@ -61,6 +63,8 @@ public class KafkaConsumer extends Thread{
                           }
                           userAccountBalance.setUserName(userName);
                           userAccountBalance.setCreateTime(new Date());
+                          userAccountBalance.setBalance(balance); 
+                          userAccountBalance.setStatus(status);
                           userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
                      }
              }
