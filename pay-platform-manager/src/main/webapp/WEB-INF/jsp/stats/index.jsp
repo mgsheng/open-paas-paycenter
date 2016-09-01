@@ -33,7 +33,7 @@ table {
 			style="border:0px solid;border-color:green;height: 30px;display:inline-block; width: 100%px;">
 			<div>
 				<span> <select class="easyui-combobox" name="channelId" id="channelId"
-					label="支付方式" style="width:200px">
+					label="支付方式" style="width:200px" data-options="editable:false">
 					    <option value="" selected="selected">全部</option>
 						<option value="10001">支付宝</option>
 						<option value="10002">微信</option>
@@ -41,13 +41,13 @@ table {
 						<option value="10003">银联</option>
 				</select> </span> <span style="margin-left: 180px"> <select
 					class="easyui-combobox" id="payClient"name="payClient" label="缴费来源"
-					style="width:230px;">
+					style="width:230px;" data-options="editable:false">
 					    <option value="" selected="selected">全部</option>
 						<option value="pc">PC端</option>
 						<option value="mobile" >移动端</option>
 				</select> </span> <span style="margin-left: 170px"> <select
 					class="easyui-combobox" id="paymentId"name="paymentId" label="缴费银行"
-					style="width:200px" >
+					style="width:200px" data-options="editable:false">
 					    <option value="" selected="selected">全部</option>
 						<option value="10012">支付宝-即时到账</option>
 						<option value="10013">微信-扫码支付</option>
@@ -67,7 +67,7 @@ table {
 			</div>
 			<div style="margin-top: 5px">
 				<span style=""> <select class="easyui-combobox" name="appId" id="appId"
-					label="业务类型" style="width:200px">
+					label="业务类型" style="width:200px" data-options="editable:false">
 					   <option value="" selected="selected">全部</option>
 						<option value="1">OES学历</option>
 						<option value="10026" >mooc2u</option>
@@ -193,7 +193,8 @@ table {
 		//去除Y轴的单位k、m
 		Highcharts.setOptions({
 			lang : {
-				numericSymbols : []
+				numericSymbols : [],
+				loading: '数据载入中...' 
 			}
 		});
 		$.post("${pageContext.request.contextPath}/user/admin/userstatistics/chart.json", {
@@ -207,7 +208,8 @@ table {
 		}, function(data) {
 			if (data.timeData != null) {
 				var dataString = data.timeData;
-				$('#payAmount').highcharts({
+				  var payAmountchart;
+				 var options = {
 				 chart: {
 				    	renderTo : 'payAmount',
 				    	width:900,
@@ -259,9 +261,14 @@ table {
 						borderWidth : 0
 					},
 					series : data.payAmountListMap
-				});
+				};
 				
+				 $('#payAmount').highcharts(options);                         //创建图表动画
+				 payAmountchart = $('#payAmount').highcharts();                         //获取图表对象
+                 
+		          
 				$('#payCount').highcharts({
+				
 				 chart: {
 				    	renderTo : 'payCount',
 				    	width:900,
@@ -314,6 +321,7 @@ table {
 					},
 					series : data.payCountListMap
 				});
+				
 				$('#userCount').highcharts({
 				 chart: {
 				    	renderTo : 'userCount',
