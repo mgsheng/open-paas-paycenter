@@ -3,7 +3,7 @@
   type="WEB"
   name="pay-service-message"
   id="myeclipse.1470620261497"
-  context-root="/user-platform-manager"
+  context-root="/pay-service-message"
   j2ee-spec="6.0"
   archive="pay-service-message.war">
   <attributes>
