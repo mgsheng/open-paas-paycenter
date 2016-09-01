@@ -666,7 +666,6 @@ pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/DBUtil
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/DESUtil.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/DateTools.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/DateUtils.java -text
-pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/EmailTools.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/FatherCommon.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/GuidGenerator.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/Help_Encrypt.java -text
@@ -677,7 +676,6 @@ pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/Monito
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/NetworkUtil.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/PropertiesTool.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/SerializeUtil.java -text
-pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/SmsTools.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/StringTool.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/ValidateUtil.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/tools/WebUtils.java -text
