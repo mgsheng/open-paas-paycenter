@@ -7,6 +7,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/resources"/>
         <property name="java-output-path" value="/pay-platform-manager/src/main/webapp/WEB-INF/classes"/>
-        <property name="context-root" value="/user-platform-manager"/>
+        <property name="context-root" value="/pay-service-message"/>
     </wb-module>
 </project-modules>
