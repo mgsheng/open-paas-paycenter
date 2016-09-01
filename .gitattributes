@@ -48,7 +48,6 @@ pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/DBUtil.java 
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/DESUtil.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/DateTools.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/DateUtils.java -text
-pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/EmailTools.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/FatherCommon.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/GuidGenerator.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/Help_Encrypt.java -text
@@ -60,7 +59,6 @@ pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/NetworkUtil.
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/PayUtil.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/PropertiesTool.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/SerializeUtil.java -text
-pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/SmsTools.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/StringTool.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/SysUtil.java -text
 pay-order-service/src/main/java/cn/com/open/pay/order/service/tools/ValidateUtil.java -text

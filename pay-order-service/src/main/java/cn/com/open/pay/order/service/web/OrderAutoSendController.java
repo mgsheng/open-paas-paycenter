@@ -8,7 +8,6 @@ import java.util.TreeMap;
 
 import net.sf.json.JSONObject;
 
-import org.apache.commons.httpclient.util.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import cn.com.open.pay.order.service.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.order.service.tools.AlipayCore;
 import cn.com.open.pay.order.service.tools.BaseControllerUtil;
 import cn.com.open.pay.order.service.tools.DateTools;
+import cn.com.open.pay.order.service.tools.DateUtils;
 import cn.com.open.pay.order.service.tools.PayUtil;
 import cn.com.open.pay.order.service.tools.SysUtil;
 
@@ -75,7 +75,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
 				params.put("guid", orderInfo.getGuid());
 				params.put("appUid",String.valueOf(orderInfo.getSourceUid()));
 				//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-				params.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+				params.put("timeEnd", DateUtils.toDateText(new Date(), "yyyyMMddHHmmss"));
 				params.put("totalFee", String.valueOf((int)(orderInfo.getPayAmount()*100)));
 				params.put("goodsId", orderInfo.getMerchantProductId());
 				params.put("goodsName",orderInfo.getMerchantProductName());

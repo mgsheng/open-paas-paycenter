@@ -38,7 +38,7 @@
 
 
     <build>
-        <finalName>pay-service</finalName>
+        <finalName>pay-order-service</finalName>
 
         <plugins>
             <plugin>
@@ -175,18 +175,18 @@
             <version>2.1</version>
             <scope>provided</scope>
         </dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.1</version>
-		</dependency>
+		</dependency> -->
         <!--public compile dependencies-->
-        <dependency>
+       <!--  <dependency>
             <groupId>opensymphony</groupId>
             <artifactId>sitemesh</artifactId>
             <version>2.4</version>
-        </dependency>
-        <dependency>
+        </dependency> -->
+   <!--      <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
             <version>${aspectj.version}</version>
@@ -197,7 +197,7 @@
             <artifactId>aspectjweaver</artifactId>
             <version>${aspectj.version}</version>
             <scope>compile</scope>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
@@ -286,13 +286,11 @@
             <artifactId>spring-security-config</artifactId>
             <version>${spring.security.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
             <artifactId>spring-security-oauth2</artifactId>
             <version>1.0.5.RELEASE</version>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -304,7 +302,6 @@
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>1.2.1</version>
 		</dependency>
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -317,7 +314,6 @@
             <version>1.7.5</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>net.sf.json-lib</groupId>
             <artifactId>json-lib</artifactId>
@@ -329,8 +325,7 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
+        </dependency> 
         <!--mybatis-->
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -355,7 +350,7 @@
         </dependency>
 
         <!--public test dependencies-->
-        <dependency>
+       <!--  <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
@@ -376,13 +371,20 @@
             <groupId>org.springframework.mobile</groupId>
             <artifactId>spring-mobile-device</artifactId>
             <version>1.0.0.RELEASE</version>
-        </dependency>
-           <dependency>  
+        </dependency>-->
+        
+        <dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>0.2.20</version>
+		</dependency>
+        <!-- redis -->
+           <dependency>   
         <groupId>redis.clients</groupId>  
         <artifactId>jedis</artifactId>  
         <version>2.1.0</version>  
     </dependency>  
-    <dependency>
+ <!--    <dependency>
 	<groupId>org.apache.axis</groupId>
 	<artifactId>axis</artifactId>
 	<version>1.4</version>
@@ -401,7 +403,8 @@
     <groupId>commons-discovery</groupId>
     <artifactId>commons-discovery</artifactId>
     <version>0.5</version>
-</dependency>
+</dependency> -->
+
 <dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
@@ -428,7 +431,7 @@
 	<version>2.2.2</version>
 </dependency>
   <!--ali pay dependencies  -->
-<dependency>
+<!-- <dependency>
 	<groupId>org.apache.directory.studio</groupId>
 	<artifactId>org.dom4j.dom4j</artifactId>
 	<version>1.6.1</version>
@@ -447,9 +450,14 @@
 	<groupId>commons-httpclient</groupId>
 	<artifactId>commons-httpclient</artifactId>
 	<version>3.0.1</version>
+</dependency> -->
+<dependency>
+	<groupId>commons-httpclient</groupId>
+	<artifactId>commons-httpclient</artifactId>
+	<version>3.0.1</version>
 </dependency>
 <!-- dang mian fu lib -->
-<dependency>
+<!-- <dependency>
 	<groupId>com.google.zxing</groupId>
 	<artifactId>core</artifactId>
 	<version>2.1</version>
@@ -468,11 +476,11 @@
     <groupId>com.google.code.gson</groupId>
     <artifactId>gson</artifactId>
     <version>2.3.1</version>
-</dependency>
+</dependency> -->
 
 
 <!--wenxin jar  -->
-        <dependency>
+       <!--  <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
@@ -537,7 +545,7 @@
     	<artifactId>core</artifactId>
     	<version>2.2</version>
 		</dependency>
-		<!-- kafka -->
+		kafka
         <dependency>
         <groupId>org.apache.kafka</groupId>
         <artifactId>kafka_2.10</artifactId>
@@ -547,7 +555,7 @@
     <groupId>org.bouncycastle</groupId>
     <artifactId>bcprov-jdk16</artifactId>
     <version>1.45</version>
-</dependency>
+</dependency> -->
 <!-- disconf -->
 <dependency>
     <groupId>com.baidu.disconf</groupId>
