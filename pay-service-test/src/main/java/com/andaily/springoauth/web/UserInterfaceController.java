@@ -308,7 +308,7 @@ public class UserInterfaceController {
      * Redirect to oauth-server bind page:   step-2
      * */
      @RequestMapping(value = "fileDownlond", method = RequestMethod.POST)
-     public String fileDownlond(String  outTradeNo,String appId) throws Exception {
+     public String fileDownlond(String  outTradeNo,String appId,String acDate,String merchantId) throws Exception {
     	 String key=map.get(appId);
    	  	 String signature="";
    	  	 String timestamp="";
@@ -320,13 +320,16 @@ public class UserInterfaceController {
 	   		sParaTemp.put("appId",appId);
 	   		sParaTemp.put("timestamp", timestamp);
 	   		sParaTemp.put("signatureNonce", signatureNonce);
-	   		sParaTemp.put("outTradeNo",outTradeNo );
+//	   		sParaTemp.put("outTradeNo",outTradeNo );
+	   		sParaTemp.put("acDate",acDate );
+	   		sParaTemp.put("merchantId",merchantId );
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);
 	   	 }
-    	 final String fullUri =fileDownlondUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
-         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+//    	 final String fullUri =fileDownlondUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+	   	 final String fullUri =fileDownlondUri+"?merchantId="+merchantId+"&acDate="+acDate+"&appId="+appId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+        LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
  	
