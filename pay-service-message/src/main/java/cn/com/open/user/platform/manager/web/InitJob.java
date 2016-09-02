@@ -23,8 +23,10 @@ public class InitJob implements ApplicationListener<ContextRefreshedEvent> {
 	private UserManagerDev userManagerDev;
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
+		if(event.getApplicationContext().getDisplayName().equals("Root WebApplicationContext")){
+			System.out.println("~~~~~~~~~~~~~~~Kafka message service start~~~~~~~~~~~~~~~~");
 		Thread thread = new Thread( new KafkaConsumer(userAccountBalanceService,userManagerDev));
 		thread.run();
-		
+		}
 	}
 }
