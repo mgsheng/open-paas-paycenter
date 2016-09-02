@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -14,8 +16,9 @@ import net.sf.json.JSONObject;
 import cn.com.open.user.platform.manager.dev.UserManagerDev;
 import cn.com.open.user.platform.manager.user.model.UserAccountBalance;
 import cn.com.open.user.platform.manager.user.service.UserAccountBalanceService;
+import cn.com.open.user.platform.manager.web.InitJob;
 public class KafkaConsumer extends Thread{  
-  
+	private static final Logger log = Logger.getLogger(KafkaConsumer.class);
     private UserAccountBalanceService userAccountBalanceService;
     private UserManagerDev userManagerDev; 
     public KafkaConsumer(UserAccountBalanceService userAccountBalanceService,UserManagerDev userManagerDev){  
@@ -37,38 +40,43 @@ public class KafkaConsumer extends Thread{
          ConsumerIterator<byte[], byte[]> iterator =  stream.iterator(); 
          
          while(iterator.hasNext()){  
-             String message = new String(iterator.next().message());
-             //保存账户表中
-             //message: {"appId":1,"userId":80012553,"userName":"testsendpay11","type":"1","sourceId":"21292111111"}
-             i++;
-             System.out.println("接收到: " + message+","+"i="+i); 
-             if(!nullEmptyBlankJudge(message)){
-                	 JSONObject reqjson = JSONObject.fromObject(message);
-                     String userId = reqjson.getString("userId");
-                     String appId = reqjson.getString("appId");
-                     String sourceId = reqjson.getString("sourceId");
-                    // Double balance=0.0;
-                     String userName = reqjson.getString("userName");
-                     String type = reqjson.getString("type");
-                     //int  status=1;
-                     UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
-                     if(userAccountBalance==null){
-                    	 userAccountBalance=new UserAccountBalance();
-                    	  if(!nullEmptyBlankJudge(appId)){
-                         	 userAccountBalance.setAppId(Integer.parseInt(appId));	 
-                            }
-                          userAccountBalance.setUserId(userId);
-                          userAccountBalance.setSourceId(sourceId);
-                          if(!nullEmptyBlankJudge(type)){
-                           userAccountBalance.setType(Integer.parseInt(type));	 
-                          }
-                          userAccountBalance.setUserName(userName);
-                          userAccountBalance.setCreateTime(new Date());
-                          //userAccountBalance.setBalance(balance); 
-                         // userAccountBalance.setStatus(status);
-                          userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
-                     }
-             }
+             try {
+				String message = new String(iterator.next().message());
+				
+			     log.info("Kafka consumer receive:message:"+message);
+				 //保存账户表中
+				 //message: {"appId":1,"userId":80012553,"userName":"testsendpay11","type":"1","sourceId":"21292111111"}
+				
+				 if(!nullEmptyBlankJudge(message)){
+				    	 JSONObject reqjson = JSONObject.fromObject(message);
+				         String userId = reqjson.getString("userId");
+				         String appId = reqjson.getString("appId");
+				         String sourceId = reqjson.getString("sourceId");
+				        // Double balance=0.0;
+				         String userName = reqjson.getString("userName");
+				         String type = reqjson.getString("type");
+				         //int  status=1;
+				         UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
+				         if(userAccountBalance==null){
+				        	 userAccountBalance=new UserAccountBalance();
+				        	  if(!nullEmptyBlankJudge(appId)){
+				             	 userAccountBalance.setAppId(Integer.parseInt(appId));	 
+				                }
+				              userAccountBalance.setUserId(userId);
+				              userAccountBalance.setSourceId(sourceId);
+				              if(!nullEmptyBlankJudge(type)){
+				               userAccountBalance.setType(Integer.parseInt(type));	 
+				              }
+				              userAccountBalance.setUserName(userName);
+				              userAccountBalance.setCreateTime(new Date());
+				              //userAccountBalance.setBalance(balance); 
+				             // userAccountBalance.setStatus(status);
+				              userAccountBalanceService.saveUserAccountBalance(userAccountBalance); 
+				         }
+				 }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
            
          }  
     }  
