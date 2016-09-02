@@ -26,7 +26,7 @@
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
 
                 <div ng-show="visible">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="col-sm-2 control-label">outTradeNo</label>
 
                         <div class="col-sm-10">
@@ -34,6 +34,16 @@
                                    class="form-control" ng-model="outTradeNo"/>
 
                             <p class="help-block">业务方唯一订单号（必填）</p>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">merchantId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="merchantId" id="merchantId"
+                                   class="form-control" ng-model="merchantId"/>
+
+                            <p class="help-block">商户号</p>
                         </div>
                     </div>
                     <div class="form-group">  
@@ -46,6 +56,19 @@
                             <p class="help-block">应用Id,23-测试应用Id</p>
                         </div>
                     </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">startTime</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="acDate" id="acDate"
+                                   class="form-control" ng-model="acDate"/>
+
+                            <p class="help-block">时间（必填）格式：yyyyMMdd</p>
+                        </div>
+                    </div>
+                    
+                    
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>
                         <br/>
@@ -65,7 +88,9 @@
 <script>
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
 		$scope.outTradeNo="test201607151059";
+		$scope.merchantId="10001";
 		$scope.appId="10026";
+		$scope.acDate="20160715";
         $scope.visible = false;
 
         $scope.showParams = function () {
