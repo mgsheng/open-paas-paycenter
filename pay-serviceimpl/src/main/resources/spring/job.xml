@@ -29,14 +29,14 @@
 		</property>
 	</bean>
 	<!-- 【订单自动补发】调用类配置-->
-<!-- 	<bean id="orderAutoSendTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">调用的类
+ 	<bean id="orderAutoSendTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">调用的类
 		<property name="targetObject">
 			<ref bean="orderAutoSendJob" />
 		</property>
 		<property name="targetMethod">
 			<value>orderAutoSend</value>
 		</property>
-	</bean> -->
+	</bean> 
 	
     <!-- 【解析接口日志】调用类配置-->
 	<bean id="doAnalyticalLogTask" class="org.springframework.scheduling.quartz.CronTriggerBean">
@@ -49,24 +49,23 @@
 		</property>
 	</bean>
 	<!-- 【订单自动补发】调用类配置-->
-	<!-- <bean id="doOrderAutoSendTask" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <bean id="doOrderAutoSendTask" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail">
 			<ref bean="orderAutoSendTask" />
 		</property>
-		每天00:30分执行 更具体时间配置请搜索CronTriggerBean说明  
 		<property name="cronExpression">
 			<value>0 0 0/1 * * ?</value>
 		</property>
-	</bean> -->
+	</bean> 
 	
 	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序 -->
-	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<!--	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				<ref bean="doAnalyticalLogTask" />
 				<ref bean="doOrderAutoSendTask" />
 			</list>
 		</property>
-	</bean>
+	</bean>-->
 	<!-- 定时任务配置结束 -->
 </beans>
