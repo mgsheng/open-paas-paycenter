@@ -30,6 +30,9 @@
 									{"menuid":"22","menuname":"用户订单查询","icon":"icon-nav","url":"${pageContext.request.contextPath}/manage/userOrderPages"},
 									{"menuid":"23","menuname":"账户流水记录查询","icon":"icon-nav","url":"${pageContext.request.contextPath}/running/accountRunningPages"}
 								]
+						},{"menuid":"","icon":"icon-sys","menuname":"用户管理",
+							"menus":[{"menuid":"24","menuname":"添加用户","icon":"icon-add","url":"${pageContext.request.contextPath}/managerUser/showAdd"},
+										   {"menuid":"25","menuname":"查询用户","icon":"icon-search","url":"${pageContext.request.contextPath}/managerUser/showSearch"}									]
 						}
 				]};
         //设置登录窗口
@@ -104,8 +107,6 @@
             });
         });
 		
-		
-
     </script>
 
 </head>
@@ -143,7 +144,7 @@
 		style="width:180px;" id="west">
 		<div id="nav" class="easyui-accordion" fit="true" border="false">
 			<!--  导航内容 -->
-
+			
 		</div>
 
 	</div>

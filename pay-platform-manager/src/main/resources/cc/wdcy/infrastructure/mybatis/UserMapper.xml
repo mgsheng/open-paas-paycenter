@@ -1,298 +1,340 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.UserRepositoryMyBatis">
+<mapper
+	namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.UserRepositoryMyBatis">
 
-    <resultMap type="User" id="userMap">
-        <id property="id" column="id"/>
-        <result property="pid" column="pid"/>
-        <result property="guid" column="guid"/>
-        <result property="archived" column="archived"/>
-        <result property="createTime" column="create_time"/>
+	<resultMap type="User" id="userMap">
+		<id property="id" column="id" />
+		<result property="pid" column="pid" />
+		<result property="guid" column="guid" />
+		<result property="archived" column="archived" />
+		<result property="createTime" column="create_time" />
 
-        <result property="email" column="email"/>
-        <result property="phone" column="phone"/>
-        <result property="cardNo" column="card_no"/>
-        <result property="defaultUser" column="default_user"/>
-        
-        <result property="nickName" column="nickname"/>
-        <result property="realName" column="real_name"/>
-        <result property="headPicture" column="head_picture"/>
-        <result property="identifyType" column="identify_type"/>
-        <result property="identifyNo" column="identify_no"/>
-        
-        <result property="userType" column="user_type"/>
-        <result property="userSercure" column="user_sercure"/>
+		<result property="email" column="email" />
+		<result property="phone" column="phone" />
+		<result property="cardNo" column="card_no" />
+		<result property="defaultUser" column="default_user" />
 
-        <result property="password" column="sha_password"/>
-        <result property="passwordSalt" column="password_salt"/>
-        <result property="username" column="user_name"/>
-        <result property="lastLoginTime" column="last_login_time"/>
-        <result property="userState" column="user_state" />
-        <result property="emailActivation" column="email_activation" />
-		<result property="updatePwdTime" column="update_pwd_time"/>
-		<result property="desPassword" column="des_password"/>
-<!--         <collection property="privileges" column="id" select="findPrivilegesByUserId" ofType="Privilege"/>
- -->
-    </resultMap>
-    
-    <sql id="Column_List">
-    	id,
-    	pid,
-    	guid,
-    	archived,
-    	create_time,
-    	email,
-    	phone,
-    	card_no,
-    	default_user,
-    	nickname,
-    	real_name,
-    	head_picture,
-    	identify_type,
-    	identify_no,
-    	user_type,
-    	user_sercure,
-    	sha_password,
-    	password_salt,
-    	user_name,
-    	last_login_time,
-    	user_state,
-    	email_activation,
-    	update_pwd_time,
-    	des_password,
-    	user_state
-    </sql>
+		<result property="nickName" column="nickname" />
+		<result property="realName" column="real_name" />
+		<result property="headPicture" column="head_picture" />
+		<result property="identifyType" column="identify_type" />
+		<result property="identifyNo" column="identify_no" />
 
-    <select id="findByGuid" parameterType="String" resultMap="userMap">
-         select 
-         <include refid="Column_List" />
-         from user_account where  guid = #{guid}
+		<result property="userType" column="user_type" />
+		<result property="userSercure" column="user_sercure" />
+
+		<result property="password" column="sha_password" />
+		<result property="passwordSalt" column="password_salt" />
+		<result property="username" column="user_name" />
+		<result property="lastLoginTime" column="last_login_time" />
+		<result property="userState" column="user_state" />
+		<result property="emailActivation" column="email_activation" />
+		<result property="updatePwdTime" column="update_pwd_time" />
+		<result property="desPassword" column="des_password" />
+		<!-- <collection property="privileges" column="id" select="findPrivilegesByUserId" 
+			ofType="Privilege"/> -->
+	</resultMap>
+
+	<sql id="Column_List">
+		id,
+		pid,
+		guid,
+		archived,
+		create_time,
+		email,
+		phone,
+		card_no,
+		default_user,
+		nickname,
+		real_name,
+		head_picture,
+		identify_type,
+		identify_no,
+		user_type,
+		user_sercure,
+		sha_password,
+		password_salt,
+		user_name,
+		last_login_time,
+		user_state,
+		email_activation,
+		update_pwd_time,
+		des_password,
+		user_state
+	</sql>
+	
+	<!-- 添加用户 -->
+	<insert id="addUser" parameterType="User" >
+		insert into user_account 
+			(
+				user_name,
+				real_name,
+				nickname,
+				sha_password
+			) 
+		values
+		 	(
+		 		#{username,jdbcType=VARCHAR},
+		 		#{realName,jdbcType=VARCHAR},
+		 		#{nickName,jdbcType=VARCHAR},
+		 		#{password,jdbcType=VARCHAR}
+		 	)
+	</insert>
+	
+	<select id="findByGuid" parameterType="String" resultMap="userMap">
+		select
+		<include refid="Column_List" />
+		from user_account where guid = #{guid}
 	</select>
 
-    <!-- <select id="findUserById" parameterType="Integer" resultMap="userMap">
-         select * from user_account where id = #{id}
-	</select> -->
-	
+	<!-- <select id="findUserById" parameterType="Integer" resultMap="userMap"> 
+		select * from user_account where id = #{id} </select> -->
+
 	<select id="findUserById" parameterType="Integer" resultMap="userMap">
-         select <include refid="Column_List" /> from user_account where id = #{id}
+		select
+		<include refid="Column_List" />
+		from user_account where id = #{id}
 	</select>
 
- <!--    <select id="findPrivilegesByUserId" parameterType="Integer" resultType="Privilege">
-         select privilege from user_privilege where user_id = #{userId}
-	</select> -->
+	<!-- <select id="findPrivilegesByUserId" parameterType="Integer" resultType="Privilege"> 
+		select privilege from user_privilege where user_id = #{userId} </select> -->
 
-    <!-- <select id="findByUsername" parameterType="String" resultMap="userMap">
-         select * from user_account
-         where user_name = #{username}
-         and archived = 0 limit 1
-	</select> -->
-	
+	<!-- <select id="findByUsername" parameterType="String" resultMap="userMap"> 
+		select * from user_account where user_name = #{username} and archived = 0 
+		limit 1 </select> -->
+
 	<select id="findByUsername" parameterType="String" resultMap="userMap">
-         select 
-         <include refid="Column_List" />
-         from user_account
-         where user_name = binary #{username}
-         and archived = 0 limit 1
+		select
+		<include refid="Column_List" />
+		from user_account
+		where user_name = binary #{username}
+		and archived = 0
+		limit 1
 	</select>
-	
+
 	<select id="findByRealname" parameterType="String" resultMap="userMap">
-         select
-         <include refid="Column_List" />
-         from user_account
-         where real_name = #{realname}
-         and archived = 0
+		select
+		<include refid="Column_List" />
+		from user_account
+		where real_name = #{realname}
+		and archived = 0
 	</select>
-	
-	<!-- <select id="findByEmail" parameterType="String" resultMap="userMap">
-         select * from user_account
-         where email = #{email}
-         and archived = 0 limit 1
-	</select>
-	
-	<select id="findByPhone" parameterType="String" resultMap="userMap">
-         select * from user_account
-         where phone = #{phone}
-         and archived = 0 limit 1
-	</select> -->
-	
+
+	<!-- <select id="findByEmail" parameterType="String" resultMap="userMap"> 
+		select * from user_account where email = #{email} and archived = 0 limit 
+		1 </select> <select id="findByPhone" parameterType="String" resultMap="userMap"> 
+		select * from user_account where phone = #{phone} and archived = 0 limit 
+		1 </select> -->
+
 	<select id="findByEmail" parameterType="String" resultMap="userMap">
-         select <include refid="Column_List" /> from user_account
-         where email = #{email}
-         and archived = 0
+		select
+		<include refid="Column_List" />
+		from user_account
+		where email = #{email}
+		and archived = 0
 	</select>
-	
+
 	<select id="findByPhone" parameterType="String" resultMap="userMap">
-         select <include refid="Column_List" /> from user_account
-         where phone = #{phone}
-         and archived = 0
+		select
+		<include refid="Column_List" />
+		from user_account
+		where phone = #{phone}
+		and archived = 0
 	</select>
 
 	<select id="findByRnIn" resultMap="userMap" parameterType="map">
-         select 
-         <include refid="Column_List" />
-         from user_account
-         where  real_name = #{realName, jdbcType=VARCHAR} and identify_no = #{identifyNo, jdbcType=VARCHAR}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where real_name = #{realName, jdbcType=VARCHAR} and
+		identify_no =
+		#{identifyNo, jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="findByRnPn" resultMap="userMap" parameterType="map">
-         select 
-         <include refid="Column_List" />
-         from user_account
-         where  real_name = #{realName, jdbcType=VARCHAR} and phone = #{phone, jdbcType=VARCHAR}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where real_name = #{realName, jdbcType=VARCHAR} and
+		phone = #{phone,
+		jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="findByRnInPn" resultMap="userMap" parameterType="map">
-         select 
-         <include refid="Column_List" />
-         from user_account
-         where  real_name = #{realName, jdbcType=VARCHAR} and identify_no = #{identifyNo, jdbcType=VARCHAR} and phone = #{phone, jdbcType=VARCHAR}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where real_name = #{realName, jdbcType=VARCHAR} and
+		identify_no =
+		#{identifyNo, jdbcType=VARCHAR} and phone = #{phone,
+		jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="findByRnEm" resultMap="userMap" parameterType="map">
-         select 
-         <include refid="Column_List" />
-         from user_account
-         where  real_name = #{realName, jdbcType=VARCHAR} and email = #{email, jdbcType=VARCHAR}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where real_name = #{realName, jdbcType=VARCHAR} and
+		email = #{email,
+		jdbcType=VARCHAR}
 	</select>
 
 	<select id="findByRnInPnEm" resultMap="userMap" parameterType="map">
-         select 
-         <include refid="Column_List" />
-         from user_account
-         where  real_name = #{realName, jdbcType=VARCHAR} and identify_no = #{identifyNo, jdbcType=VARCHAR} and phone = #{phone, jdbcType=VARCHAR} and email = #{email, jdbcType=VARCHAR}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where real_name = #{realName, jdbcType=VARCHAR} and
+		identify_no =
+		#{identifyNo, jdbcType=VARCHAR} and phone = #{phone,
+		jdbcType=VARCHAR}
+		and email = #{email, jdbcType=VARCHAR}
 	</select>
 
-    <insert id="saveUser" parameterType="User" useGeneratedKeys="true" keyProperty="id">
-        insert into user_account(guid,pid,archived,create_time,email,sha_password,password_salt,card_no,user_name,phone, last_login_time,nickname,real_name,head_picture,identify_no,identify_type,user_type,user_sercure,update_pwd_time,default_user,des_password)
-        values
-        (#{guid},#{pid},#{archived},#{createTime},#{email},#{password},#{passwordSalt},#{cardNo},#{username}, #{phone}, #{lastLoginTime}, #{nickName},#{realName},#{headPicture}, #{identifyNo}, #{identifyType}, #{userType}, #{userSercure},#{updatePwdTime},#{defaultUser},#{desPassword})
-    </insert>
+	<insert id="saveUser" parameterType="User" useGeneratedKeys="true"
+		keyProperty="id">
+		insert into
+		user_account(guid,pid,archived,create_time,email,sha_password,password_salt,card_no,user_name,phone,
+		last_login_time,nickname,real_name,head_picture,identify_no,identify_type,user_type,user_sercure,update_pwd_time,default_user,des_password)
+		values
+		(#{guid},#{pid},#{archived},#{createTime},#{email},#{password},#{passwordSalt},#{cardNo},#{username},
+		#{phone}, #{lastLoginTime}, #{nickName},#{realName},#{headPicture},
+		#{identifyNo}, #{identifyType}, #{userType},
+		#{userSercure},#{updatePwdTime},#{defaultUser},#{desPassword})
+	</insert>
 
-    <update id="updateUser" parameterType="User">
-        update user_account set
-        <if test="pid != null" >
-        pid = #{pid},
-        </if>
-        <if test="guid != null and guid !=''" >
-        guid = #{guid},
-        </if>
-        <if test="cardNo != null and cardNo !=''" >
-        card_no = #{cardNo},
-        </if>
-        <if test="username != null and username !=''" >
-        user_name = #{username},
-        </if>
-        <if test="nickName != null and nickName !=''" >
-        nickname = #{nickName},
-        </if>
-        <if test="realName != null and realName !=''" >
-        real_name = #{realName},
-        </if>
-        <if test="headPicture != null and headPicture !=''" >
-        head_picture = #{headPicture},
-        </if>
-        <if test="identifyType != null and identifyType>-1">
-        identify_type = #{identifyType},
-        </if>
-        <if test="password != null and password !=''" >
-        sha_password = #{password},
-        </if>
-        <if test="passwordSalt != null and passwordSalt !=''" >
-        password_salt = #{passwordSalt},
-        </if>
-        phone = #{phone},
-        email = #{email},
-        <if test="userType != null and userType>-1" >
-        user_type = #{userType},
-        </if>
-        <if test="userState != null and userState !=''" >
-        user_state = #{userState},
-        </if>
-        <if test="userSercure != null" >
-        user_sercure = #{userSercure},
-        </if>
-        <if test="lastLoginTime != null" >
-        last_login_time = #{lastLoginTime},
-        </if>
-        <if test="updatePwdTime != null" >
-        update_pwd_time = #{updatePwdTime},
-        </if>
-        <if test="desPassword != null" >
-        des_password = #{desPassword},
-        </if>
-        identify_no = #{identifyNo},
-        archived = #{archived},
-        default_user = #{defaultUser},
-        email_activation = #{emailActivation}
-        where id = #{id}
-    </update>
-    <select id="getPayAmount"  resultType="java.util.Map" flushCache="true">
-         select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
-         where 1=1 
-         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
+	<update id="updateUser" parameterType="User">
+		update user_account set
+		<if test="pid != null">
+			pid = #{pid},
+		</if>
+		<if test="guid != null and guid !=''">
+			guid = #{guid},
+		</if>
+		<if test="cardNo != null and cardNo !=''">
+			card_no = #{cardNo},
+		</if>
+		<if test="username != null and username !=''">
+			user_name = #{username},
+		</if>
+		<if test="nickName != null and nickName !=''">
+			nickname = #{nickName},
+		</if>
+		<if test="realName != null and realName !=''">
+			real_name = #{realName},
+		</if>
+		<if test="headPicture != null and headPicture !=''">
+			head_picture = #{headPicture},
+		</if>
+		<if test="identifyType != null and identifyType>-1">
+			identify_type = #{identifyType},
+		</if>
+		<if test="password != null and password !=''">
+			sha_password = #{password},
+		</if>
+		<if test="passwordSalt != null and passwordSalt !=''">
+			password_salt = #{passwordSalt},
+		</if>
+		phone = #{phone},
+		email = #{email},
+		<if test="userType != null and userType>-1">
+			user_type = #{userType},
+		</if>
+		<if test="userState != null and userState !=''">
+			user_state = #{userState},
+		</if>
+		<if test="userSercure != null">
+			user_sercure = #{userSercure},
+		</if>
+		<if test="lastLoginTime != null">
+			last_login_time = #{lastLoginTime},
+		</if>
+		<if test="updatePwdTime != null">
+			update_pwd_time = #{updatePwdTime},
+		</if>
+		<if test="desPassword != null">
+			des_password = #{desPassword},
+		</if>
+		identify_no = #{identifyNo},
+		archived = #{archived},
+		default_user =
+		#{defaultUser},
+		email_activation = #{emailActivation}
+		where id = #{id}
+	</update>
+	<select id="getPayAmount" resultType="java.util.Map" flushCache="true">
+		select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
+		where 1=1
+		and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP} AND
+		#{endTime,
+		jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
 	</select>
-    <select id="connectionTest" resultType="Integer">
-         select 1
+	<select id="connectionTest" resultType="Integer">
+		select 1
 	</select>
-	
+
 	<select id="findByCardNo" parameterType="String" resultMap="userMap">
 		select
 		<include refid="Column_List" />
 		from user_account
 		where card_no=#{cardNo} and user_name is not null
 	</select>
-	
+
 	<select id="findByPid" parameterType="String" resultMap="userMap">
-         select
-         <include refid="Column_List" />
-         from user_account
-         where pid = #{pid}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where pid = #{pid}
 	</select>
 
 	<select id="findBindUserById" parameterType="int" resultMap="userMap">
-         select
-         <include refid="Column_List" />
-         from user_account
-         where pid = #{id} or id = #{id}
+		select
+		<include refid="Column_List" />
+		from user_account
+		where pid = #{id} or id = #{id}
 	</select>
-	
+
 	<update id="updateUserLastLoginTimeById">
-        update user_account set
-        last_login_time = #{lastLoginTime}
-        where id = #{id}
-    </update>
-    <update id="updateUserCardNoById">
-        update user_account set
-        card_no = #{cardNo}
-        where id = #{id}
-    </update>
-  <update id="updatephoneById">
-        update user_account set
-        phone = #{phone}
-        where id = #{id}
-    </update>
-     <update id="updateDefaultUserById">
-        update user_account set
-        default_user = #{defaultUser}
-        where id = #{id}
-    </update>
-      <update id="updateDAPById">
-        update user_account set
-        default_user = #{defaultUser},
-        pid = #{id}
-        where pid = #{pid}
-    </update>
-      <update id="updateParentUser">
-        update user_account set
-        user_name = #{username},
-        phone=#{phone},
-        email=#{email},
-        card_no=#{cardno}
-        where id = #{id}
-    </update>
-    
-    <delete id="deleteUser" parameterType="Integer">
-        delete from user_account where id=#{id}
-    </delete>
+		update user_account set
+		last_login_time =
+		#{lastLoginTime}
+		where id = #{id}
+	</update>
+	<update id="updateUserCardNoById">
+		update user_account set
+		card_no = #{cardNo}
+		where id =
+		#{id}
+	</update>
+	<update id="updatephoneById">
+		update user_account set
+		phone = #{phone}
+		where id =
+		#{id}
+	</update>
+	<update id="updateDefaultUserById">
+		update user_account set
+		default_user = #{defaultUser}
+		where id = #{id}
+	</update>
+	<update id="updateDAPById">
+		update user_account set
+		default_user = #{defaultUser},
+		pid = #{id}
+		where pid = #{pid}
+	</update>
+	<update id="updateParentUser">
+		update user_account set
+		user_name = #{username},
+		phone=#{phone},
+		email=#{email},
+		card_no=#{cardno}
+		where id = #{id}
+	</update>
+
+	<delete id="deleteUser" parameterType="Integer">
+		delete from user_account
+		where id=#{id}
+	</delete>
 </mapper>

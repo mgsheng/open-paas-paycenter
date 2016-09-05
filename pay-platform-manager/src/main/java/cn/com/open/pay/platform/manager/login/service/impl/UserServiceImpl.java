@@ -3,6 +3,8 @@ package cn.com.open.pay.platform.manager.login.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,20 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-
+    
+    /**
+	 * 添加用户
+	 * @param user_name		用户名
+	 * @param real_name		真实姓名
+	 * @param nickname		昵称
+	 * @param sha_password		MD5加密密码
+	 */
+	@Override
+	public void addUser(User user) {
+		System.out.println("-----------------UserServiceImpl-------addUser---------------");
+		userRepository.addUser(user);
+		
+	}
 	@Override
 	public User findByUsername(String username) {
 		// TODO Auto-generated method stub
@@ -82,6 +97,7 @@ public class UserServiceImpl implements UserService {
 			return false;
 		}
 	}
+
 
   
 }

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html lang="en">
 <head>
 
 	<meta charset="utf-8" />
 
-	<title>用户中心管理系统</title>
+	<title>ç¨æ·ä¸­å¿ç®¡çç³»ç»</title>
 
 	<meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
@@ -61,7 +62,7 @@
 
 				<h3 class="page-title">
 
-					数据分析 <small>用户统计图</small>
+					æ°æ®åæ <small>ç¨æ·ç»è®¡å¾</small>
 
 				</h3>
 
@@ -71,12 +72,12 @@
 
 						<i class="icon-home"></i>
 
-						<a href="#">数据分析</a>
+						<a href="#">æ°æ®åæ</a>
 						
 						<i class="icon-angle-right"></i>
 
 					</li>
-					<li><a href="#">用户统计图</a></li>
+					<li><a href="#">ç¨æ·ç»è®¡å¾</a></li>
 					
 
 				</ul>
@@ -101,7 +102,7 @@
 
 					<div class="portlet-title">
 
-						<div class="caption"><i class="icon-user"></i>用户统计图</div>
+						<div class="caption"><i class="icon-user"></i>ç¨æ·ç»è®¡å¾</div>
 
 						<div class="actions">
 
@@ -113,37 +114,37 @@
 						<div class="title">
 							<table width="100%">
 								<tr>
-									<td align="right" width="100px">App名称：</td>
+									<td align="right" width="100px">Appåç§°ï¼</td>
 									<td>
 										<input id="appSearchName" class="m-wrap small" type="text" readonly="readonly" onclick="showAppDiv()" style="cursor:pointer" />
-										<a class="btn" href="javascript:showAppDiv()">选择</a>
+										<a class="btn" href="javascript:showAppDiv()">éæ©</a>
 									</td>
 								</tr>
 								<tr>	
-									<td align="right">日期范围：</td>
+									<td align="right">æ¥æèå´ï¼</td>
 									<td>
 										<select id="dateSelect" onchange="loadDataChange()" style="width:60px;heigth:10px">
-											<option value="yyyy-MM-ddd" selected="selected">天</option>
-											<option value="yyyy-MM-ddw">周</option>
-											<option value="yyyy-MM">月</option>
-											<option value="yyyy">年</option>
+											<option value="yyyy-MM-ddd" selected="selected">å¤©</option>
+											<option value="yyyy-MM-ddw">å¨</option>
+											<option value="yyyy-MM">æ</option>
+											<option value="yyyy">å¹´</option>
 										</select>&nbsp;&nbsp;
 										<input name="startTime" id="startTime" class="WdateSearch" style="height:26px;cursor:pointer;margin-bottom: 10px" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',maxDate:'#F{$dp.$D(\'endTime\',{d:0});}'})" readonly="readonly" value="${startTime}"/>~<input name="endTime" id="endTime" class="WdateSearch" style="height:26px;cursor:pointer;margin-bottom: 10px" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'startTime\',{d:0});}'})" readonly="readonly" value="${endTime}"/>
 									</td>
 								</tr>
 								<tr>	
-									<td align="right">曲线图：</td>
+									<td align="right">æ²çº¿å¾ï¼</td>
 									<td>
-										<input type="radio" name="qxRadio" id="xzchart" value="container" style="margin-left:0px" checked="checked"/><span style="cursor: pointer" onclick="showHideChart('xzchart','container')">新增用户曲线图</span>
-										<input type="radio" name="qxRadio" id="uachart" value="containerActive" style="margin-left:0px" /><span style="cursor: pointer" onclick="showHideChart('uachart','containerActive')">活跃用户曲线图</span>
-										<input type="radio" name="qxRadio" id="utchart" value="containerUser" style="margin-left:0px" /><span style="cursor: pointer" onclick="showHideChart('utchart','containerUser')">累积用户曲线图</span>
+										<input type="radio" name="qxRadio" id="xzchart" value="container" style="margin-left:0px" checked="checked"/><span style="cursor: pointer" onclick="showHideChart('xzchart','container')">æ°å¢ç¨æ·æ²çº¿å¾</span>
+										<input type="radio" name="qxRadio" id="uachart" value="containerActive" style="margin-left:0px" /><span style="cursor: pointer" onclick="showHideChart('uachart','containerActive')">æ´»è·ç¨æ·æ²çº¿å¾</span>
+										<input type="radio" name="qxRadio" id="utchart" value="containerUser" style="margin-left:0px" /><span style="cursor: pointer" onclick="showHideChart('utchart','containerUser')">ç´¯ç§¯ç¨æ·æ²çº¿å¾</span>
 									</td>
 								</tr>
 								<tr>
 									<td></td>
 									<td  align="right">
-										<a class="btn blue" href="javascript:showButton();">查询</a>&nbsp;&nbsp;
-										<a c:if="${resourceCodesBtn.indexOf(\'exportchart')>=0}" href="javascript:exportHighcharts('pdf');" id="dcBtna" style="display:none" class="btn btn_default js_iconDel privilege_btn_export_chat">导出PDF</a>
+										<a class="btn blue" href="javascript:showButton();">æ¥è¯¢</a>&nbsp;&nbsp;
+										<a c:if="${resourceCodesBtn.indexOf(\'exportchart')>=0}" href="javascript:exportHighcharts('pdf');" id="dcBtna" style="display:none" class="btn btn_default js_iconDel privilege_btn_export_chat">å¯¼åºPDF</a>
 										<form id="pdfform" action="/admin/userstatistics/exportchartuser.html" method="post">  
 										  	<input type="hidden" name="svg" id="svg" />   
 									   		<input type="hidden" name="type" id="type" /> 
@@ -169,18 +170,18 @@
 
 	<!-- END PAGE CONTAINER-->
 
-	<div class="div-loading"><i class="icon-loading"></i>&nbsp;数据加载中...</div>
+	<div class="div-loading"><i class="icon-loading"></i>&nbsp;æ°æ®å è½½ä¸­...</div>
 	
-	<!-- 选择app列表 -->
+	<!-- éæ©appåè¡¨ -->
 	<div id="select_app_div" style="display:none;" >
 		<form id="update_account_form">
 			<input type="hidden" id="appSelectIds" value="" />
 			<table class="table table-striped table-bordered table-hover" id="page_app_show">
 			</table>
-			<div align="right"><a class="btn blue" href="javascript:selectApp();">选择</a></div>
+			<div align="right"><a class="btn blue" href="javascript:selectApp();">éæ©</a></div>
 			<table class="table table-striped table-bordered table-hover" id="page_app_select">
 			</table>
-			<div align="right"><a class="btn blue" href="javascript:delApp();">移除</a></div>
+			<div align="right"><a class="btn blue" href="javascript:delApp();">ç§»é¤</a></div>
 		</form>
 	 </div>
 
@@ -222,7 +223,7 @@
         border-left: 1px solid #333;
         border-right: 1px solid #333;
         position:absolute;
-        z-index:9999; /* 设置对象的层叠顺序 */
+        z-index:9999; /* è®¾ç½®å¯¹è±¡çå±å é¡ºåº */
         display:block;
     }
     .auto_onmouseover{
@@ -237,7 +238,7 @@
     }
     </style>
 	<script>
-		//ajax加载弹出层
+		//ajaxå è½½å¼¹åºå±
 		var htmlWidth = 0;
 		var htmlHeight = 0;
 		jQuery(document).ajaxStart(function(){
@@ -252,17 +253,17 @@
 		});
 			
 		var autoComplete;
-		var appShowTable = null;//分页表定义
-		var appSelectTable = null;//分页表定义
+		var appShowTable = null;//åé¡µè¡¨å®ä¹
+		var appSelectTable = null;//åé¡µè¡¨å®ä¹
 		jQuery(document).ready(function() {       
 			App.init();
 			selectMenu("menu_userstatisticschart",2);
-            //加载app选择显示分页
+            //å è½½appéæ©æ¾ç¤ºåé¡µ
             appPageShow();
-            //加载app选中Ids的分页数据
+            //å è½½appéä¸­Idsçåé¡µæ°æ®
 			appPageSelect();
 			chart();
-            //曲线图单选框
+            //æ²çº¿å¾åéæ¡
 			jQuery("input[name='qxRadio']").click(function(){
 				jQuery("#container").hide();
 				jQuery("#containerActive").hide();
@@ -271,21 +272,21 @@
 					jQuery("#"+this.value).show();
 				}
 			});
-            //选择APP
+            //éæ©APP
 			jQuery('#select_app_div').dialog({
 				autoOpen:false,
 				modal:true,
 				draggable:false,
 				resizable:false,
 				width:700,
-				title:'App列表选择查询'
+				title:'Appåè¡¨éæ©æ¥è¯¢'
 			});
 		});
-		//弹出app选择框
+		//å¼¹åºappéæ©æ¡
 		function showAppDiv(){
 			jQuery('#select_app_div').dialog('open');
 		}
-		//日期下拉框变化时日期选择相应的变化
+		//æ¥æä¸ææ¡ååæ¶æ¥æéæ©ç¸åºçåå
 		function loadDataChange(){
 			var dformat=jQuery('#dateSelect').val();
 			if(jQuery('#dateSelect').val()=="yyyy-MM-ddd" || jQuery('#dateSelect').val()=="yyyy-MM-ddw"){
@@ -296,7 +297,7 @@
 			jQuery('#startTime').attr("onfocus","WdatePicker({skin:'whyGreen',dateFmt:'"+dformat+"',maxDate:'#F{$dp.$D(\\'endTime\\',{d:0});}'})");
 			jQuery('#endTime').attr("onfocus","WdatePicker({skin:'whyGreen',dateFmt:'"+dformat+"',minDate:'#F{$dp.$D(\\'startTime\\',{d:0});}'})");
 		}
-		//曲线图显示与影藏
+		//æ²çº¿å¾æ¾ç¤ºä¸å½±è
 		function showHideChart(iid,did){
 			jQuery("#"+iid).click();
 			jQuery("#"+iid).click();
@@ -305,22 +306,22 @@
 			jQuery("#containerUser").hide();
 			jQuery("#"+did).show();
 		}
-		//查询按钮
+		//æ¥è¯¢æé®
 		function showButton(){
 			if(jQuery('#appSelectIds').val()==""){
-				alert("请选择需要查询的App");
+				alert("è¯·éæ©éè¦æ¥è¯¢çApp");
 			}
 			else if(jQuery("#startTime").val()=="" || jQuery("#endTime").val()==""){
-				alert("请选择两个日期范围");
+				alert("è¯·éæ©ä¸¤ä¸ªæ¥æèå´");
 			}
 			else if(jQuery('#dateSelect').val()=="yyyy-MM-ddd" && getDateDiff(jQuery("#endTime").val(),jQuery("#startTime").val())>30){
-				alert("天数的日期间隔不能超过30天")
+				alert("å¤©æ°çæ¥æé´éä¸è½è¶è¿30å¤©")
 			}
 			else{
 				chart();
 			}
 		}
-		//计算两个日期相隔的天数
+		//è®¡ç®ä¸¤ä¸ªæ¥æç¸éçå¤©æ°
 		function getDateDiff(startDate,endDate)
 		{
 			var startTime = new Date(Date.parse(startDate.replace(/-/g, "/"))).getTime();
@@ -328,12 +329,12 @@
 			var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
 			return dates;
 		} 
-		//app查询分页数据
+		//appæ¥è¯¢åé¡µæ°æ®
 		function appPageShow(){
 			appShowTable = $('#page_app_show').dataTable({
 				"oLanguage": {
-					"sLengthMenu":"条数：_MENU_",
-					"sSearch": "App名称："
+					"sLengthMenu":"æ¡æ°ï¼_MENU_",
+					"sSearch": "Appåç§°ï¼"
 				},
 				"bProcessing": true, 
 				"bServerSide": true, 
@@ -345,11 +346,11 @@
 				"iDisplayLength": 5,
 				"sServerMethod":"POST",
 				"sAjaxSource": "/admin/userstatistics/appshowpage.json",
-				//增加自定义参数
+				//å¢å èªå®ä¹åæ°
 				"fnServerParams": function ( aoData ) { 
 					aoData.push( 
-						{"name":"appName", "value":$('#appText').val()},//增加自定义参数
-						{"name":"notHasIds", "value":$('#appSelectIds').val()}//增加自定义参数
+						{"name":"appName", "value":$('#appText').val()},//å¢å èªå®ä¹åæ°
+						{"name":"notHasIds", "value":$('#appSelectIds').val()}//å¢å èªå®ä¹åæ°
 					);
 				},
 				"aoColumns":[
@@ -362,19 +363,19 @@
 							return '<input type="checkbox" id="appShowCheck" name="appShowCheck" value="'+obj.aData.id+'" />';
 						}
 					},{
-						"sTitle": "app名称",
+						"sTitle": "appåç§°",
 						"mDataProp": "name",
 						"fnRender": function(obj){
 							return '<span id="spAppSh'+obj.aData.id+'" >'+obj.aData.name+'</span>';
 						}
 					},{
-						"sTitle": "登录类型",
+						"sTitle": "ç»å½ç±»å",
 						"mDataProp": "loginType"
 					},{
-						"sTitle": "类型",
+						"sTitle": "ç±»å",
 						"mDataProp": "type"
 					},{
-						"sTitle": "创建人",
+						"sTitle": "åå»ºäºº",
 						"mDataProp": "user"
 					}
 				]
@@ -382,12 +383,12 @@
 			jQuery('#page_app_show_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
 			jQuery('#page_app_show_wrapper .dataTables_filter input').attr("id","appText");
 		}
-		//app选中Ids的分页数据
+		//appéä¸­Idsçåé¡µæ°æ®
 		function appPageSelect(){
 			appSelectTable = $('#page_app_select').dataTable({
 				"oLanguage": {
-					"sLengthMenu":"条数：_MENU_",
-					"sSearch": "App名称："
+					"sLengthMenu":"æ¡æ°ï¼_MENU_",
+					"sSearch": "Appåç§°ï¼"
 				},
 				"bProcessing": true, 
 				"bServerSide": true, 
@@ -399,10 +400,10 @@
 				"iDisplayLength": 5,
 				"sServerMethod":"POST",
 				"sAjaxSource": "/admin/userstatistics/appselectpage.json",
-				//增加自定义参数
+				//å¢å èªå®ä¹åæ°
 				"fnServerParams": function ( aoData ) { 
 					aoData.push( 
-						{"name":"appIds", "value":$('#appSelectIds').val()}//增加自定义参数
+						{"name":"appIds", "value":$('#appSelectIds').val()}//å¢å èªå®ä¹åæ°
 					);
 				},
 				"aoColumns":[
@@ -415,19 +416,19 @@
 							return '<input type="checkbox" id="appSelectCheck" name="appSelectCheck" value="'+obj.aData.id+'" />';
 						}
 					},{
-						"sTitle": "app名称",
+						"sTitle": "appåç§°",
 						"mDataProp": "name",
 						"fnRender": function(obj){
 							return '<span id="spAppSe'+obj.aData.id+'" >'+obj.aData.name+'</span>';
 						}
 					},{
-						"sTitle": "登录类型",
+						"sTitle": "ç»å½ç±»å",
 						"mDataProp": "loginType"
 					},{
-						"sTitle": "类型",
+						"sTitle": "ç±»å",
 						"mDataProp": "type"
 					},{
-						"sTitle": "创建人",
+						"sTitle": "åå»ºäºº",
 						"mDataProp": "user"
 					}
 				]
@@ -435,10 +436,10 @@
 			jQuery('#page_app_select_wrapper .dataTables_filter input').addClass("m-wrap small"); // modify table search input
 			jQuery('#page_app_select_wrapper > .row-fluid:eq(0)').hide();
 		}
-		//曲线图
+		//æ²çº¿å¾
 		function chart()
 		{
-			//去除Y轴的单位k、m
+			//å»é¤Yè½´çåä½kãm
 			Highcharts.setOptions({
 				lang: {
 			    	numericSymbols: []
@@ -454,7 +455,7 @@
 						var dataString=data.timeData;
 					    $('#container').highcharts({
 					        title: {
-					            text: '新增用户曲线图',
+					            text: 'æ°å¢ç¨æ·æ²çº¿å¾',
 					            x: -20 //center
 						    },
 					        xAxis: {
@@ -470,7 +471,7 @@
 						    },
 						    yAxis: {
 						        title: {
-						        	text: '人数(人)'
+						        	text: 'äººæ°(äºº)'
 						        },
 						        plotLines: [{
 						            value: 0,
@@ -486,7 +487,7 @@
 						       	} 
 					       	},
 						    tooltip: {
-						        valueSuffix: '人'
+						        valueSuffix: 'äºº'
 						    },
 						    legend: {
 						        layout: 'vertical',
@@ -498,7 +499,7 @@
 						});
 						$('#containerActive').highcharts({
 						    title: {
-						        text: '活跃用户曲线图',
+						        text: 'æ´»è·ç¨æ·æ²çº¿å¾',
 						        x: -20 //center
 						    },
 						    xAxis: {
@@ -514,7 +515,7 @@
 						    },
 						    yAxis: {
 						        title: {
-						            text: '人数(人)'
+						            text: 'äººæ°(äºº)'
 						        },
 						    	plotLines: [{
 						            value: 0,
@@ -530,7 +531,7 @@
 						        }  
 					       	},
 						    tooltip: {
-						        valueSuffix: '人'
+						        valueSuffix: 'äºº'
 						    },
 						    legend: {
 						        layout: 'vertical',
@@ -542,7 +543,7 @@
 						});
 						$('#containerUser').highcharts({
 						    title: {
-						    	text: '累积用户曲线图',
+						    	text: 'ç´¯ç§¯ç¨æ·æ²çº¿å¾',
 						        x: -20 //center
 						    },
 						    xAxis: {
@@ -558,7 +559,7 @@
 						    },
 						    yAxis: {
 						        title: {
-						            text: '人数(人)'
+						            text: 'äººæ°(äºº)'
 						        },
 							    plotLines: [{
 							        value: 0,
@@ -574,7 +575,7 @@
 						        }  
 					        },
 						    tooltip: {
-						        valueSuffix: '人'
+						        valueSuffix: 'äºº'
 						    },
 						    legend: {
 						        layout: 'vertical',
@@ -595,14 +596,14 @@
 		        }
 			);
 		}
-		//选择App
+		//éæ©App
 		function selectApp(){
 			if(jQuery("input[name='appShowCheck']").length==0 || jQuery("input[name='appShowCheck']:checked").length==0){
-				alert('请勾选需要查询的App！');
+				alert('è¯·å¾ééè¦æ¥è¯¢çAppï¼');
 			}
 			else{
-				var selectNames=jQuery('#appSearchName').val();//显示选中的app名称
-				var selectIds=jQuery('#appSelectIds').val();//选中的appIds
+				var selectNames=jQuery('#appSearchName').val();//æ¾ç¤ºéä¸­çappåç§°
+				var selectIds=jQuery('#appSelectIds').val();//éä¸­çappIds
 				var selectSz=selectIds.split(",");
 				jQuery("input[name='appShowCheck']").each(function(){
 					if(this.checked==true){
@@ -624,24 +625,24 @@
 						}	
 					}
 				});
-				jQuery('#appSearchName').val(selectNames);//显示选中的app名称
-				jQuery('#appSelectIds').val(selectIds);//选中的appIds
-				appShowTable.fnDraw();//刷新显示的app列表
-				appSelectTable.fnDraw();//刷新选择的app列表
+				jQuery('#appSearchName').val(selectNames);//æ¾ç¤ºéä¸­çappåç§°
+				jQuery('#appSelectIds').val(selectIds);//éä¸­çappIds
+				appShowTable.fnDraw();//å·æ°æ¾ç¤ºçappåè¡¨
+				appSelectTable.fnDraw();//å·æ°éæ©çappåè¡¨
 				jQuery("#checkShowAll").attr("checked", false);
 			}
 		}
-		//移除App
+		//ç§»é¤App
 		function delApp(){
 			if(jQuery("input[name='appSelectCheck']").length==0 || jQuery("input[name='appSelectCheck']:checked").length==0){
-				alert('请勾选需要移除的App！');
+				alert('è¯·å¾ééè¦ç§»é¤çAppï¼');
 			}
 			else{
-				var selectNameSz=jQuery('#appSearchName').val().split(",");//原选中的app名称
-				var selectIds=jQuery('#appSelectIds').val();//原选中的appIds
+				var selectNameSz=jQuery('#appSearchName').val().split(",");//åéä¸­çappåç§°
+				var selectIds=jQuery('#appSelectIds').val();//åéä¸­çappIds
 				var selectSz=selectIds.split(",");
-				var newSelect="";//新选中的appIds
-				var newSelectNames="";//新选中的app名称
+				var newSelect="";//æ°éä¸­çappIds
+				var newSelectNames="";//æ°éä¸­çappåç§°
 				if(selectIds!=""){
 					for(var i=0;i<selectSz.length;i++){
 						var isbool=false;
@@ -662,14 +663,14 @@
 						}
 					}
 				}
-				jQuery('#appSearchName').val(newSelectNames);//显示选中的app名称
-				jQuery('#appSelectIds').val(newSelect);//选中的appIds
-				appShowTable.fnDraw();//刷新显示的app列表
-				appSelectTable.fnDraw();//刷新选择的app列表
+				jQuery('#appSearchName').val(newSelectNames);//æ¾ç¤ºéä¸­çappåç§°
+				jQuery('#appSelectIds').val(newSelect);//éä¸­çappIds
+				appShowTable.fnDraw();//å·æ°æ¾ç¤ºçappåè¡¨
+				appSelectTable.fnDraw();//å·æ°éæ©çappåè¡¨
 				jQuery("#checkSelectAll").attr("checked", false);
 			}
 		}
-		//导出曲线图
+		//å¯¼åºæ²çº¿å¾
 		function exportHighcharts(type){
 		    var chart_line = $("#container").highcharts();
 		    var chart_active = $("#containerActive").highcharts();
@@ -690,7 +691,7 @@
 					jQuery("#pdfform").prop("action", "/admin/userstatistics/exportchartuserdownload.html").submit();  
 				},
 				error:function(e) {
-					alert("导出失败！");
+					alert("å¯¼åºå¤±è´¥ï¼");
 				}
 			});
 		}

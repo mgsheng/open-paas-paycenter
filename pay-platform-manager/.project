@@ -3,6 +3,7 @@
 	<name>pay-platform-manager</name>
 	<comment></comment>
 	<projects>
+		<project>pay-service-message</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

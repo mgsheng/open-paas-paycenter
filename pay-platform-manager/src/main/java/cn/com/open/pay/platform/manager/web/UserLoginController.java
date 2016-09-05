@@ -70,9 +70,11 @@ public class UserLoginController extends BaseControllerUtil {
 		public String login(HttpServletRequest request,HttpServletResponse response,Model model) {
 	    	   String username = request.getParameter("userName");
 				User user=null;
-				 user=userService.findByUsername(username);
-	    	model.addAttribute("userName",username);
-	    	model.addAttribute("realName",user.getRealName());
+				user=userService.findByUsername(username);
+				if(user != null){
+			    	model.addAttribute("userName",username);
+			    	model.addAttribute("realName",user.getRealName());
+		    	}
 	    	return "login/index";
 	    }
 	    /**

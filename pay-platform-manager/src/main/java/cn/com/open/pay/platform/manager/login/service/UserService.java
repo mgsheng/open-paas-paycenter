@@ -13,6 +13,14 @@ import cn.com.open.pay.platform.manager.login.model.User;
  * 
  */
 public interface UserService {
+	/**
+	 * 添加用户
+	 * @param user_name		用户名
+	 * @param real_name		真实姓名
+	 * @param nickname		昵称
+	 * @param sha_password		MD5加密密码
+	 */
+	void addUser(User user);
 	
 	User findByUsername(String username);
 	List<User> findByEmail(String account);
