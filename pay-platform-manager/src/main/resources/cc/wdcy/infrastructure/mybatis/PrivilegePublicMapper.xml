@@ -29,7 +29,7 @@
 		)
 	</insert>
  
-	<insert id="saveUserSerialRecord" parameterType="UserSerialRecord" useGeneratedKeys="true" keyProperty="id">
+	<insert id="saveUserSerialRecord" parameterType="PrivilegePublic" useGeneratedKeys="true" keyProperty="id">
         insert into USER_SERIAL_RECORD(Id,USER_NAME,AMOUNT,SERIAL_NO,PAY_TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
         values
         (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
@@ -42,7 +42,7 @@
 	</select>
 	
 	
-	<select id="findQueryRunning" resultMap="userSerialRecordMap" >
+	<select id="findQueryRunning" resultMap="privilegePublicMap" >
         select * from  USER_SERIAL_RECORD where 1=1
         <if test="appId != null and appId !=''" >
            and APP_ID=#{appId} 
