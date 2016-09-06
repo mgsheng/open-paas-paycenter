@@ -156,6 +156,10 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/mo
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRole.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRoleDetails.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeModuleService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegePublicService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeResourceService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleDetailsService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeRoleService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeModuleServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegePublicServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/impl/PrivilegeResourceServiceImpl.java -text
