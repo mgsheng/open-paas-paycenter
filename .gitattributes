@@ -202,6 +202,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/test1.
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/testDemo.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/AccountRunningManage.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserController.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserDataStatsController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserLoginController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQueryDownloadManage.java -text
@@ -225,6 +226,7 @@ pay-platform-manager/src/main/webapp/META-INF/MANIFEST.MF -text
 pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/model/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/add.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/search.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text

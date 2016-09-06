@@ -34,10 +34,10 @@
 							"menus":[{"menuid":"24","menuname":"添加用户","icon":"icon-add","url":"${pageContext.request.contextPath}/managerUser/showAdd"},
 										   {"menuid":"25","menuname":"查询用户","icon":"icon-search","url":"${pageContext.request.contextPath}/managerUser/showSearch"}									]
 						},{"menuid":"","icon":"icon-sys","menuname":"权限管理",
-							"menus":[{"menuid":"26","menuname":"资源管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/managerUser/showAdd"},
+							"menus":[{"menuid":"26","menuname":"资源管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/module/index"},
 									 {"menuid":"27","menuname":"模块管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/managerUser/showSearch"},
 									 {"menuid":"28","menuname":"角色管理","icon":"icon-role","url":"${pageContext.request.contextPath}/managerUser/showSearch"},
-									 {"menuid":"29","menuname":"公共权限","icon":"icon-nav","url":"${pageContext.request.contextPath}/managerUser/showSearch"}
+									 {"menuid":"29","menuname":"公共权限","icon":"icon-set","url":"${pageContext.request.contextPath}/managerUser/showSearch"}
 								   ]
 						}
 				]};
