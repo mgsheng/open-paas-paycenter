@@ -42,7 +42,12 @@
 </body>
 <script>
 
-
+        function getSelected(){
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				$.messager.alert('Info', row.itemid+":"+row.productid+":"+row.attr1);
+			}
+		}
 		function submitForm(){
 			var orderId = $("input[name='orderId']").val();//商户订单号
 			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号

@@ -28,6 +28,7 @@
 	  resources,
 	  create_time
 	</sql>
+	
 	<sql id="Base_Column_List">
 		id,
 		<include refid="Insert_Column_List" />
@@ -57,38 +58,50 @@
 		)
 	</insert>
  
-	<insert id="saveUserSerialRecord" parameterType="PrivilegeModule" useGeneratedKeys="true" keyProperty="id">
-        insert into USER_SERIAL_RECORD(Id,USER_NAME,AMOUNT,SERIAL_NO,PAY_TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+	
+	<insert id="savePrivilegeModule" parameterType="PrivilegeModule" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_module(id,name,url,level,parent_ids,display_order,code,status,resources,createTime)
         values
-        (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
+        (#{id},#{userName},#{url},#{level},#{parentId},#{parentIds},#{displayOrder},#{code},#{status},#{resources},#{createTime})
     </insert>
-    <select id="getSerialByTime" resultType="java.util.Map" flushCache="true">
-         select   SERIAL_NO serialNo,USER_NAME userName,AMOUNT amount,PAY_TYPE payType,APP_ID appId,SOURCE_ID sourceId
-	     from USER_SERIAL_RECORD
-         where 1=1 
-         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId} and PAY_TYPE=#{payType}
-	</select>
-	<select id="findQueryRunning" resultMap="privilegeModuleMap" >
-        select * from  USER_SERIAL_RECORD where 1=1
-        <if test="appId != null and appId !=''" >
-           and APP_ID=#{appId} 
+    	<select id="findByName" resultMap="privilegeModuleMap">
+         select * from privilege_module
+         where  name = #{name}
+         limit #{startRow},#{pageSize}
+	</select>	
+   <update id="updatePrivilegeModule" parameterType="PrivilegeModule" flushCache="true">
+        update privilege_module set
+        <if test="name != null and name !=''" >
+        name = #{name},
         </if>
-        <if test="payType != null and payType !=''" >
-           and PAY_TYPE=#{payType} 
+         <if test="url != null and url !=''" >
+         url = #{url},
         </if>
-        <if test="serialNo != null and serialNo !=''" >
-           and SERIAL_NO=#{serialNo} 
+         <if test="level != null " >
+        parent_id = #{level},
         </if>
-        <if test="userName != null and userName !=''" >
-           and USER_NAME=#{userName} 
+         <if test="parentId != null" >
+        parent_ids = #{parentId},
         </if>
-        <if test="startDate != null and startDate !=''" >
-           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+         <if test="parentIds != null" >
+        display_order = #{parentIds},
         </if>
-        <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
+         <if test="displayOrder != null" >
+        code = #{displayOrder},
         </if>
-       limit #{startRow},#{pageSize} 
-    </select>
-    
+         <if test="code != null and code !=''" >
+        status = #{code},
+        </if>
+         <if test="icon != null and icon !=''" >
+        icon = #{icon},
+        </if>
+         <if test="resources != null and resources !=''" >
+        resources = #{resources},
+        </if>
+        create_time=#{createTime}
+        where ID = #{id}
+     </update> 
+     <delete id="deletePrivilegeModule" parameterType="Integer">
+        delete from privilege_module where id=#{id}
+    </delete>
 </mapper>

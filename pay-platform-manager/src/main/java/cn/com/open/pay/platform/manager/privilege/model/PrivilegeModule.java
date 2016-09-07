@@ -24,8 +24,22 @@ public class PrivilegeModule implements Serializable {
 	String icon;					//图标（暂时无用）
 	String resources;				//资源集合
 	long createTime;				//创建时间
+	private Integer startRow;
+	private Integer pageSize;
 	
 	
+	public Integer getStartRow() {
+		return startRow;
+	}
+	public void setStartRow(Integer startRow) {
+		this.startRow = startRow;
+	}
+	public Integer getPageSize() {
+		return pageSize;
+	}
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
 	public int getId() {
 		return id;
 	}
