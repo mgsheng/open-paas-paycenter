@@ -15,6 +15,8 @@ public class PrivilegeRole implements Serializable {
 	int status;									//启用禁用
 	long createTime;							//创建时间
 	
+	String statusName;
+	
 
 	public int getId() {
 		return id;
@@ -46,6 +48,14 @@ public class PrivilegeRole implements Serializable {
 
 	public void setCreateTime(long createTime) {
 		this.createTime = createTime;
+	}
+
+	public String getStatusName() {
+		return statusName;
+	}
+
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 	
 }
