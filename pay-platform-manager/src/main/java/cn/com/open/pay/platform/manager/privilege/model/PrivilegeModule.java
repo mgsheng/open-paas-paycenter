@@ -1,6 +1,7 @@
 package cn.com.open.pay.platform.manager.privilege.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class PrivilegeModule implements Serializable {
 	int status;						//启用禁用
 	String icon;					//图标（暂时无用）
 	String resources;				//资源集合
-	long createTime;				//创建时间
+	Date createTime;				//创建时间
 	private Integer startRow;
 	private Integer pageSize;
 	
@@ -100,12 +101,6 @@ public class PrivilegeModule implements Serializable {
 	public void setResources(String resources) {
 		this.resources = resources;
 	}
-	public long getCreateTime() {
-		return createTime;
-	}
-	public void setCreateTime(long createTime) {
-		this.createTime = createTime;
-	}
 	public String getCode() {
 		return code;
 	}
@@ -113,5 +108,12 @@ public class PrivilegeModule implements Serializable {
 	public void setCode(String code) {
 		this.code = code;
 	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	
 	
 }

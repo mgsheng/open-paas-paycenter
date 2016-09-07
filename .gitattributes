@@ -206,6 +206,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/AccountR
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerRoleController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeResourceController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserDataStatsController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserLoginController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQueryDownloadManage.java -text
@@ -230,6 +231,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/Copy[!!-~]of[!!-~]index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/role/roleMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/add.jsp -text

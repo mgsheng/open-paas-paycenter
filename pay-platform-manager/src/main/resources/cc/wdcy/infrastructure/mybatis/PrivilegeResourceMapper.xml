@@ -36,61 +36,49 @@
 		)
 	</insert>
  
-	<insert id="saveUserSerialRecord" parameterType="PrivilegeResource" useGeneratedKeys="true" keyProperty="id">
-        insert into USER_SERIAL_RECORD(Id,USER_NAME,AMOUNT,SERIAL_NO,PAY_TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+	<insert id="savePrivilegeResource" parameterType="PrivilegeResource" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_resource (id,name,code,status,create_time)
         values
-        (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
+        (#{id},#{name},#{code},#{status},#{createTime})
     </insert>
-    <select id="getSerialByTime" resultType="java.util.Map" flushCache="true">
-         select   SERIAL_NO serialNo,USER_NAME userName,AMOUNT amount,PAY_TYPE payType,APP_ID appId,SOURCE_ID sourceId
-	     from USER_SERIAL_RECORD
-         where 1=1 
-         and CREATE_TIME BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APP_ID=#{appId} and PAY_TYPE=#{payType}
+    
+	<select id="findByName" resultType="java.util.Map">
+         select id,name,status,DATE_FORMAT(create_time,'%Y-%m-%d %T') create_time from privilege_resource
+         where  name = #{name}
+	</select>
+	<select id="getPageListByName" resultMap="privilegeResourceMap" parameterType="PrivilegeResource">
+         select * from privilege_resource
+         where  1=1
+         <if test="name != null and name !=''" >
+         and name = #{name},
+         </if>
+         limit #{startRow},#{pageSize}
 	</select>
 	
-	<select id="findQueryRunning" resultMap="privilegeResourceMap" >
-        select * from  USER_SERIAL_RECORD where 1=1
-        <if test="appId != null and appId !=''" >
-           and APP_ID=#{appId} 
-        </if>
-        <if test="payType != null and payType !=''" >
-           and PAY_TYPE=#{payType} 
-        </if>
-        <if test="serialNo != null and serialNo !=''" >
-           and SERIAL_NO=#{serialNo} 
-        </if>
-        <if test="userName != null and userName !=''" >
-           and USER_NAME=#{userName} 
-        </if>
-        <if test="startDate != null and startDate !=''" >
-           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
-        </if>
-        <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
-        </if>
-       limit #{startRow},#{pageSize} 
-    </select>
-    
-     <select id="findRunningCount" resultType="int">
-        select count(*) from  USER_SERIAL_RECORD where 1=1
-        <if test="appId != null and appId !=''" >
-           and APP_ID=#{appId} 
-        </if>
-        <if test="payType != null and payType !=''" >
-           and PAY_TYPE=#{payType} 
-        </if>
-        <if test="serialNo != null and serialNo !=''" >
-           and SERIAL_NO=#{serialNo} 
-        </if>
-        <if test="userName != null and userName !=''" >
-           and USER_NAME=#{userName} 
-        </if>
-        <if test="startDate != null and startDate !=''" >
-           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
-        </if>
-        <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
+	  <select id="findQueryCount" resultType="int">
+        select count(*) from  privilege_resource
+        where  1=1
+        <if test="name != null and name !=''" >
+        name = #{name}
         </if>
     </select>
+		
+   <update id="updatePrivilegeResource" parameterType="PrivilegeResource" flushCache="true">
+        update privilege_resource set
+        <if test="name != null and name !=''" >
+        name = #{name},
+        </if>
+         <if test="code != null and code !=''" >
+         code = #{code},
+        </if>
+         <if test="status != null " >
+        status = #{status},
+        </if>
+        create_time=#{createTime}
+        where id = #{id}
+     </update> 
+     <delete id="deletePrivilegeResource" parameterType="Integer">
+        delete from privilege_resource where id=#{id}
+    </delete>
     
 </mapper>

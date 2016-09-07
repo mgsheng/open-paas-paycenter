@@ -99,7 +99,7 @@
         resources = #{resources},
         </if>
         create_time=#{createTime}
-        where ID = #{id}
+        where id = #{id}
      </update> 
      <delete id="deletePrivilegeModule" parameterType="Integer">
         delete from privilege_module where id=#{id}
