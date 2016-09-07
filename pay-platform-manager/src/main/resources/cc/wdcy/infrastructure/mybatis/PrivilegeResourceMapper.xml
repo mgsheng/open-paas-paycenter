@@ -50,7 +50,7 @@
          select * from privilege_resource
          where  1=1
          <if test="name != null and name !=''" >
-         and name = #{name},
+         and name = #{name}
          </if>
          limit #{startRow},#{pageSize}
 	</select>
@@ -59,7 +59,7 @@
         select count(*) from  privilege_resource
         where  1=1
         <if test="name != null and name !=''" >
-        name = #{name}
+        and name = #{name}
         </if>
     </select>
 		

@@ -132,9 +132,11 @@ public class PrivilegeResourceController extends BaseControllerUtil {
      * @param model
      * @param bool
      * @return
+     * @throws UnsupportedEncodingException 
      */
     @RequestMapping(value = "findModuel")
-	public void findResource(HttpServletRequest request,HttpServletResponse response,String name) {
+	public void findResource(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+    	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
     	//当前第几页
 		String page=request.getParameter("page");
 		//每页显示的记录数

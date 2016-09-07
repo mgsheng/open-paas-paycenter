@@ -27,7 +27,7 @@
 		名称: 
 		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true" id="search"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true" id="search" onclick="onsearch();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
@@ -110,6 +110,9 @@
                  msgShow('系统提示', '恭喜，添加成功！', 'info');
                  close();
                 $('#w').window('close');
+                 //刷新
+			      var url='${pageContext.request.contextPath}/resource/findModuel';
+			      reload(url,name);
                 }else{
                  $newpass.val('');
                  $rePass.val('');
@@ -154,6 +157,8 @@
 		     openPwd();
 		     $('#add').click(function() {
                 $('#w').window('open');
+                
+                
             });
             $('#btnEp').click(function() {
                 serverLogin();
@@ -198,57 +203,22 @@
             url: url, queryParams:{ name:name}, method: "post"
           }); 
 		}
-		function submitForm(){
-			var orderId = $("input[name='orderId']").val();//商户订单号
-			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号
-			var payOrderId = $("input[name='payOrderId']").val();//第三方订单号
-			var channelId = $("input[name='channelId']").val();//支付方式
-			var appId = $("input[name='appId']").val();//业务类型
-			var userName = $("input[name='userName']").val();//商户订单号
-			var createDate =$("input[name='createDate']:checked").val(); 
-			var startDate = $("#_easyui_textbox_input7").val();
-			var endDate = $("#_easyui_textbox_input8").val();
-			
-			if(orderId==""&&merchantOrderId==""&&payOrderId==""&&channelId==""&&appId==""&&userName==""){
-				if(startDate==""||endDate==""){
-					alert("请选择时间段");
-					return;
-				}
-			}
-			if(!startDate==""){
-				if(endDate==""){
-					alert("请选择结束时间");
-					return;
-				}
-			}
-			if(!endDate==""){
-				if(startDate==""){
-					alert("请选择开始时间");
-					return;
-				}
-			}
-			if(!startDate==""&&!endDate==""){
-				if(startDate>endDate){
-					alert("开始时间大于结束时间！");
-					return;
-				}
-			}
-			if(orderId==""&&userName==""){
-				alert("请填写订单号或用户名！");
-				return;
-			}
-			$('#dg').datagrid({
+		function onsearch(){
+		 var name=$("#name").val();
+		 var url=encodeURI("${pageContext.request.contextPath}/resource/findModuel?name="+name);
+        $('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/manage/userQueryMessage?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&userName="+userName,  
-		        //pagination: true,显示分页工具栏
+		        url: url,  
+		        pagination: true,
 		        onLoadSuccess:function(data){
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
                   }
                    
                 }
+		     
 		    }); 
 			 //设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 
