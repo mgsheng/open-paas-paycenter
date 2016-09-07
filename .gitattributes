@@ -227,6 +227,8 @@ pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/model/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/add.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/search.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
