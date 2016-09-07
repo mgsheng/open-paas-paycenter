@@ -1,6 +1,7 @@
 package cn.com.open.pay.platform.manager.privilege.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 角色
@@ -13,7 +14,7 @@ public class PrivilegeRole implements Serializable {
 	int id;
 	String name;								//角色名
 	int status;									//启用禁用
-	long createTime;							//创建时间
+	Date createTime;							//创建时间
 	
 	String statusName;
 	
@@ -42,11 +43,11 @@ public class PrivilegeRole implements Serializable {
 		this.status = status;
 	}
 
-	public long getCreateTime() {
+	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public void setCreateTime(long createTime) {
+	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
 
