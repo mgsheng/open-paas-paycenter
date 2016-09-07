@@ -23,8 +23,7 @@
 			</tr>
 		</thead>
 	</table>
-	<div id="tb" style="padding:2px 5px;">
-	   <span style="margin-left: 75%;">
+	<div id="tb" style="padding:2px 5px; text-align: right;">
 		名称: 
 		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
 		&nbsp;&nbsp;&nbsp;&nbsp;
@@ -32,7 +31,6 @@
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
-		</span>
 	</div>
 	<!--添加资源-->
 	<div id="w" class="easyui-window" title="资源添加" collapsible="false"
