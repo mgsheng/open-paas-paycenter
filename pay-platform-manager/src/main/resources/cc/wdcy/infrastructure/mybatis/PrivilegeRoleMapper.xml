@@ -38,7 +38,7 @@
         values
         (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
     </insert>
-    <select id="findByRoleName" resultType="privilegeRoleMap" flushCache="true">
+    <select id="findByRoleName" resultType="java.util.Map" flushCache="true">
          select * from privilege_role where 1=1
          <if test="name != null and name !=''" >
            and name=#{name} 
