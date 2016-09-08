@@ -61,7 +61,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
 		//每页的开始记录  第一页为1  第二页为number +1   
 	    int startRow = (currentPage-1)*pageSize;
-		String roleName = request.getParameter("roleName");
+		String roleName = request.getParameter("name");
 		PrivilegeRole privilegeRole=new PrivilegeRole();
 		privilegeRole.setName(roleName);
 		privilegeRole.setPageSize(pageSize);
@@ -100,22 +100,32 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "addRole")
 	public void addRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+    	String  id= request.getParameter("id");
     	String  status= request.getParameter("status");
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
-    	List <PrivilegeRole> list= roleService.findByName(name);
-    	if(list!=null&& list.size()>0){
-    		map.put("returnMsg", "0");
+    	if(id==""){
+			List <PrivilegeRole> list= roleService.findByName(name);
+			if(list!=null&& list.size()>0){
+				map.put("returnMsg", "0");
+			}else{
+				PrivilegeRole privilegeRole=new PrivilegeRole();
+				privilegeRole.setName(name);
+				privilegeRole.setCreateTime(new Date());
+				if(nullEmptyBlankJudge(status)){
+					status="0";
+				}
+				privilegeRole.setStatus(Integer.parseInt(status));
+				roleService.savePrivilegeRole(privilegeRole);
+				map.put("returnMsg", "1");
+			}
     	}else{
     		PrivilegeRole privilegeRole=new PrivilegeRole();
+    		privilegeRole.setId(Integer.parseInt(id));
     		privilegeRole.setName(name);
-    		privilegeRole.setCreateTime(new Date());
-    		if(nullEmptyBlankJudge(status)){
-    			status="0";
-    		}
     		privilegeRole.setStatus(Integer.parseInt(status));
-    		roleService.savePrivilegeRole(privilegeRole);
-    		map.put("returnMsg", "1");
+    		roleService.updatePrivilegeRole(privilegeRole);
+    		map.put("returnMsg", "2");
     	}
     	WebUtils.writeErrorJson(response, map);
     }

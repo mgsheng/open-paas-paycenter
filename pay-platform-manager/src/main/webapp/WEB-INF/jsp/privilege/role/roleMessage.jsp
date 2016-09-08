@@ -15,7 +15,7 @@
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-				<th data-options="field:'id',width:200" >ID</th>
+				<th data-options="field:'id',width:200" hidden="true">ID</th>
 				<th data-options="field:'name',width:400">名称</th>
 				<th data-options="field:'statusName',width:240,align:'right'">状态</th>
 				<th data-options="field:'create_Time',width:250,align:'right'">创建时间</th>
@@ -27,14 +27,13 @@
 		名称: 
 		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
 		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true" id="search"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true"  onclick="onsearch();" id="search"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
 		</span>
 	</div>
-	<!--添加资源-->
-	<div id="w" class="easyui-window" title="资源添加" collapsible="false"
+	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
 		style="width: 300px; height: 150px; padding: 5px;
         background: #fafafa;">
@@ -42,10 +41,10 @@
 			<div region="center" border="false"
 				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
 				<table cellpadding=3>
-				
-					<tr>
+					<input id="id" type="hidden" />
+					<tr style="height: 60px">
 						<td>名称：</td>
-						<td><input id="resourceName" type="text" class="txt01" />
+						<td><input id="resourceName" type="text" class="txt01" value=""/>
 						</td>
 					</tr>
 					
@@ -75,7 +74,7 @@
          //设置登录窗口
         function openPwd() {
             $('#w').window({
-                title: '资源',
+                title: '角色',
                 width: 300,
                 modal: true,
                 shadow: true,
@@ -90,16 +89,24 @@
         }
         //添加
         function serverLogin() {
+        	var id = $('#id').val();
             var $resourceName = $('#resourceName');
             var $status= $('#status');
             if ($resourceName.val() == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
-            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val());
+            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id);
             $.post(url, function(data) {
                 if(data.returnMsg=='1'){
 	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				      reload(url,name);
+                }else if(data.returnMsg=='2'){
+                	msgShow('系统提示', '修改成功！', 'info');
 	                 close();
 	                $('#w').window('close');
 	                //刷新
@@ -149,6 +156,8 @@
 		    });
 		     openPwd();
 		     $('#add').click(function() {
+		    	 document.getElementById("resourceName").value=""; 
+		    	 document.getElementById("id").value=""; 
                 $('#w').window('open');
             });
             $('#btnEp').click(function() {
@@ -164,6 +173,35 @@
 				$.messager.alert('Info', row.itemid+":"+row.productid+":"+row.attr1);
 			}
 		}
+        
+        
+        function editMessage(){
+   			var row = $('#dg').datagrid('getSelected');
+   			if (row){
+   			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
+   				if (r){
+   					
+   					   var id=row.id;
+   					   var name=row.name;
+   					   var statusName=row.statusName;
+   						
+   						document.getElementById("id").value=id; 
+   						document.getElementById("resourceName").value=name; 
+   						if(statusName=="启用"){
+   						  $("#status").val("1");
+   						}else{
+   						  $("#status").val("0");
+   						}
+   						
+   						
+	  					openPwd();
+	  					$('#w').window('open');
+   				}
+   			   });
+   		   
+   			}
+   		  
+   		}
 		
 		function removeit(){
 		 var name=$("#name").val();
@@ -194,6 +232,38 @@
             url: url, queryParams:{ name:name}, method: "post"
           }); 
 		}
+		
+		function onsearch(){
+			 var name=$("#name").val();
+			 var url=encodeURI("${pageContext.request.contextPath}/managerRole/QueryRoleMessage?name="+name);
+	        $('#dg').datagrid({
+					collapsible:true,
+					rownumbers:true,
+					pagination:true,
+			        url: url,  
+			        pagination: true,
+			        onLoadSuccess:function(data){
+	                    if (data.total<1){
+	                       $.messager.alert("提示","没有符合查询条件的数据!");
+	                  }
+	                   
+	                }
+			     
+			    }); 
+				 //设置分页控件 
+			    var p = $('#dg').datagrid('getPager'); 
+			    $(p).pagination({ 
+			        pageSize: 15,//每页显示的记录条数，默认为10 
+			        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
+			        beforePageText: '第',//页数文本框前显示的汉字 
+			        afterPageText: '页    共 {pages} 页', 
+			        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+			        onBeforeRefresh:function(){
+			            $(this).pagination('loading');
+			            $(this).pagination('loaded');
+			        } 
+			    }); 
+			}
 		
 	</script>
 </html>

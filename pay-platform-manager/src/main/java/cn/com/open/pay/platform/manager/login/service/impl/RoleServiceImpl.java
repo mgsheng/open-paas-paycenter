@@ -46,6 +46,12 @@ public class RoleServiceImpl implements RoleService {
 		// TODO Auto-generated method stub
 		privilegeRoleRepository.deletePrivilegeRole(parseInt);
 	}
+	@Override
+	public void updatePrivilegeRole(PrivilegeRole privilegeRole) {
+		// TODO Auto-generated method stub
+		privilegeRoleRepository.updatePrivilegeRole(privilegeRole);
+		
+	}
 	
 
 

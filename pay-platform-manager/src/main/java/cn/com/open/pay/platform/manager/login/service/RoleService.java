@@ -25,6 +25,8 @@ public interface RoleService {
 
 	void deletePrivilegeRole(int parseInt);
 
+	void updatePrivilegeRole(PrivilegeRole privilegeRole);
+
 	
 
 	

@@ -22,4 +22,6 @@ public interface PrivilegeRoleRepository extends Repository {
 	List<PrivilegeRole> findByName(String name);
 
 	void deletePrivilegeRole(int parseInt);
+
+	void updatePrivilegeRole(PrivilegeRole privilegeRole);
 }
