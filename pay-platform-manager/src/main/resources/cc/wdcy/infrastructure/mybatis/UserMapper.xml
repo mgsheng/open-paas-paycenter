@@ -65,6 +65,12 @@
 		user_state
 	</sql>
 	
+	<!-- 根据用户名删除用户 -->
+	<delete id="removeUserByID" parameterType="Integer">
+		delete from user_account where id = #{id}
+	</delete>
+	
+	
 	<!-- 添加用户 -->
 	<insert id="addUser" parameterType="User" >
 		insert into user_account 
@@ -82,6 +88,30 @@
 		 		#{password,jdbcType=VARCHAR}
 		 	)
 	</insert>
+
+	<!-- 根据真实姓名和昵称查询 -->
+	<select id="findUsers" parameterType="User" resultMap="userMap">
+			 select	
+			 			id,
+						user_name,
+						real_name,
+						nickname,
+						DATE_FORMAT(create_time,'%Y-%m-%d %T') create_time,
+						DATE_FORMAT(last_login_time,'%Y-%m-%d %T') last_login_time
+			  from 	user_account
+			<where>
+						archived = 0
+			  		<if test="username !=null and username != ''">
+			  			and user_name=#{username,jdbcType=VARCHAR}
+			  		</if>
+			  		<if test="realName !=null and realName != ''">
+			  			and real_name=#{realName,jdbcType=VARCHAR}
+			  		</if>
+			  		<if test="nickName !=null and nickName != ''">
+			  			and nickname=#{nickName,jdbcType=VARCHAR}
+			  		</if>
+		  </where>   
+	</select>
 	
 	<select id="findByGuid" parameterType="String" resultMap="userMap">
 		select
@@ -104,7 +134,7 @@
 	<!-- <select id="findByUsername" parameterType="String" resultMap="userMap"> 
 		select * from user_account where user_name = #{username} and archived = 0 
 		limit 1 </select> -->
-
+	
 	<select id="findByUsername" parameterType="String" resultMap="userMap">
 		select
 		<include refid="Column_List" />
@@ -113,7 +143,6 @@
 		and archived = 0
 		limit 1
 	</select>
-
 	<select id="findByRealname" parameterType="String" resultMap="userMap">
 		select
 		<include refid="Column_List" />
