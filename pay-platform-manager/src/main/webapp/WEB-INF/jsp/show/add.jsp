@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 </head>
 <body style="margin-left: 350px">
-	<div style="margin:80px auto;"></div>
+	<div style="margin:40px auto;"></div>
 	<div class="easyui-panel" title="添加用户" style="width:60%;max-width:600px;padding:60px 60px;">
 		<form id="ff" method="post" style="margin:15px 30px;width:90%">
 			<div style="margin-bottom:20px">
@@ -31,51 +31,23 @@
 					prompt="密码" type="text"  name="password" style="width:100%;height:35px;padding:5px;" required=true>
 			</div>
 			<div style="margin-bottom:20px">
-				<input id="confirm_pass" class="easyui-passwordbox" missingMessage="以字母开头，由5-18位字母数字下划线组成"
+				<input id="confirm_pass" class="easyui-passwordbox" missingMessage="由6-20位字母、数字、下划线组成"
 					prompt="确认密码" name="confirmPass" type="text"  style="width:100%;height:35px;padding:5px;" required=true>
 			</div>
 		</form>
 		<div style="text-align:center;padding:5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px;margin:10px 15px">提交</a>
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px;margin:10px 15px">清空</a>
+			<a href="${pageContext.request.contextPath}/managerUser/userList" class="easyui-linkbutton" style="width:80px;margin:10px 15px">取消</a>
 		</div>
 	</div>
 	<script type="text/javascript">
+		// 清空添加用户表单
 		function clearForm(){
 			$('#ff').form('clear');
 		}
-		function submitForm(){
-			var username = $.trim($('#un').val()) ;
-			var realname = $.trim($('#rn').val());
-			var nickname = $.trim($('#nn').val()) ;
-			var password = $.trim($('#pass').val()) ;
-			var check_result = check();
-			if(!check_result){
-				return;
-			}
-			$.ajax({
-				type:"post",
-				url:"/pay-platform-manager/managerUser/addUser",
-				data:{"user_name":username,"real_name":realname,"nickname":nickname,"sha_password":password},
-				dataType:"json",
-				success:function (data){
-					if(data.result == "2"){
-						clearForm();
-						$.messager.alert("系统提示","恭喜，添加用户成功!","info");
-					}else if(data.result == "1"){
-						clearForm();
-						$.messager.alert("系统提示","该用户名已被注册，请重新填写用户名!","error");	
-					}else{
-						$.messager.alert("系统提示","添加用户失败，请重新添加!","error");
-						clearForm();
-					}
-				},
-				error:function(){
-					$.messager.alert("系统提示","用户添加异常，请刷新页面!","error");
-				}
-			});
-		}
 		
+		//前端校验
 		function check(){
 			var regex_username = /^[a-zA-Z0-9_]{2,20}$/;
 			var regex_realname=/^[\u4E00-\u9FA5A-Za-z0-9_]{2,20}$/;
@@ -111,6 +83,49 @@
 				return false;
 			}
 			return true;
+		}
+		
+		//列表重新加载
+		function reload(){
+			$('#dg').datagrid('reload',{
+	            url: "${pageContext.request.contextPath}/managerUser/findUsers?username=''&realname=''&nickname=''",
+	            method: "post"
+	          }); 
+		}
+		
+		// 提交（用户信息）
+		function submitForm(){
+			var username = $.trim($('#un').val()) ;
+			var realname = $.trim($('#rn').val());
+			var nickname = $.trim($('#nn').val()) ;
+			var password = $.trim($('#pass').val()) ;
+			// 提交信息前完成前端校验
+			var check_result = check();
+			if(!check_result){
+				return;
+			}
+			$.ajax({
+				type:"post",
+				url:"/pay-platform-manager/managerUser/addUser",
+				data:{"user_name":username,"real_name":realname,"nickname":nickname,"sha_password":password},
+				dataType:"json",
+				success:function (data){
+					if(data.result == true){
+						clearForm();
+						//reload();
+						$.messager.alert("系统提示","恭喜，添加用户成功!","info");
+					}else if(data.result == false){
+						clearForm();
+						$.messager.alert("系统提示","该用户名已被注册，请重新填写用户名!","error");	
+					}else{
+						clearForm();
+						$.messager.alert("系统提示","添加用户失败，请重新添加!","error");
+					}
+				},
+				error:function(){
+					$.messager.alert("系统提示","用户添加异常，请刷新页面!","error");
+				}
+			});
 		}
 	</script>
 </body>

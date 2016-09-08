@@ -234,7 +234,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/role/roleMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/add.jsp -text
-pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/search.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/userlist.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/accountRunningMessage.jsp -text
