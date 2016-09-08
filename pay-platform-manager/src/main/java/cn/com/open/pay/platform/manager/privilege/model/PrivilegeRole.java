@@ -16,6 +16,8 @@ public class PrivilegeRole implements Serializable {
 	int status;									//启用禁用
 	Date createTime;							//创建时间
 	
+	private Integer startRow;
+	private Integer pageSize;
 	String statusName;
 	String create_Time;
 	
@@ -66,6 +68,22 @@ public class PrivilegeRole implements Serializable {
 
 	public void setCreate_Time(String create_Time) {
 		this.create_Time = create_Time;
+	}
+
+	public Integer getStartRow() {
+		return startRow;
+	}
+
+	public void setStartRow(Integer startRow) {
+		this.startRow = startRow;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
 	
 }

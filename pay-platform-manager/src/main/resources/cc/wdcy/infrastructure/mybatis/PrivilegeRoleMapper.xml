@@ -43,6 +43,7 @@
          <if test="name != null and name !=''" >
            and name=#{name} 
         </if>
+        limit #{startRow},#{pageSize}
      </select>
      
      <select id="findQueryCount" resultType="int">

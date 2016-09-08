@@ -51,9 +51,21 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	@RequestMapping("QueryRoleMessage")
 	public String QueryRoleMessage(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------searchUser         start------------------------------------");
+		//当前第几页
+		String page=request.getParameter("page");
+		//每页显示的记录数
+	    String rows=request.getParameter("rows"); 
+		//当前页  
+		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+		//每页显示条数  
+		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+		//每页的开始记录  第一页为1  第二页为number +1   
+	    int startRow = (currentPage-1)*pageSize;
 		String roleName = request.getParameter("roleName");
 		PrivilegeRole privilegeRole=new PrivilegeRole();
 		privilegeRole.setName(roleName);
+		privilegeRole.setPageSize(pageSize);
+		privilegeRole.setStartRow(startRow);
 		List<PrivilegeRole> privilegeRoleList=roleService.findByRoleName(privilegeRole);
 		int countNum= roleService.findQueryCount(privilegeRole);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
@@ -109,15 +121,15 @@ public class ManagerRoleController  extends BaseControllerUtil {
     }
     
     /**
-     * 删除资源
+     * 删除角色
      * @param request
      * @param model
      * @param bool
      * @return
      */
-    @RequestMapping(value = "delete")
-	public void delete(HttpServletRequest request,HttpServletResponse response) {
-    	String id = request.getParameter("id");
+    @RequestMapping(value = "deleteRole")
+	public void deleteRole(HttpServletRequest request,HttpServletResponse response,String id) {
+    	String id1 = request.getParameter("id");
     	Map<String,Object> map = new HashMap<String, Object>();
     	try {
     		if(nullEmptyBlankJudge(id)){
@@ -134,6 +146,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	WebUtils.writeErrorJson(response, map);
     }
 	
+    
+   
 //	/**
 //	 * 跳转到添加用户的页面
 //	 * @return 返回的是 jsp文件名路径及文件名
