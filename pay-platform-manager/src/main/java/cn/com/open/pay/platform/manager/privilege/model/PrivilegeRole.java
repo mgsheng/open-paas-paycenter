@@ -17,6 +17,7 @@ public class PrivilegeRole implements Serializable {
 	Date createTime;							//创建时间
 	
 	String statusName;
+	String create_Time;
 	
 
 	public int getId() {
@@ -57,6 +58,14 @@ public class PrivilegeRole implements Serializable {
 
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
+	}
+
+	public String getCreate_Time() {
+		return create_Time;
+	}
+
+	public void setCreate_Time(String create_Time) {
+		this.create_Time = create_Time;
 	}
 	
 }

@@ -33,12 +33,12 @@
 		)
 	</insert>
  
-	<insert id="saveUserSerialRecord" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="id">
-        insert into USER_SERIAL_RECORD(Id,USER_NAME,AMOUNT,SERIAL_NO,PAY_TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+	<insert id="savePrivilegeRole" parameterType="PrivilegeRole" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_role(name,status,create_time)
         values
-        (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
+        (#{name},#{status},#{createTime})
     </insert>
-    <select id="findByRoleName" resultType="java.util.Map" flushCache="true">
+    <select id="findByRoleName" resultMap="privilegeRoleMap" parameterType="PrivilegeRole">
          select * from privilege_role where 1=1
          <if test="name != null and name !=''" >
            and name=#{name} 
@@ -52,49 +52,13 @@
         </if>
      </select>
 	
-	<select id="findQueryRunning" resultType="java.util.Map" flushCache="true">
-        select * from  USER_SERIAL_RECORD where 1=1
-        <if test="appId != null and appId !=''" >
-           and APP_ID=#{appId} 
-        </if>
-        <if test="payType != null and payType !=''" >
-           and PAY_TYPE=#{payType} 
-        </if>
-        <if test="serialNo != null and serialNo !=''" >
-           and SERIAL_NO=#{serialNo} 
-        </if>
-        <if test="userName != null and userName !=''" >
-           and USER_NAME=#{userName} 
-        </if>
-        <if test="startDate != null and startDate !=''" >
-           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
-        </if>
-        <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
-        </if>
-       limit #{startRow},#{pageSize} 
-    </select>
-    
-     <select id="findRunningCount" resultType="int">
-        select count(*) from  USER_SERIAL_RECORD where 1=1
-        <if test="appId != null and appId !=''" >
-           and APP_ID=#{appId} 
-        </if>
-        <if test="payType != null and payType !=''" >
-           and PAY_TYPE=#{payType} 
-        </if>
-        <if test="serialNo != null and serialNo !=''" >
-           and SERIAL_NO=#{serialNo} 
-        </if>
-        <if test="userName != null and userName !=''" >
-           and USER_NAME=#{userName} 
-        </if>
-        <if test="startDate != null and startDate !=''" >
-           and CREATE_TIME BETWEEN #{startDate, jdbcType=TIMESTAMP} 
-        </if>
-        <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
-        </if>
-    </select>
+	<select id="findByName" resultType="java.util.Map">
+         select * from privilege_role
+         where  name = #{name}
+	</select>
+	
+	<delete id="deletePrivilegeRole" parameterType="Integer">
+        delete from privilege_role where id=#{id}
+    </delete>
     
 </mapper>
