@@ -15,6 +15,7 @@
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
+				<th data-options="field:'id',width:200" >ID</th>
 				<th data-options="field:'name',width:400">名称</th>
 				<th data-options="field:'statusName',width:240,align:'right'">状态</th>
 				<th data-options="field:'create_Time',width:250,align:'right'">创建时间</th>
@@ -98,13 +99,17 @@
             var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val());
             $.post(url, function(data) {
                 if(data.returnMsg=='1'){
-                 msgShow('系统提示', '恭喜，添加成功！', 'info');
-                 close();
-                $('#w').window('close');
+	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				      reload(url,name);
                 }else{
-                 $newpass.val('');
-                 $rePass.val('');
-                 close();
+                	msgShow('系统提示', '角色已存在！', 'info');
+	                 $newpass.val('');
+	                 $rePass.val('');
+	                 close();
                 }
             });
             
@@ -167,7 +172,7 @@
 			$.messager.confirm('系统提示', '是否确定删除?', function(r){
 				if (r){
 					   var id=row.id;
-					   var url='${pageContext.request.contextPath}/managerRole/delete?id='+id;
+					   var url="${pageContext.request.contextPath}/managerRole/deleteRole?id="+id;
 			            $.post(url, function(data) {
 			                if(data.returnMsg=='1'){
 			                 msgShow('系统提示', '恭喜，删除成功！', 'info');
@@ -176,7 +181,7 @@
 			                }
 			            });
 			              //刷新
-			              var url='${pageContext.request.contextPath}/resource/findModuel';
+			              var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
 			              reload(url,name);
 				}
 			   });
