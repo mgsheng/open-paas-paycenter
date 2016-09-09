@@ -1,8 +1,7 @@
 package cn.com.open.pay.platform.manager.login.model;
 
-import java.util.ArrayList;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -36,7 +35,7 @@ public class User extends AbstractDomain {
 	private String username;
     private String password;
     private String passwordSalt;
-
+    
     private String phone;
     private String email;
     private String cardNo;
@@ -63,10 +62,13 @@ public class User extends AbstractDomain {
     private Date updatePwdTime;
     
     private String desPassword;
-    
+    private long createTime; //注册时间  
+    private String create_Time;// 作用是将long型转成String型
    /* private List<Privilege> privileges = new ArrayList<Privilege>();*/
 
-    public User() {
+   
+
+	public User() {
     }
     
     public User(String username, String password, String phone, String email) {
@@ -162,7 +164,7 @@ public class User extends AbstractDomain {
 	public void setUpdatePwdTime(Date updatePwdTime) {
 		this.updatePwdTime = updatePwdTime;
 	}
-
+	
 	public String username() {
 		return username;
 	}
@@ -472,4 +474,27 @@ public class User extends AbstractDomain {
 	public void setDesPassword(String desPassword) {
 		this.desPassword = desPassword;
 	}
+	
+	 public long getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(long createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getCreate_Time() {
+		setCreate_Time();
+		return create_Time;
+	}
+	//将注册时间类型转换成 String
+	public void setCreate_Time() {
+		if(createTime != 0){
+			String createtime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(createTime));
+			this.create_Time = createtime;
+		}else{
+			this.create_Time = "";
+		}
+	}
+	
 }
