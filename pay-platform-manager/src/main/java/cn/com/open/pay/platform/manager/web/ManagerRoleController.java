@@ -3,10 +3,14 @@ package cn.com.open.pay.platform.manager.web;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,7 +26,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.login.service.RoleService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
+import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
@@ -31,6 +39,11 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
 	/**
 	 * 跳转到查询角色的页面
 	 * @return 返回的是 jsp文件名路径及文件名
@@ -73,9 +86,9 @@ public class ManagerRoleController  extends BaseControllerUtil {
 			PrivilegeRole privilegeRole1 = privilegeRoleList.get(i);
 			int status = privilegeRole1.getStatus();
 			if(status==0){
-				privilegeRoleList.get(i).setStatusName("启用");
+				privilegeRoleList.get(i).setStatusName("禁用");
 			}else{
-				privilegeRoleList.get(i).setStatusName("停用");
+				privilegeRoleList.get(i).setStatusName("启用");
 			}
 			Date createTime = privilegeRole1.getCreateTime();
 			privilegeRole1.setCreate_Time(df.format(createTime));//交易时间
@@ -157,16 +170,70 @@ public class ManagerRoleController  extends BaseControllerUtil {
     }
 	
     
-   
-//	/**
-//	 * 跳转到添加用户的页面
-//	 * @return 返回的是 jsp文件名路径及文件名
-//	 */
-//	@RequestMapping(value="showAdd")
-//	public String showAdd(){
-//		log.info("-------------------------showAdd         start------------------------------------");
-//		return "show/add";
-//	}
-//	
+    @RequestMapping(value = "tree")
+	public void getModelTree(HttpServletRequest request,HttpServletResponse response) {
+		List<TreeNode> nodes = privilegeModuleService.getDepartmentTree();//见方法02
+		 //buildTree(nodes)见方法01，return返回值自动转为json,不懂的话看下面紫色部分，懂的略过
+		List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
+		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes,privilegeResourceList));
+    	WebUtils.writeJson(response,jsonArr);
+	}
+    
+    /**
+	* 构建树
+	* @param treeNodes
+	* @return
+	*/
+	protected List<TreeNode> buildTree(List<TreeNode> treeNodes,List<PrivilegeResource> resourceList ) {
+		List<TreeNode> results = new ArrayList<TreeNode>();
+
+		Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+		for (TreeNode node : treeNodes) {
+			aidMap.put(node.getId(), node);
+		}
+		treeNodes = null;
+
+		Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+		for (Entry<String, TreeNode> entry : entrySet) {
+			String pid = entry.getValue().getPid();
+			TreeNode node = aidMap.get(pid);
+			if (node == null) {
+				results.add(entry.getValue());
+			} else {
+				List<TreeNode> children = node.getChildren();
+				if (children == null) {
+					children = new ArrayList<TreeNode>();
+					node.setChildren(children);
+					node.setState("closed");
+					//添加三级
+					String resource = entry.getValue().getResource();
+					List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+					if(resource!=null){
+						String[] resourceStrArray = resource.split(",");
+						for(int i=0;i<resourceStrArray.length;i++){
+							String vl = resourceStrArray[i];
+							for(int j=0;j<resourceList.size();j++){
+								int id = resourceList.get(j).getId();
+								String nameValue = resourceList.get(j).getName();
+								TreeNode treeNode=new TreeNode();
+								if(Integer.parseInt(vl)==id){
+									treeNode.setId(vl);
+									treeNode.setText(nameValue);
+									treeNodeList.add(treeNode);
+								}
+								
+							}
+						}
+					}
+					
+					entry.getValue().setChildren(treeNodeList);
+				}
+				children.add(entry.getValue());
+			}
+		}
+		aidMap = null;
+
+		return results;
+	}
 	
 }
