@@ -36,7 +36,7 @@
 										   {"menuid":"25","menuname":"添加用户","icon":"icon-add","url":"${pageContext.request.contextPath}/managerUser/showAddUser"}								]
 						},{"menuid":"","icon":"icon-sys","menuname":"权限管理",
 							"menus":[{"menuid":"26","menuname":"资源管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/resource/index"},
-									 {"menuid":"27","menuname":"模块管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/module/showSearch"},
+									 {"menuid":"27","menuname":"模块管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/module/index"},
 									 {"menuid":"28","menuname":"角色管理","icon":"icon-role","url":"${pageContext.request.contextPath}/managerRole/roleMessage"},
 									 {"menuid":"29","menuname":"公共权限","icon":"icon-set","url":"${pageContext.request.contextPath}/managerUser/showSearch"}
 								   ]
