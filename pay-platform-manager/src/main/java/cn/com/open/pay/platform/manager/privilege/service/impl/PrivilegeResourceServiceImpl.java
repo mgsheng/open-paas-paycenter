@@ -49,6 +49,12 @@ public class PrivilegeResourceServiceImpl implements  PrivilegeResourceService {
 		// TODO Auto-generated method stub
 		return privilegeResourceRepository.findQueryCount(name);
 	}
+
+	@Override
+	public List<PrivilegeResource> findAllResource() {
+		// TODO Auto-generated method stub
+		return privilegeResourceRepository.findAllResource();
+	}
    
     
 }

@@ -80,5 +80,7 @@
      <delete id="deletePrivilegeResource" parameterType="Integer">
         delete from privilege_resource where id=#{id}
     </delete>
-    
+     <select id="findAllResource" resultMap="privilegeResourceMap">
+      select * from privilege_resource
+    </select>
 </mapper>

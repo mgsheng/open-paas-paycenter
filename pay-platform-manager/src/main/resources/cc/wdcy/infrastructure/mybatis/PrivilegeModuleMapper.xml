@@ -60,9 +60,9 @@
  
 	
 	<insert id="savePrivilegeModule" parameterType="PrivilegeModule" useGeneratedKeys="true" keyProperty="id">
-        insert into privilege_module(id,name,url,level,parent_ids,display_order,code,status,resources,createTime)
+        insert into privilege_module(id,name,url,level,parent_id,parent_ids,display_order,code,status,resources,create_time)
         values
-        (#{id},#{userName},#{url},#{level},#{parentId},#{parentIds},#{displayOrder},#{code},#{status},#{resources},#{createTime})
+        (#{id},#{name},#{url},#{level},#{parentId},#{parentIds},#{displayOrder},#{code},#{status},#{resources},#{createTime})
     </insert>
     	<select id="findByName" resultMap="privilegeModuleMap">
          select * from privilege_module
@@ -104,4 +104,7 @@
      <delete id="deletePrivilegeModule" parameterType="Integer">
         delete from privilege_module where id=#{id}
     </delete>
+    <select id="findAllModules" resultMap="privilegeModuleMap">
+      select * from privilege_module
+    </select>	
 </mapper>

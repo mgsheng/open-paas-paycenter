@@ -16,4 +16,5 @@ public interface PrivilegeModuleRepository extends Repository {
 	void savePrivilegeModule(PrivilegeModule privilegeModule);
     void updatePrivilegeModule(PrivilegeModule privilegeModule);
     void deletePrivilegeModule(Integer id);
+    List<PrivilegeModule> findAllModules();
 }

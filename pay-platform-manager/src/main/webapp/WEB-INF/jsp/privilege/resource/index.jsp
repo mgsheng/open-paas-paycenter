@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
 	<script type="text/javascript"
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/common.js"></script>
 </head>
 <body>
 	<table id="dg" class="easyui-datagrid" title="权限资源管理" style="width:100%;height:540px"
@@ -75,7 +76,7 @@
 </body>
 
 <script>
-         //设置登录窗口
+         //设置=窗口
         function openPwd() {
             $('#w').window({
                 title: '资源',
@@ -87,11 +88,11 @@
                 resizable:false
             });
         }
-        //关闭登录窗口
+        //关闭窗口
         function closePwd() {
             $('#w').window('close');
         }
-        //修改密码
+        //添加資源
         function serverLogin() {
             var $resourceName = $('#resourceName');
             var $code = $('#code');
@@ -137,9 +138,7 @@
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
                   }
-                   
                 }
-		     
 		    }); 
 			 //设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 
@@ -166,14 +165,7 @@
 
 			$('#btnCancel').click(function(){closePwd();});
 		    });
-		  
-        function getSelected(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				$.messager.alert('Info', row.itemid+":"+row.productid+":"+row.attr1);
-			}
-		}
-		
+		//刪除 
 		function removeit(){
 		 var name=$("#name").val();
 		var row = $('#dg').datagrid('getSelected');
@@ -198,11 +190,13 @@
 			}
 		  
 		}
+		//重新加載
 		function reload(url,name){
 		$('#dg').datagrid('reload',{
             url: url, queryParams:{ name:name}, method: "post"
           }); 
 		}
+		//查詢
 		function onsearch(){
 		 var name=$("#name").val();
 		 var url=encodeURI("${pageContext.request.contextPath}/resource/findModuel?name="+name);
@@ -216,9 +210,7 @@
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
                   }
-                   
                 }
-		     
 		    }); 
 			 //设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 

@@ -157,6 +157,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/mo
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeResource.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRole.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeRoleDetails.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/TreeNode.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeModuleService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegePublicService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/service/PrivilegeResourceService.java -text

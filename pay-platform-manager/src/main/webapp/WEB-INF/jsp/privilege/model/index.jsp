@@ -11,173 +11,216 @@
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
-	<table id="dg" class="easyui-datagrid" title="权限资源管理" style="width:100%;height:540px"
-			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
-		<thead>
-			<tr>
-				<th data-options="field:'name',width:400">名称</th>
-				<th data-options="field:'code',width:300">code</th>
-				<th data-options="field:'status',width:240,align:'right'">状态</th>
-				<th data-options="field:'creatTime',width:250,align:'right'">创建时间</th>
-			</tr>
-		</thead>
-	</table>
-	<div id="tb" style="padding:2px 5px;">
-	   <span >
-		创建时间: <input class="easyui-datebox" style="width:110px">
-		To: <input class="easyui-datebox" style="width:110px">
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		名称: 
-		<input class="easyui-textbox" name="name" id="name" style="width:110px;">
-		&nbsp;&nbsp;&nbsp;&nbsp;
-		<a href="#" class="easyui-linkbutton" iconCls="icon-search">查询</a>
-		</span>
-		<span style="margin-left: 45%;">
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true"></a>
-		</span>
+	<div class="easyui-panel" title="模块管理" style="width:100%;max-width:100%;padding:20px 30px;height:540px;">
+	<div style="padding:2px 5px; text-align: right;">
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" ></a>
 	</div>
-
+	<div class="easyui-panel" style="padding:5px;height: 95%;overflow-x:scroll;">
+		  <ul id="deptree"  style="height: 100%"class="easyui-tree" 
+			 data-options="method:'get',url:'${pageContext.request.contextPath}/module/tree'"> 
+	 </ul>
+	</div>
+	</div>
+	<!--添加模块-->
+	<div id="wmodule" class="easyui-window" title="资源添加" collapsible="false"
+		minimizable="false" maximizable="false" icon="icon-save"
+		style="width: 300px; height: 150px; padding: 5px;
+        background: #fafafa;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false"
+				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<form id="resourceFrom" style="padding-top: 10px;" action="">
+				<table cellpadding=6>
+					<tr>
+						<td width="50px">父节点：</td>
+						<td>
+						<div  id="parentName"></div>
+						<input type="hidden" id="parentId" name="parentId" value=""/>
+						</td>
+						<td rowspan="6" valign="top" width="50px">资源：</td>
+						<td rowspan="6" valign="top">
+						<div  id="resourcesHtml">
+						</div>
+						<input type="hidden" id="resources" value="" />
+						</td>
+					</tr>
+					<tr>
+						<td>名称：</td>
+						<td><input id="moduleName" name="name" type="text" class="txt01" />
+						</td>
+					</tr>
+					<tr>
+						<td>URL：</td>
+						<td><input id="url" type="text" name="url"class="txt01" />
+						</td>
+					</tr>
+					<tr>
+						<td>code：</td>
+						<td><input id="code" type="text" name="code" class="txt01" />
+						</td>
+					</tr>
+					<tr>
+						<td>排序：</td>
+						<td><input id="display_order" name="displayOrder"type="text" class="txt01" />
+						</td>
+					</tr>
+					<tr>
+						<td>状态：</td>
+						<td>
+			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
+								<option value="1">启用</option>
+								<option value="0">禁用</option>
+							</select>
+						</td>
+					</tr>
+				</table>
+				</form>
+			</div>
+			<div region="south" border="false"
+				style="text-align:center; height: 30px; line-height: 30px;">
+				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
+					href="javascript:void(0)"> 确定</a> <a id="btnCancel"
+					class="easyui-linkbutton" icon="icon-cancel"
+					href="javascript:void(0)">取消</a>
+			</div>
+		</div>
+	</div>
 </body>
 <script>
-
-        function getSelected(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				$.messager.alert('Info', row.itemid+":"+row.productid+":"+row.attr1);
-			}
-		}
-		function submitForm(){
-			var orderId = $("input[name='orderId']").val();//商户订单号
-			var merchantOrderId = $("input[name='merchantOrderId']").val();//商户订单号
-			var payOrderId = $("input[name='payOrderId']").val();//第三方订单号
-			var channelId = $("input[name='channelId']").val();//支付方式
-			var appId = $("input[name='appId']").val();//业务类型
-			var userName = $("input[name='userName']").val();//商户订单号
-			var createDate =$("input[name='createDate']:checked").val(); 
-			var startDate = $("#_easyui_textbox_input7").val();
-			var endDate = $("#_easyui_textbox_input8").val();
-			
-			if(orderId==""&&merchantOrderId==""&&payOrderId==""&&channelId==""&&appId==""&&userName==""){
-				if(startDate==""||endDate==""){
-					alert("请选择时间段");
-					return;
+	   //设置=窗口
+        function openPwd() {
+            $('#wmodule').window({
+                title: '模块',
+                width: 600,
+                modal: true,
+                shadow: true,
+                closed: true,
+                top:150,
+                left:400,
+                height: 400,
+                resizable:false
+            });
+        }
+        //关闭窗口
+        function closePwd() {
+            $('#wmodule').window('close');
+        }
+        //添加資源
+        function serverLogin() {
+            var name = $('#moduleName').val();
+            var code = $('#code').val();
+            var moduleUrl= $('#url').val();
+            var displayOrder= $('#display_order').val();
+            var status= $('#status').val();
+            var parentId=$('#parentId').val();
+            if (name == '') {
+                msgShow('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+            if (code == '') {
+                msgShow('系统提示', '请输入code！', 'warning');
+                return false;
+            }
+            if (moduleUrl == '') {
+                msgShow('系统提示', '请输入URL！', 'warning');
+                return false;
+            }
+            if (displayOrder == '') {
+                msgShow('系统提示', '请输入排序！', 'warning');
+                return false;
+            }
+              var aa= $(":checkbox").serialize();
+                 var optionArray = aa.split("&");
+	             var resources="";
+				for(var i = 0;i<optionArray.length-1;i++){
+				    var opt = optionArray[i];
+				    var optArray = opt.split("=");
+				    resources+=optArray[1]+",";                           
 				}
-			}
-			if(!startDate==""){
-				if(endDate==""){
-					alert("请选择结束时间");
-					return;
+				if(resources!=""){
+				resources=resources.substring(0, resources.length-1);
 				}
-			}
-			if(!endDate==""){
-				if(startDate==""){
-					alert("请选择开始时间");
-					return;
-				}
-			}
-			if(!startDate==""&&!endDate==""){
-				if(startDate>endDate){
-					alert("开始时间大于结束时间！");
-					return;
-				}
-			}
-			if(orderId==""&&userName==""){
-				alert("请填写订单号或用户名！");
-				return;
-			}
-			
-			
-			
-			
-			$('#dg').datagrid({
-				collapsible:true,
-				rownumbers:true,
-				pagination:true,
-		        url: "${pageContext.request.contextPath}/manage/userQueryMessage?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&userName="+userName,  
-		        //pagination: true,显示分页工具栏
-		        onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("提示","没有符合查询条件的数据!");
-                  }
-                   
+            var url=encodeURI('${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources);
+           //解析data===parentId=&resources=1&resources=3&resources=5&resources=7&name=aa&url=aa%2Faa%2Faa&code=aa&displayOrder=2&status=1
+             $.post(url, function(data) {
+                if(data.returnMsg=='1'){
+                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+                 close();
+                $('#wmodule').window('close');
+                 $(window.top.document).find("#deptree").tree('reload');
+                }else{
+                 msgShow('系统提示', '添加失败！', 'info');
+                 close();
                 }
-		     
-		    }); 
-			 //设置分页控件 
-		    var p = $('#dg').datagrid('getPager'); 
-		    $(p).pagination({ 
-		        pageSize: 15,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-		        beforePageText: '第',//页数文本框前显示的汉字 
-		        afterPageText: '页    共 {pages} 页', 
-		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        onBeforeRefresh:function(){
-		            $(this).pagination('loading');
-		            $(this).pagination('loaded');
-		        } 
-		    }); 
-
-			
+            }); 
+            
+        }
+		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
+		function msgShow(title, msgString, msgType) {
+			$.messager.alert(title, msgString, msgType);
 		}
-		function clearForm(){
-			$('#ff').form('clear');
-		}
-	
-		//页面加载  
-		$(document).ready(function(){ 
-					var hy="seven";
-					getDayType(hy);
-		            loadGrid();  
-		});  
-		  
 		
-		function getDayType(date) {
-			var input6=getnowtime();
-			if(date=="thirty"){
-			//判断点击三十天
-			timeType="1";
-			var d=new Date();
-		    var n=new Date(d.getTime()-86400000*30);
-		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else if(date=="seven"){
-			//判断点击七天
-			timeType="2";
-			var d=new Date();
-		    var n=new Date(d.getTime()-86400000*7);
-		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else if(date=="both"){
-			//判断点击二天
-			timeType="3";
-			var d=new Date();
-		    var n=new Date(d.getTime()-86400000*2);
-		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else{
-			//判断点击一天
-			timeType="3";
-			var d=new Date();
-		    var n=new Date(d.getTime()-86400000*0);
-		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}
+	    $(function(){  
+		     openPwd();
+		     //添加
+		     $('#add').click(function() {
+		     var node = $('#deptree').tree('getSelected');
+			if (node){
+			 var s = node.text;
+			 $("#parentName").html(s);
+			 $("#parentId").val(node.id);
+			   $('#wmodule').window('open');
+		     }else{
+		       msgShow('系统提示', '请选择需要添加的节点！', 'info');
+		     }
+              
+            });
+            
+             $('#delete').click(function() {
+		     var node = $('#deptree').tree('getSelected');
+		     var id=node.id;
+			 if (node){
+			  var url=encodeURI('${pageContext.request.contextPath}/module/delete?id='+id);
+           //解析data===parentId=&resources=1&resources=3&resources=5&resources=7&name=aa&url=aa%2Faa%2Faa&code=aa&displayOrder=2&status=1
+             $.post(url, function(data) {
+                if(data.returnMsg=='1'){
+                 msgShow('系统提示', '恭喜，删除成功！', 'info');
+                 close();
+                 $(window.top.document).find("#deptree").tree('reload');
+                }else{
+                 msgShow('系统提示', '添加失败！', 'info');
+                 close();
+                }
+            }); 
+		     }else{
+		       msgShow('系统提示', '请选择需要添加的节点！', 'info');
+		     }
+              
+            });
+            
+            
+            
+            $('#btnEp').click(function() {
+                serverLogin();
+            });
+
+			$('#btnCancel').click(function(){closePwd();});
+			var list = '${resourceList}';
+	        var data = jQuery.parseJSON(list);
+			var html = "";
+			$(data).each(function(index,val){
+					html+="<div style='float:left;width:50%'>";
+					html+="<input class='m-wrap placeholder-no-fix' type='checkbox' name='resources' id='resource_"+val.id+"' value='"+val.id+"'/>";
+					html+="<span style='cursor:pointer' onclick='jQuery(\"#resource_"+val.id+"\").click();'>"+val.name+"</span>";
+					html+="</div>";
+			});
+			$("#resourcesHtml").html(html);
 			
-			$("#_easyui_textbox_input7").val(input5);
-			$("#_easyui_textbox_input8").val(input6);
-			}
-		function getnowtime() {
-            var nowtime = new Date();
-            var year = nowtime.getFullYear();
-            var month = padleft0(nowtime.getMonth() + 1);
-            var day = padleft0(nowtime.getDate());
-            var hour = padleft0(nowtime.getHours());
-            var minute = padleft0(nowtime.getMinutes());
-            var second = padleft0(nowtime.getSeconds());
-            var millisecond = nowtime.getMilliseconds(); millisecond = millisecond.toString().length == 1 ? "00" + millisecond : millisecond.toString().length == 2 ? "0" + millisecond : millisecond;
-            return year+"-"+month + "-" + day;
-        }
-        //补齐两位数
-        function padleft0(obj) {
-            return obj.toString().replace(/^[0-9]{1}$/, "0" + obj);
-        }
-	</script>
+		    });
+		    
+		     
+	
+</script>
 </html>

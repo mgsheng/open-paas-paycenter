@@ -13,5 +13,6 @@ public interface PrivilegeResourceService {
 	void updatePrivilegeResource(PrivilegeResource privilegeResource);
 	void deletePrivilegeResource(Integer id);
 	int findQueryCount(String name);
+	List<PrivilegeResource> findAllResource();
     
 }
