@@ -13,85 +13,99 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 		<style type="text/css">
-			table {
-				border: 1px solid;
-				border-color: grey;
+			#father {
+			    position: absolute;
+			    left:30px;
+			    right:30px;
+			    top:30px;
+			    bottom:30px;
+			    overflow:auto;
 			}
 		</style>
 	</head>
 	<body >
-			<div style="border:0px solid;border-radius:8px;margin-bottom:25px;height: 80%; width: 100%;">
-				<div class="top" style="width: 100%">
-					<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
-						<form id="fm" method="post" action="/managerUser/findUsers">
-							<div>
-								<span style="margin-left: 20px"> 
-										<input class="easyui-textbox" name="username" id="un" label="用&nbsp;户&nbsp;名：" 
-											prompt="选填" style="width:200px"></input> 
-								</span> 
-								<span style="margin-left: 20px"> 
-										<input class="easyui-textbox" name="realname" id="rn" label="真实姓名：" prompt="选填"  
-											style="width:200px"></input> 
-								</span> 
-								<span style="margin-left: 20px"> 
-										<input class="easyui-textbox" name="nickname" id="nn" label="昵&nbsp;&nbsp;&nbsp;
-											&nbsp;称：" prompt="选填" style="width:200px"></input> 
-								</span> 
-								<span style="margin-left:20px;">
-									<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findUsers();" style="width: 100px;">
-										<span style="font-weight:bold;margin-right:10px;margin-left:10px;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
-										<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-									</a>
-								</span>
-								<span style="margin-left:20px">
-									<a href="${pageContext.request.contextPath}/managerUser/showAdd" class="easyui-linkbutton"  
-										style="width: 100px;">
-										<span style="font-weight:bold;margin-right:5px;margin-left:5px;">添加用户</span>
-										<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-									</a>
-								</span>
-								<span style="margin-left:20px;">
-									<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="width: 100px;">
-										<span style="font-weight:bold;margin-right:8px;margin-left:10px;">清&nbsp;&nbsp;
-											&nbsp;&nbsp;除</span>
-										<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-									</a>
-								</span>
-							</div>
-						</form>
+		<div id="father">
+			<div>
+				<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;">
+					<div class="top" style="width: 100%">
+						<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
+							<form id="fm" method="post" action="/managerUser/findUsers">
+								<table cellpadding="5px">
+									<tr>
+										<td>
+												<input class="easyui-textbox" name="username" id="un" label="用&nbsp;户&nbsp;名：" 
+													prompt="选填" style="width:200px"></input> 
+										</td>
+										<td>	
+												<input class="easyui-textbox" name="realname" id="rn" label="真实姓名：" prompt="选填"  
+													style="width:200px"></input> 
+										</td>
+										<td> 
+												<input class="easyui-textbox" name="nickname" id="nn" label="昵&nbsp;&nbsp;&nbsp;
+													&nbsp;称：" prompt="选填" style="width:200px"></input> 
+										</td>
+										<td>	
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findUsers();" style="width: 120px;">
+												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
+												<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											</a>
+										</td>
+										<td>	
+											<a href="${pageContext.request.contextPath}/managerUser/showAddUser" class="easyui-linkbutton"  
+												style="width: 120px;">
+												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">添加用户</span>
+												<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											</a>
+										</td>
+										<td>	
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="width:120px;">
+												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">清&nbsp;&nbsp;
+													&nbsp;&nbsp;除</span>
+												<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											</a>
+										</td>	
+									</tr>
+								</table>
+							</form>
+						</div>
 					</div>
 				</div>
+				<div class="botton" style="margin-top:0px;width:100%;height:300px">
+					<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
+						data-options="singleSelect:true,method:'get'">
+						<thead>
+							<tr>
+								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
+								<th data-options="field:'password',align:'center'" hidden="true" style="width:15%;max-width:100%;">密码</th>
+								<th data-options="field:'username',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
+								<th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th>
+								<th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
+								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">注册时间</th>
+								<th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th>
+								<th data-options="field:'foundDate',align:'center',formatter:formatOper"  style="width:18%;max-width:100%;">
+									<span style="font-weight:bold;margin-left:2%;margin-right:2%;">操&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作</span>
+									<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+									</th>
+							</tr>
+					</thead>
+				</table>
 			</div>
-			<div class="botton" style="width: 100%;height: 300px;">
-				<table  id="dg"  class="easyui-datagrid" title="查询结果"    style="width:100%;max-width:100%;border:false;"
-					data-options="singleSelect:true,method:'get'">
-					<thead>
-						<tr>
-							<th data-options="field:'id',width:200,align:'center'" hidden="true">ID</th>
-							<th data-options="field:'password',width:200,align:'center'" hidden="true">密码</th>
-							<th data-options="field:'username',width:200,align:'center'">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
-							<th data-options="field:'realName',width:200,align:'center'">真实姓名</th>
-							<th data-options="field:'nickName',width:200,align:'center'">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
-							<th data-options="field:'createTime',width:200,align:'center'">注册时间</th>
-							<th data-options="field:'lastLoginTime',width:200,align:'center'">上次登陆时间</th>
-							<th data-options="field:'foundDate',width:200,align:'center',formatter:formatOper">
-								<span style="font-weight:bold;margin-left:40px;margin-right:20px;">操&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作</span>
-								<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-								</th>
-						</tr>
-				</thead>
-			</table>
 		</div>
-		
+	</div>	
 	<!--修改用户窗口--> 
 	<div id="upda" class="easyui-window" title="用户信息" collapsible="false"
 		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 300px; height: 150px; padding: 5px;
+		style="width: 300px; height: 150px;
         background: #fafafa;">
 		<div class="easyui-layout" fit="true">
 			<div region="center" border="false"
 				style="background: #fff; border: 1px solid #ccc;">
-				<table cellpadding="5px" id="tb"  style="border: 0px;margin:30px 10px" >
+				<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px" >
+					<tr>
+						<td>用户名：</td>
+						<td><input id="userName" type="text" class="txt01" name="username" class="easyui-textbox" readonly/>
+						</td>
+					</tr>
 					<tr>
 						<td>真实姓名：</td>
 						<td><input id="realname" type="text" class="txt01" name="realname" class="easyui-textbox" />
@@ -105,9 +119,9 @@
 				</table>
 			</div>
 			<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateUser()"> 确定</a>
-				<a id="btnCancel" class="easyui-linkbutton" onclick="closeWin()" icon="icon-cancel" href="javascript:void(0)">取消</a>
-				<a id="btnClear" href="javascript:void(0)" onclick="clearTable()" class="easyui-linkbutton" icon="icon-clear" style="width:80px;margin:10px 15px">清空</a>
+				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateUser()" style="margin:8px"> 确定</a>
+				<a id="btnCancel" class="easyui-linkbutton" onclick="closeWin()" icon="icon-cancel" href="javascript:void(0)" style="margin:8px">取消</a>
+				<a id="btnClear" href="javascript:void(0)" onclick="clearTable()" class="easyui-linkbutton" icon="icon-clear" style="margin:8px">清空</a>
 			</div>
 		</div>
 	</div>
@@ -142,7 +156,18 @@
 		function openWin(){
 			//打开修改用户窗口之前先清空
 			clearTable();
-			$('#upda').window('open');
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				var user_name = row.username;
+				var real_name = row.realName;
+				var nick_name = row.nickName;
+				$('#userName').val(user_name);
+				$('#realname').val(real_name);
+				$('#nickname').val(nick_name);
+				$('#upda').window('open');
+			}else{
+            	msgShow('系统提示', '请选择修改用户！', 'info');
+            }
 		};
 		//关闭修改用户窗口
 		function closeWin(){
@@ -156,15 +181,7 @@
 	
 		//追加操作列
 		function formatOper(val,row,index){  
-		    return  '<a href="#" onclick="removeUserByID('+index+')">删除</a>&nbsp;<a style="margin-left:20px" href="#" onclick="openUp('+index+')">修改</a>';  
-		}  
-		
-		
-		//修改用户信息
-		function openUp(index){
-			var row = $('#dg').datagrid('getSelected');
-			var id=row.id;  
-			openWin();
+		    return  '<a href="#" onclick="removeUserByID('+index+')">删除</a>&nbsp;<a style="margin-left:20px" href="#" onclick="openWin()">修改</a>';  
 		}  
 		
 		//根据用户ID删除用户
@@ -187,7 +204,9 @@
 			              reload(url,name);
 				}
 			   });
-			}
+			}else{
+            	msgShow('系统提示', '请选择要删除的用户！', 'info');
+            }
 		}
 		
 		//列表重新加载
@@ -235,7 +254,7 @@
 		    }); 
 		}
         
-        // 提交用户信息
+        // 提交修改后的用户信息
          function updateUser() {
 		 	var row = $('#dg').datagrid('getSelected');
 			var id=row.id;
@@ -250,21 +269,17 @@
                 return false;
             }
             var url=encodeURI('${pageContext.request.contextPath}/managerUser/updateUser?realname='+$realname+'&nickname='+$nickname+'&id='+id);
-           	if(row){
-	            $.post(url, function(data) {
-	                if(data.result==true){
-		                 msgShow('系统提示', '修改成功！', 'info');
-		                 closeWin();
-		                 var url='${pageContext.request.contextPath}/managerUser/updateUser';
-			             reload(url,name);
-	                }else{
-		                 msgShow('系统提示', '修改失败！', 'info');
-		                 closeWin();
-	                }
-	            });
-            }else{
-            	msgShow('系统提示', '请选择修改用户！', 'info');
-            }
+            $.post(url, function(data) {
+                if(data.result==true){
+	                 msgShow('系统提示', '修改成功！', 'info');
+	                 closeWin();
+	                 var url='${pageContext.request.contextPath}/managerUser/updateUser';
+		             reload(url,name);
+                }else{
+	                 msgShow('系统提示', '修改失败！', 'info');
+	                 closeWin();
+                }
+            });
         }
 	</script>
 </html>
