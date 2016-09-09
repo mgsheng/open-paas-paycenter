@@ -23,6 +23,7 @@ public class TreeNode {
 	
 	private List<TreeNode> children;
 
+	private String resource;
 	public String getId() {
 		return id;
 	}
@@ -86,12 +87,21 @@ public class TreeNode {
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
 	}
+	
+
+	public String getResource() {
+		return resource;
+	}
+
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
 
 	@Override
 	public String toString() {
 		return "TreeNode [id=" + id + ", text=" + text + ", checked=" + checked
 				+ ", pid=" + pid + ", attributes=" + attributes + ", target="
-				+ target + ", children=" + children + "]";
+				+ target + ", children=" + children + ",resource="+resource+"]";
 	}
 
 	@Override
