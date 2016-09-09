@@ -67,6 +67,7 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 			node.setText(privilegeModule.getName());//部门名称
 			node.setTarget("");
 			node.setPid(String.valueOf(privilegeModule.getParentId()));//父级部门ID
+			node.setResource(privilegeModule.getResources());
 			Map<String,Object> map = new HashMap<String,Object>();
 			node.setAttributes(map);
 		}
