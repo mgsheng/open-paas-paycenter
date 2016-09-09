@@ -78,14 +78,16 @@
 				user_name,
 				real_name,
 				nickname,
-				sha_password
+				sha_password,
+				create_time
 			) 
 		values
 		 	(
 		 		#{username,jdbcType=VARCHAR},
 		 		#{realName,jdbcType=VARCHAR},
 		 		#{nickName,jdbcType=VARCHAR},
-		 		#{password,jdbcType=VARCHAR}
+		 		#{password,jdbcType=VARCHAR},
+		 		#{createTime,jdbcType=BIGINT}
 		 	)
 	</insert>
 
@@ -96,7 +98,7 @@
 						user_name,
 						real_name,
 						nickname,
-						DATE_FORMAT(create_time,'%Y-%m-%d %T') create_time,
+						create_time,
 						DATE_FORMAT(last_login_time,'%Y-%m-%d %T') last_login_time
 			  from 	user_account
 			<where>
