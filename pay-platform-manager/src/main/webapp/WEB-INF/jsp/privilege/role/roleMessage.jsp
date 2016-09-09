@@ -11,6 +11,13 @@
 	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body>
+
+    <div class="easyui-panel" style="padding:5px;height: 30%;overflow-x:scroll;">
+		  <ul id="deptree"  style="height: 100%;width: 200px"class="easyui-tree" 
+			 data-options="method:'get'"> 
+	 	  </ul>
+	</div>
+	
 	<table id="dg" class="easyui-datagrid" title="权限角色管理" style="width:100%;height:540px"
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
 		<thead>
@@ -38,7 +45,7 @@
 		style="width: 300px; height: 150px; padding: 5px;
         background: #fafafa;">
 		<div class="easyui-layout" fit="true">
-			<div region="center" border="false"
+			<div border="false"
 				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
 				<table cellpadding=3>
 					<input id="id" type="hidden" />
@@ -48,7 +55,7 @@
 						</td>
 					</tr>
 					
-					<tr>
+					<tr style="height: 20px">
 						<td>状态：</td>
 						<td>
 			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
@@ -57,7 +64,19 @@
 							</select>
 						</td>
 					</tr>
+					<tr >
+							<td></td>
+							<td>
+							</td>
+					</tr>
+					
 				</table>
+								  
+			</div>
+			<div  style="padding:5px;height: 30%;overflow-x:scroll;">
+				  <ul id="deptree"  style="height: 100%;width: 200px"class="easyui-tree" 
+					 data-options="method:'get'"> 
+			 	  </ul>
 			</div>
 			<div region="south" border="false"
 				style="text-align:center; height: 30px; line-height: 30px;">
@@ -74,12 +93,12 @@
          //设置登录窗口
         function openPwd() {
             $('#w').window({
-                title: '角色',
-                width: 300,
+                title: '角色添加',
+                width: 600,
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: 260,
+                height: 600,
                 resizable:false
             });
         }
@@ -119,7 +138,6 @@
 	                 close();
                 }
             });
-            
         }
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
@@ -137,9 +155,7 @@
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
                   }
-                   
                 }
-		     
 		    }); 
 			 //设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 
@@ -163,7 +179,6 @@
             $('#btnEp').click(function() {
                 serverLogin();
             });
-
 			$('#btnCancel').click(function(){closePwd();});
 		    });
 		  
@@ -174,33 +189,27 @@
 			}
 		}
         
-        
         function editMessage(){
    			var row = $('#dg').datagrid('getSelected');
    			if (row){
    			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
    				if (r){
-   					
    					   var id=row.id;
    					   var name=row.name;
    					   var statusName=row.statusName;
-   						
    						document.getElementById("id").value=id; 
    						document.getElementById("resourceName").value=name; 
    						if(statusName=="启用"){
-   						  $("#status").val("1");
+   						$('#status option:eq(0)').attr('selected','selected');
    						}else{
+   							$('#status option:eq(1)').attr('selected','selected');
    						  $("#status").val("0");
    						}
-   						
-   						
 	  					openPwd();
 	  					$('#w').window('open');
    				}
    			   });
-   		   
    			}
-   		  
    		}
 		
 		function removeit(){
@@ -223,9 +232,7 @@
 			              reload(url,name);
 				}
 			   });
-		   
 			}
-		  
 		}
 		function reload(url,name){
 		$('#dg').datagrid('reload',{
@@ -246,9 +253,7 @@
 	                    if (data.total<1){
 	                       $.messager.alert("提示","没有符合查询条件的数据!");
 	                  }
-	                   
 	                }
-			     
 			    }); 
 				 //设置分页控件 
 			    var p = $('#dg').datagrid('getPager'); 
@@ -264,6 +269,13 @@
 			        } 
 			    }); 
 			}
+		
+		 $(function(){  
+             $('#deptree').tree({ 
+            	  checkbox:true,
+                  url: '${pageContext.request.contextPath}/managerRole/tree' ,  
+              });     
+         }); 
 		
 	</script>
 </html>
