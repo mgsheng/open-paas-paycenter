@@ -23,7 +23,14 @@ public class PrivilegeResource implements Serializable {
 	private Integer startRow;
 	private Integer pageSize;
 	private String foundDate; //创建时间
+	private String  statusName;
 	
+	public String getStatusName() {
+		return statusName;
+	}
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
+	}
 	public String getFoundDate() {
 		return foundDate;
 	}

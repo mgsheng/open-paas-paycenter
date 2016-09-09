@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
@@ -118,15 +119,24 @@ public class PrivilegeModuleController extends BaseControllerUtil{
 	public void add(HttpServletRequest request,HttpServletResponse response,PrivilegeModule privilegeModule) {
     	//返回
     		Map<String, Object> map = new LinkedHashMap<String, Object>();
-    			try {
-    				privilegeModule.setCreateTime(new Date());
-    				privilegeModuleService.savePrivilegeModule(privilegeModule);
-    				map.put("returnMsg", "1");
-    				
-    			} catch (Exception e) {
-    				e.printStackTrace();
-    				map.put("returnMsg", "0");
-    			}
+    		String  id= request.getParameter("id");
+	    		if(nullEmptyBlankJudge(id)){
+	    			try {
+	    				privilegeModule.setCreateTime(new Date());
+	    				privilegeModuleService.savePrivilegeModule(privilegeModule);
+	    				map.put("returnMsg", "1");
+	    				
+	    			} catch (Exception e) {
+	    				e.printStackTrace();
+	    				map.put("returnMsg", "0");
+	    			}	
+	    		}else{
+	    			privilegeModule.setCreateTime(new Date());
+	    			privilegeModuleService.updatePrivilegeModule(privilegeModule);
+	        		map.put("returnMsg", "2");
+	    			
+	    		}
+    			
     			WebUtils.writeErrorJson(response, map);
     }
     /**
@@ -139,6 +149,47 @@ public class PrivilegeModuleController extends BaseControllerUtil{
     @RequestMapping(value = "edit")
 	public void edit(HttpServletRequest request,HttpServletResponse response) {
     }
+    /**
+     * 编辑模块
+     * @param request
+     * @param model
+     * @param bool
+     * @return
+     */
+    @RequestMapping(value = "detail")
+	public void detail(HttpServletRequest request,HttpServletResponse response,String id) {
+    	//返回
+  		Map<String, Object> map = new LinkedHashMap<String, Object>();
+  		if(!nullEmptyBlankJudge(id)){
+  			try {
+  	  			PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(Integer.parseInt(id));
+  	  			map.put("id", privilegeModule.getId());
+  	  			map.put("parentId", privilegeModule.getParentId());
+  	  			map.put("name", privilegeModule.getName());
+  	  			map.put("url", privilegeModule.getUrl());
+  	  			map.put("code", privilegeModule.getCode());
+  	  			map.put("displayOrder", privilegeModule.getDisplayOrder());
+  	  			map.put("status", privilegeModule.getStatus());
+  	  			map.put("resources", privilegeModule.getResources());
+  	  			PrivilegeModule parentModule = null;
+  	  			if(privilegeModule.getParentId()!=0){
+  	  				parentModule = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+  	  				map.put("parentName", parentModule.getName());
+  	  			}
+  	  		map.put("returnMsg", "1");
+  	  		} catch (Exception e) {
+  	  			e.printStackTrace();
+  	  			map.put("id", 0);
+  	  		map.put("returnMsg", "0");
+  	  		}	
+  		}else{
+  			map.put("returnMsg", "0");
+  		}
+  		WebUtils.writeErrorJson(response, map);
+    	
+    }
+    
+  
     /**
      * 删除模块
      * @param request

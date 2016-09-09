@@ -19,7 +19,7 @@
 			    <th data-options="field:'id',width:400" hidden="true">ID</th>
 				<th data-options="field:'name',width:400">名称</th>
 				<th data-options="field:'code',width:300">code</th>
-				<th data-options="field:'status',width:240,align:'right'">状态</th>
+				<th data-options="field:'statusName',width:240,align:'right'">状态</th>
 				<th data-options="field:'foundDate',width:250,align:'right'">创建时间</th>
 			</tr>
 		</thead>
@@ -45,7 +45,9 @@
 				
 					<tr>
 						<td>名称：</td>
-						<td><input id="resourceName" type="text" class="txt01" />
+						<td>
+						<input id="id" type="hidden" />
+						<input id="resourceName" type="text" class="txt01" />
 						</td>
 					</tr>
 					<tr>
@@ -105,7 +107,8 @@
                 msgShow('系统提示', '请输出code！', 'warning');
                 return false;
             }
-            var url=encodeURI('${pageContext.request.contextPath}/resource/add?name='+$resourceName.val()+'&code='+$code.val()+'&status='+$status.val());
+            var id=$('#id').val();
+            var url=encodeURI('${pageContext.request.contextPath}/resource/add?name='+$resourceName.val()+'&code='+$code.val()+'&status='+$status.val()+'&id='+id);
             $.post(url, function(data) {
                 if(data.returnMsg=='1'){
                  msgShow('系统提示', '恭喜，添加成功！', 'info');
@@ -114,9 +117,15 @@
                  //刷新
 			      var url='${pageContext.request.contextPath}/resource/findModuel';
 			      reload(url,name);
+                }else if(data.returnMsg=='2'){
+                   msgShow('系统提示', '恭喜，修改成功！', 'info');
+                 close();
+                $('#w').window('close');
+                 //刷新
+			      var url='${pageContext.request.contextPath}/resource/findModuel';
+			      reload(url,name);
                 }else{
-                 $newpass.val('');
-                 $rePass.val('');
+                 msgShow('系统提示', '系统错误！', 'info');
                  close();
                 }
             });
@@ -156,8 +165,31 @@
 		     openPwd();
 		     $('#add').click(function() {
                 $('#w').window('open');
-                
-                
+            });
+            
+            $('#edit').click(function() {
+            var row = $('#dg').datagrid('getSelected');
+   			if (row){
+   			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
+   				if (r){
+   					   var id=row.id;
+   					   var name=row.name;
+   					   var code=row.code;
+   					   var statusName=row.statusName;
+   					     $("#id").val(id);
+   						 $("#resourceName").val(name);
+   						 $("#code").val(code);
+   						if(statusName=="启用"){
+   						  $("#status").val("1");
+   						}else{
+   						  $("#status").val("0");
+   						}
+	  					openPwd();
+	  					$('#w').window('open');
+   				}
+   			   });
+   		   
+   			}
             });
             $('#btnEp').click(function() {
                 serverLogin();

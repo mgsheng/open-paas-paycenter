@@ -8,6 +8,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 
 public interface PrivilegeResourceService {
 	List<PrivilegeResource> findByName(String name);
+	PrivilegeResource  findById(Integer id);
 	List<PrivilegeResource> getPageListByName(PrivilegeResource privilegeResource);
 	void savePrivilegeResource(PrivilegeResource privilegeResource);
 	void updatePrivilegeResource(PrivilegeResource privilegeResource);

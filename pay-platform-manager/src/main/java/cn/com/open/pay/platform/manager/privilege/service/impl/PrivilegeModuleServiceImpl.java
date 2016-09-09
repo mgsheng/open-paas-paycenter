@@ -72,5 +72,10 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 		}
 		return node;
 	}
+	@Override
+	public PrivilegeModule getModuleById(Integer id) {
+		// TODO Auto-generated method stub
+		return privilegeModuleRepository.findModuleById(id);
+	}
     
 }

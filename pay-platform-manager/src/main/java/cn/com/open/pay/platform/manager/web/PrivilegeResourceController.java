@@ -58,21 +58,36 @@ public class PrivilegeResourceController extends BaseControllerUtil {
     	PrivilegeResource  privilegeResource=null;
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
-    	List <PrivilegeResource> list= privilegeResourceService.findByName(name);
-    	if(list!=null&& list.size()>0){
-    		map.put("returnMsg", "0");
+    	String id=request.getParameter("id");
+    	if(nullEmptyBlankJudge(id)){
+    		List <PrivilegeResource> list= privilegeResourceService.findByName(name);
+        	if(list!=null&& list.size()>0){
+        		map.put("returnMsg", "0");
+        	}else{
+        		privilegeResource=new PrivilegeResource();
+        		privilegeResource.setName(name);
+        		privilegeResource.setCode(code);
+        		privilegeResource.setCreateTime(new Date());
+        		if(nullEmptyBlankJudge(status)){
+        			status="0";
+        		}
+        		privilegeResource.setStatus(Integer.parseInt(status));
+        		privilegeResourceService.savePrivilegeResource(privilegeResource);
+        		map.put("returnMsg", "1");
+        	}
     	}else{
-    		privilegeResource=new PrivilegeResource();
+    		privilegeResource= privilegeResourceService.findById(Integer.parseInt(id));
     		privilegeResource.setName(name);
     		privilegeResource.setCode(code);
-    		privilegeResource.setCreateTime(new Date());
     		if(nullEmptyBlankJudge(status)){
     			status="0";
     		}
     		privilegeResource.setStatus(Integer.parseInt(status));
-    		privilegeResourceService.savePrivilegeResource(privilegeResource);
-    		map.put("returnMsg", "1");
+    		privilegeResourceService.updatePrivilegeResource(privilegeResource);
+    		map.put("returnMsg", "2");
+    		
     	}
+    	
     	WebUtils.writeErrorJson(response, map);
     }
     /**
@@ -158,6 +173,12 @@ public class PrivilegeResourceController extends BaseControllerUtil {
 			 PrivilegeResource privilegeResourcenew = list.get(i);
 			 Date createTime = privilegeResourcenew.getCreateTime();
 			 privilegeResourcenew.setFoundDate(df.format(createTime));//交易时间
+			 int status = privilegeResourcenew.getStatus();
+				if(status==1){
+					privilegeResourcenew.setStatusName("启用");
+				}else{
+					privilegeResourcenew.setStatusName("停用");
+				}
 		 }
     	 JSONArray jsonArr = JSONArray.fromObject(list);
 		 JSONObject jsonObjArr = new JSONObject();  

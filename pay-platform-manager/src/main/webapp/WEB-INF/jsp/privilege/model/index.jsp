@@ -34,9 +34,11 @@
 				<form id="resourceFrom" style="padding-top: 10px;" action="">
 				<table cellpadding=6>
 					<tr>
+					
 						<td width="50px">父节点：</td>
 						<td>
 						<div  id="parentName"></div>
+						<input id="id" name="id" type="hidden" value=""/>
 						<input type="hidden" id="parentId" name="parentId" value=""/>
 						</td>
 						<td rowspan="6" valign="top" width="50px">资源：</td>
@@ -115,6 +117,7 @@
             var displayOrder= $('#display_order').val();
             var status= $('#status').val();
             var parentId=$('#parentId').val();
+            var id=$('#id').val();
             if (name == '') {
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
@@ -142,7 +145,12 @@
 				if(resources!=""){
 				resources=resources.substring(0, resources.length-1);
 				}
-            var url=encodeURI('${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources);
+			var url="";
+		    if(id==""){
+		    url=  encodeURI('${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources);
+		    }else{
+		   url= encodeURI('${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources+'&id='+id);
+		    }
            //解析data===parentId=&resources=1&resources=3&resources=5&resources=7&name=aa&url=aa%2Faa%2Faa&code=aa&displayOrder=2&status=1
              $.post(url, function(data) {
                 if(data.returnMsg=='1'){
@@ -150,8 +158,13 @@
                  close();
                 $('#wmodule').window('close');
                  $(window.top.document).find("#deptree").tree('reload');
+                }else if(data.returnMsg=='2'){
+                 msgShow('系统提示', '恭喜，修改成功！', 'info');
+                 close();
+                 $('#wmodule').window('close');
+                 $(window.top.document).find("#deptree").tree('reload');
                 }else{
-                 msgShow('系统提示', '添加失败！', 'info');
+                 msgShow('系统提示', '系统错误！', 'info');
                  close();
                 }
             }); 
@@ -177,7 +190,29 @@
 		     }
               
             });
-            
+            //编辑
+            $('#edit').click(function() {
+		     var node = $('#deptree').tree('getSelected');
+			if (node){
+			 var s = node.text;
+			 var id=node.id;
+			 var url=encodeURI('${pageContext.request.contextPath}/module/detail?id='+id);
+			 $.post(url, function(data) {
+                if(data.returnMsg=='1'){
+	                reset();
+	                updateModel(data);
+                    openPwd();
+	  				$('#wmodule').window('open');
+                }else{
+                 msgShow('系统提示', '系统错误！', 'info');
+                 close();
+                }
+            }); 
+            }else{
+            msgShow('系统提示', '请选择需要添加的节点！', 'info');
+            }  
+            });
+            //删除
              $('#delete').click(function() {
 		     var node = $('#deptree').tree('getSelected');
 		     var id=node.id;
@@ -190,7 +225,7 @@
                  close();
                  $(window.top.document).find("#deptree").tree('reload');
                 }else{
-                 msgShow('系统提示', '添加失败！', 'info');
+                 msgShow('系统提示', '删除失败！', 'info');
                  close();
                 }
             }); 
@@ -219,8 +254,62 @@
 			$("#resourcesHtml").html(html);
 			
 		    });
-		    
-		     
+		    //清空
+			function reset(){
+				jQuery('.control-group').removeClass('error');
+				jQuery('#id').val('0');
+				jQuery('#parentName').val('');
+				jQuery('#parentId').val('');
+				jQuery('#name').val('');
+				jQuery('#url').val('');
+				jQuery('#code').val('');
+				jQuery('#displayOrder').val('1');
+				document.getElementById("status").selectedIndex=0;
+				jQuery('#resources').val('');
+				jQuery("input[name='resources']").each(function(){
+					if(this.checked == true){
+						$(this).parent().removeClass("checked");
+						$(this).attr("checked",false);
+					}
+				});
+			}
+		     function updateModel(data){
+				reset();
+				if(data.id==null || data.id==0){
+					return;
+				}
+				//赋值
+				var id = data.id;
+				var parentId = data.parentId;
+				var name = data.name;
+				var url = data.url;
+				var code = data.code;
+				var displayOrder = data.displayOrder;
+				var status = data.status;
+				var resources = data.resources;
+				jQuery('#id').val(id);
+				jQuery('#parentId').val(parentId);
+				if(parentId==0){
+					jQuery('#parentName').html('根节点');
+				}
+				else{
+					jQuery('#parentName').html(data.parentName);
+				}
+				jQuery('#parentId').val(parentId);
+				jQuery('#moduleName').val(name);
+				jQuery('#url').val(url);
+				jQuery('#code').val(code);
+				jQuery('#display_order').val(displayOrder);
+				jQuery('#status').attr('value',status);
+				jQuery('#resources').val(resources);
+				if(resources!=null && resources!=""){
+					var resource=resources.split(",");
+					for(var i=0;i<resource.length;i++){
+						$("#resource_"+resource[i]).parent().addClass("checked");
+						$("#resource_"+resource[i]).attr("checked",true);
+					}
+				}
+			}
 	
 </script>
 </html>

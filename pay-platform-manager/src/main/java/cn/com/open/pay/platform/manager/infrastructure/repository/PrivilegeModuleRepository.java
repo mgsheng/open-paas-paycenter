@@ -13,6 +13,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
  */
 public interface PrivilegeModuleRepository extends Repository {
 	List<PrivilegeModule> findByName(@Param("name")String name);
+	PrivilegeModule  findModuleById(Integer id);
 	void savePrivilegeModule(PrivilegeModule privilegeModule);
     void updatePrivilegeModule(PrivilegeModule privilegeModule);
     void deletePrivilegeModule(Integer id);
