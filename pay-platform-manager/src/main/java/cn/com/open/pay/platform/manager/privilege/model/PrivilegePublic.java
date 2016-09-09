@@ -13,9 +13,9 @@ public class PrivilegePublic implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private int id;
-	int module;
-	String resources;
+	private int id;//主键（自增长）
+	private int moduleId;//模块ID
+	private String resources;//可操作资源
 
 	
 	public int getId() {
@@ -25,10 +25,10 @@ public class PrivilegePublic implements Serializable {
 		this.id = id;
 	}
 	public int getModule() {
-		return module;
+		return moduleId;
 	}
-	public void setModule(int module) {
-		this.module = module;
+	public void setModule(int moduleId) {
+		this.moduleId = moduleId;
 	}
 	public String getResources() {
 		return resources;
