@@ -99,7 +99,7 @@ public class PrivilegeModuleController extends BaseControllerUtil{
 				if (children == null) {
 					children = new ArrayList<TreeNode>();
 					node.setChildren(children);
-					node.setState("closed");
+					node.setState("open");
 				}
 				children.add(entry.getValue());
 			}

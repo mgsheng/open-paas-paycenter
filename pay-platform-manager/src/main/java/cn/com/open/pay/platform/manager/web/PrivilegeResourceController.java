@@ -184,7 +184,6 @@ public class PrivilegeResourceController extends BaseControllerUtil {
 		 JSONObject jsonObjArr = new JSONObject();  
 		 jsonObjArr.put("total", queryCount);
 		 jsonObjArr.put("rows", jsonArr);
-		 System.out.println(jsonArr);
 	     WebUtils.writeJson(response,jsonObjArr);
     }
 

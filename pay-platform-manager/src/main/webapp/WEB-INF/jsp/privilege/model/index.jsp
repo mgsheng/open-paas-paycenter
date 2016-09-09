@@ -156,13 +156,14 @@
                 if(data.returnMsg=='1'){
                  msgShow('系统提示', '恭喜，添加成功！', 'info');
                  close();
+                 eload();
                 $('#wmodule').window('close');
-                 $(window.top.document).find("#deptree").tree('reload');
+                 
                 }else if(data.returnMsg=='2'){
                  msgShow('系统提示', '恭喜，修改成功！', 'info');
                  close();
+                 reload();
                  $('#wmodule').window('close');
-                 $(window.top.document).find("#deptree").tree('reload');
                 }else{
                  msgShow('系统提示', '系统错误！', 'info');
                  close();
@@ -223,7 +224,7 @@
                 if(data.returnMsg=='1'){
                  msgShow('系统提示', '恭喜，删除成功！', 'info');
                  close();
-                 $(window.top.document).find("#deptree").tree('reload');
+                 reload();
                 }else{
                  msgShow('系统提示', '删除失败！', 'info');
                  close();
@@ -310,6 +311,20 @@
 					}
 				}
 			}
+			function reload(){
+			   
+			    $('#deptree').tree({
+                url:'${pageContext.request.contextPath}/module/tree'
+             });
+			}
+			function expandAll(){
+			var node = $('#deptree').tree('getSelected');
+			if (node){
+				$('#deptree').tree('expandAll', node.target);
+			} else {
+				$('#deptree').tree('expandAll');
+			}
+		}
 	
 </script>
 </html>

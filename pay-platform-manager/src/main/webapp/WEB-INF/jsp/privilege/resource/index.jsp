@@ -42,7 +42,6 @@
 			<div region="center" border="false"
 				style="padding: 10px; background: #fff; border: 1px solid #ccc;">
 				<table cellpadding=3>
-				
 					<tr>
 						<td>名称：</td>
 						<td>
