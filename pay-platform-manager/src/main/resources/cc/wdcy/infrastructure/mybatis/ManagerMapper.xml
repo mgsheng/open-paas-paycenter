@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.ManagerRepositoryMyBatis">
+	<resultMap type="Manager" id="managerMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="role" property="role" jdbcType="INTEGER" />
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  type,
+	  role,
+	  createTime
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.privilege.model.Manager">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into manager
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{type, jdbcType=INTEGER},
+			#{role, jdbcType=INTEGER},
+			#{createTime, jdbcType=TIMESTAMP}
+			
+		)
+	</insert>
+ 
+	<insert id="savePrivilegeRole" parameterType="Manager" useGeneratedKeys="true" keyProperty="id">
+        insert into manager(type,role,createTime)
+        values
+        (#{type},#{role},#{createTime})
+    </insert>
+    
+</mapper>

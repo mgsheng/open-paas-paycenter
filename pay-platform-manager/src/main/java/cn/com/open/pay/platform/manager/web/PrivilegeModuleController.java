@@ -119,24 +119,28 @@ public class PrivilegeModuleController extends BaseControllerUtil{
 	public void add(HttpServletRequest request,HttpServletResponse response,PrivilegeModule privilegeModule) {
     	//返回
     		Map<String, Object> map = new LinkedHashMap<String, Object>();
+    		try {
+    		String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
+			privilegeModule.setName(name);
     		String  id= request.getParameter("id");
 	    		if(nullEmptyBlankJudge(id)){
-	    			try {
+	    		
 	    				privilegeModule.setCreateTime(new Date());
+	    			
 	    				privilegeModuleService.savePrivilegeModule(privilegeModule);
 	    				map.put("returnMsg", "1");
 	    				
-	    			} catch (Exception e) {
-	    				e.printStackTrace();
-	    				map.put("returnMsg", "0");
-	    			}	
+	    			
 	    		}else{
 	    			privilegeModule.setCreateTime(new Date());
 	    			privilegeModuleService.updatePrivilegeModule(privilegeModule);
 	        		map.put("returnMsg", "2");
 	    			
 	    		}
-    			
+	    		} catch (Exception e) {
+					e.printStackTrace();
+					map.put("returnMsg", "0");
+				}	
     			WebUtils.writeErrorJson(response, map);
     }
     /**

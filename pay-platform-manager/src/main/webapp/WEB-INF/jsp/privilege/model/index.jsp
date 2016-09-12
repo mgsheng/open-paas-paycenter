@@ -122,14 +122,6 @@
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
-            if (code == '') {
-                msgShow('系统提示', '请输入code！', 'warning');
-                return false;
-            }
-            if (moduleUrl == '') {
-                msgShow('系统提示', '请输入URL！', 'warning');
-                return false;
-            }
             if (displayOrder == '') {
                 msgShow('系统提示', '请输入排序！', 'warning');
                 return false;
@@ -147,16 +139,16 @@
 				}
 			var url="";
 		    if(id==""){
-		    url=  encodeURI('${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources);
+		    url=  '${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources;
 		    }else{
-		   url= encodeURI('${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources+'&id='+id);
+		   url= '${pageContext.request.contextPath}/module/add?name='+name+'&code='+code+'&parentId='+parentId+'&status='+status+'&displayOrder='+displayOrder+'&url='+moduleUrl+'&resources='+resources+'&id='+id;
 		    }
            //解析data===parentId=&resources=1&resources=3&resources=5&resources=7&name=aa&url=aa%2Faa%2Faa&code=aa&displayOrder=2&status=1
              $.post(url, function(data) {
                 if(data.returnMsg=='1'){
                  msgShow('系统提示', '恭喜，添加成功！', 'info');
                  close();
-                 eload();
+                 reload();
                 $('#wmodule').window('close');
                  
                 }else if(data.returnMsg=='2'){
@@ -187,7 +179,9 @@
 			 $("#parentId").val(node.id);
 			   $('#wmodule').window('open');
 		     }else{
-		       msgShow('系统提示', '请选择需要添加的节点！', 'info');
+		       $("#parentName").html('根节点');
+			    $("#parentId").val('0');
+			   $('#wmodule').window('open');
 		     }
               
             });
@@ -200,10 +194,9 @@
 			 var url=encodeURI('${pageContext.request.contextPath}/module/detail?id='+id);
 			 $.post(url, function(data) {
                 if(data.returnMsg=='1'){
-	                reset();
-	                updateModel(data);
-                    openPwd();
-	  				$('#wmodule').window('open');
+                $('#wmodule').window('open');
+	            updateModel(data);
+	  				
                 }else{
                  msgShow('系统提示', '系统错误！', 'info');
                  close();
@@ -275,7 +268,7 @@
 				});
 			}
 		     function updateModel(data){
-				reset();
+				//reset();
 				if(data.id==null || data.id==0){
 					return;
 				}

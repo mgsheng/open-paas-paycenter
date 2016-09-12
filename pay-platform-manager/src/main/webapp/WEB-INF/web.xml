@@ -108,6 +108,14 @@
     <!--<error-code>404</error-code>-->
     <!--<location>/index.jsp</location>-->
     <!--</error-page>-->
+  <!--   <filter>
+	<filter-name>sessionFilter</filter-name>
+	<filter-class>cn.com.open.pay.platform.manager.filter.SessionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>sessionFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping> -->
 
     <session-config>
         <session-timeout>30</session-timeout>

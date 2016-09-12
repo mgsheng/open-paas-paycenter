@@ -17,6 +17,7 @@
        	<typeAlias alias="PrivilegePublic" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegePublic"/>
        	<typeAlias alias="PrivilegeResource" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource"/>
        	<typeAlias alias="PrivilegeRole" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole"/>
+       	<typeAlias alias="Manager" type="cn.com.open.pay.platform.manager.privilege.model.Manager"/>
        	<typeAlias alias="PrivilegeRoleDetails" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails"/>	 
     </typeAliases>
     <mappers>
@@ -27,6 +28,7 @@
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeRoleDetailsMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/UserMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml"/>
+        <mapper resource="cc/wdcy/infrastructure/mybatis/ManagerMapper.xml"/>
       	<mapper resource="cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml"/>
     </mappers>
 
