@@ -33,6 +33,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 @Controller
@@ -42,7 +43,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	@Autowired
 	private RoleService roleService;
 	@Autowired
-	private RoleDetailsService roleDetailsService;
+	private PrivilegeRoleDetailsService privilegeRoleDetailsService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
 	
@@ -147,7 +148,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 						String moduleId = arr[i];
 						privilegeRoleDetails.setRoleId(roleId);
 						privilegeRoleDetails.setModuleId(Integer.parseInt(moduleId));
-						roleDetailsService.savePrivilegeRole(privilegeRoleDetails);
+						privilegeRoleDetailsService.savePrivilegeRole(privilegeRoleDetails);
 					}
 				}
 				map.put("returnMsg", "1");
@@ -241,6 +242,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 								if(Integer.parseInt(vl)==id){
 									treeNode.setId(vl);
 									treeNode.setText(nameValue);
+//									treeNode.setState("closed");
 									treeNodeList.add(treeNode);
 								}
 								
