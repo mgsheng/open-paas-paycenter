@@ -3,7 +3,7 @@
 <mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeRoleDetailsRepositoryMyBatis">
 	<resultMap type="PrivilegeRoleDetails" id="privilegeRoleDetailsMap">
 		<id column="id" property="id" jdbcType="INTEGER" />
-		<result column="roleId" property="+" jdbcType="INTEGER" />
+		<result column="roleId" property="roleId" jdbcType="INTEGER" />
 		<result column="moduleId" property="moduleId" jdbcType="INTEGER" />
 		<result column="resources" property="resources" jdbcType="VARCHAR" />
 	</resultMap>
@@ -33,10 +33,10 @@
 		)
 	</insert>
  
-	<insert id="saveUserSerialRecord" parameterType="PrivilegeRoleDetails" useGeneratedKeys="true" keyProperty="id">
-        insert into USER_SERIAL_RECORD(Id,USER_NAME,AMOUNT,SERIAL_NO,PAY_TYPE,CREATE_TIME,APP_ID,SOURCE_ID)
+	<insert id="savePrivilegeRoleDetails" parameterType="PrivilegeRoleDetails" useGeneratedKeys="true" keyProperty="id">
+        insert into privilege_role_details(roleId,moduleId,resources)
         values
-        (#{id},#{userName},#{amount},#{serialNo},#{payType},#{createTime},#{appId},#{sourceId})
+        (#{roleId},#{moduleId},#{resources})
     </insert>
     <select id="getSerialByTime" resultType="java.util.Map" flushCache="true">
          select   SERIAL_NO serialNo,USER_NAME userName,AMOUNT amount,PAY_TYPE payType,APP_ID appId,SOURCE_ID sourceId

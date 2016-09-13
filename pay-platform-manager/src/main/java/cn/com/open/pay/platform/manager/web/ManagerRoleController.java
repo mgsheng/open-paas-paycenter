@@ -25,9 +25,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.login.service.RoleDetailsService;
 import cn.com.open.pay.platform.manager.login.service.RoleService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
@@ -39,6 +41,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private RoleDetailsService roleDetailsService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
 	
@@ -115,6 +119,11 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	public void addRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
     	String  id= request.getParameter("id");
     	String  status= request.getParameter("status");
+    	String  temp= request.getParameter("temp");
+    	if(temp!=""){
+    		System.out.println("2");
+    	}
+    	
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
     	if(id==""){
@@ -130,6 +139,17 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				}
 				privilegeRole.setStatus(Integer.parseInt(status));
 				roleService.savePrivilegeRole(privilegeRole);
+				int roleId = privilegeRole.getId();
+				PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
+				if(temp!=""){
+					String[] arr = temp.split(",");
+					for(int i=0;i<arr.length;i++){
+						String moduleId = arr[i];
+						privilegeRoleDetails.setRoleId(roleId);
+						privilegeRoleDetails.setModuleId(Integer.parseInt(moduleId));
+						roleDetailsService.savePrivilegeRole(privilegeRoleDetails);
+					}
+				}
 				map.put("returnMsg", "1");
 			}
     	}else{
@@ -205,6 +225,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 					children = new ArrayList<TreeNode>();
 					node.setChildren(children);
 					node.setState("closed");
+				}
+				else{
 					//添加三级
 					String resource = entry.getValue().getResource();
 					List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
