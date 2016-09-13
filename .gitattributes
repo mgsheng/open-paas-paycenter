@@ -144,9 +144,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructu
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/UserSerialRecordRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/model/Privilege.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/model/User.java -text
-pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/RoleService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/UserService.java -text
-pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/impl/RoleServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/impl/UserServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderInfo.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/UserSerialRecord.java -text
