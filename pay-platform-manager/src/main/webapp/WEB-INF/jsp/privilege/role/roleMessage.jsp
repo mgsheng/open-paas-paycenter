@@ -12,11 +12,7 @@
 </head>
 <body>
 
-    <div class="easyui-panel" style="padding:5px;height: 30%;overflow-x:scroll;">
-		  <ul id="deptree"  style="height: 100%;width: 200px"class="easyui-tree" 
-			 data-options="method:'get'"> 
-	 	  </ul>
-	</div>
+    
 	
 	<table id="dg" class="easyui-datagrid" title="权限角色管理" style="width:100%;height:540px"
 			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
@@ -64,19 +60,16 @@
 							</select>
 						</td>
 					</tr>
-					<tr >
-							<td></td>
-							<td>
-							</td>
-					</tr>
+					
 					
 				</table>
 								  
-			</div>
-			<div  style="padding:5px;height: 30%;overflow-x:scroll;">
-				  <ul id="deptree"  style="height: 100%;width: 200px"class="easyui-tree" 
+			
+			<div class="easyui-panel" style="padding:5px;height: 80%;widows:300px;margin-top:5px;overflow-x:scroll;">
+				  <ul id="deptree1"  style="height: 100%;width: 200px" class="easyui-tree" 
 					 data-options="method:'get'"> 
 			 	  </ul>
+			</div>
 			</div>
 			<div region="south" border="false"
 				style="text-align:center; height: 30px; line-height: 30px;">
@@ -94,13 +87,20 @@
         function openPwd() {
             $('#w').window({
                 title: '角色添加',
-                width: 600,
+                width: 400,
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: 600,
+                height: 500,
                 resizable:false
             });
+            
+            $('#deptree1').tree({ 
+           	 lines:true,//显示虚线效果 
+           	 animate: true,
+           	  checkbox:true,
+                 url: '${pageContext.request.contextPath}/managerRole/tree' ,  
+             });
         }
         //关闭登录窗口
         function closePwd() {
@@ -108,6 +108,37 @@
         }
         //添加
         function serverLogin() {
+        	var c_nodes=[]; //代存子节点
+        	var p_nodes = $('#deptree1').tree('getChecked');
+        	if(p_nodes.length>0){
+        		for(var i=0;i<p_nodes.length;i++){
+        			c_nodes.push($('#deptree1').tree('getChecked',p_nodes.target));  //获取选中节点的子节点，并插入数组
+        		}
+        	}
+        	 console.info(c_nodes);//控制台输出
+        	
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 
+        	 
+        	var tm='';
+        	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
+        	alert(ui);
+        	for(var i = 0;i<ui.length;i++){
+        		if(tm !='')
+        			tm += ',';
+        		    tm += ui[i].id;
+        	}
+        	
+	       
+        	
+        	
         	var id = $('#id').val();
             var $resourceName = $('#resourceName');
             var $status= $('#status');
@@ -115,7 +146,7 @@
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
-            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id);
+            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+tm);
             $.post(url, function(data) {
                 if(data.returnMsg=='1'){
 	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
@@ -270,12 +301,7 @@
 			    }); 
 			}
 		
-		 $(function(){  
-             $('#deptree').tree({ 
-            	  checkbox:true,
-                  url: '${pageContext.request.contextPath}/managerRole/tree' ,  
-              });     
-         }); 
+		
 		
 	</script>
 </html>
