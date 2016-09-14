@@ -38,8 +38,12 @@
 							"menus":[{"menuid":"26","menuname":"资源管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/resource/index"},
 									 {"menuid":"27","menuname":"模块管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/module/index"},
 									 {"menuid":"28","menuname":"角色管理","icon":"icon-role","url":"${pageContext.request.contextPath}/managerRole/roleMessage"},
-									 {"menuid":"29","menuname":"公共权限","icon":"icon-set","url":"${pageContext.request.contextPath}/managerUser/showSearch"}
+									 {"menuid":"29","menuname":"公共权限","icon":"icon-set","url":"${pageContext.request.contextPath}/privilegePublic/index"}
 								   ]
+						},{"menuid":"","icon":"icon-sys","menuname":"部门管理",
+							"menus":[
+										   {"menuid":"30","menuname":"部门信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/department /departmentList"},
+										   {"menuid":"31","menuname":"添加部门","icon":"icon-add","url":"${pageContext.request.contextPath}/department /showAddDepartment "}								]
 						}
 				]};
         //设置登录窗口
