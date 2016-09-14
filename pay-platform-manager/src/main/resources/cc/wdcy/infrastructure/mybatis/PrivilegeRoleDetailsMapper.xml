@@ -38,6 +38,17 @@
         values
         (#{roleId},#{moduleId},#{resources})
     </insert>
+    
+    <select id="QueryRoleDetails" resultMap="privilegeRoleDetailsMap" >
+        select * from  privilege_role_details where 1=1
+        <if test="roleId != null and roleId !=''" >
+           and roleId=#{roleId} 
+        </if>
+        
+    </select>
+    
+    
+    
     <select id="getSerialByTime" resultType="java.util.Map" flushCache="true">
          select   SERIAL_NO serialNo,USER_NAME userName,AMOUNT amount,PAY_TYPE payType,APP_ID appId,SOURCE_ID sourceId
 	     from USER_SERIAL_RECORD

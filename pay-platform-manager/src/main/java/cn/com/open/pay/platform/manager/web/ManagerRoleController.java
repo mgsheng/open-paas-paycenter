@@ -119,10 +119,12 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	public void addRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
     	String  id= request.getParameter("id");
     	String  status= request.getParameter("status");
-    	String  temp= request.getParameter("temp");
-    	if(temp!=""){
-    		System.out.println("2");
-    	}
+//    	String  temp= request.getParameter("temp");
+    	String  roleTreeNodeIds= request.getParameter("temp");
+    	
+//    	if(temp!=""){
+//    		System.out.println("2");
+//    	}
     	
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
@@ -139,17 +141,40 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				}
 				privilegeRole.setStatus(Integer.parseInt(status));
 				roleService.savePrivilegeRole(privilegeRole);
-				int roleId = privilegeRole.getId();
-				PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
-				if(temp!=""){
-					String[] arr = temp.split(",");
-					for(int i=0;i<arr.length;i++){
-						String moduleId = arr[i];
-						privilegeRoleDetails.setRoleId(roleId);
-						privilegeRoleDetails.setModuleId(Integer.parseInt(moduleId));
-						privilegeRoleDetailsService.savePrivilegeRole(privilegeRoleDetails);
+				
+				
+				//解析选择的权限
+				int roleId = privilegeRole.getId(); //获取角色id
+				if(roleTreeNodeIds!=null && !roleTreeNodeIds.equals("")){
+					PrivilegeRoleDetails roleDetails=null;//角色权限实体
+					String[] moduleRes=roleTreeNodeIds.split(",,,");//模块与模块拆分
+					for(int i=0;i<moduleRes.length;i++){
+						if(moduleRes[i]!=null && !moduleRes[i].equals("")){
+							String[] mres=moduleRes[i].split(",,");//模块与资源拆分
+							if(mres[0]!=null && !mres[0].equals("")){
+								roleDetails=new PrivilegeRoleDetails();
+								roleDetails.setRoleId(roleId);
+								roleDetails.setModuleId(Integer.parseInt(mres[0]));
+								if(mres.length>1 && mres[1]!=null && !mres[1].equals("")){
+									roleDetails.setResources(mres[1].replace(",", ","));
+								}
+								privilegeRoleDetailsService.savePrivilegeRole(roleDetails);
+							}
+						}
 					}
 				}
+				
+//				int roleId = privilegeRole.getId();
+//				PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
+//				if(temp!=""){
+//					String[] arr = temp.split(",");
+//					for(int i=0;i<arr.length;i++){
+//						String moduleId = arr[i];
+//						privilegeRoleDetails.setRoleId(roleId);
+//						privilegeRoleDetails.setModuleId(Integer.parseInt(moduleId));
+//						privilegeRoleDetailsService.savePrivilegeRole(privilegeRoleDetails);
+//					}
+//				}
 				map.put("returnMsg", "1");
 			}
     	}else{
@@ -172,7 +197,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "deleteRole")
 	public void deleteRole(HttpServletRequest request,HttpServletResponse response,String id) {
-    	String id1 = request.getParameter("id");
+//    	String id = request.getParameter("id");
     	Map<String,Object> map = new HashMap<String, Object>();
     	try {
     		if(nullEmptyBlankJudge(id)){
@@ -199,6 +224,36 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	WebUtils.writeJson(response,jsonArr);
 	}
     
+    
+    /**
+     * 
+     * @param request
+     * @param model
+     * @param bool
+     * @return
+     */
+    @RequestMapping(value = "QueryRoleDetails")
+	public void QueryRoleDetails(HttpServletRequest request,HttpServletResponse response,String id) {
+    	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
+    	privilegeRoleDetails.setRoleId(Integer.parseInt(id));
+    	List<PrivilegeRoleDetails> PrivilegeRoleDetailsList = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
+//    	String id = request.getParameter("id");
+    	Map<String,Object> map = new HashMap<String, Object>();
+    	try {
+    		if(nullEmptyBlankJudge(id)){
+       		 map.put("returnMsg", "0");//不存在	
+       		}else{
+       			roleService.deletePrivilegeRole(Integer.parseInt(id));
+           		map.put("returnMsg", "1");//修改成功	
+       		}
+			} catch (Exception e) {
+				 map.put("returnMsg", "0");//不存在	
+			}
+    	
+    		
+    	WebUtils.writeErrorJson(response, map);
+    }
+    
     /**
 	* 构建树
 	* @param treeNodes
@@ -221,6 +276,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				results.add(entry.getValue());
 			} else {
 				List<TreeNode> children = node.getChildren();
+				
 				if (children == null) {
 					children = new ArrayList<TreeNode>();
 					node.setChildren(children);
@@ -242,6 +298,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 									treeNode.setId(vl);
 									treeNode.setText(nameValue);
 //									treeNode.setState("closed");
+									treeNode.setIsmodule("1");
 									treeNodeList.add(treeNode);
 								}
 								
