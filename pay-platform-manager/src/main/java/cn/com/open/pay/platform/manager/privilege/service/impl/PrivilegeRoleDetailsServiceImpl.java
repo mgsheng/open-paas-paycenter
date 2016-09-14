@@ -29,4 +29,10 @@ public class PrivilegeRoleDetailsServiceImpl implements PrivilegeRoleDetailsServ
 		List<PrivilegeRoleDetails> PrivilegeRoleDetailsList = privilegeRoleDetailsRepository.QueryRoleDetails(privilegeRoleDetails);
 		return PrivilegeRoleDetailsList;
 	}
+
+	@Override
+	public void deletePrivilegeRoleDetail(String id) {
+		// TODO Auto-generated method stub
+		privilegeRoleDetailsRepository.deletePrivilegeRoleDetail(id);
+	}
 }

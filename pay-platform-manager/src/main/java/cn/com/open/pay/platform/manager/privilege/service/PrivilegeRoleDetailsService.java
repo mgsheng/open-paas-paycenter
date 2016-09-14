@@ -10,4 +10,6 @@ public interface PrivilegeRoleDetailsService {
 	void savePrivilegeRole(PrivilegeRoleDetails privilegeRoleDetails);
 
 	List<PrivilegeRoleDetails> QueryRoleDetails(PrivilegeRoleDetails privilegeRoleDetails);
+
+	void deletePrivilegeRoleDetail(String id);
 }
