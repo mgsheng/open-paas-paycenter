@@ -42,8 +42,8 @@
 								   ]
 						},{"menuid":"","icon":"icon-sys","menuname":"部门管理",
 							"menus":[
-										   {"menuid":"30","menuname":"部门信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/department /departmentList"},
-										   {"menuid":"31","menuname":"添加部门","icon":"icon-add","url":"${pageContext.request.contextPath}/department /showAddDepartment "}								]
+										   {"menuid":"30","menuname":"部门信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/department/departmentList"},
+										   {"menuid":"31","menuname":"添加部门","icon":"icon-add","url":"${pageContext.request.contextPath}/department /showAddDept "}								]
 						}
 				]};
         //设置登录窗口
