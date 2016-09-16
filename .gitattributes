@@ -242,6 +242,8 @@ pay-platform-manager/src/main/resources/spring/transaction.xml -text
 pay-platform-manager/src/main/webapp/META-INF/MANIFEST.MF -text
 pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/addDept.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/departmentList.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
