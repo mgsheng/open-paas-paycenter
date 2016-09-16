@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.ManagerDepartmentRepositoryMyBatis">
+	<resultMap type="Department" id="DepartmentMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="deptName" property="deptName" jdbcType="VARCHAR" />
+		<result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Column_List">
+	  id,
+	  deptName,
+	  createTime
+	</sql>
+	
+	<select id="findDepts" resultMap="DepartmentMap" parameterType="Department" >
+		select id,deptName,createTime
+		from privilege_dept 
+		<where>
+			<if test="deptName != null and deptName != '' ">deptName =#{deptName,jdbcType=VARCHAR}</if>
+		</where>
+	</select>
+	
+	<select id="findDeptById" resultType="Department" parameterType="Integer">
+		select deptName,createTime from privilege_dept where id = #{id}
+	</select>
+	
+	<select id="findByDeptName" resultType="Department" parameterType="String">
+		select deptName,createTime from privilege_dept where deptName = #{deptName}
+	</select>
+	
+	<update id="updateDept" parameterType="Department">
+		update privilege_dept set
+		<if test="deptName != null and deptName != '' ">
+			deptName =#{deptName,jdbcType=VARCHAR}
+		</if>
+		where id = #{id}
+	</update>
+	
+	<insert id="addDept" parameterType="Department">
+		insert into privilege_dept
+		(
+			  deptName,
+			  createTime
+		)
+		values 
+		(
+			#{deptName, jdbcType=VARCHAR},
+			#{createTime, jdbcType=DATE}
+		)
+	</insert>
+	
+	<delete id="removeDeptByID"  parameterType="Integer">
+		delete from privilege_dept where id = #{id}
+	</delete>
+    
+</mapper>
