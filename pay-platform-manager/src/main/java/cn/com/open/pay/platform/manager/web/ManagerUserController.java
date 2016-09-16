@@ -65,7 +65,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 	public void removeUser(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		Integer	id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"),"utf-8"));
 		boolean result = userService.removeUserByID(id);
-		// result = 1表示该用户删除成功
+		// result = true表示该用户删除成功
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("result",result);
 	    WebUtils.writeJson(response,jsonobj);
@@ -144,7 +144,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		String sha_password = request.getParameter("sha_password");
 //		log.info("--------------user_name："+user_name+"；real_name:"+real_name+"；nickname:"+nickname+"；sha_password:"+sha_password+"-------------------------");
 		JSONObject jsonObjArr = new JSONObject();  
-		//判断数据库是否已经存在该用户   result 为状态  0表示添加失败  1表示该用户已被注册   2 表示添加用户成功
+		//判断数据库是否已经存在该用户   
 		boolean result = false;
 		User user_db = userService.findByUsername(user_name);
 		if(user_db != null){
