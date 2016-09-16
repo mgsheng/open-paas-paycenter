@@ -124,6 +124,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/datasource/D
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/datasource/DynamicDataSource.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/model/Department.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/ManagerDepartmentService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/ManagerDepartmentServiceImp.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/dev/PayManagerDev.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/filter/SessionFilter.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerRepositoryMyBatis.java -text
