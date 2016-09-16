@@ -127,6 +127,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/s
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/ManagerDepartmentServiceImp.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/dev/PayManagerDev.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/filter/SessionFilter.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerDepartmentRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeModuleRepositoryMyBatis.java -text
