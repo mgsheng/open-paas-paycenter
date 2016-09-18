@@ -91,10 +91,10 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		for(int i=0;i<privilegeRoleList.size();i++){
 			PrivilegeRole privilegeRole1 = privilegeRoleList.get(i);
 			int status = privilegeRole1.getStatus();
-			if(status==0){
-				privilegeRoleList.get(i).setStatusName("禁用");
-			}else{
+			if(status==1){
 				privilegeRoleList.get(i).setStatusName("启用");
+			}else{
+				privilegeRoleList.get(i).setStatusName("禁用");
 			}
 			Date createTime = privilegeRole1.getCreateTime();
 			privilegeRole1.setCreate_Time(df.format(createTime));//交易时间
