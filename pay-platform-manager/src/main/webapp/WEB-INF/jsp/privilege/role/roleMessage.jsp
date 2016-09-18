@@ -94,12 +94,12 @@
                 height: 500,
                 resizable:false
             });
-            
+            var id = $('#id').val();
             $('#deptree1').tree({ 
            	 lines:true,//显示虚线效果 
            	 animate: true,
            	  checkbox:true,
-                 url: '${pageContext.request.contextPath}/managerRole/tree' ,  
+                 url: '${pageContext.request.contextPath}/managerRole/tree1?id='+id,  
              });
         }
         //关闭登录窗口
@@ -108,35 +108,30 @@
         }
         //添加
         function serverLogin() {
-        	var c_nodes=[]; //代存子节点
-        	var p_nodes = $('#deptree1').tree('getChecked');
-        	if(p_nodes.length>0){
-        		for(var i=0;i<p_nodes.length;i++){
-        			c_nodes.push($('#deptree1').tree('getChecked',p_nodes.target));  //获取选中节点的子节点，并插入数组
-        		}
-        	}
-        	 console.info(c_nodes);//控制台输出
         	
-        	 
-        	 
-        	 
-        	 
-        	 
-        	 
-        	 
-        	 
-        	 
-        	 
-        	var tm='';
+        	var checkIds='';
+        	var bool=false;
         	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
-        	alert(ui);
         	for(var i = 0;i<ui.length;i++){
-        		if(tm !='')
-        			tm += ',';
-        		    tm += ui[i].id;
+       			if(i>0){
+       				//模块节点(ismodule自定义参数=0标记的是模块)
+       				if(ui[i].ismodule=="0"){
+       				//	alert("1");
+       					checkIds+=",,,";//模块与模块区分
+       					bool=false;
+       				}else if(bool){
+       				//	alert("2");
+       					checkIds+=",";//资源与资源区分
+       				}else{
+       				//	alert("3");
+       					checkIds+=",,";//模块与资源区分
+       					bool=true;
+       				}
+        		}
+       		    //去掉带r标示的id（用于区分资源和模块id）
+    			checkIds+=ui[i].id.replace('r','');
         	}
-        	
-	       
+        	//alert(checkIds);
         	
         	
         	var id = $('#id').val();
@@ -146,7 +141,7 @@
                 msgShow('系统提示', '请输入名称！', 'warning');
                 return false;
             }
-            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+tm);
+            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
             $.post(url, function(data) {
                 if(data.returnMsg=='1'){
 	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
@@ -170,6 +165,66 @@
                 }
             });
         }
+        
+      //修改
+        function serverUpdate() {
+        	var checkIds='';
+        	var bool=false;
+        	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
+        	for(var i = 0;i<ui.length;i++){
+       			if(i>0){
+       				//模块节点(ismodule自定义参数=0标记的是模块)
+       				if(ui[i].ismodule=="0"){
+       					checkIds+=",,,";//模块与模块区分
+       					bool=false;
+       				}else if(bool){
+       					checkIds+=",";//资源与资源区分
+       				}else{
+       					checkIds+=",,";//模块与资源区分
+       					bool=true;
+       				}
+        		}
+       		    //去掉带r标示的id（用于区分资源和模块id）
+    			checkIds+=ui[i].id.replace('r','');
+        	}
+        	var id = $('#id').val();
+            var $resourceName = $('#resourceName');
+            var $status= $('#status');
+            if ($resourceName.val() == '') {
+                msgShow('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+            var url= "";
+            if(id==''){
+            	url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
+            }else{
+            	url=encodeURI('${pageContext.request.contextPath}/managerRole/updateRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
+            }
+             $.post(url, function(data) {
+            	 if(data.returnMsg=='1'){
+	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				      reload(url,name);
+                }else if(data.returnMsg=='2'){
+                	msgShow('系统提示', '修改成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				      reload(url,name);
+                }else{
+                	msgShow('系统提示', '角色已存在！', 'info');
+	                 $newpass.val('');
+	                 $rePass.val('');
+	                 close();
+                }
+            });
+        }
+      
+      
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
@@ -208,7 +263,7 @@
                 $('#w').window('open');
             });
             $('#btnEp').click(function() {
-                serverLogin();
+            	serverUpdate();
             });
 			$('#btnCancel').click(function(){closePwd();});
 		    });
@@ -222,6 +277,7 @@
         
         function editMessage(){
    			var row = $('#dg').datagrid('getSelected');
+   		
    			if (row){
    			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
    				if (r){
@@ -230,12 +286,40 @@
    					   var statusName=row.statusName;
    						document.getElementById("id").value=id; 
    						document.getElementById("resourceName").value=name; 
+   					   $.ajax({
+   						    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?id="+id, 
+	   						success: function(data) {
+	   							var obj = eval(data); 
+	   							var node;
+	   				            $(data[0].list).each(function(){
+	   				            	if(this.resources!=null && this.resources!=""){
+	   				            		var resId=this.resources.split(",");
+	   				            		for(var i=0;i<resId.length;i++){
+	   				            			node = zTree.getNodeByParam("searchId",("m"+this.moduleId+"r"+resId[i]));
+	   				            			if(node!=null){
+	   											if(!node.isParent){
+	   												zTree.checkNode(node,true,true);
+	   											}
+	   										}
+	   				            		}
+	   				            	}else{
+	   				            		node = zTree.getNodeByParam("searchId",("m"+this.moduleId));
+	   				            		if(node!=null){
+	   										zTree.checkNode(node,true,true);
+	   									}
+	   				            	}
+	   							});
+	   						}
+   					   });
+   						
+   						
    						if(statusName=="启用"){
    						$('#status option:eq(0)').attr('selected','selected');
    						}else{
    							$('#status option:eq(1)').attr('selected','selected');
    						  $("#status").val("0");
    						}
+   						
 	  					openPwd();
 	  					$('#w').window('open');
    				}
@@ -301,7 +385,6 @@
 			    }); 
 			}
 		
-		
-		
+	  
 	</script>
 </html>
