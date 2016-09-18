@@ -121,13 +121,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	public void addRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
     	String  id= request.getParameter("id");
     	String  status= request.getParameter("status");
-//    	String  temp= request.getParameter("temp");
     	String  roleTreeNodeIds= request.getParameter("temp");
-    	
-//    	if(temp!=""){
-//    		System.out.println("2");
-//    	}
-    	
+
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
     	if(id==""){
@@ -143,9 +138,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				}
 				privilegeRole.setStatus(Integer.parseInt(status));
 				roleService.savePrivilegeRole(privilegeRole);
-				
-				
-				//解析选择的权限
 				int roleId = privilegeRole.getId(); //获取角色id
 				if(roleTreeNodeIds!=null && !roleTreeNodeIds.equals("")){
 					PrivilegeRoleDetails roleDetails=null;//角色权限实体
@@ -165,18 +157,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 						}
 					}
 				}
-				
-//				int roleId = privilegeRole.getId();
-//				PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
-//				if(temp!=""){
-//					String[] arr = temp.split(",");
-//					for(int i=0;i<arr.length;i++){
-//						String moduleId = arr[i];
-//						privilegeRoleDetails.setRoleId(roleId);
-//						privilegeRoleDetails.setModuleId(Integer.parseInt(moduleId));
-//						privilegeRoleDetailsService.savePrivilegeRole(privilegeRoleDetails);
-//					}
-//				}
+
 				map.put("returnMsg", "1");
 			}
     	}else{
@@ -258,8 +239,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
 			} catch (Exception e) {
 				 map.put("returnMsg", "0");//不存在	
 			}
-    	
-    		
     	WebUtils.writeErrorJson(response, map);
     }
 	
@@ -336,7 +315,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 					node.setChildren(children);
 					node.setState("closed");
 				}
-				else{
+//				else{
 					//添加三级
 					String resource = entry.getValue().getResource();
 					List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
@@ -361,7 +340,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 					}
 					
 					entry.getValue().setChildren(treeNodeList);
-				}
+//				}
 				children.add(entry.getValue());
 			}
 		}
@@ -437,7 +416,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 						node.setChildren(children);
 						node.setState("closed");
 					}
-					else{
+//					else{
 						//添加三级
 						String resource = entry.getValue().getResource();
 						String idt = entry.getValue().getId();
@@ -480,7 +459,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 						}
 						
 						entry.getValue().setChildren(treeNodeList);
-					}
+//					}
 					children.add(entry.getValue());
 				}
 			}
