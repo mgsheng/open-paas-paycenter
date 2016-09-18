@@ -320,7 +320,7 @@ public class PrivilegePublicController extends BaseControllerUtil {
 		 
 		 
 		 	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
-	    	privilegeRoleDetails.setRoleId(Integer.parseInt(id));
+//	    	privilegeRoleDetails.setRoleId(Integer.parseInt(id));
 //	    	List<PrivilegeRoleDetails> privilegeRoleDetailslist = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
 	    	List<PrivilegePublic> privilegePublicDetailslist = privilegePublicService.findPublic();
 		 
