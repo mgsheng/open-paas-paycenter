@@ -99,7 +99,7 @@
            	 lines:true,//显示虚线效果 
            	 animate: true,
            	  checkbox:true,
-                 url: '${pageContext.request.contextPath}/managerRole/tree1?id='+id,  
+                 url: '${pageContext.request.contextPath}/managerRole/tree?id='+id,  
              });
         }
         //关闭登录窗口
@@ -116,14 +116,11 @@
        			if(i>0){
        				//模块节点(ismodule自定义参数=0标记的是模块)
        				if(ui[i].ismodule=="0"){
-       				//	alert("1");
        					checkIds+=",,,";//模块与模块区分
        					bool=false;
        				}else if(bool){
-       				//	alert("2");
        					checkIds+=",";//资源与资源区分
        				}else{
-       				//	alert("3");
        					checkIds+=",,";//模块与资源区分
        					bool=true;
        				}
@@ -322,7 +319,23 @@
    						  $("#status").val("0");
    						}
    						
-	  					openPwd();
+	  					//openPwd();
+	  					$('#w').window({
+			                title: '角色修改',
+			                width: 400,
+			                modal: true,
+			                shadow: true,
+			                closed: true,
+			                height: 500,
+			                resizable:false
+			            });
+	  					var id = $('#id').val();
+	  		            $('#deptree1').tree({ 
+	  		           	 lines:true,//显示虚线效果 
+	  		           	 animate: true,
+	  		           	  checkbox:true,
+	  		                 url: '${pageContext.request.contextPath}/managerRole/tree1?id='+id,  
+	  		             });
 	  					$('#w').window('open');
    				}
    			   });
