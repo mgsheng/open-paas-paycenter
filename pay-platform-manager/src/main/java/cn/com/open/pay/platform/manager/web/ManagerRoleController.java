@@ -394,26 +394,25 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		* @return
 		*/
 		protected List<TreeNode> buildTree1(List<TreeNode> treeNodes,List<PrivilegeResource> resourceList ,List<PrivilegeRoleDetails> privilegeRoleDetailslist ) {
-//			String[] sourceStrArray = null;
-//			String[] sourceStrArray1 = null;
-//			String[] sourceStrArray2 = null;
-//			StringBuffer module=new StringBuffer();
-//			StringBuffer moduleRole=new StringBuffer();
-//			if(privilegeRoleDetailslist!=null){
-//				
-//				for(int i=0;i<privilegeRoleDetailslist.size();i++){
-//					PrivilegeRoleDetails privilegeRoleDetails = privilegeRoleDetailslist.get(i);
-//					String resources = privilegeRoleDetails.getResources();
-//					int moduleId=0;
-////					String resourcesArry = null;
-//					if(resources!=null){
-//						moduleId = privilegeRoleDetails.getModuleId();
-//						String resourcesArry = privilegeRoleDetails.getResources();
-//					    module.append(moduleId+",");
-//					    moduleRole.append(resourcesArry+",,");
-//					}
-//				}
-//			}
+			String[] sourceStrArray = null;
+			String[] sourceStrArray1 = null;
+			String[] sourceStrArray2 = null;
+			StringBuffer module=new StringBuffer();
+			StringBuffer moduleRole=new StringBuffer();
+			if(privilegeRoleDetailslist!=null){
+				for(int i=0;i<privilegeRoleDetailslist.size();i++){
+					PrivilegeRoleDetails privilegeRoleDetails = privilegeRoleDetailslist.get(i);
+					String resources = privilegeRoleDetails.getResources();
+					int moduleId=0;
+					String resourcesArry = null;
+					if(resources!=null){
+						moduleId = privilegeRoleDetails.getModuleId();
+						resourcesArry = privilegeRoleDetails.getResources();
+					    module.append(moduleId+",");
+					    moduleRole.append(resourcesArry+",,");
+					}
+				}
+			}
 			
 			
 			List<TreeNode> results = new ArrayList<TreeNode>();
@@ -441,6 +440,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
 					else{
 						//添加三级
 						String resource = entry.getValue().getResource();
+						String idt = entry.getValue().getId();
 						List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
 						if(resource!=null){
 							String[] resourceStrArray = resource.split(",");
@@ -455,30 +455,23 @@ public class ManagerRoleController  extends BaseControllerUtil {
 										treeNode.setText(nameValue);
 //										treeNode.setState("closed");
 										treeNode.setIsmodule("1");
-//										if(vl.equals(valueId)){
-//											
-//										}
-										//888888888888888888888888
-//										sourceStrArray = module.toString().split(",");
-//										for(int p=0;p<sourceStrArray.length;p++){
-//											String value = sourceStrArray[i];
-//											String ids = entry.getValue().getId()+"";
-//											if(value.equals(ids)){
-//												sourceStrArray1  =	moduleRole.toString().split(",");
-//												sourceStrArray2 = sourceStrArray1[i].split(",");
-//												for(int u=0;u<sourceStrArray2.length;u++){
-//													String vo = sourceStrArray2[u];
-//													if(vl.equals(vo)){
-//														treeNode.setChecked(true);
-//													}
-//												}
+										
+										sourceStrArray = module.toString().split(",");
+										for(int p=0;p<sourceStrArray.length;p++){
+											String value = sourceStrArray[p];
+											if(value.equals(idt)){
+												sourceStrArray1  =	moduleRole.toString().split(",,");
+												sourceStrArray2 = sourceStrArray1[p].split(",");
+												for(int u=0;u<sourceStrArray2.length;u++){
+													String vo = sourceStrArray2[u];
+													if(vl.equals(vo)){
+														treeNode.setChecked(true);
+													}
+												}
 //												node.setChecked(true);
-//											}
-//										}
-										//8888888888888888888888
-//										for(int p=0;p<privilegeRoleDetailslist.size();p++){
-//											
-//										}
+											}
+										}
+										
 										treeNodeList.add(treeNode);
 									}
 									
