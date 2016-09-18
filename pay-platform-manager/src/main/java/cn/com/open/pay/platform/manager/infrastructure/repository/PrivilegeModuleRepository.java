@@ -18,4 +18,5 @@ public interface PrivilegeModuleRepository extends Repository {
     void deletePrivilegeModule(Integer id);
     List<PrivilegeModule> findAllModules();
     List<PrivilegeModule> findModuleByIds(@Param("ids")List<Integer> ids);
+    int findParentId(int parentId);
 }
