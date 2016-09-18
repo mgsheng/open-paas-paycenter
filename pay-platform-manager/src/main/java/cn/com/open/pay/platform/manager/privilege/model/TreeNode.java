@@ -24,6 +24,8 @@ public class TreeNode {
 	private List<TreeNode> children;
 
 	private String resource;
+	
+	private String ismodule;
 	public String getId() {
 		return id;
 	}
@@ -96,12 +98,22 @@ public class TreeNode {
 	public void setResource(String resource) {
 		this.resource = resource;
 	}
+	
+	
+
+	public String getIsmodule() {
+		return ismodule;
+	}
+
+	public void setIsmodule(String ismodule) {
+		this.ismodule = ismodule;
+	}
 
 	@Override
 	public String toString() {
 		return "TreeNode [id=" + id + ", text=" + text + ", checked=" + checked
 				+ ", pid=" + pid + ", attributes=" + attributes + ", target="
-				+ target + ", children=" + children + ",resource="+resource+"]";
+				+ target + ", children=" + children + " ,resource="+resource+" ,ismodule="+ismodule+"]";
 	}
 
 	@Override
