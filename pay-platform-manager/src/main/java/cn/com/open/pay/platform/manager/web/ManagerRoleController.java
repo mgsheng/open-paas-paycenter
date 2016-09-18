@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
@@ -188,6 +190,52 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	WebUtils.writeErrorJson(response, map);
     }
     
+    
+    /**
+     * 修改角色
+     * @param request
+     * @param model
+     * @param bool
+     * @return
+     * @throws UnsupportedEncodingException 
+     */
+    @RequestMapping(value = "updateRole")
+	public void updateRole(HttpServletRequest request,HttpServletResponse response) throws UnsupportedEncodingException {
+    	String  id= request.getParameter("id");
+    	String  status= request.getParameter("status");
+    	String  roleTreeNodeIds= request.getParameter("temp");
+
+    	Map<String,Object> map = new HashMap<String, Object>();
+    	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
+    	
+		PrivilegeRole privilegeRole=new PrivilegeRole();
+		privilegeRole.setId(Integer.parseInt(id));
+		privilegeRole.setName(name);
+		privilegeRole.setStatus(Integer.parseInt(status));
+		roleService.updatePrivilegeRole(privilegeRole);
+		privilegeRoleDetailsService.deletePrivilegeRoleDetail(id);
+		if(roleTreeNodeIds!=null && !roleTreeNodeIds.equals("")){
+			PrivilegeRoleDetails roleDetails=null;//角色权限实体
+			String[] moduleRes=roleTreeNodeIds.split(",,,");//模块与模块拆分
+			for(int i=0;i<moduleRes.length;i++){
+				if(moduleRes[i]!=null && !moduleRes[i].equals("")){
+					String[] mres=moduleRes[i].split(",,");//模块与资源拆分
+					if(mres[0]!=null && !mres[0].equals("")){
+						roleDetails=new PrivilegeRoleDetails();
+						roleDetails.setRoleId(Integer.parseInt(id));
+						roleDetails.setModuleId(Integer.parseInt(mres[0]));
+						if(mres.length>1 && mres[1]!=null && !mres[1].equals("")){
+							roleDetails.setResources(mres[1].replace(",", ","));
+						}
+						privilegeRoleDetailsService.savePrivilegeRole(roleDetails);
+					}
+				}
+			}
+		}
+		map.put("returnMsg", "2");
+    	WebUtils.writeErrorJson(response, map);
+    }
+    
     /**
      * 删除角色
      * @param request
@@ -204,6 +252,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
        		 map.put("returnMsg", "0");//不存在	
        		}else{
        			roleService.deletePrivilegeRole(Integer.parseInt(id));
+       			privilegeRoleDetailsService.deletePrivilegeRoleDetail(id);
            		map.put("returnMsg", "1");//修改成功	
        		}
 			} catch (Exception e) {
@@ -215,16 +264,6 @@ public class ManagerRoleController  extends BaseControllerUtil {
     }
 	
     
-    @RequestMapping(value = "tree")
-	public void getModelTree(HttpServletRequest request,HttpServletResponse response) {
-		List<TreeNode> nodes = privilegeModuleService.getDepartmentTree();//见方法02
-		 //buildTree(nodes)见方法01，return返回值自动转为json,不懂的话看下面紫色部分，懂的略过
-		List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
-		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes,privilegeResourceList));
-    	WebUtils.writeJson(response,jsonArr);
-	}
-    
-    
     /**
      * 
      * @param request
@@ -234,25 +273,40 @@ public class ManagerRoleController  extends BaseControllerUtil {
      */
     @RequestMapping(value = "QueryRoleDetails")
 	public void QueryRoleDetails(HttpServletRequest request,HttpServletResponse response,String id) {
+    	List<Map<String,String>> listMap = new LinkedList<Map<String,String>>();
     	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
     	privilegeRoleDetails.setRoleId(Integer.parseInt(id));
-    	List<PrivilegeRoleDetails> PrivilegeRoleDetailsList = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
+    	List<PrivilegeRoleDetails> list = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
 //    	String id = request.getParameter("id");
-    	Map<String,Object> map = new HashMap<String, Object>();
-    	try {
-    		if(nullEmptyBlankJudge(id)){
-       		 map.put("returnMsg", "0");//不存在	
-       		}else{
-       			roleService.deletePrivilegeRole(Integer.parseInt(id));
-           		map.put("returnMsg", "1");//修改成功	
-       		}
-			} catch (Exception e) {
-				 map.put("returnMsg", "0");//不存在	
+    	if(list!=null && list.size()>0){
+			Map<String,String> map = null;
+			for(PrivilegeRoleDetails roleDetail : list){
+				map = new HashMap<String,String>();
+				map.put("id", roleDetail.getId()+"");
+				map.put("moduleId", roleDetail.getModuleId()+"");
+				map.put("resources", roleDetail.getResources()==null?"":roleDetail.getResources());
+				listMap.add(map);
 			}
-    	
-    		
-    	WebUtils.writeErrorJson(response, map);
+		}
+		//返回
+		Map<String, Object> map = new LinkedHashMap<String, Object>();
+		map.put("list", listMap);
+//		JsonUtil.writeJson(response,JsonUtil.getContentData(map));
+		JSONArray jsonArr = JSONArray.fromObject(map);
+		WebUtils.writeJson(response,jsonArr);
+		
+	
     }
+    
+    @RequestMapping(value = "tree")
+	public void getModelTree(HttpServletRequest request,HttpServletResponse response) {
+		List<TreeNode> nodes = privilegeModuleService.getDepartmentTree();//见方法02
+		 //buildTree(nodes)见方法01，return返回值自动转为json,不懂的话看下面紫色部分，懂的略过
+		List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
+		JSONArray jsonArr = JSONArray.fromObject(buildTree(nodes,privilegeResourceList));
+    	WebUtils.writeJson(response,jsonArr);
+	}
+    
     
     /**
 	* 构建树
@@ -315,5 +369,134 @@ public class ManagerRoleController  extends BaseControllerUtil {
 
 		return results;
 	}
+	
+	
+	
+	 @RequestMapping(value = "tree1")
+		public void getModelTree1(HttpServletRequest request,HttpServletResponse response,String id) {
+		 
+		 
+		 	PrivilegeRoleDetails privilegeRoleDetails=new PrivilegeRoleDetails();
+	    	privilegeRoleDetails.setRoleId(Integer.parseInt(id));
+	    	List<PrivilegeRoleDetails> privilegeRoleDetailslist = privilegeRoleDetailsService.QueryRoleDetails(privilegeRoleDetails);
+		 
+			List<TreeNode> nodes = privilegeModuleService.getDepartmentTree(privilegeRoleDetailslist);//见方法02
+			 //buildTree(nodes)见方法01，return返回值自动转为json,不懂的话看下面紫色部分，懂的略过
+			List<PrivilegeResource> privilegeResourceList = privilegeResourceService.findAllResource();
+			JSONArray jsonArr = JSONArray.fromObject(buildTree1(nodes,privilegeResourceList,privilegeRoleDetailslist));
+	    	WebUtils.writeJson(response,jsonArr);
+		}
+	    
+	    
+	    /**
+		* 构建树
+		* @param treeNodes
+		* @return
+		*/
+		protected List<TreeNode> buildTree1(List<TreeNode> treeNodes,List<PrivilegeResource> resourceList ,List<PrivilegeRoleDetails> privilegeRoleDetailslist ) {
+//			String[] sourceStrArray = null;
+//			String[] sourceStrArray1 = null;
+//			String[] sourceStrArray2 = null;
+//			StringBuffer module=new StringBuffer();
+//			StringBuffer moduleRole=new StringBuffer();
+//			if(privilegeRoleDetailslist!=null){
+//				
+//				for(int i=0;i<privilegeRoleDetailslist.size();i++){
+//					PrivilegeRoleDetails privilegeRoleDetails = privilegeRoleDetailslist.get(i);
+//					String resources = privilegeRoleDetails.getResources();
+//					int moduleId=0;
+////					String resourcesArry = null;
+//					if(resources!=null){
+//						moduleId = privilegeRoleDetails.getModuleId();
+//						String resourcesArry = privilegeRoleDetails.getResources();
+//					    module.append(moduleId+",");
+//					    moduleRole.append(resourcesArry+",,");
+//					}
+//				}
+//			}
+			
+			
+			List<TreeNode> results = new ArrayList<TreeNode>();
+
+			Map<String, TreeNode> aidMap = new LinkedHashMap<String, TreeNode>();
+			for (TreeNode node : treeNodes) {
+				aidMap.put(node.getId(), node);
+			}
+			treeNodes = null;
+
+			Set<Entry<String, TreeNode>> entrySet = aidMap.entrySet();
+			for (Entry<String, TreeNode> entry : entrySet) {
+				String pid = entry.getValue().getPid();
+				TreeNode node = aidMap.get(pid);
+				if (node == null) {
+					results.add(entry.getValue());
+				} else {
+					List<TreeNode> children = node.getChildren();
+					
+					if (children == null) {
+						children = new ArrayList<TreeNode>();
+						node.setChildren(children);
+						node.setState("closed");
+					}
+					else{
+						//添加三级
+						String resource = entry.getValue().getResource();
+						List<TreeNode> treeNodeList = new ArrayList<TreeNode>();
+						if(resource!=null){
+							String[] resourceStrArray = resource.split(",");
+							for(int i=0;i<resourceStrArray.length;i++){
+								String vl = resourceStrArray[i];
+								for(int j=0;j<resourceList.size();j++){
+									int id = resourceList.get(j).getId();
+									String nameValue = resourceList.get(j).getName();
+									TreeNode treeNode=new TreeNode();
+									if(Integer.parseInt(vl)==id){
+										treeNode.setId(vl);
+										treeNode.setText(nameValue);
+//										treeNode.setState("closed");
+										treeNode.setIsmodule("1");
+//										if(vl.equals(valueId)){
+//											
+//										}
+										//888888888888888888888888
+//										sourceStrArray = module.toString().split(",");
+//										for(int p=0;p<sourceStrArray.length;p++){
+//											String value = sourceStrArray[i];
+//											String ids = entry.getValue().getId()+"";
+//											if(value.equals(ids)){
+//												sourceStrArray1  =	moduleRole.toString().split(",");
+//												sourceStrArray2 = sourceStrArray1[i].split(",");
+//												for(int u=0;u<sourceStrArray2.length;u++){
+//													String vo = sourceStrArray2[u];
+//													if(vl.equals(vo)){
+//														treeNode.setChecked(true);
+//													}
+//												}
+//												node.setChecked(true);
+//											}
+//										}
+										//8888888888888888888888
+//										for(int p=0;p<privilegeRoleDetailslist.size();p++){
+//											
+//										}
+										treeNodeList.add(treeNode);
+									}
+									
+								}
+							}
+						}
+						
+						entry.getValue().setChildren(treeNodeList);
+					}
+					children.add(entry.getValue());
+				}
+			}
+			aidMap = null;
+
+			return results;
+		}
+	
+	
+
 	
 }

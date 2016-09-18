@@ -122,4 +122,10 @@
       #{item}  
      </foreach>  
     </select>  
+    
+    
+	<select id="findParentId" resultType="int">
+         select count(*) from privilege_module where parent_id = #{parentId}
+         
+	</select>
 </mapper>
