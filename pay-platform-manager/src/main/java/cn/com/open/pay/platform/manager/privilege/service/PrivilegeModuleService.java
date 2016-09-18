@@ -13,6 +13,7 @@ public interface PrivilegeModuleService {
 	void updatePrivilegeModule(PrivilegeModule privilegeModule);
 	void deletePrivilegeModule(Integer id);
 	List<TreeNode>  getDepartmentTree();
+	List<PrivilegeModule> findModuleByIds(List<Integer> ids);
    
     
 }

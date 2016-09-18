@@ -78,5 +78,10 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 		// TODO Auto-generated method stub
 		return privilegeModuleRepository.findModuleById(id);
 	}
+	@Override
+	public List<PrivilegeModule> findModuleByIds(List<Integer> ids) {
+		// TODO Auto-generated method stub
+		return privilegeModuleRepository.findModuleByIds(ids);
+	}
     
 }

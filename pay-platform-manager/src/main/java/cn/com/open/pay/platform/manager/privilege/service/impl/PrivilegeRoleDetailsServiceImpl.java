@@ -23,6 +23,13 @@ public class PrivilegeRoleDetailsServiceImpl implements PrivilegeRoleDetailsServ
 		
 	}
 
+
+	@Override
+	public List<PrivilegeRoleDetails> findRoleDetailsByRoleId(Integer roleId) {
+		// TODO Auto-generated method stub
+		return privilegeRoleDetailsRepository.findRoleDetailsByRoleId(roleId);
+	}
+
 	@Override
 	public List<PrivilegeRoleDetails> QueryRoleDetails(PrivilegeRoleDetails privilegeRoleDetails) {
 		// TODO Auto-generated method stub

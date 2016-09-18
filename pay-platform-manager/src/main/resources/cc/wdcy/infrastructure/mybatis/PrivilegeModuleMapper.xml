@@ -114,4 +114,12 @@
          select * from privilege_module
          where  id = #{id}
 	</select>
+	 <select id="findModuleByIds" resultMap="privilegeModuleMap">  
+     Select  
+     <include refid="Base_Column_List" />  
+     from privilege_module where id in  
+     <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">  
+      #{item}  
+     </foreach>  
+    </select>  
 </mapper>

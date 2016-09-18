@@ -76,7 +76,7 @@
     	function btnSubmit(){
 				var username=$('#username').val();
 				var password=$('#password').val();
-				$.post("${pageContext.request.contextPath}/user/verify",
+				$.post("${pageContext.request.contextPath}/user/loginVerify",
 					{username:username,password:password},
 	   				function(data){
 	   					if(data.flag){

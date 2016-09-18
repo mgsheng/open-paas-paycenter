@@ -1,18 +1,30 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import cn.com.open.pay.platform.manager.dev.PayManagerDev;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
+import cn.com.open.pay.platform.manager.privilege.model.Manager;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
+import cn.com.open.pay.platform.manager.privilege.service.ManagerService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
@@ -28,6 +40,14 @@ public class UserLoginController extends BaseControllerUtil {
 	
 	 @Autowired
 	 private UserService userService;
+	 @Autowired
+	 private ManagerService managerService;
+	 @Autowired
+	 private PayManagerDev payManagerDev;
+	 @Autowired
+	 private PrivilegeRoleDetailsService privilegeRoleDetailsService;
+	 @Autowired
+	 private PrivilegeModuleService privilegeModuleService;
 	
      /**
       * 登录验证
@@ -36,7 +56,7 @@ public class UserLoginController extends BaseControllerUtil {
       * @param username
       * @param password
       */
-	 @RequestMapping("verify")
+	 @RequestMapping("loginVerify")
 	 public void  verify(HttpServletRequest request,HttpServletResponse response,String username,String password) {
 		 log.info("-----------------------login start----------------");
 		 boolean flag = false;
@@ -75,6 +95,28 @@ public class UserLoginController extends BaseControllerUtil {
 			    	model.addAttribute("userName",username);
 			    	model.addAttribute("realName",user.getRealName());
 		    	}
+				Manager manager=managerService.getManagerById(user.getId());
+				int role=0;
+				List<PrivilegeRoleDetails> list=null;
+				List<PrivilegeModule> modules=null;
+				if(manager!=null){
+					role=manager.getRole();
+					list=privilegeRoleDetailsService.findRoleDetailsByRoleId(role);
+					List<Integer>ids=new ArrayList<Integer>(list.size());
+					for(int i=0;i<list.size();i++){
+						ids.add(list.get(i).getModuleId());
+					}
+					if(ids!=null&&list.size()>0){
+						modules= privilegeModuleService.findModuleByIds(ids);
+						for(int j=0;j<modules.size();j++){
+							
+						}
+					}
+				}
+				HttpSession session = request.getSession();
+				session.setAttribute("serverHost",payManagerDev.getServer_host());
+				session.setAttribute("manager",manager);
+				session.setAttribute("modules",modules);
 	    	return "login/index";
 	    }
 	    /**
@@ -82,7 +124,7 @@ public class UserLoginController extends BaseControllerUtil {
 	     * @param request
 	     * @param response
 	     */
-	    @RequestMapping(value = "updatePassword")
+	    @RequestMapping(value = "update")
 		public void updatePassword(HttpServletRequest request,HttpServletResponse response) {
 	    	String password=request.getParameter("newpass");
 	        String username = request.getParameter("userName");

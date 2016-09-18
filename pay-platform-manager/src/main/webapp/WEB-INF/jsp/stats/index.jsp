@@ -214,7 +214,7 @@ table {
 		});
 		$
 				.post(
-						"${pageContext.request.contextPath}/user/admin/userstatistics/chart.json",
+						"${pageContext.request.contextPath}/user/statistics/chart",
 						{
 							paymentId : $("input[name='paymentId']").val(),
 							appId : $("input[name='appId']").val(),
@@ -222,7 +222,8 @@ table {
 							channelId : $("input[name='channelId']").val(),
 							startTime : startTime,
 							endTime : endTime,
-							timeType : timeType
+							timeType : timeType,
+							resourceCode:"query"
 						},
 						function(data) {
 							if (data.timeData != null) {

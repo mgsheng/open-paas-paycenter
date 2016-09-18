@@ -32,13 +32,17 @@
 			
 		)
 	</insert>
- 
 	<insert id="savePrivilegeRoleDetails" parameterType="PrivilegeRoleDetails" useGeneratedKeys="true" keyProperty="id">
         insert into privilege_role_details(roleId,moduleId,resources)
         values
         (#{roleId},#{moduleId},#{resources})
     </insert>
-    
+    <select id="findRoleDetailsByRoleId" resultMap="privilegeRoleDetailsMap">
+          Select  
+     	  <include refid="Base_Column_List" />  
+    	   from privilege_role_details 
+    	   where roleId =#{roleId}
+	</select> 
     <select id="QueryRoleDetails" resultMap="privilegeRoleDetailsMap" >
         select * from  privilege_role_details where 1=1
         <if test="roleId != null and roleId !=''" >
@@ -47,7 +51,6 @@
         
     </select>
     
-	
     <delete id="deletePrivilegeRoleDetail" parameterType="Integer">
         delete from privilege_role_details where roleId=#{id}
     </delete>

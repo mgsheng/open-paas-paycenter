@@ -38,5 +38,10 @@
         values
         (#{type},#{role},#{createTime})
     </insert>
+    <select id="findManagerById" resultMap="managerMap">
+         select * from manager
+         where  id = #{id}
+	</select>
+   
     
 </mapper>

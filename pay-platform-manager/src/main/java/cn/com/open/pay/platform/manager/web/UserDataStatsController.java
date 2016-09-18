@@ -55,7 +55,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 		  * @param response
 		  * @throws UnsupportedEncodingException
 		  */
-		@RequestMapping(value = "/admin/userstatistics/chart.json",method = RequestMethod.POST)
+		@RequestMapping(value = "statistics/chart",method = RequestMethod.POST)
 		public void chart(HttpServletRequest request,HttpServletResponse response,
 				String paymentId,
 				String channelId,
