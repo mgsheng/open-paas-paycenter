@@ -277,7 +277,9 @@
         
         function editMessage(){
    			var row = $('#dg').datagrid('getSelected');
-   		
+	   		if(row==null){
+	   			msgShow('系统提示', '请选中要修改的数据', 'info');
+	   		}
    			if (row){
    			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
    				if (r){
