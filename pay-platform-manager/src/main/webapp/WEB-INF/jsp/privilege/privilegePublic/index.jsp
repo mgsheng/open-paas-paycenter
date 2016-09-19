@@ -20,7 +20,7 @@
 			<a href="#" class="easyui-linkbutton" onclick="getBack()" style="font-weight: bolder;margin-left:20px"> 取消</a> 
 		</div>
 		<div class="easyui-panel" style="padding:30px;overflow-x:scroll;height: 70%;">
-			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="url:'${pageContext.request.contextPath}/privilegePublic/tree', 
+			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="url:'${pageContext.request.contextPath}/privilegePublic/tree2', 
 				method:'get',animate:true,checkbox:true"></ul>
 		</div>
 	</div>
