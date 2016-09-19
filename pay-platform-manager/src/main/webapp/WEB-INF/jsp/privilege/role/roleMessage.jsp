@@ -54,10 +54,15 @@
 					<tr style="height: 20px">
 						<td>状态：</td>
 						<td>
-			                 <select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
+			                <select  id="status" name="status" id="status" style="width:100%">
 								<option value="1">启用</option>
-								<option value="0">禁用</option>
-							</select>
+								<option value="2">禁用</option>
+							</select> 
+							<!--启用：
+							<input type="radio" checked="checked"  id="status" value="1" />
+							<br />
+							禁用：
+							<input type="radio" id="status" value="2" />-->
 						</td>
 					</tr>
 					
