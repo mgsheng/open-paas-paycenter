@@ -12,10 +12,8 @@ import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
  *
  */
 public interface PrivilegePublicService {
-	boolean updatePublic(PrivilegePublic privilegePublic);
-	List<PrivilegePublic> findPublic();
-	boolean insertPublic(PrivilegePublic privilegePublic);
-	List<PrivilegePublic> QueryRoleDetails(PrivilegePublic privilegePublic);
-	List<TreeNode> getDepartmentTree(
-			List<PrivilegePublic> privilegeRoleDetailslist);
+	public List<PrivilegePublic> findPublic();
+	public List<TreeNode> getDepartmentTree(List<PrivilegePublic> privilegeRoleDetailslist);
+	public boolean insertPublic(PrivilegePublic privilegePublic);
+	public boolean deletePublic();
 }

@@ -31,16 +31,22 @@ public class PrivilegePublicServiceImpl implements  PrivilegePublicService{
 		List<PrivilegePublic> publics = privilegePublicRepository.findPublic();
 		return publics;
 	}
+	/**
+	 * 删除数据库privilege_public表中所有的数据
+	 */
 	@Override
-	public boolean updatePublic(PrivilegePublic privilegePublic) {
+	public boolean deletePublic() {
 		try{
-			privilegePublicRepository.updatePublic(privilegePublic);
+			privilegePublicRepository.deletePublic();
 			return true;
 		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
 	}
+	/**
+	 * 将解析的数据插入到数据库privilege_public表中
+	 */
 	@Override
 	public boolean insertPublic(PrivilegePublic privilegePublic) {
 		try{
@@ -52,27 +58,14 @@ public class PrivilegePublicServiceImpl implements  PrivilegePublicService{
 		}
 	}
 	
-	public List<TreeNode>  getDepartmentTree() {
-		List<PrivilegeModule> modules = privilegeModuleRepository.findAllModules();//用于取出所有的部门对象的list集合
-		return convertTreeNodeList(modules);
-	}
-	private List<TreeNode> convertTreeNodeList(List<PrivilegeModule> modules) {
-			List<TreeNode> nodes = null;
-			
-			if(modules != null){
-				nodes = new ArrayList<TreeNode>();
-				for(PrivilegeModule module : modules){
-					TreeNode node = convertTreeNode(module);
-					if(node != null){
-						nodes.add(node);
-					}
-				}
-			}
-			
-			return nodes;
-		}
 	/**
-	* @param departments
+	 * 将所有查询出的PrivilegeModule对象 构建树型结构
+	 * @return List<TreeNode>
+	 */
+	
+	/**
+	 * 将每个PrivilegeModule对象 构建树型结构
+	* @param PrivilegeModule
 	* @return
 	*/
 	private TreeNode convertTreeNode(PrivilegeModule privilegeModule){
@@ -90,81 +83,77 @@ public class PrivilegePublicServiceImpl implements  PrivilegePublicService{
 		}
 		return node;
 	}
+	
+	
 	@Override
-	public List<PrivilegePublic> QueryRoleDetails(
-			PrivilegePublic privilegePublic) {
-		
-		return privilegePublicRepository.queryRoleDetails(privilegePublic);
-	}
-	@Override
-	public List<TreeNode> getDepartmentTree(
-		List<PrivilegePublic> privilegeRoleDetailslist) {
+	public List<TreeNode> getDepartmentTree(List<PrivilegePublic> privilegeRoleDetailslist) {
 			List<PrivilegeModule> modules = privilegeModuleRepository.findAllModules();//用于取出所有的部门对象的list集合
 			return convertTreeNodeList1(modules,privilegeRoleDetailslist);
 	}
 		
-		private List<TreeNode> convertTreeNodeList1(List<PrivilegeModule> modules,List<PrivilegePublic> privilegeRoleDetailslist) {
-			StringBuffer module=new StringBuffer();
-			if(privilegeRoleDetailslist.size()!=0){
-				
-				for(int i=0;i<privilegeRoleDetailslist.size();i++){
-					PrivilegePublic privilegeRoleDetails = privilegeRoleDetailslist.get(i);
-					String resources = privilegeRoleDetails.getResources();
-					int moduleId=0;
-					if(resources==null){
-						moduleId = privilegeRoleDetails.getModuleId();
-					    PrivilegeModule privilegeModule = privilegeModuleRepository.findModuleById(moduleId);
-					    int parentId = privilegeModule.getParentId();
-					    if(parentId!=0){
-					    	module.append(moduleId+",");
-					    }
-					}
-						
-						
+	private List<TreeNode> convertTreeNodeList1(List<PrivilegeModule> modules,List<PrivilegePublic> privilegeRoleDetailslist) {
+		StringBuffer module=new StringBuffer();
+		if(privilegeRoleDetailslist.size()!=0){
+			
+			for(int i=0;i<privilegeRoleDetailslist.size();i++){
+				PrivilegePublic privilegeRoleDetails = privilegeRoleDetailslist.get(i);
+				String resources = privilegeRoleDetails.getResources();
+				int moduleId=0;
+				if(resources==null){
+					moduleId = privilegeRoleDetails.getModuleId();
+				    PrivilegeModule privilegeModule = privilegeModuleRepository.findModuleById(moduleId);
+				    int parentId = privilegeModule.getParentId();
+				    if(parentId!=0){
+				    	module.append(moduleId+",");
+				    }
+				}
+					
+					
+			}
+		}
+		List<TreeNode> nodes = null;
+		
+		if(modules != null){
+			nodes = new ArrayList<TreeNode>();
+			for(PrivilegeModule department:modules){
+				TreeNode node = convertTreeNode1(department,module.toString());
+				if(node != null){
+					nodes.add(node);
 				}
 			}
-			List<TreeNode> nodes = null;
-			
-			if(modules != null){
-				nodes = new ArrayList<TreeNode>();
-				for(PrivilegeModule department:modules){
-					TreeNode node = convertTreeNode1(department,module.toString());
-					if(node != null){
-						nodes.add(node);
-					}
-				}
-			}
-			
-			return nodes;
 		}
 		
-		private TreeNode convertTreeNode1(PrivilegeModule privilegeModule,String module){
-			String[] sourceStrArray = null;
-			if(module!=""){
-				sourceStrArray = module.split(",");
-			}
-			
-			TreeNode node = null;
-			if(privilegeModule != null){
-				
-				node = new TreeNode();
-				node.setId(String.valueOf(privilegeModule.getId()));//部门ID
-				node.setChecked(false);
-				node.setText(privilegeModule.getName());//部门名称
-				node.setTarget("");
-				node.setPid(String.valueOf(privilegeModule.getParentId()));//父级部门ID
-				node.setResource(privilegeModule.getResources());
-				node.setIsmodule("0");
-				for(int i=0;i<sourceStrArray.length;i++){
-					String value = sourceStrArray[i];
-					String id = privilegeModule.getId()+"";
-					if(value.equals(id)){
-						node.setChecked(true);
-					}
-				}
-				Map<String,Object> map = new HashMap<String,Object>();
-				node.setAttributes(map);
-			}
-			return node;
+		return nodes;
+	}
+		
+	private TreeNode convertTreeNode1(PrivilegeModule privilegeModule,String module){
+		String[] sourceStrArray = null;
+		if(module!=""){
+			sourceStrArray = module.split(",");
 		}
+		
+		TreeNode node = null;
+		if(privilegeModule != null){
+			
+			node = new TreeNode();
+			node.setId(String.valueOf(privilegeModule.getId()));//部门ID
+			node.setChecked(false);
+			node.setText(privilegeModule.getName());//部门名称
+			node.setTarget("");
+			node.setPid(String.valueOf(privilegeModule.getParentId()));//父级部门ID
+			node.setResource(privilegeModule.getResources());
+			node.setIsmodule("0");
+			for(int i=0;i<sourceStrArray.length;i++){
+				String value = sourceStrArray[i];
+				String id = privilegeModule.getId()+"";
+				if(value.equals(id)){
+					node.setChecked(true);
+				}
+			}
+			Map<String,Object> map = new HashMap<String,Object>();
+			node.setAttributes(map);
+		}
+		return node;
+	}
+
 }

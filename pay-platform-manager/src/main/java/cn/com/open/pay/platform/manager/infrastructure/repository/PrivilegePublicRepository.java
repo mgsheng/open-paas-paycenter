@@ -12,7 +12,6 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegePublic;
  */
 public interface PrivilegePublicRepository extends Repository {
 	public List<PrivilegePublic> findPublic();
-	public void updatePublic(PrivilegePublic privilegePublic);
-	public void insertPublic(PrivilegePublic privilegePublic);
-	public List<PrivilegePublic> queryRoleDetails(PrivilegePublic privilegePublic);
+	public boolean insertPublic(PrivilegePublic privilegePublic);
+	public boolean deletePublic();
 }
