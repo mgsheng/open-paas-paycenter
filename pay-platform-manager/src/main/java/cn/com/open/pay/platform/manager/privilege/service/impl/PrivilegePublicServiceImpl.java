@@ -63,26 +63,6 @@ public class PrivilegePublicServiceImpl implements  PrivilegePublicService{
 	 * @return List<TreeNode>
 	 */
 	
-	/**
-	 * 将每个PrivilegeModule对象 构建树型结构
-	* @param PrivilegeModule
-	* @return
-	*/
-	private TreeNode convertTreeNode(PrivilegeModule privilegeModule){
-		TreeNode node = null;
-		if(privilegeModule != null){
-			node = new TreeNode();
-			node.setId(String.valueOf(privilegeModule.getId()));//部门ID
-//			node.setChecked(false);
-			node.setText(privilegeModule.getName());//部门名称
-//			node.setTarget("");
-			node.setPid(String.valueOf(privilegeModule.getParentId()));//父级部门ID
-			node.setResource(privilegeModule.getResources());
-			Map<String,Object> map = new HashMap<String,Object>();
-			node.setAttributes(map);
-		}
-		return node;
-	}
 	
 	
 	@Override
@@ -90,13 +70,14 @@ public class PrivilegePublicServiceImpl implements  PrivilegePublicService{
 			List<PrivilegeModule> modules = privilegeModuleRepository.findAllModules();//用于取出所有的部门对象的list集合
 			return convertTreeNodeList1(modules,privilegeRoleDetailslist);
 	}
-		
-	private List<TreeNode> convertTreeNodeList1(List<PrivilegeModule> modules,List<PrivilegePublic> privilegeRoleDetailslist) {
+	
+	
+	private List<TreeNode> convertTreeNodeList1(List<PrivilegeModule> modules,List<PrivilegePublic> privilegePublic) {
 		StringBuffer module=new StringBuffer();
-		if(privilegeRoleDetailslist.size()!=0){
+		if(privilegePublic.size()!=0){
 			
-			for(int i=0;i<privilegeRoleDetailslist.size();i++){
-				PrivilegePublic privilegeRoleDetails = privilegeRoleDetailslist.get(i);
+			for(int i=0;i<privilegePublic.size();i++){
+				PrivilegePublic privilegeRoleDetails = privilegePublic.get(i);
 				String resources = privilegeRoleDetails.getResources();
 				int moduleId=0;
 				if(resources==null){
@@ -125,7 +106,12 @@ public class PrivilegePublicServiceImpl implements  PrivilegePublicService{
 		
 		return nodes;
 	}
-		
+	
+	/**
+	 * 将每个PrivilegeModule对象 构建树型结构
+	* @param PrivilegeModule
+	* @return
+	*/
 	private TreeNode convertTreeNode1(PrivilegeModule privilegeModule,String module){
 		String[] sourceStrArray = null;
 		if(module!=""){
