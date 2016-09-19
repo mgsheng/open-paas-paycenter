@@ -16,12 +16,7 @@ public interface PrivilegeModuleService {
 	void deletePrivilegeModule(Integer id);
 	List<TreeNode>  getDepartmentTree();
 	List<PrivilegeModule> findModuleByIds(List<Integer> ids);
-	
-	List<TreeNode> getDepartmentTree(
-			List<PrivilegeRoleDetails> privilegeRoleDetailslist);
-	
-	List<TreeNode> getDepartmentTree2(
-			List<PrivilegePublic> privilegeRoleDetailslist);
-   
+	List<TreeNode> getDepartmentTree(List<PrivilegeRoleDetails> privilegeRoleDetailslist);
+	List<TreeNode> getDepartmentTree2(List<PrivilegePublic> privilegeRoleDetailslist);
     
 }

@@ -20,4 +20,5 @@ public interface PrivilegeResourceRepository extends Repository {
     void deletePrivilegeResource(Integer id);
     int findQueryCount(@Param("name")String name);
     List<PrivilegeResource> findAllResource();
+    List<PrivilegeResource> findResource();
 }
