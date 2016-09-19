@@ -13,14 +13,14 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
-<body>
+<body id="pub">
 	<div id="ep" class="easyui-panel" title="公共权限" style="width:100%;max-width:100%;padding:20px 30px;height:650px;">
 		<div style="margin:10px 0">
 			<a href="#" class="easyui-linkbutton" onclick="submitPub()" style="font-weight: bolder;margin-left:20px">确认</a>
 			<a href="#" class="easyui-linkbutton" onclick="getBack()" style="font-weight: bolder;margin-left:20px"> 取消</a> 
 		</div>
 		<div class="easyui-panel" style="padding:30px;overflow-x:scroll;height: 70%;">
-			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="url:'${pageContext.request.contextPath}/privilegePublic/tree2', 
+			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="url:'${pageContext.request.contextPath}/privilegePublic/tree', 
 				method:'get',animate:true,checkbox:true"></ul>
 		</div>
 	</div>
@@ -73,11 +73,11 @@
 		}
 		//刷新
 		function reLoad(url){
-			$('#ep').panel('open').panel('refresh',url);
+			window.location.href=url;
 		}
-		//返回
+		//取消
 		function getBack(){
-			$.messager.confirm('系统提示','确认返回吗？',function(){
+			$.messager.confirm('系统提示','确认取消吗？',function(){
 				var url= "${pageContext.request.contextPath}/privilegePublic/index";
 				reLoad(url);
 			});	
