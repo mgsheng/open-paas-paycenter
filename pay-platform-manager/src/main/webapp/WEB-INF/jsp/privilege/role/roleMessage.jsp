@@ -344,13 +344,13 @@
 			            $.post(url, function(data) {
 			                if(data.returnMsg=='1'){
 			                 msgShow('系统提示', '恭喜，删除成功！', 'info');
+			               //刷新
+				              var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				              reload(url,name);
 			                }else{
 			                  msgShow('系统提示', '删除失败！', 'info');
 			                }
 			            });
-			              //刷新
-			              var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
-			              reload(url,name);
 				}
 			   });
 			}
