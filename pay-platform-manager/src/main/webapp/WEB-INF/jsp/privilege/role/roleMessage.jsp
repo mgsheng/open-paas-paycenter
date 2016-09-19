@@ -58,11 +58,6 @@
 								<option value="1">启用</option>
 								<option value="2">禁用</option>
 							</select> 
-							<!--启用：
-							<input type="radio" checked="checked"  id="status" value="1" />
-							<br />
-							禁用：
-							<input type="radio" id="status" value="2" />-->
 						</td>
 					</tr>
 					
@@ -287,13 +282,13 @@
    				if (r){
    					   var id=row.id;
    					   var name=row.name;
-   					   var statusName=row.statusName;
+   					   var status=row.status;
    						document.getElementById("id").value=id; 
    						document.getElementById("resourceName").value=name; 
+   						$("#status").get(0).selectedIndex = status-1;//index为索引值
    					   $.ajax({
    						    url:"${pageContext.request.contextPath}/managerRole/QueryRoleDetails?id="+id, 
 	   						success: function(data) {
-	   							var obj = eval(data); 
 	   							var node;
 	   				            $(data[0].list).each(function(){
 	   				            	if(this.resources!=null && this.resources!=""){
@@ -315,15 +310,6 @@
 	   							});
 	   						}
    					   });
-   						
-   						
-   						if(statusName=="启用"){
-   						$('#status option:eq(0)').attr('selected','selected');
-   						}else{
-   							$('#status option:eq(1)').attr('selected','selected');
-   						  $("#status").val("0");
-   						}
-   						
 	  					//openPwd();
 	  					$('#w').window({
 			                title: '角色修改',
