@@ -1013,6 +1013,8 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/TestAlipayController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/config/PaymaxConfig.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/config/SignConfig.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/example/ChargeUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/example/RefundExample.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/exception/AuthorizationException.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/exception/InvalidRequestException.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/exception/InvalidResponseException.java -text
