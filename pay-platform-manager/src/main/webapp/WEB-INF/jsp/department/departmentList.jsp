@@ -384,7 +384,7 @@
 		 	var row = $('#dg').datagrid('getSelected');
 			if(row){	
 				var id=row.id;
-	            var url=encodeURI('${pageContext.request.contextPath}/department/findDeptUsers?id='+id);
+	            var url=encodeURI('${pageContext.request.contextPath}/department/deptUsers?id='+id);
 	            $.post(url, function(data) {
 	                if(data.result==true){
 		                 msgShow('系统提示', '查询成功！', 'info');

@@ -15,8 +15,8 @@ public class Department extends AbstractDomain{
 	private String deptName;//部门名称
 	private Date createTime;//部门注册时间
 	private String create_Time;//将时间类型转换成字符串
-	private Integer pageSize;
-	private Integer startRow;
+	private Integer pageSize;//每页的显示条数
+	private Integer startRow;//每页的开始记录
 	
 	public Department(){
 		

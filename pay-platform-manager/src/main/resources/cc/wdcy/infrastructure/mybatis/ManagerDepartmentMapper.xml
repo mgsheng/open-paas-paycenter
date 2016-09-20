@@ -12,13 +12,19 @@
 	  createTime
 	</sql>
 	
+	<select id="findQueryCount" resultType="int" parameterType="String" >
+        select count(*) from  privilege_dept
+        where  1=1
+        <if test="deptName != null and deptName != '' ">and deptName =#{deptName,jdbcType=VARCHAR}</if>
+    </select>
+	
 	<select id="findDepts" resultMap="DepartmentMap" parameterType="Department" >
 		select id,deptName,createTime
 		from privilege_dept 
 		<where>
-			<if test="deptName != null and deptName != '' ">deptName =#{deptName,jdbcType=VARCHAR} and</if>
-			id limit #{startRow},#{pageSize}
+			<if test="deptName != null and deptName != '' ">deptName =#{deptName,jdbcType=VARCHAR}</if>
 		</where>
+		limit  #{startRow},#{pageSize}
 	</select>
 	
 	<select id="findDeptById" resultType="Department" parameterType="Integer">

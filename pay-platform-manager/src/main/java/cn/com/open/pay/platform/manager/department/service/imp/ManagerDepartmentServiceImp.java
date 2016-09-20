@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
 import cn.com.open.pay.platform.manager.infrastructure.repository.ManagerDepartmentRepository;
+import cn.com.open.pay.platform.manager.infrastructure.repository.UserRepository;
+import cn.com.open.pay.platform.manager.login.model.User;
 /**
  * 部门管理
  * @author lvjq
@@ -17,7 +19,8 @@ import cn.com.open.pay.platform.manager.infrastructure.repository.ManagerDepartm
 public class ManagerDepartmentServiceImp implements  ManagerDepartmentService{
 	@Autowired
 	private ManagerDepartmentRepository managerDepartmentRepository;
-	
+	@Autowired
+	private UserRepository UserRepository;
 	/**
 	 * 根据ID修改部门信息
 	 * @return
@@ -59,6 +62,7 @@ public class ManagerDepartmentServiceImp implements  ManagerDepartmentService{
 	 * 根据部门名查询Department对象
 	 * @return
 	 */
+	@Override
 	public Department findByDeptName(String deptName){
 		return managerDepartmentRepository.findByDeptName(deptName);
 	}
@@ -67,6 +71,7 @@ public class ManagerDepartmentServiceImp implements  ManagerDepartmentService{
 	 * 根据部门id 删除Department对象
 	 * @return
 	 */
+	@Override
 	public boolean removeDeptByID(Integer id){
 		try{
 			managerDepartmentRepository.removeDeptByID(id);
@@ -74,5 +79,25 @@ public class ManagerDepartmentServiceImp implements  ManagerDepartmentService{
 		}catch(Exception e){
 			return false;
 		}
+	}
+	
+	/**
+	 * 根据User中的部门ID，部门名属性查询所有该部门的User对象
+	 * @param user
+	 * @return User集合
+	 */
+	@Override
+	public List<User> findDeptUsers(User user) {
+		return UserRepository.findDeptUsers(user);
+	}
+	
+	/**
+	 * 查询指定部门名的个数，没有指定则查询所有
+	 * @param deptName
+	 * @return
+	 */
+	@Override
+	public int findQueryCount(Department deptName) {
+		return managerDepartmentRepository.findQueryCount(deptName);
 	}
 }

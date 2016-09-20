@@ -3,12 +3,27 @@ package cn.com.open.pay.platform.manager.department.service;
 import java.util.List;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
+import cn.com.open.pay.platform.manager.login.model.User;
 /**
  * 部门管理
  * @author lvjq
  *
  */
 public interface ManagerDepartmentService {
+	
+	/**
+	 * 查询指定部门名的个数，没有指定则查询所有
+	 * @param deptName
+	 * @return
+	 */
+	public int findQueryCount(Department deptName);
+	
+	/**
+	 * 根据User中的部门ID，部门名属性查询所有该部门的User对象
+	 * @param user
+	 * @return User集合
+	 */
+	public List<User> findDeptUsers(User user);
 	
 	/**
 	 * 根据ID修改部门信息
