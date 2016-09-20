@@ -42,7 +42,7 @@
 								   ]
 						},{"menuid":"","icon":"icon-sys","menuname":"部门管理",
 							"menus":[
-										   {"menuid":"30","menuname":"部门信息列表","icon":"icon-more","url":"${pageContext.request.contextPath}/department/departmentList"}								]
+										   {"menuid":"30","menuname":"部门信息列表","icon":"icon-role","url":"${pageContext.request.contextPath}/department/departmentList"}								]
 						}
 				]};
         //设置登录窗口
