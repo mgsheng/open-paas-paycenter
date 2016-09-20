@@ -28,6 +28,7 @@ import net.sf.json.JSONObject;
 
 public class BaseControllerUtil {
 	
+	
 	/**
 	 * 
 	 * 检验参数是否为空
@@ -707,7 +708,7 @@ public class BaseControllerUtil {
 		}
 		public static Boolean analysisValue(JSONObject obj ){
 		    	String state = obj.getString("status");
-				if(!state.equals("1")){
+				if(!state.equals("ok")){
 					return false;
 				}else{
 					return true;

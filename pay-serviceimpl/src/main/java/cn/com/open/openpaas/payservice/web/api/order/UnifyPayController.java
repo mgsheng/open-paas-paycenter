@@ -1,7 +1,6 @@
 package cn.com.open.openpaas.payservice.web.api.order;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,6 +34,7 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.BusinessType;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.paymax.example.ChargeUtil;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.data.OrderQryData;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.data.ScanCodeOrderData;
@@ -43,7 +44,6 @@ import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
 import cn.com.open.openpaas.payservice.app.channel.yeepay.HmacUtils;
-import cn.com.open.openpaas.payservice.app.channel.yeepay.PaymentForOnlineService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -55,7 +55,6 @@ import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
-import cn.com.open.openpaas.payservice.app.tools.PropertiesTool;
 import cn.com.open.openpaas.payservice.app.tools.QRCodeEncoderHandler;
 import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.StringTool;
@@ -137,8 +136,7 @@ public class UnifyPayController extends BaseControllerUtil{
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime = System.currentTimeMillis();
     	
-    	
-    	String outTradeNo=request.getParameter("outTradeNo");
+    	    	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
     	String paySwitch []=pay_switch.split("#");
     	String payZhifubao = paySwitch[0];
@@ -184,6 +182,8 @@ public class UnifyPayController extends BaseControllerUtil{
 	    String timestamp=request.getParameter("timestamp");
 	    String signatureNonce=request.getParameter("signatureNonce");
 	    String businessType=request.getParameter("businessType");
+	    String notifyUrl=request.getParameter("notifyUrl");
+	    String returnUrl=request.getParameter("returnUrl");
 	    PayServiceLog payServiceLog=new PayServiceLog();
 	    payServiceLog.setAmount(totalFee);
 	    payServiceLog.setAppId(appId);
@@ -331,7 +331,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setMerchantProductDesc(goodsDesc);//商品描述
 			merchantOrderInfo.setMerchantProductId(goodsId);
 			merchantOrderInfo.setParameter1(parameter);
-			
+			merchantOrderInfo.setNotifyUrl(notifyUrl);
+			merchantOrderInfo.setReturnUrl(returnUrl);
 			int paymentTypeId=PaymentType.getTypeByValue(paymentType).getType();
 			merchantOrderInfo.setPaymentId(paymentTypeId);
 			
@@ -348,6 +349,8 @@ public class UnifyPayController extends BaseControllerUtil{
 				}
 				else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(Integer.parseInt(payEbank));	
+				}else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(1);	
 				}
 			}
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
@@ -596,8 +599,39 @@ public class UnifyPayController extends BaseControllerUtil{
 				         		 return "pay/payRedirect";
 					        }
 				      }
-		      }
-		        	
+		      }else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
+				      //拉卡拉网关支付
+		    		//ChargeUtil ce = new ChargeUtil();
+		    	  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
+		    	 String other= dictTradeChannels.getOther();
+		  		Map<String, String> others = new HashMap<String, String>();
+		  		others=getPartner(other);
+		    	  ChargeUtil ce = new ChargeUtil();
+		      	 Map<String, Object> chargeMap=new HashMap<String, Object>();
+		          chargeMap.put("amount", merchantOrderInfo.getAmount());
+		          chargeMap.put("subject", merchantOrderInfo.getMerchantProductName());
+		          chargeMap.put("body", merchantOrderInfo.getMerchantProductDesc());
+		          chargeMap.put("order_no", merchantOrderInfo.getId());
+		          chargeMap.put("channel", others.get("channel"));
+		          chargeMap.put("client_ip", others.get("client_ip"));
+		          chargeMap.put("app", others.get("app"));
+		          if(!nullEmptyBlankJudge(feeType)){
+		        	  chargeMap.put("currency",feeType);  
+		          }else{
+		        	  chargeMap.put("currency",others.get("currency")); 
+		          }
+		          chargeMap.put("description",merchantOrderInfo.getMemo());
+		  	    //请根据渠道要求确定是否需要传递extra字段
+		          Map<String, Object> extra = new HashMap<String, Object>();
+		          extra.put("user_id",merchantOrderInfo.getId());
+		          extra.put("return_url",dictTradeChannels.getBackurl());
+		          chargeMap.put("extra",extra);
+		         
+		          String res= ce.charge(chargeMap);
+		         res+="<script>document.forms[0].submit();</script>";
+		          model.addAttribute("res", res);
+		    	  return "pay/payMaxRedirect";
+			     }
 		}
 		  
        	  return "redirect:" + fullUri;
@@ -871,7 +905,13 @@ public class UnifyPayController extends BaseControllerUtil{
           	 }else{
           		 returnValue=false; 
           	 }
-       	}
+       	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX.getValue()))){
+    		if(paymentType!=null&&PaymentType.PAYMAX.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+      	}
     	return returnValue;
     }
  

@@ -181,6 +181,7 @@
 								<option value="ALIPAY">支付宝-即时到账</option>
 								<!-- <option value="ALIFAF">支付宝-当面付</option> -->
 								<option value="WEIXIN">微信-扫码支付</option>
+								<option value="PAYMAX">拉卡拉-网关支付</option>
 								<option value="UPOP">银联</option>
 								<option value="CMB">招商银行</option>
 								<option value="ICBC">工商银行</option>
@@ -209,6 +210,7 @@
 								<option value="10002">微信</option>
 								<option value="10005">直连银行</option>
 								<option value="10003">银联</option>
+								<option value="10007">拉卡拉</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>

@@ -12,10 +12,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
+
+import org.apache.commons.httpclient.util.DateUtil;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +33,13 @@ import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelServi
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
+import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
+import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
+import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -49,6 +56,8 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 private PayserviceDev payserviceDev;
 	 @Autowired
 	 private DictTradeChannelService dictTradeChannelService;
+	 @Autowired
+	 private MerchantInfoService merchantInfoService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -113,6 +122,12 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+        String returnUrl=merchantOrderInfo.getNotifyUrl();
+ 		MerchantInfo merchantInfo = null;
+ 		if(nullEmptyBlankJudge(returnUrl)){
+ 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+ 			returnUrl=merchantInfo.getReturnUrl();
+ 		}
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params,dictTradeChannel.getKeyValue(),dictTradeChannel.getInputCharset());
 		
@@ -124,8 +139,36 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
-				backMsg="success";
-					//如果有做过处理，不执行商户的业务程序
+				 if(!nullEmptyBlankJudge(returnUrl)){
+					 //Map<String, String> dataMap=new HashMap<String, String>();
+					 String buf="";
+					    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+						sParaTemp.put("orderId", merchantOrderInfo.getId());
+				        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+				        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+				        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+						sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+						sParaTemp.put("feeType", "CNY");
+						sParaTemp.put("guid", merchantOrderInfo.getGuid());
+						sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+						//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+						sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+						sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
+						sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+						sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+						sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+						sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
+						sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+					    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+					    sParaTemp.put("secret", mySign);
+					    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+					    model.addAttribute("res", buf);
+	     			    return "pay/payRedirect"; 
+				 }else{
+					 backMsg="success";
+				 }
+				  
+				  
 			}
 		}else{
 			//该页面可做页面美工编辑

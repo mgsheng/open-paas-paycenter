@@ -10,8 +10,8 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONObject;
 
-import org.apache.commons.httpclient.util.DateUtil;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayConfig;
-import cn.com.open.openpaas.payservice.app.channel.alipay.PayUtil;
-import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -37,7 +33,6 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
@@ -46,21 +41,15 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/yeepay/notify/")
-public class YeeNotifyCallbackController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(YeeNotifyCallbackController.class);
+@RequestMapping("/yeepay/order/")
+public class CopyOfYeeOrderCallbackController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(CopyOfYeeOrderCallbackController.class);
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
-	 private MerchantInfoService merchantInfoService;
-	 @Autowired
 	 private PayserviceDev payserviceDev;
 	 @Autowired
-	 private UserAccountBalanceService userAccountBalanceService;
-	 @Autowired
-	 private UserSerialRecordService userSerialRecordService;
-	 @Autowired
-	 private ChannelRateService channelRateService;
+	 private MerchantInfoService merchantInfoService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -70,8 +59,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping("callBack")
-	public void yeeNotifyCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
-		   log.info("-----------------------callBack yeepay/notify-----------------------------------------");
+	public String yeeCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
 		long startTime = System.currentTimeMillis();
 		String r0_Cmd 	  = formatString(request.getParameter("r0_Cmd")); // 业务类型
 		String p1_MerId   = formatString(Configuration.getInstance().getValue("p1_MerId"));   // 商户编号
@@ -87,7 +75,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
-		String 	backMsg="error";
+		String 	backMsg="";
 		if(merchantOrderInfo!=null){
 			Double total_fee=0.0;
 			if(nullEmptyBlankJudge(r3_Amt)){
@@ -112,86 +100,32 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 			 payServiceLog.setUsername(merchantOrderInfo.getUserName());
 			 payServiceLog.setStatus("ok");
-			 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+			 payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			// 校验返回数据包
 			 
 			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, 
 					r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
-			 String returnUrl=merchantOrderInfo.getNotifyUrl();
+			  String returnUrl=merchantOrderInfo.getNotifyUrl();
 		 		MerchantInfo merchantInfo = null;
 		 		if(nullEmptyBlankJudge(returnUrl)){
 		 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 		 			returnUrl=merchantInfo.getReturnUrl();
-		 	}
+		 		}
+			
 			if(isOK) {
 				//在接收到支付结果通知后，判断是否进行过业务逻辑处理，不要重复进行业务逻辑处理
 				if(r1_Code.equals("1")) {
 					// 产品通用接口支付成功返回-浏览器重定向
 					if(r9_BType.equals("1")) {
 						//out.println("callback方式:产品通用接口支付成功返回-浏览器重定向");
-						 if(!nullEmptyBlankJudge(returnUrl)){
-							 //Map<String, String> dataMap=new HashMap<String, String>();
-							    String  buf="";
-							    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
-								sParaTemp.put("orderId", merchantOrderInfo.getId());
-						        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
-						        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
-						        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
-								sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
-								sParaTemp.put("feeType", "CNY");
-								sParaTemp.put("guid", merchantOrderInfo.getGuid());
-								sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
-								//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-								sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
-								sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
-								sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
-								sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
-								sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
-								sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
-								sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
-							    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
-							    sParaTemp.put("secret", mySign);
-							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
-							    model.addAttribute("res", buf);
-							    String url="/yeepay/notify/payRedirect";
-							    response.sendRedirect(url);
-						 }else{
-							 backMsg="success";
-						 }
 						// 产品通用接口支付成功返回-服务器点对点通讯
 					} else if(r9_BType.equals("2")) {
-						// 如果在发起交易请求时	设置使用应答机制时，必须应答以"success"开头的字符串，大小写不敏感
-						
-						backMsg="SUCCESS";
-						int notifyStatus=merchantOrderInfo.getNotifyStatus();
-						int payStatus=merchantOrderInfo.getPayStatus();
-						Double payCharge=0.0;
-						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
-						String rechargeMsg="";
-						if(payStatus!=1){
-							merchantOrderInfo.setPayStatus(1);
-							merchantOrderInfo.setPayAmount(total_fee-payCharge);
-							merchantOrderInfo.setAmount(total_fee);
-							merchantOrderInfo.setPayCharge(payCharge);
-							merchantOrderInfo.setDealDate(new Date());
-							merchantOrderInfo.setPayOrderId(r2_TrxId);
-							merchantOrderInfoService.updateOrder(merchantOrderInfo);
-							//账户充值操作
-							if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-								rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-							}
-						}
-						if(notifyStatus!=1){
-							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
-							 thread.run();	
-						}
-						payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
-						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				
 					}
 				}
 			  } else {
-				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
+				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 				payServiceLog.setStatus("error");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				backMsg="error";
@@ -199,7 +133,9 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		}else{
 			backMsg="error";
 		}
-		WebUtils.writeJson(response, backMsg);
+		 model.addAttribute("backMsg", backMsg);
+    	 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
+		 return "pay/callBack";
 	  } 
 	String formatString(String text){ 
 		if(text == null) {
@@ -207,14 +143,4 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		}
 		return text;
 	}
-	/**
-     * 跳转第三方渠道界面
-     */
-    @RequestMapping(value = "payRedirect", method = RequestMethod.GET)
-    public String selectPayChannel(HttpServletRequest request, Model model){
-    	  String res = request.getParameter("res");
-    	  model.addAttribute("res", res);
-    	return "pay/payRedirect";
-    }	
-    
 }

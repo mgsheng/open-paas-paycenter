@@ -3,15 +3,13 @@ package cn.com.open.openpaas.payservice.app.channel.yeepay;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
+import org.apache.commons.httpclient.util.DateUtil;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,19 +18,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
-import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
+import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayConfig;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PayUtil;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
+import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
-import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -47,6 +44,8 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
 	 private PayserviceDev payserviceDev;
+	 @Autowired
+	 private MerchantInfoService merchantInfoService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -103,6 +102,12 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 			 
 			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, 
 					r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
+			  String returnUrl=merchantOrderInfo.getNotifyUrl();
+		 		MerchantInfo merchantInfo = null;
+		 		if(nullEmptyBlankJudge(returnUrl)){
+		 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+		 			returnUrl=merchantInfo.getReturnUrl();
+		 		}
 			
 			if(isOK) {
 				//在接收到支付结果通知后，判断是否进行过业务逻辑处理，不要重复进行业务逻辑处理
@@ -110,6 +115,34 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 					// 产品通用接口支付成功返回-浏览器重定向
 					if(r9_BType.equals("1")) {
 						//out.println("callback方式:产品通用接口支付成功返回-浏览器重定向");
+						 if(!nullEmptyBlankJudge(returnUrl)){
+							 //Map<String, String> dataMap=new HashMap<String, String>();
+							    String buf ="";
+							    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+								sParaTemp.put("orderId", merchantOrderInfo.getId());
+						        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+						        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+						        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+								sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+								sParaTemp.put("feeType", "CNY");
+								sParaTemp.put("guid", merchantOrderInfo.getGuid());
+								sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+								//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+								sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+								sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
+								sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+								sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+								sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+								sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
+								sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+							    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+							    sParaTemp.put("secret", mySign);
+							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+							    model.addAttribute("res", buf);
+			     			    return "pay/payRedirect"; 
+						 }else{
+							 backMsg="success";
+						 }
 						// 产品通用接口支付成功返回-服务器点对点通讯
 					} else if(r9_BType.equals("2")) {
 				

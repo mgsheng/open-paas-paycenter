@@ -1,5 +1,8 @@
 package cn.com.open.openpaas.payservice.dev;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class PayserviceDev {
 	private String notify_times;
 	private String ali_key;
@@ -20,8 +23,31 @@ public class PayserviceDev {
 	private String log_type;
 	private String yeepayCommonReqURL;
 	private String payIndex_url;
+	private Map<String, String> bank_map;
+	private String banks_switch;
 	
 	
+	public String getBanks_switch() {
+		return banks_switch;
+	}
+	public void setBanks_switch(String banks_switch) {
+		this.banks_switch = banks_switch;
+	}
+	public Map<String, String> getBank_map() {
+		return bank_map;
+	}
+	public void setBank_map(String banks_switch) {
+		banks_switch=this.banks_switch;
+		String banks[]=banks_switch.split(",");
+		bank_map=new HashMap<String,String>();
+		for(int i=0;i<banks.length;i++){
+		String bank[]=banks[i].split(":");
+		for(int j=0;j<bank.length;j++){
+			bank_map.put(bank[0], bank[1]);
+		 }
+		}
+	//	this.bank_map = bank_map;
+	}
 	public String getPayIndex_url() {
 		return payIndex_url;
 	}

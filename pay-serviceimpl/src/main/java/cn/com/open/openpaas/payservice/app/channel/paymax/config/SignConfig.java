@@ -1,0 +1,16 @@
+package cn.com.open.openpaas.payservice.app.channel.paymax.config;
+
+/**
+ * Created by xiaowei.wang on 2016/4/26.
+ */
+public class SignConfig {
+	//商户自己的私钥【用com.Paymax.sign.RSAKeyGenerateUtil生成RSA秘钥对，公钥通过Paymax网站上传到Paymax，私钥设置到下面的变量中】
+	public static final String PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJLNUhm0TOy8BwKlb+G4fWZbLOr8mXOVcgQMuUR/sT+V/992LwckvnCuaimeoxuiwpdaSelFPrRLkGGzdQeGxMd0foaNmLa/EZ+ZELyxxeYapS+3RmUAhB2UKsQO33s9R4LpJH1ljcZwae19vTIJfQRQ72kBafCUvBm3q4YM2cc9AgMBAAECgYEAkku5WNJcosNS/SkfUUPI/Fs6bUekKRKymCSR8RiL7EEwyGH/xc+xVZwLQkTMaXsPD0Q0ShruvUBct3De3MxKhrREb5hYG1xSxUaxUI/z1IFThaWld5zKz/KFJnII2dewoWDRYCQF95pjDDPR+ui59Z57D+JZdYV5cW7p0fx8UEUCQQDDXGzTiVFxExTP1xoldl4TqEx4BO3J0PQBD+6JTP4NHyACIrpchXGZpeOCfSBhGstilkcwupRbElv+CSIaaOUPAkEAwF5Z0ZxkheCGzkN48HksKxiYoIDSo8ufVUVj9ZOiUT//lkUMNvOU+cgqBIoM84po6BLvwUZ5KysJdNar/3YG8wJAITUguoRo95OKwhmKNDv+mdDNzsjnspp2H4gZv/T6ajiUNEi67Ocx/DAakB+81US8tbFdwIa2mRRx1qiux1Z1OQJABvEgsqS/J+mjU7wxmBP3WRLJJzme4FRPyqb3ZXxPZjk2Avk46J6/qIflpEZLE1rSUFWmm0Xsx3cFH1dD27MpqwJAQEbcYgFlmYK5iDemWxncZG6zbo74COGLfAdUbUSEUaCKU/XD+7LxL8quxj4iKyODh/m9AYrOFUfyDMutk8LZBQ==";
+	//Paymax提供给商户的SecretKey，登录网站后查看
+	public static final String SECRET_KEY = "ca8e2aca50dd41ab8f27e7b07ecbb498";
+	
+	//Paymax提供给商户的公钥，登录网站后查看
+	public static final String PAYMAX_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDE0gdZi/icODd0WAQlxfw8FgoJ/BwCgMLn+Fh1DquRXqYkgGtv35B5j+CCSpag3wxNwtrHRHpar3dpo38+KIqaMy8bhQj1hmBJmHkgM1yZZpVC5S4uc4FYT21zQn0HBI1E1gg2nAA7JkFV1+VnvFKk9rzOA2UtrYXID+ZG4BMBwwIDAQAB";
+}
+
+
