@@ -1,5 +1,6 @@
 package cn.com.open.pay.platform.manager.web;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
@@ -73,11 +74,14 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 	public void removeDeptByID(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------removeDeptByID       start------------------------------------");
 		request.setCharacterEncoding("utf-8");
-		Integer id = Integer.valueOf(request.getParameter("id"));
+		String id = request.getParameter("id");
+		System.out.println("id  :  "+id);
 		// result = false表示删除失败
-		boolean result = managerDepartmentService.removeDeptByID(id);
-		System.out.println(result);
+		boolean result = false;
 		JSONObject jsonobj = new JSONObject();
+		if(id != null && id !=""){
+			result = managerDepartmentService.removeDeptByID(Integer.valueOf(id));
+		}
 		jsonobj.put("result",result);
 	    WebUtils.writeJson(response,jsonobj);
 		return;
@@ -90,7 +94,7 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value="showAddDept")
 	public String showAddDept(){
-		log.info("-------------------------addDept       start------------------------------------");
+		log.info("-------------------------showAddDept       start------------------------------------");
 		return "department/addDept";
 	}
 	
@@ -143,13 +147,30 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 	@RequestMapping(value="findDepts")
 	public void findDepts(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------findDepts        start------------------------------------");
-		String deptName = new String(request.getParameter("dept_name").getBytes("iso-8859-1"),"utf-8");
-//		String createtime = new String(request.getParameter("createtime").getBytes("iso-8859-1"),"utf-8");
-//		Timestamp ts = Timestamp.valueOf(createtime);
+		String deptName = request.getParameter("dept_name");
 		
+		if(deptName !=null ){
+			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
+		}
+		//当前第几页
+		String page=request.getParameter("page");
+		System.out.println(page);
+		
+		//每页显示的记录数
+	    String rows=request.getParameter("rows"); 
+	    System.out.println(rows);
+		//当前页  
+		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+		//每页显示条数  
+		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+		//每页的开始记录  第一页为1  第二页为number +1   
+	    int startRow = (currentPage-1)*pageSize;
+	    
 		//将请求参数封装到Department对象中
 		Department department = new Department();
 		department.setDeptName(deptName);
+		department.setPageSize(pageSize);
+		department.setStartRow(startRow);
 		List<Department> departments = managerDepartmentService.findDepts(department);
 		if(departments ==null) return;
 		int count = departments.size();

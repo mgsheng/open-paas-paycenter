@@ -50,10 +50,24 @@
 											</a>
 										</td>
 										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="width:120px;margin-left:30px;">
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearFormFind();" style="width:120px;margin-left:30px;">
 												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">清&nbsp;&nbsp;
 													&nbsp;&nbsp;除</span>
 												<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											</a>
+										</td>	
+										<td>	
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeDeptByID();" style="width:120px;margin-left:30px;">
+												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">删&nbsp;&nbsp;
+													&nbsp;&nbsp;除</span>
+												<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											</a>
+										</td>	
+										<td>	
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinUpdate();" style="width:120px;margin-left:30px;">
+												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">修&nbsp;&nbsp;
+													&nbsp;&nbsp;改</span>
+												<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 											</a>
 										</td>	
 									</tr>
@@ -69,11 +83,7 @@
 							<tr>
 								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
 								<th data-options="field:'deptName',align:'center'" style="width:15%;max-width:100%;">部&nbsp;&nbsp;门&nbsp;&nbsp;名</th>
-								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">注册时间</th>
-								<th data-options="field:'foundDate',align:'center',formatter:formatOper"  style="width:18%;max-width:100%;">
-									<span style="font-weight:bold;margin-left:2%;margin-right:2%;">操&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作</span>
-									<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-									</th>
+								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">添加时间</th>
 							</tr>
 					</thead>
 				</table>
@@ -103,8 +113,8 @@
 			</div>
 			<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
 				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateDept()" style="margin:8px"> 确定</a>
-				<a id="btnCancel" class="easyui-linkbutton" onclick="closeWin()" icon="icon-cancel" href="javascript:void(0)" style="margin:8px">取消</a>
-				<a id="btnClear" href="javascript:void(0)" onclick="clearTable()" class="easyui-linkbutton" icon="icon-clear" style="margin:8px">清空</a>
+				<a id="btnCancel" class="easyui-linkbutton" onclick="closeWinUpdate()" icon="icon-cancel" href="javascript:void(0)" style="margin:8px">取消</a>
+				<a id="btnClear" href="javascript:void(0)" onclick="clearFormUpdate()" class="easyui-linkbutton" icon="icon-clear" style="margin:8px">清空</a>
 			</div>
 		</div>
 	</div>
@@ -112,7 +122,7 @@
 	<script>
 	
 		 //设置修改部门窗口
-        function win() {
+        function winUpdate() {
             $('#upda').window({
                 title: '用户信息',
                 width: 300,
@@ -125,20 +135,20 @@
         }
         
           // 清除查询表单
-		function clearForm(){
+		function clearFormFind(){
 			$('#fm').form('clear');
 		}
 		
 		// 清空修改部门窗口
-		function clearTable(){
+		function clearFormUpdate(){
 			$('#tb').form('clear');
 		};
 		
-		win();
+		winUpdate();
 		//打开修改部门窗口
-		function openWin(){
+		function openWinUpdate(){
 			//打开修改部门窗口之前先清空
-			clearTable();
+			clearFormUpdate();
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
 				var deptName = row.deptName;
@@ -147,11 +157,11 @@
 				$('#create_time').val(create_Time);
 				$('#upda').window('open');
 			}else{
-            	msgShow('系统提示', '请选择要修改的部门！', 'info');
-            }
+				msgShow('系统提示', '请选择要修改的部门！', 'error');
+			}
 		};
 		//关闭修改部门窗口
-		function closeWin(){
+		function closeWinUpdate(){
 			$('#upda').window('close');
 		};
 		
@@ -160,33 +170,28 @@
 			$.messager.alert(title, msgString, msgType);
 		}
 	
-		//追加操作列
-		function formatOper(val,row,index){  
-		    return  '<a href="#" onclick="removeDeptByID('+index+')">删除</a>&nbsp;<a style="margin-left:20px" href="#" onclick="openWin()">修改</a>';  
-		}  
-		
 		//根据部门ID删除部门
 		function removeDeptByID(){
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
-			$.messager.confirm('系统提示', '是否确定删除?', function(r){
-				if (r){
-					   var id=row.id;
-					   var url='${pageContext.request.contextPath}/department/removeDeptByID?id='+id;
-			            $.post(url, function(data) {
-			                if(data.result==true){
-			                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-			                }else{
-			                  	msgShow('系统提示', '删除失败！', 'error');
-			                }
-			            });
-			              //刷新
-			              var url='${pageContext.request.contextPath}/department/removeDeptByID';
-			              reload(url,name);
-				}
+				$.messager.confirm('系统提示', '是否确定删除?', function(r){
+					if (r){
+						   var id=row.id;
+						   var url='${pageContext.request.contextPath}/department/removeDeptByID?id='+id;
+				            $.post(url, function(data) {
+				                if(data.result==true){
+				                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
+				                }else{
+				                  	msgShow('系统提示', '删除失败！', 'error');
+				                }
+				            });
+				              //刷新
+				              var url='${pageContext.request.contextPath}/department/findDepts';
+				              reload(url,name);
+					}
 			   });
 			}else{
-            	msgShow('系统提示', '请选择要删除的用户！', 'info');
+            	msgShow('系统提示', '请选择要删除的部门！', 'error');
             }
 		}
 		
@@ -197,13 +202,12 @@
 	          }); 
 		}
 		
+		
+		
 		// 查询部门方法
 		function findDepts(){
 			//部门名
 			var dept_name = $('#deptname').val().trim();
-			//创建时间
-			//var createtime = $('#createtime').val().trim();
-			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -234,31 +238,34 @@
         
         // 提交修改后的部门信息
          function updateDept() {
-		 	var row = $('#dg').datagrid('getSelected');
-			var id=row.id;
-            var dept_name = $('#dept_name').val().trim();
-            if (dept_name == '') {
-                msgShow('系统提示', '请输入部门名！', 'warning');
-                return false;
+			var row = $('#dg').datagrid('getSelected');
+			if(row){	
+				var id=row.id;
+	            var dept_name = $('#dept_name').val().trim();
+	            if (dept_name == '') {
+	                msgShow('系统提示', '请输入部门名！', 'warning');
+	                return false;
+	            }
+	            var url=encodeURI('${pageContext.request.contextPath}/department/updateDept?dept_name='+dept_name+'&id='+id);
+	            $.post(url, function(data) {
+	                if(data.result==true){
+		                 msgShow('系统提示', '修改成功！', 'info');
+		                 closeWinUpdate();
+		                 var url='${pageContext.request.contextPath}/department/findDepts';
+			            reload(url,name);
+	                }else if(data.result==false){
+	                	msgShow('系统提示', '该部门名已被注册！', 'error');
+		                 closeWinUpdate();
+		                 var url='${pageContext.request.contextPath}/department/updateDept';
+			             reload(url,name);
+	                }else{
+		                 msgShow('系统提示', '修改失败！', 'error');
+		                 closeWinUpdate();
+	                }
+	            });
+            }else{
+            	msgShow('系统提示', '请选择要修改的部门！', 'error');
             }
-            alert(id);
-            var url=encodeURI('${pageContext.request.contextPath}/department/updateDept?dept_name='+dept_name+'&id='+id);
-            $.post(url, function(data) {
-                if(data.result==true){
-	                 msgShow('系统提示', '修改成功！', 'info');
-	                 closeWin();
-	                 var url='${pageContext.request.contextPath}/department/updateDept';
-		             reload(url,name);
-                }else if(data.result==false){
-                	msgShow('系统提示', '该部门名已被注册！', 'error');
-	                 closeWin();
-	                 var url='${pageContext.request.contextPath}/department/updateDept';
-		             reload(url,name);
-                }else{
-	                 msgShow('系统提示', '修改失败！', 'error');
-	                 closeWin();
-                }
-            });
         }
 	</script>
 </html>

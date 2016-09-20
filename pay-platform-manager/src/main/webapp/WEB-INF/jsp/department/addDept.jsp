@@ -21,14 +21,14 @@
 		</form>
 		<div style="text-align:center;padding:5px 0">
 			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px;margin:10px 15px">提交</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px;margin:10px 15px">清空</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearFormAdd()" style="width:80px;margin:10px 15px">清空</a>
 			<a href="${pageContext.request.contextPath}/department/departmentList" class="easyui-linkbutton" 
 				style="width:80px;margin:10px 15px">取消</a>
 		</div>
 	</div>
 	<script>
 		// 清空添加用户表单
-		function clearForm(){
+		function clearFormAdd(){
 			$('#ff').form('clear');
 		}
 		
@@ -41,14 +41,6 @@
 					return false;
 			}
 			return true;
-		}
-		
-		//列表重新加载
-		function reload(){
-			$('#dg').datagrid('reload',{
-	            url: "${pageContext.request.contextPath}/department/findDepts?deptname=''",
-	            method: "post"
-	          }); 
 		}
 		
 		// 提交（部门信息）
@@ -72,20 +64,26 @@
 				dataType:"json",
 				success:function (data){
 					if(data.result == true){
-						clearForm();
 						$.messager.alert("系统提示","恭喜，添加部门成功!","info");
+						var URL = "${pageContext.request.contextPath}/department /showAddDept ";
+						reLoad(URL);
 					}else if(data.result == false){
-						clearForm();
 						$.messager.alert("系统提示","该部门名已被注册，请重新填写部门名!","error");	
+						clearFormAdd();
 					}else{
-						clearForm();
 						$.messager.alert("系统提示","添加部门失败，请重新添加!","error");
+						clearFormAdd();
 					}
 				},
 				error:function(){
 					$.messager.alert("系统提示","部门添加异常，请刷新页面!","error");
 				}
 			});
+		}
+		
+		//列表重新加载
+		function reLoad(url){
+			window.location.href=url;
 		}
 	</script>
 </body>

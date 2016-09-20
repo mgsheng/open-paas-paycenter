@@ -16,7 +16,8 @@
 		select id,deptName,createTime
 		from privilege_dept 
 		<where>
-			<if test="deptName != null and deptName != '' ">deptName =#{deptName,jdbcType=VARCHAR}</if>
+			<if test="deptName != null and deptName != '' ">deptName =#{deptName,jdbcType=VARCHAR} and</if>
+			id limit #{startRow},#{pageSize}
 		</where>
 	</select>
 	

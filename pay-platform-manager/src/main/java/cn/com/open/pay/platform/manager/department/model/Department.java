@@ -15,6 +15,9 @@ public class Department extends AbstractDomain{
 	private String deptName;//部门名称
 	private Date createTime;//部门注册时间
 	private String create_Time;//将时间类型转换成字符串
+	private Integer pageSize;
+	private Integer startRow;
+	
 	public Department(){
 		
 	}
@@ -41,6 +44,22 @@ public class Department extends AbstractDomain{
 		return serialVersionUID;
 	}
 	
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Integer getStartRow() {
+		return startRow;
+	}
+
+	public void setStartRow(Integer startRow) {
+		this.startRow = startRow;
+	}
+
 	public String getCreate_Time() {
 		setCreate_Time();
 		return create_Time;
