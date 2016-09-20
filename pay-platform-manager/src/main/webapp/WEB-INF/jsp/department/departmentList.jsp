@@ -43,9 +43,8 @@
 											</a>
 										</td>
 										<td>	
-											<a href="${pageContext.request.contextPath}/department/showAddDept" class="easyui-linkbutton"  
-												style="width: 120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">添加部门</span>
+											<a href="#" class="easyui-linkbutton"  style="width: 120px;margin-left:30px;" onclick="openWinAdd();">
+												<span style="font-weight:bold;margin-right:15px;margin-left:15px;"">添加部门</span>
 												<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 											</a>
 										</td>
@@ -57,7 +56,7 @@
 											</a>
 										</td>	
 										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeDeptByID();" style="width:120px;margin-left:30px;">
+											<a href="#" class="easyui-linkbutton" onclick="removeDeptByID();" style="width:120px;margin-left:30px;">
 												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">删&nbsp;&nbsp;
 													&nbsp;&nbsp;除</span>
 												<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -68,6 +67,12 @@
 												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">修&nbsp;&nbsp;
 													&nbsp;&nbsp;改</span>
 												<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+											</a>
+										</td>
+										<td>	
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openDeptUsers();" style="width:120px;margin-left:30px;">
+												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">部门员工信息</span>
+												<span class="icon-man">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 											</a>
 										</td>	
 									</tr>
@@ -90,31 +95,53 @@
 			</div>
 		</div>
 	</div>	
-	<!--修改用户窗口--> 
-	<div id="upda" class="easyui-window" title="部门信息" collapsible="false"
-		minimizable="false" maximizable="false" icon="icon-save"
-		style="width: 300px; height: 150px;
-        background: #fafafa;">
+	<!--修改部门窗口--> 
+	<div id="upda" class="easyui-window" title="部门信息" collapsible="false" minimizable="false" maximizable="false" 
+		icon="icon-save" style="width: 300px; height: 150px; background: #fafafa;">
 		<div class="easyui-layout" fit="true">
-			<div region="center" border="false"
-				style="background: #fff; border: 1px solid #ccc;">
-				<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px" >
+			<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
+				<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px;font-weight: bold;"" >
 					<tr>
-						<td>部门名：</td>
-						<td><input id="dept_name" type="text" class="txt01" name="dept_name" class="easyui-textbox" />
+						<td>部&nbsp;门&nbsp;名：</td>
+						<td><input id="dept_name" type="text" class="txt01" name="dept_name" />
+						</td>
+					</tr>
+					<tr>
+						<td><input id="dept_name_check" type="text" class="txt01" name="dept_name_check" hidden="true" />
 						</td>
 					</tr>
 					<tr>
 						<td>注册时间：</td>
-						<td><input id="create_time" type="text" class="txt01" name="create_time" class="easyui-textbox" readonly/>
+						<td><input id="create_time" type="text" class="txt01" name="create_time" readonly/>
 						</td>
 					</tr>
 				</table>
 			</div>
 			<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
 				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateDept()" style="margin:8px"> 确定</a>
-				<a id="btnCancel" class="easyui-linkbutton" onclick="closeWinUpdate()" icon="icon-cancel" href="javascript:void(0)" style="margin:8px">取消</a>
-				<a id="btnClear" href="javascript:void(0)" onclick="clearFormUpdate()" class="easyui-linkbutton" icon="icon-clear" style="margin:8px">清空</a>
+				<a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)" onclick="closeWinUpdate()" style="margin:8px">取消</a>
+				<a id="btnClear" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearFormUpdate()" style="margin:8px">清空</a>
+			</div>
+		</div>
+	</div>
+	<!-- 添加部门窗口 -->
+	<div id="addDept" class="easyui-window" title="添加部门" collapsible="false" minimizable="false" maximizable="false" 
+		icon="icon-save" style="background: #fafafa;">
+		<div class="easyui-layout" fit="true">
+			<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
+				<table cellpadding="10px" id="addForm"  style="border: 0px;margin:50px 20px;font-weight: bold;" data-options="novalidate:true">
+					<tr>
+						<td>部&nbsp;门&nbsp;名：</td>
+						<td>
+							<input id="dept_Name"  type="text" class="text" name="dept_Name" >
+						</td>
+					</tr>
+				</table>	
+			</div>
+			<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
+				<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-ok" onclick="submitForm()" style="margin:8px">提交</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-clear"  onclick="clearFormAdd()" style="margin:8px">清空</a>
+				<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-cancel" onclick="closeWinAdd()" style="margin:8px">取消</a>
 			</div>
 		</div>
 	</div>
@@ -124,7 +151,20 @@
 		 //设置修改部门窗口
         function winUpdate() {
             $('#upda').window({
-                title: '用户信息',
+                title: '部门信息',
+                width: 300,
+                modal: true,
+                shadow: true,
+                closed: true,
+                height: 260,
+                resizable:false
+            });
+        }
+        
+         //设置添加部门窗口
+        function winAdd() {
+            $('#addDept').window({
+                title: '添加部门',
                 width: 300,
                 modal: true,
                 shadow: true,
@@ -148,21 +188,36 @@
 		//打开修改部门窗口
 		function openWinUpdate(){
 			//打开修改部门窗口之前先清空
-			clearFormUpdate();
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
 				var deptName = row.deptName;
+				var dept_name_check = row.deptName;
 				var create_Time = row.create_Time;
 				$('#dept_name').val(deptName);
+				$('#dept_name_check').val(dept_name_check);
 				$('#create_time').val(create_Time);
 				$('#upda').window('open');
 			}else{
 				msgShow('系统提示', '请选择要修改的部门！', 'error');
 			}
 		};
+		
+		winAdd();
+		//打开添加部门窗口
+		function openWinAdd(){
+			//打开添加部门窗口之前先清空
+			clearFormAdd();
+			$('#addDept').window('open');
+		};
+		
 		//关闭修改部门窗口
 		function closeWinUpdate(){
 			$('#upda').window('close');
+		};
+		
+		//关闭添加部门窗口
+		function closeWinAdd(){
+			$('#addDept').window('close');
 		};
 		
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
@@ -202,8 +257,6 @@
 	          }); 
 		}
 		
-		
-		
 		// 查询部门方法
 		function findDepts(){
 			//部门名
@@ -242,21 +295,29 @@
 			if(row){	
 				var id=row.id;
 	            var dept_name = $('#dept_name').val().trim();
+	            var dept_name_check = $('#dept_name_check').val().trim();
 	            if (dept_name == '') {
 	                msgShow('系统提示', '请输入部门名！', 'warning');
 	                return false;
+	            }else if(dept_name_check==dept_name){
+	            	msgShow('系统提示', '修改成功！', 'info');
+	            	closeWinUpdate();
+		            var url='${pageContext.request.contextPath}/department/findDepts';
+			        reload(url,name);
+	                return;
 	            }
+	            dept_name = $('#dept_name').val().trim();
 	            var url=encodeURI('${pageContext.request.contextPath}/department/updateDept?dept_name='+dept_name+'&id='+id);
 	            $.post(url, function(data) {
 	                if(data.result==true){
 		                 msgShow('系统提示', '修改成功！', 'info');
 		                 closeWinUpdate();
 		                 var url='${pageContext.request.contextPath}/department/findDepts';
-			            reload(url,name);
+			             reload(url,name);
 	                }else if(data.result==false){
-	                	msgShow('系统提示', '该部门名已被注册！', 'error');
+	                	 msgShow('系统提示', '该部门名已被注册！', 'error');
 		                 closeWinUpdate();
-		                 var url='${pageContext.request.contextPath}/department/updateDept';
+		                 var url='${pageContext.request.contextPath}/department/findDepts';
 			             reload(url,name);
 	                }else{
 		                 msgShow('系统提示', '修改失败！', 'error');
@@ -267,5 +328,73 @@
             	msgShow('系统提示', '请选择要修改的部门！', 'error');
             }
         }
+        
+        // 清空添加部门表单
+		function clearFormAdd(){
+			$('#addForm').form('clear');
+		}
+		
+		//前端校验
+		function checked(){
+			var regex_dept_Name=/^[\u4E00-\u9FA5A-Za-z0-9_]{2,20}$/;
+			var dept_Name = $.trim($('#dept_Name').val()) ;
+			if(dept_Name == "" || dept_Name == null || dept_Name == undefined || regex_dept_Name.test(dept_Name) != true){
+					$.messager.alert("系统提示","部门名不能为空或格式不正确，请重新填写！\n用户名由2-20位汉字、字母、数字、下划线组成","error");	
+					return false;
+			}
+			return true;
+		}
+		
+		// 提交（部门信息）
+		function submitForm(){
+			var dept_Name = $.trim($('#dept_Name').val()) ;
+			// 提交信息前完成前端校验
+			var check_result = checked();
+			if(!check_result){
+				return;
+			}
+			$.ajax({
+				type:"post",
+				url:"/pay-platform-manager/department/addDept",
+				data:{"deptname":dept_Name},
+				dataType:"json",
+				success:function (data){
+					if(data.result == true){
+						$.messager.alert("系统提示","恭喜，添加部门成功!","info");
+						var URL = '${pageContext.request.contextPath}/department /findDepts?dept_name=';
+						var name = $('#deptname').val().trim();
+						closeWinAdd();
+						reload(URL,name);
+					}else if(data.result == false){
+						$.messager.alert("系统提示","该部门名已被注册，请重新填写部门名!","error");	
+						clearFormAdd();
+					}else{
+						$.messager.alert("系统提示","添加部门失败，请重新添加!","error");
+						clearFormAdd();
+					}
+				},
+				error:function(){
+					$.messager.alert("系统提示","部门添加异常，请刷新页面!","error");
+				}
+			});
+		}
+		
+		//跳转到所选部门的员工信息页面
+		 function openDeptUsers(){
+		 	var row = $('#dg').datagrid('getSelected');
+			if(row){	
+				var id=row.id;
+	            var url=encodeURI('${pageContext.request.contextPath}/department/findDeptUsers?id='+id);
+	            $.post(url, function(data) {
+	                if(data.result==true){
+		                 msgShow('系统提示', '查询成功！', 'info');
+	                }else{
+		                 msgShow('系统提示', '查询失败，请刷新页面后再次尝试！', 'error');
+	                }
+	            });
+            }else{
+            	msgShow('系统提示', '请选择部门！', 'error');
+            }
+		 }
 	</script>
 </html>
