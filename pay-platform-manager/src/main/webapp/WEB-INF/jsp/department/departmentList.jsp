@@ -29,7 +29,7 @@
 				<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;">
 					<div class="top" style="width: 100%">
 						<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
-							<form id="fm" method="post" action="/department/findDepts">
+							<form id="fm" method="post" action="/department/findDepts" >
 								<table cellpadding="5px">
 									<tr>
 										<td>
@@ -70,7 +70,7 @@
 											</a>
 										</td>
 										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openDeptUsers();" style="width:120px;margin-left:30px;">
+											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinDeptUserList();" style="width:120px;margin-left:30px;">
 												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">部门员工信息</span>
 												<span class="icon-man">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 											</a>
@@ -90,64 +90,99 @@
 								<th data-options="field:'deptName',align:'center'" style="width:15%;max-width:100%;">部&nbsp;&nbsp;门&nbsp;&nbsp;名</th>
 								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">添加时间</th>
 							</tr>
-					</thead>
-				</table>
+						</thead>
+					</table>
+				</div>
+			</div>
+		</div>	
+		<!--修改部门窗口--> 
+		<div id="upda" class="easyui-window" title="部门信息" collapsible="false" minimizable="false" maximizable="false" 
+			icon="icon-save" style="width: 300px; height: 150px; background: #fafafa;">
+			<div class="easyui-layout" fit="true">
+				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
+					<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px;font-weight: bold;"" >
+						<tr>
+							<td>部&nbsp;门&nbsp;名：</td>
+							<td><input id="dept_name" type="text" class="txt01" name="dept_name" />
+							</td>
+						</tr>
+						<tr>
+							<td><input id="dept_name_check" type="text" class="txt01" name="dept_name_check" hidden="true" />
+							</td>
+						</tr>
+						<tr>
+							<td>注册时间：</td>
+							<td><input id="create_time" type="text" class="txt01" name="create_time" readonly/>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
+					<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateDept()" style="margin:8px"> 确定</a>
+					<a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)" onclick="closeWinUpdate()" style="margin:8px">取消</a>
+					<a id="btnClear" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearFormUpdate()" style="margin:8px">清空</a>
+				</div>
 			</div>
 		</div>
-	</div>	
-	<!--修改部门窗口--> 
-	<div id="upda" class="easyui-window" title="部门信息" collapsible="false" minimizable="false" maximizable="false" 
-		icon="icon-save" style="width: 300px; height: 150px; background: #fafafa;">
-		<div class="easyui-layout" fit="true">
-			<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-				<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px;font-weight: bold;"" >
-					<tr>
-						<td>部&nbsp;门&nbsp;名：</td>
-						<td><input id="dept_name" type="text" class="txt01" name="dept_name" />
-						</td>
-					</tr>
-					<tr>
-						<td><input id="dept_name_check" type="text" class="txt01" name="dept_name_check" hidden="true" />
-						</td>
-					</tr>
-					<tr>
-						<td>注册时间：</td>
-						<td><input id="create_time" type="text" class="txt01" name="create_time" readonly/>
-						</td>
-					</tr>
-				</table>
-			</div>
-			<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="updateDept()" style="margin:8px"> 确定</a>
-				<a id="btnCancel" class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)" onclick="closeWinUpdate()" style="margin:8px">取消</a>
-				<a id="btnClear" class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearFormUpdate()" style="margin:8px">清空</a>
+		<!-- 添加部门窗口 -->
+		<div id="addDept" class="easyui-window" title="添加部门" collapsible="false" minimizable="false" maximizable="false" 
+			icon="icon-save" style="background: #fafafa;">
+			<div class="easyui-layout" fit="true">
+				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
+					<table cellpadding="10px" id="addForm"  style="border: 0px;margin:50px 20px;font-weight: bold;" data-options="novalidate:true">
+						<tr>
+							<td>部&nbsp;门&nbsp;名：</td>
+							<td>
+								<input id="dept_Name"  type="text" class="text" name="dept_Name" >
+							</td>
+						</tr>
+					</table>	
+				</div>
+				<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
+					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-ok" onclick="submitForm()" style="margin:8px">提交</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-clear"  onclick="clearFormAdd()" style="margin:8px">清空</a>
+					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-cancel" onclick="closeWinAdd()" style="margin:8px">取消</a>
+				</div>
 			</div>
 		</div>
-	</div>
-	<!-- 添加部门窗口 -->
-	<div id="addDept" class="easyui-window" title="添加部门" collapsible="false" minimizable="false" maximizable="false" 
-		icon="icon-save" style="background: #fafafa;">
-		<div class="easyui-layout" fit="true">
-			<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-				<table cellpadding="10px" id="addForm"  style="border: 0px;margin:50px 20px;font-weight: bold;" data-options="novalidate:true">
-					<tr>
-						<td>部&nbsp;门&nbsp;名：</td>
-						<td>
-							<input id="dept_Name"  type="text" class="text" name="dept_Name" >
-						</td>
-					</tr>
-				</table>	
-			</div>
-			<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-				<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-ok" onclick="submitForm()" style="margin:8px">提交</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-clear"  onclick="clearFormAdd()" style="margin:8px">清空</a>
-				<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-cancel" onclick="closeWinAdd()" style="margin:8px">取消</a>
-			</div>
+		<!--部门用户信息列表窗口  -->
+		<div id="deptUserList" class="easyui-window" title="部门用户信息" collapsible="false" minimizable="false" maximizable="false" 
+			icon="icon-save" style="background: #fafafa;">
+			<div class="easyui-layout" fit="true">
+				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">		
+					<table  id="deptTable"  class="easyui-datagrid" style="width:100%;max-width:100%;padding:20px 30px;"
+							data-options="rownumbers:true,singleSelect:true,method:'get'">
+						<thead>
+							<tr>
+								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
+								<th data-options="field:'username',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
+								<th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th>
+								<th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
+								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">注册时间</th>
+								<th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th>
+								<th data-options="field:'deptName',align:'center'"  style="width:18%;max-width:100%;">所属部门</th>
+								<th data-options="field:'deptID',align:'center'" hidden="true"  style="width:18%;max-width:100%;">所属部门ID</th>
+							</tr>
+						</thead>
+					</table>
+				</div>	
+			</div>	
 		</div>
-	</div>
 	</body>
 	<script>
-	
+		//设置部门用户信息窗口
+		 function winDeptUserList() {
+            $('#deptUserList').window({
+                title: '部门用户信息',
+                width: 600,
+                modal: true,
+                shadow: true,
+                closed: true,
+                height: 400,
+                resizable:false
+            });
+        }
+		
 		 //设置修改部门窗口
         function winUpdate() {
             $('#upda').window({
@@ -184,10 +219,24 @@
 			$('#tb').form('clear');
 		};
 		
+		winDeptUserList();
+		//打开部门用户信息窗口
+		function openWinDeptUserList(){
+			var row = $('#dg').datagrid('getSelected');
+			if (row){
+				var deptID = row.id;
+				$('#deptUserList').window('open');
+				$(function(){
+					findDeptUsers(deptID);
+				});
+			}else{
+				msgShow('系统提示', '请选择部门！', 'error');
+			}
+		};
+		
 		winUpdate();
 		//打开修改部门窗口
 		function openWinUpdate(){
-			//打开修改部门窗口之前先清空
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
 				var deptName = row.deptName;
@@ -208,6 +257,11 @@
 			//打开添加部门窗口之前先清空
 			clearFormAdd();
 			$('#addDept').window('open');
+		};
+		
+		//关闭修改部门窗口
+		function closeWinDeptUserList(){
+			$('#deptUserList').window('close');
 		};
 		
 		//关闭修改部门窗口
@@ -379,22 +433,33 @@
 			});
 		}
 		
-		//跳转到所选部门的员工信息页面
-		 function openDeptUsers(){
-		 	var row = $('#dg').datagrid('getSelected');
-			if(row){	
-				var id=row.id;
-	            var url=encodeURI('${pageContext.request.contextPath}/department/deptUsers?id='+id);
-	            $.post(url, function(data) {
-	                if(data.result==true){
-		                 msgShow('系统提示', '查询成功！', 'info');
-	                }else{
-		                 msgShow('系统提示', '查询失败，请刷新页面后再次尝试！', 'error');
-	                }
-	            });
-            }else{
-            	msgShow('系统提示', '请选择部门！', 'error');
-            }
-		 }
+		 // 查询部门用户方法
+		function findDeptUsers(deptID){
+			$('#deptTable').datagrid({
+				collapsible:true,
+				rownumbers:true,
+				pagination:true,
+		        url: "${pageContext.request.contextPath}/managerUser/findDeptUsers?deptID="+deptID,  
+		        pagination: true,//显示分页工具栏
+		        onLoadSuccess:function(data){
+                    if (data.total<1){
+                       $.messager.alert("系统提示","没有符合查询条件的数据!","info");
+                  };
+                }
+		    }); 
+			 //设置分页控件 
+		    var p = $('#deptTable').datagrid('getPager'); 
+		    $(p).pagination({ 
+		        pageSize: 15,//每页显示的记录条数，默认为10 
+		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
+		        beforePageText: '第',//页数文本框前显示的汉字 
+		        afterPageText: '页    共 {pages} 页', 
+		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+		        onBeforeRefresh:function(){
+		            $(this).pagination('loading');
+		            $(this).pagination('loaded');
+		        } 
+		    }); 
+		}
 	</script>
 </html>

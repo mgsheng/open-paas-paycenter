@@ -15,11 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
 import cn.com.open.pay.platform.manager.login.model.User;
-import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -41,11 +42,13 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-	@RequestMapping("deptUsers")
-	public String  deptUsers(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+//	@RequestMapping("deptUsers")
+	public String  deptUsers(HttpServletRequest request,HttpServletResponse response,ModelAndView attr)throws UnsupportedEncodingException{
 		log.info("-------------------------deptUsers       start------------------------------------");
 		request.setCharacterEncoding("utf-8");
 		Integer id = Integer.valueOf(request.getParameter("id"));
+		attr.addObject("id", id);
+		
 		System.out.println(id);
 		
 		return "department/deptUsers";
@@ -63,6 +66,7 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		if(deptID !=null){
 			deptID = new String(deptID.getBytes("iso-8859-1"),"utf-8");
 		}
+		System.out.println("**************deptID :   "+deptID);
 		//当前第几页
 		String page=request.getParameter("page");
 		System.out.println(page);
@@ -84,7 +88,7 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		user.setStartRow(startRow);
 		List<User> users = managerDepartmentService.findDeptUsers(user);
 		if(users ==null) return;
-		int count = users.size();
+		int count = managerDepartmentService.findDeptUsersCount(user);
 		JSONArray jsonArr = JSONArray.fromObject(users);
 		JSONObject jsonObjArr = new JSONObject();  
 		jsonObjArr.put("total", count);
@@ -136,7 +140,7 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		log.info("-------------------------removeDeptByID       start------------------------------------");
 		request.setCharacterEncoding("utf-8");
 		String id = request.getParameter("id");
-		System.out.println("id  :  "+id);
+//		System.out.println("id  :  "+id);
 		// result = false表示删除失败
 		boolean result = false;
 		JSONObject jsonobj = new JSONObject();
@@ -203,14 +207,14 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		if(deptName !=null ){
 			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
 		}
-		System.out.println(deptName);
+//		System.out.println(deptName);
 		//当前第几页
 		String page=request.getParameter("page");
-		System.out.println(page);
+//		System.out.println(page);
 		
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-	    System.out.println(rows);
+//	    System.out.println(rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  

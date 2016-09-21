@@ -10,6 +10,12 @@ import cn.com.open.pay.platform.manager.login.model.User;
  *
  */
 public interface ManagerDepartmentService {
+	/**
+	 * 查询所有该部门的User对象个数
+	 * @param user
+	 * @return User集合
+	 */
+	public int findDeptUsersCount(User user);
 	
 	/**
 	 * 查询指定部门名的个数，没有指定则查询所有

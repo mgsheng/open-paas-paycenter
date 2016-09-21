@@ -13,6 +13,33 @@ import cn.com.open.pay.platform.manager.login.model.User;
 public interface UserRepository extends Repository {
 	
 	/**
+	 * 查询指定用户的角色情况
+	 * @param user
+	 * @return String
+	 */
+	public String findUserRoles(User user);
+	
+	/**
+	 * 查询User对象个数
+	 * @param user
+	 * @return User对象个数
+	 */
+	public int findUsersCount(User user);
+	
+	/**
+	 * 查询所有该部门的User对象个数
+	 * @param user
+	 * @return User对象个数
+	 */
+	public int findDeptUsersCount(User user);
+	
+	/**
+	 * 根据部门ID，部门名查询该部门所以用户信息
+	 * @param username
+	 */
+	public List<User> findDeptUsers(User user);
+	
+	/**
 	 * 根据用户id删除用户
 	 * @param username
 	 */

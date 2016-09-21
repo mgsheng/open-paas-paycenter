@@ -64,6 +64,13 @@ public class User extends AbstractDomain {
     private String desPassword;
     private long createTime; //注册时间  
     private String create_Time;// 作用是将long型转成String型
+    
+    private Integer deptID;//所属部门ID
+    private String deptName;//所属部门名称
+    private String role;//所属角色
+    private Integer pageSize;//每页的显示条数
+    private Integer startRow;//每页的开始记录
+    private Integer countQuantity;//保存记录条数
    /* private List<Privilege> privileges = new ArrayList<Privilege>();*/
 
    
@@ -496,5 +503,45 @@ public class User extends AbstractDomain {
 			this.create_Time = "";
 		}
 	}
-	
+
+	public Integer getDeptID() {
+		return deptID;
+	}
+
+	public void setDeptID(Integer deptID) {
+		this.deptID = deptID;
+	}
+
+	public String getDeptName() {
+		return deptName;
+	}
+
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Integer getStartRow() {
+		return startRow;
+	}
+
+	public void setStartRow(Integer startRow) {
+		this.startRow = startRow;
+	}
+
 }

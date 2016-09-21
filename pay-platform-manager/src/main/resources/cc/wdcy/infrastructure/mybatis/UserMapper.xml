@@ -33,6 +33,10 @@
 		<result property="emailActivation" column="email_activation" />
 		<result property="updatePwdTime" column="update_pwd_time" />
 		<result property="desPassword" column="des_password" />
+		<result property="deptID" column="deptID" />
+		<result property="deptName" column="deptName" />
+		<result property="role" column="role" />
+		
 		<!-- <collection property="privileges" column="id" select="findPrivilegesByUserId" 
 			ofType="Privilege"/> -->
 	</resultMap>
@@ -62,14 +66,38 @@
 		email_activation,
 		update_pwd_time,
 		des_password,
-		user_state
+		user_state,
+		deptID,
+		deptName,
+		role
 	</sql>
+	
+	<!-- 查询用户的角色情况 -->
+	<select id="findUserRoles" parameterType="User" resultType="string">
+		select role from user_account where id =#{id}
+	</select>
+	
+	<!-- 根据部门ID，部门名查询该部门所有的用户 -->
+	<select id="findDeptUsers" parameterType="User" resultMap="userMap">
+		select 	
+	 			id,
+				user_name,
+				real_name,
+				nickname,
+				deptName,
+				deptID,
+				create_time,
+				DATE_FORMAT(last_login_time,'%Y-%m-%d %T') last_login_time
+	      from user_account
+	  	where 
+	  			  deptID=#{deptID,jdbcType=INTEGER}
+		  limit #{startRow},#{pageSize}
+	</select>
 	
 	<!-- 根据用户名删除用户 -->
 	<delete id="removeUserByID" parameterType="Integer">
 		delete from user_account where id = #{id}
 	</delete>
-	
 	
 	<!-- 添加用户 -->
 	<insert id="addUser" parameterType="User" >
@@ -78,6 +106,7 @@
 				user_name,
 				real_name,
 				nickname,
+				deptName,
 				sha_password,
 				create_time
 			) 
@@ -86,18 +115,41 @@
 		 		#{username,jdbcType=VARCHAR},
 		 		#{realName,jdbcType=VARCHAR},
 		 		#{nickName,jdbcType=VARCHAR},
+		 		#{deptName,jdbcType=VARCHAR},
 		 		#{password,jdbcType=VARCHAR},
 		 		#{createTime,jdbcType=BIGINT}
 		 	)
 	</insert>
-
-	<!-- 根据真实姓名和昵称查询 -->
+	<!-- 查询记录数 -->
+	<select id="findUsersCount" parameterType="User" resultType="int">
+		 select	count(*) count_quantity from user_account
+			<where>
+						archived = 0
+			  		<if test="username !=null and username != ''">
+			  			and user_name=#{username,jdbcType=VARCHAR}
+			  		</if>
+			  		<if test="realName !=null and realName != ''">
+			  			and real_name=#{realName,jdbcType=VARCHAR}
+			  		</if>
+			  		<if test="nickName !=null and nickName != ''">
+			  			and nickname=#{nickName,jdbcType=VARCHAR}
+			  		</if>
+			  		<if test="deptName !=null and deptName != ''">
+			  			and deptName=#{deptName,jdbcType=VARCHAR}
+			  		</if>
+		  </where>
+	</select>
+	
+	<!-- 根据用户名，真实姓名和昵称查询 -->
 	<select id="findUsers" parameterType="User" resultMap="userMap">
 			 select	
 			 			id,
 						user_name,
 						real_name,
 						nickname,
+						deptName,
+						deptID,
+						role,
 						create_time,
 						DATE_FORMAT(last_login_time,'%Y-%m-%d %T') last_login_time
 			  from 	user_account
@@ -112,7 +164,11 @@
 			  		<if test="nickName !=null and nickName != ''">
 			  			and nickname=#{nickName,jdbcType=VARCHAR}
 			  		</if>
-		  </where>   
+			  		<if test="deptName !=null and deptName != ''">
+			  			and deptName=#{deptName,jdbcType=VARCHAR}
+			  		</if>
+		  </where>
+		     limit #{startRow},#{pageSize}
 	</select>
 	
 	<select id="findByGuid" parameterType="String" resultMap="userMap">
@@ -254,6 +310,12 @@
 		</if>
 		<if test="realName != null and realName !=''">
 			real_name = #{realName},
+		</if>
+		<if test="deptName != null and deptName !=''">
+			deptName = #{deptName},
+		</if>
+		<if test="deptID != null and deptID !=''">
+			deptID = #{deptID},
 		</if>
 		<if test="headPicture != null and headPicture !=''">
 			head_picture = #{headPicture},

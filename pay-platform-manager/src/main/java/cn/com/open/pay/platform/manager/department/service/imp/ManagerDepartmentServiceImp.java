@@ -92,6 +92,16 @@ public class ManagerDepartmentServiceImp implements  ManagerDepartmentService{
 	}
 	
 	/**
+	 * 查询所有该部门的User对象个数
+	 * @param user
+	 * @return User集合
+	 */
+	@Override
+	public int findDeptUsersCount(User user) {
+		return UserRepository.findDeptUsersCount(user);
+	}
+	
+	/**
 	 * 查询指定部门名的个数，没有指定则查询所有
 	 * @param deptName
 	 * @return
