@@ -22,6 +22,15 @@ public interface PayLogName {
 	public static String ALIPAY_RETURN_START = "alipay_return_start";
 	//支付宝页面回调结束
 	public static String ALIPAY_RETURN_END = "alipay_return_end";
+	
+	//拉卡拉页面回调开始
+	public static String PAYMAX_RETURN_START = "paymax_return_start";
+	//拉卡拉页面回调结束
+	public static String PAYMAX_RETURN_END = "paymax_return_end";
+	//拉卡拉异步回调开始
+	public static String PAYMAX_NOTIFY_START = "paymax_notify_start";
+	//拉卡拉异步回调结束
+	public static String PAYMAX_NOTIFY_END = "paymax_notify_end";
 	//扣费开始
 	public static String COSTS_START = "costs_start";
 	//扣费结束

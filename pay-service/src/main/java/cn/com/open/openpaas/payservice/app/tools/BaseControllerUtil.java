@@ -43,6 +43,13 @@ public class BaseControllerUtil {
         }
         return true;
     }
+	 public static Boolean analysisOesValue(String obj ){
+			if(obj.indexOf("SUCCESS")!=-1){
+				return true;
+			}else{
+				return false;
+			}
+	    }
 	/**
 	 * 检验字符串是否为空
 	 * @param str

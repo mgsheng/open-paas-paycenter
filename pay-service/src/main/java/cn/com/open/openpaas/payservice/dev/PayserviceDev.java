@@ -25,8 +25,16 @@ public class PayserviceDev {
 	private String payIndex_url;
 	private Map<String, String> bank_map;
 	private String banks_switch;
+	private String oes_merchantId;
 	
 	
+	
+	public String getOes_merchantId() {
+		return oes_merchantId;
+	}
+	public void setOes_merchantId(String oes_merchantId) {
+		this.oes_merchantId = oes_merchantId;
+	}
 	public String getBanks_switch() {
 		return banks_switch;
 	}
