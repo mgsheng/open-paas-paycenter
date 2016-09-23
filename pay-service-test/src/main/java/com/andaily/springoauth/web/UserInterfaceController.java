@@ -133,7 +133,7 @@ public class UserInterfaceController {
      * */
      @RequestMapping(value = "unifyPay", method = RequestMethod.POST)
      public String unifyPay(UnifyPayDto unifyPayDto,HttpServletRequest request,HttpServletResponse response) throws Exception {
-    	 String key=map.get(unifyPayDto.getAppId());
+    	 String key=map.get(unifyPayDto.getMerchantId());
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -203,9 +203,9 @@ public class UserInterfaceController {
      * Redirect to oauth-server bind page:   step-2
      * */
      @RequestMapping(value = "orderManualSend", method = RequestMethod.POST)
-     public String orderManualSend(String orderId, String appId) throws Exception {
+     public String orderManualSend(String orderId, String appId,String merchantId) throws Exception {
     	 
-    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -238,8 +238,8 @@ public class UserInterfaceController {
      * Redirect to oauth-server bind page:   step-2
      * */
      @RequestMapping(value = "orderQuery", method = RequestMethod.POST)
-     public String orderQuery(String  outTradeNo,String appId) throws Exception {
-    	 String key=map.get(appId);
+     public String orderQuery(String  outTradeNo,String appId,String merchantId) throws Exception {
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -366,7 +366,7 @@ public class UserInterfaceController {
      * */
      @RequestMapping(value = "orderRefund", method = RequestMethod.POST)
      public String orderRefund(OrderRefund orderRefund) throws Exception {
-    	 String key=map.get(orderRefund.getAppId());
+    	 String key=map.get(orderRefund.getMerchantId());
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -411,7 +411,7 @@ public class UserInterfaceController {
      */
      @RequestMapping(value = "unifyCosts", method = RequestMethod.POST)
      public String unifyCosts(String appId,String startTime,String merchantId,String endTime) throws Exception {
-    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -489,7 +489,7 @@ public class UserInterfaceController {
      */
      @RequestMapping(value = "querySerialRecord", method = RequestMethod.POST)
      public String querySerialRecord(String appId,String startTime,String merchantId,String endTime,String payType) throws Exception {
-    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";

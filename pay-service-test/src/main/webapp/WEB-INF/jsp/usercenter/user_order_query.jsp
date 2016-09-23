@@ -46,6 +46,16 @@
                             <p class="help-block">应用Id,23-测试应用Id</p>
                         </div>
                     </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">merchantId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="merchantId" id="merchantId"
+                                   class="form-control" ng-model="merchantId"/>
+
+                            <p class="help-block">商户Id（必填）</p>
+                        </div>
+                    </div>
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>
                         <br/>
@@ -66,6 +76,7 @@
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
 		$scope.outTradeNo="test20160517";
 		$scope.appId="23";
+		 $scope.merchantId="10001";
         $scope.visible = false;
 
         $scope.showParams = function () {
@@ -78,6 +89,7 @@
 		var outTradeNo=$("#outTradeNo").val();
 		var appId=$("#appId").val();
 	    var orderQueryUri=$("#orderQueryUri").val();
+	    var merchantId=$("#merchantId").val();
 		if(outTradeNo==''){
 		    alert("请输入outTradeNo业务方唯一订单号");
 			return;
@@ -86,7 +98,10 @@
 		    alert("请输入appId公共参数");
 			return;
 		}
-		
+		if(merchantId==''){
+		    alert("请输入merchantId公共参数");
+			return;
+		}
 		$.post("${contextPath}/getSignature",
 			{
 				appId:appId
