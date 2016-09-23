@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
@@ -122,7 +123,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-        String returnUrl=merchantOrderInfo.getNotifyUrl();
+        String returnUrl=merchantOrderInfo.getReturnUrl();
  		MerchantInfo merchantInfo = null;
  		if(nullEmptyBlankJudge(returnUrl)){
  			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
@@ -141,6 +142,21 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 				 if(!nullEmptyBlankJudge(returnUrl)){
 					 //Map<String, String> dataMap=new HashMap<String, String>();
+					 /*int payStatus=merchantOrderInfo.getPayStatus();
+						Double payCharge=0.0;
+						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+						if(payStatus!=1){
+							merchantOrderInfo.setPayStatus(1);
+							merchantOrderInfo.setPayAmount(total_fee-payCharge);
+							merchantOrderInfo.setAmount(total_fee);
+							merchantOrderInfo.setPayCharge(payCharge);
+							merchantOrderInfo.setDealDate(new Date());
+							merchantOrderInfo.setPayOrderId(trade_no);
+							merchantOrderInfoService.updateOrder(merchantOrderInfo);
+							if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+								rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+							}
+						}*/
 					 String buf="";
 					    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
 						sParaTemp.put("orderId", merchantOrderInfo.getId());
@@ -157,13 +173,15 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 						sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
 						sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
 						sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
-						sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
+						sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf(merchantOrderInfo.getPayCharge()));
 						sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+						
+						
 					    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 					    sParaTemp.put("secret", mySign);
 					    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
 					    model.addAttribute("res", buf);
-	     			    return "pay/payRedirect"; 
+	     			    return "pay/payMaxRedirect"; 
 				 }else{
 					 backMsg="success";
 				 }

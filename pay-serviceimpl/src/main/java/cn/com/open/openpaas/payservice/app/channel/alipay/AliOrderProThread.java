@@ -73,12 +73,12 @@ public class AliOrderProThread implements Runnable {
 		sParaTemp.put("guid", merchantOrderInfo.getGuid());
 		sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-		sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+		sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 		sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
 		sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
 		sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
 		sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
-		sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
+		sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf((int)(merchantOrderInfo.getPayCharge()*100))+";");
 		sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
 		String mySign = PayUtil.createSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 		sParaTemp.put("secret", mySign);
@@ -113,28 +113,51 @@ public class AliOrderProThread implements Runnable {
 		    	  count+=1;
 		    	  if(returnValue!=null)
 		    	  {
-		    		  JSONObject reqjson = JSONObject.fromObject(returnValue);
-						 
-					  callBackSend=analysisValue(reqjson);
-					  if(callBackSend){
-						  merchantOrderInfo.setNotifyStatus(1);
-						  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
-						  payServiceLog.setLogName(PayLogName.NOTIFY_END);
-						  UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-						  sendMsg="通知成功！";
-					  }else{
-						  if(count>1){
-							  callBackSend=true;  
-						  }
-						merchantOrderInfo.setNotifyStatus(2);
-					    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
-						merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
-						payServiceLog.setErrorCode("1");
-						 payServiceLog.setLogName(PayLogName.NOTIFY_END);
-						 payServiceLog.setStatus("error");
-							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-						sendMsg="通知失败！";
-		    	   }
+		    		  
+		    		  if(merchantOrderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
+		    			  callBackSend= analysisOesValue(returnValue);
+		    			  if(callBackSend){
+							  merchantOrderInfo.setNotifyStatus(1);
+							  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
+							  payServiceLog.setLogName(PayLogName.NOTIFY_END);
+							  UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+							  sendMsg="通知成功！";
+						  }else{
+							  if(count>1){
+								  callBackSend=true;  
+							  }
+							merchantOrderInfo.setNotifyStatus(2);
+						    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
+							merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
+							payServiceLog.setErrorCode("1");
+							 payServiceLog.setLogName(PayLogName.NOTIFY_END);
+							 payServiceLog.setStatus("error");
+								UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+							sendMsg="通知失败！";
+			    	   }
+		    		  }else{
+		    			  JSONObject reqjson = JSONObject.fromObject(returnValue);
+						  callBackSend=analysisValue(reqjson);
+						  if(callBackSend){
+							  merchantOrderInfo.setNotifyStatus(1);
+							  merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);
+							  payServiceLog.setLogName(PayLogName.NOTIFY_END);
+							  UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+							  sendMsg="通知成功！";
+						  }else{
+							  if(count>1){
+								  callBackSend=true;  
+							  }
+							merchantOrderInfo.setNotifyStatus(2);
+						    merchantOrderInfo.setNotifyTimes(merchantOrderInfo.getNotifyTimes()+1);
+							merchantOrderInfoService.updateNotifyStatus(merchantOrderInfo);  
+							payServiceLog.setErrorCode("1");
+							 payServiceLog.setLogName(PayLogName.NOTIFY_END);
+							 payServiceLog.setStatus("error");
+								UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+							sendMsg="通知失败！";
+			    	   } 
+		    		  }
 				  }
 		    	  else{
 		    		  if(count>1){
@@ -161,6 +184,13 @@ public class AliOrderProThread implements Runnable {
 				return true;
 			}
 	    }	
+	  public static Boolean analysisOesValue(String obj ){
+			if(obj.indexOf("SUCCESS")!=-1){
+				return true;
+			}else{
+				return false;
+			}
+	    }
 	  private static boolean nullEmptyBlankJudge(String str){
 	        return null==str||str.isEmpty()||"".equals(str.trim());
 	    }

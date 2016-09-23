@@ -154,7 +154,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 			params.put("goodsId", orderInfo.getMerchantProductId());
 			params.put("goodsName",orderInfo.getMerchantProductName());
 			params.put("goodsDesc", orderInfo.getMerchantProductDesc());
-			params.put("parameter", orderInfo.getParameter1());
+			params.put("parameter", orderInfo.getParameter1()+"payCharge="+String.valueOf((int)(orderInfo.getPayCharge()*100))+";");
 			params.put("userName", orderInfo.getSourceUserName());
     		
     		log.info("~~~~~~~~~orderManualSend params："+AlipayCore.createLogString(params));
@@ -174,19 +174,35 @@ public class OrderManualSendController extends BaseControllerUtil{
     		}
     		if(result != null && !("").equals(result)){
     			log.info("~~~~~~~~~~~~~~orderManualSend result："+result+"~~~~~~~~~~~~~~~~~~~~");
-    			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
-    			if("ok".equals(map.get("state"))){//商户处理成功
-    				orderInfo.setNotifyStatus(1);
-    				 payServiceLog.setStatus("ok");
-    			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
-    			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+    			if(orderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
+    				boolean callBackSend= analysisOesValue(result);
+    				if(callBackSend){
+    					orderInfo.setNotifyStatus(1);
+       				 payServiceLog.setStatus("ok");
+       			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+       			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+    				}else{
+    					payServiceLog.setStatus("error");
+      			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+      			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+      				    orderInfo.setNotifyStatus(2);
+    				}
     			}else{
-    				    payServiceLog.setStatus("error");
-    				    payServiceLog.setErrorCode(map.get("errorCode").toString());
-    			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
-    			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-    				orderInfo.setNotifyStatus(2);
+    				Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
+        			if("ok".equals(map.get("state"))){//商户处理成功
+        				orderInfo.setNotifyStatus(1);
+        				 payServiceLog.setStatus("ok");
+        			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+        			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+        			}else{
+        				    payServiceLog.setStatus("error");
+        				    payServiceLog.setErrorCode(map.get("errorCode").toString());
+        			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+        			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+        				orderInfo.setNotifyStatus(2);
+        			}
     			}
+    			
 				orderInfo.setNotifyTimes();
 				orderInfo.setNotifyDate(new Date());
 				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态

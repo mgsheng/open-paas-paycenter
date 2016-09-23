@@ -41,8 +41,8 @@ public class ChargeUtil {
     /**
      * 创建充值订单
      */
-    public String charge(Map<String, Object> chargeMap) {
-    	String returnValue="";
+    public Map<String, Object> charge(Map<String, Object> chargeMap) {
+    	Map<String, Object> returnValue=new HashMap<String, Object>();
 	    try {
             Charge charge = Charge.create(chargeMap);
             returnValue=  printResult(charge);
@@ -64,18 +64,22 @@ public class ChargeUtil {
      *
      * @param charge
      */
-    private static String printResult(Charge charge) {
-    	String returnValue="";
+    private static Map<String, Object> printResult(Charge charge) {
+    	Map<String, Object>returnValue=new HashMap<String, Object>();
         if (charge.getReqSuccessFlag()){//http请求成功
         	 System.out.println(JSON.toJSONString(charge));
             Map<String, Object> credential=charge.getCredential();
             String lakala_web=credential.get("lakala_web").toString();
-            returnValue=lakala_web;
+            returnValue.put("lakala_web",lakala_web);
+            returnValue.put("status", "ok");
             System.out.println(returnValue);
         }else {//http请求失败
 	        System.out.println(JSON.toJSONString(charge));
             String failureCode = charge.getFailureCode();
             String failureMsg = charge.getFailureMsg();
+            returnValue.put("failureCode",failureCode);
+            returnValue.put("failureMsg",failureMsg);
+            returnValue.put("status", "error");
             System.out.println("failureCode:"+failureCode);
             System.out.println("failureMsg:"+failureMsg);
         }

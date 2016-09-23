@@ -136,8 +136,10 @@ public class UnifyPayController extends BaseControllerUtil{
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	long startTime = System.currentTimeMillis();
     	
-    	    	String outTradeNo=request.getParameter("outTradeNo");
+    	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
+    	String banks_switch=payserviceDev.getBanks_switch();
+    	Map<String, String> bank_map=getBankMap(banks_switch);
     	String paySwitch []=pay_switch.split("#");
     	String payZhifubao = paySwitch[0];
     	String payWx=paySwitch[1];
@@ -553,6 +555,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		    	 
 		     }else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payEbank);
+		    	  payEbank=getBankSwitch(paymentType, bank_map);
 		    	 if(!nullEmptyBlankJudge(payEbank)&&"0".equals(payEbank)){
 				    	// 支付宝-网银支付
 				    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
@@ -604,13 +607,17 @@ public class UnifyPayController extends BaseControllerUtil{
 		    		//ChargeUtil ce = new ChargeUtil();
 		    	  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
 		    	 String other= dictTradeChannels.getOther();
-		  		Map<String, String> others = new HashMap<String, String>();
-		  		others=getPartner(other);
+		  		 Map<String, String> others = new HashMap<String, String>();
+		  		 others=getPartner(other);
 		    	  ChargeUtil ce = new ChargeUtil();
 		      	 Map<String, Object> chargeMap=new HashMap<String, Object>();
-		          chargeMap.put("amount", merchantOrderInfo.getAmount());
+		          chargeMap.put("amount", merchantOrderInfo.getOrderAmount());
 		          chargeMap.put("subject", merchantOrderInfo.getMerchantProductName());
-		          chargeMap.put("body", merchantOrderInfo.getMerchantProductDesc());
+		          if(nullEmptyBlankJudge(merchantOrderInfo.getMerchantProductDesc())){
+		        	  chargeMap.put("body", merchantOrderInfo.getMerchantProductName());  
+		          }else{
+		        	  chargeMap.put("body", merchantOrderInfo.getMerchantProductDesc());  
+		          }
 		          chargeMap.put("order_no", merchantOrderInfo.getId());
 		          chargeMap.put("channel", others.get("channel"));
 		          chargeMap.put("client_ip", others.get("client_ip"));
@@ -627,10 +634,26 @@ public class UnifyPayController extends BaseControllerUtil{
 		          extra.put("return_url",dictTradeChannels.getBackurl());
 		          chargeMap.put("extra",extra);
 		         
-		          String res= ce.charge(chargeMap);
-		         res+="<script>document.forms[0].submit();</script>";
-		          model.addAttribute("res", res);
-		    	  return "pay/payMaxRedirect";
+		          Map<String, Object> res= ce.charge(chargeMap);
+		          JSONObject reqjson = JSONObject.fromObject(res);
+		          boolean backValue=analysisValue(reqjson);
+		          if(backValue){
+		        	  String formValue="";
+		        	  formValue=res.get("lakala_web").toString();
+		        	  formValue+="<script>document.forms[0].submit();</script>";
+			          model.addAttribute("res", formValue);
+			    	  return "pay/payMaxRedirect";
+		        		
+		          }else{
+		        	 payServiceLog.setErrorCode("8");
+		 			 payServiceLog.setStatus("error");
+		 			 String failureMsg=res.get("failureMsg").toString();
+		 			 String failureCode=res.get("failureCode").toString();
+		 			 payServiceLog.setLogName(PayLogName.PAY_END);
+		 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+		 	         return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+		          }
+		       
 			     }
 		}
 		  
@@ -837,6 +860,45 @@ public class UnifyPayController extends BaseControllerUtil{
 		 }
 		 return returnValue;
 	}
+	/**
+	 * 根据银行编码和银行集合判断选择那种方式进行支付
+	 * 0：支付宝；1：tcl;2：易宝支付
+	 * @param bankName
+	 * @param bankMap
+	 * @return
+	 */
+	private String getBankSwitch(String bankName,Map<String, String> bankMap){
+		String returnValue="";
+		for (String key : bankMap.keySet()) {  
+			if(bankName.equals(key)){
+				returnValue=bankMap.get(key);
+				break;
+			}  
+		}
+		return returnValue;
+		
+	}
+	/**
+	 * 获取银行map银行
+	 * @param banks_switch
+	 * @return 
+	 */
+	public Map<String,String>  getBankMap(String banks_switch) {
+		Map<String, String> bank_map=null;
+		if(!nullEmptyBlankJudge(banks_switch)){
+			bank_map=new HashMap<String, String>();
+			String banks[]=banks_switch.split(",");
+			for(int i=0;i<banks.length;i++){
+			String bank[]=banks[i].split(":");
+			for(int j=0;j<bank.length;j++){
+				bank_map.put(bank[0], bank[1]);
+			 }
+		  }
+		}
+	
+		return  bank_map;
+	//	this.bank_map = bank_map;
+	}
    /**
     * 返回银行代码
     * @param paymentType
@@ -919,7 +981,7 @@ public class UnifyPayController extends BaseControllerUtil{
      * 跳转到错误页面
      */
     @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo){
+    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
     	String errorMsg="";
     	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
     		errorMsg="必传参数中有空值";
@@ -935,6 +997,8 @@ public class UnifyPayController extends BaseControllerUtil{
     		errorMsg="订单处理失败，请重新提交！";
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
     		errorMsg="订单已处理，请勿重复提交！";
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);
