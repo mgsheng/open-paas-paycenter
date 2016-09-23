@@ -273,8 +273,9 @@ public class UserInterfaceController {
      * Redirect to oauth-server bind page:   step-2
      * */
      @RequestMapping(value = "getOrderQuery", method = RequestMethod.POST)
-     public String getOrderQuery(String  outTradeNo,String appId) throws Exception {
-    	 String key=map.get(appId);
+     public String getOrderQuery(String  outTradeNo,String appId,String merchantId) throws Exception {
+//    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -309,7 +310,8 @@ public class UserInterfaceController {
      * */
      @RequestMapping(value = "fileDownlond", method = RequestMethod.POST)
      public String fileDownlond(String  outTradeNo,String appId,String acDate,String merchantId) throws Exception {
-    	 String key=map.get(appId);
+//    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
@@ -450,7 +452,8 @@ public class UserInterfaceController {
      */
      @RequestMapping(value = "queryOrderInfo", method = RequestMethod.POST)
      public String queryOrderInfo(String appId,String startTime,String merchantId,String endTime) throws Exception {
-    	 String key=map.get(appId);
+//    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
    	  	 String signature="";
    	  	 String timestamp="";
    	  	 String signatureNonce="";
