@@ -12,6 +12,10 @@
 	  createTime
 	</sql>
 	
+	<select id="findAllDepts" resultMap="DepartmentMap">
+		select id,deptName from privilege_dept 
+	</select>
+	
 	<select id="findQueryCount" resultType="int" parameterType="String" >
         select count(*) from  privilege_dept
         where  1=1

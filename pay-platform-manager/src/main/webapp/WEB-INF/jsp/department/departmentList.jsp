@@ -183,6 +183,12 @@
             });
         }
 		
+		//打开部门用户信息窗口
+		winDeptUserList();
+		function openWinDUL(){
+			$('#deptUserList').window('open');
+		}
+		
 		 //设置修改部门窗口
         function winUpdate() {
             $('#upda').window({
@@ -219,13 +225,13 @@
 			$('#tb').form('clear');
 		};
 		
-		winDeptUserList();
+		
 		//打开部门用户信息窗口
 		function openWinDeptUserList(){
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
 				var deptID = row.id;
-				$('#deptUserList').window('open');
+				openWinDUL();
 				$(function(){
 					findDeptUsers(deptID);
 				});
@@ -447,6 +453,7 @@
                   };
                 }
 		    }); 
+		    alert(deptID);
 			 //设置分页控件 
 		    var p = $('#deptTable').datagrid('getPager'); 
 		    $(p).pagination({ 
@@ -461,5 +468,10 @@
 		        } 
 		    }); 
 		}
+		
+		//页面预加载
+		$(function(){
+			findDepts();
+		});
 	</script>
 </html>

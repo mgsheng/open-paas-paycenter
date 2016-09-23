@@ -8,15 +8,32 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.com.open.pay.platform.manager.department.model.Department;
+import cn.com.open.pay.platform.manager.infrastructure.repository.ManagerDepartmentRepository;
+import cn.com.open.pay.platform.manager.infrastructure.repository.PrivilegeRoleRepository;
 import cn.com.open.pay.platform.manager.infrastructure.repository.UserRepository;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PrivilegeRoleRepository privilegeRoleRepository;
+    @Autowired
+    private ManagerDepartmentRepository managerDepartmentRepository;
+    /**
+	 * 查询用户记录的条数
+	 * @param user
+	 * @return
+	 */
+    @Override
+    public int findUsersCount(User user){
+    	return userRepository.findUsersCount(user);
+    }
     
     /**
 	 * 根据用户id删除用户
@@ -123,7 +140,47 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 	
-
-
+	/**
+	 * 查询指定用户的角色情况
+	 * @param user
+	 * @return String
+	 */
+	@Override
+	public String findUserRoles(User user) {
+		return userRepository.findUserRoles(user);
+	}
+	
+	/**
+	 * 查询privilege_role表中所有角色
+	 * @return
+	 */
+	@Override
+	public List<PrivilegeRole> findRoleAll() {
+		return privilegeRoleRepository.findRoleAll();
+	}
+	
+	/**
+	 * 授权用户角色
+	 * @param user
+	 * @return
+	 */
+	@Override
+	public boolean authorizeRole(User user) {
+		try{
+			userRepository.authorizeRole(user);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+	
+	/**
+	 * 查询所有部门
+	 * @return
+	 */
+	@Override
+	public List<Department> findAllDepts() {
+		return managerDepartmentRepository.findAllDepts();
+	}
   
 }

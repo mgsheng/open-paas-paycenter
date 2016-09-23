@@ -253,6 +253,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -t
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/role/roleMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/add.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/addUser.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/authorizeRole.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/userlist.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text

@@ -11,6 +11,12 @@ import org.springframework.stereotype.Repository;
 import cn.com.open.pay.platform.manager.login.model.User;
 
 public interface UserRepository extends Repository {
+	/**
+	 * 授权用户角色
+	 * @param user
+	 * @return
+	 */
+	public void authorizeRole(User user);
 	
 	/**
 	 * 查询指定用户的角色情况
@@ -43,7 +49,7 @@ public interface UserRepository extends Repository {
 	 * 根据用户id删除用户
 	 * @param username
 	 */
-	void removeUserByID(Integer id);
+	public void removeUserByID(Integer id);
 	
 	/**
 	 * 添加用户
@@ -52,7 +58,7 @@ public interface UserRepository extends Repository {
 	 * @param nickname		昵称
 	 * @param sha_password		MD5加密密码
 	 */
-	void addUser(User user);
+	public void addUser(User user);
 	
 	/**
 	 * 根据用户名、真实姓名、昵称 查询用户，返回 User集合

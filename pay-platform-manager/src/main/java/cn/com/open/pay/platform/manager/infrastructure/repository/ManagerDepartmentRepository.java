@@ -12,6 +12,12 @@ import cn.com.open.pay.platform.manager.department.model.Department;
  */
 public interface ManagerDepartmentRepository extends Repository {
 	/**
+	 * 查询所有部门
+	 * @return
+	 */
+	public List<Department> findAllDepts();
+	
+	/**
 	 * 查询指定部门名的个数，没有指定则查询所有
 	 * @param deptName
 	 * @return

@@ -19,7 +19,7 @@
 	
 	<!-- 查询所有角色 -->
 	<select id="findRoleAll" resultMap="privilegeRoleMap">
-		select id,name from privilege_role
+		select id,name,status from privilege_role
 	</select>
 	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole">

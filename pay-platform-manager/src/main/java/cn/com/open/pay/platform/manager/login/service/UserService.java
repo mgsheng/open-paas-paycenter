@@ -3,14 +3,39 @@ package cn.com.open.pay.platform.manager.login.service;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
+import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 
 /**
  * 
  */
 public interface UserService {
+	/**
+	 * 查询所有部门
+	 * @return
+	 */
+	public List<Department> findAllDepts();
+	
+	/**
+	 * 授权用户角色
+	 * @param user
+	 * @return
+	 */
+	public boolean authorizeRole(User user);
+	
+	/**
+	 * 查询privilege_role表中所有角色
+	 * @return
+	 */
+	public List<PrivilegeRole> findRoleAll();
+	
+	/**
+	 * 查询指定用户的角色情况
+	 * @param user
+	 * @return String
+	 */
+	String findUserRoles(User user);
 	
 	/**
 	 * 根据用户id删除用户
@@ -32,7 +57,14 @@ public interface UserService {
 	 * @param user
 	 * @return
 	 */
-	List<User> findUsers(User user);
+	public List<User> findUsers(User user);
+	
+	/**
+	 * 查询用户记录的条数
+	 * @param user
+	 * @return
+	 */
+	public int findUsersCount(User user);
 	
 	User findByUsername(String username);
 	List<User> findByEmail(String account);

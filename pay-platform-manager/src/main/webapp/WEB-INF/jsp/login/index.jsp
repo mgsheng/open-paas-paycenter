@@ -32,8 +32,7 @@
 								]
 						},{"menuid":"","icon":"icon-sys","menuname":"用户管理",
 							"menus":[
-										   {"menuid":"24","menuname":"用户信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/managerUser/userList"},
-										   {"menuid":"25","menuname":"添加用户","icon":"icon-add","url":"${pageContext.request.contextPath}/managerUser/showAddUser"}								]
+										   {"menuid":"24","menuname":"用户信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/managerUser/userList"}							]
 						},{"menuid":"","icon":"icon-sys","menuname":"权限管理",
 							"menus":[{"menuid":"26","menuname":"资源管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/resource/index"},
 									 {"menuid":"27","menuname":"模块管理","icon":"icon-nav","url":"${pageContext.request.contextPath}/module/index"},

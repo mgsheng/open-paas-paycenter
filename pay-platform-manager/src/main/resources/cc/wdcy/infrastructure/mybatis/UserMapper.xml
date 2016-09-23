@@ -72,6 +72,11 @@
 		role
 	</sql>
 	
+	<!-- 授权用户角色 -->
+	<update id="authorizeRole" parameterType="User">
+		update user_account set role=#{role} where id =#{id}
+	</update>
+	
 	<!-- 查询用户的角色情况 -->
 	<select id="findUserRoles" parameterType="User" resultType="string">
 		select role from user_account where id =#{id}
@@ -140,7 +145,7 @@
 		  </where>
 	</select>
 	
-	<!-- 根据用户名，真实姓名和昵称查询 -->
+	<!-- 根据用户名，真实姓名,部门和昵称查询 -->
 	<select id="findUsers" parameterType="User" resultMap="userMap">
 			 select	
 			 			id,
@@ -168,7 +173,7 @@
 			  			and deptName=#{deptName,jdbcType=VARCHAR}
 			  		</if>
 		  </where>
-		     limit #{startRow},#{pageSize}
+		  	order by create_time desc limit #{startRow},#{pageSize} 
 	</select>
 	
 	<select id="findByGuid" parameterType="String" resultMap="userMap">
@@ -316,6 +321,9 @@
 		</if>
 		<if test="deptID != null and deptID !=''">
 			deptID = #{deptID},
+		</if>
+		<if test="role != null and role !=''">
+			role = #{role},
 		</if>
 		<if test="headPicture != null and headPicture !=''">
 			head_picture = #{headPicture},

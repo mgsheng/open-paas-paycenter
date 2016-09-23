@@ -70,7 +70,6 @@ public class User extends AbstractDomain {
     private String role;//所属角色
     private Integer pageSize;//每页的显示条数
     private Integer startRow;//每页的开始记录
-    private Integer countQuantity;//保存记录条数
    /* private List<Privilege> privileges = new ArrayList<Privilege>();*/
 
    
