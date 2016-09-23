@@ -630,7 +630,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		          chargeMap.put("description",merchantOrderInfo.getMemo());
 		  	    //请根据渠道要求确定是否需要传递extra字段
 		          Map<String, Object> extra = new HashMap<String, Object>();
-		          extra.put("user_id",merchantOrderInfo.getId());
+		          extra.put("user_id",merchantOrderInfo.getMerchantId());
 		          extra.put("return_url",dictTradeChannels.getBackurl());
 		          chargeMap.put("extra",extra);
 		         
