@@ -18,8 +18,8 @@
 	</sql>
 	
 	<!-- 查询所有角色 -->
-	<select id="findRoleAll" resultMap="privilegeRoleMap">
-		select id,name,status from privilege_role
+	<select id="findRoleAll" resultMap="privilegeRoleMap" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole">
+		select id,name,status from privilege_role limit #{startRow},#{pageSize}
 	</select>
 	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole">

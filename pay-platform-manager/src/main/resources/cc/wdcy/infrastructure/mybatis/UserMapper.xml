@@ -82,6 +82,20 @@
 		select role from user_account where id =#{id}
 	</select>
 	
+	<!-- 根据部门ID，部门名查询该部门用户数量 -->
+	<select id="findDeptUsersCount" parameterType="User"  resultType="int">
+		select count(*) from user_account
+	  	<where>
+					archived = 0
+		  		<if test="deptID !=null and deptID != ''">
+		  			and deptID=#{deptID,jdbcType=INTEGER}
+		  		</if>
+		  		<if test="deptName !=null and deptName != ''">
+		  			and deptName=#{deptName,jdbcType=VARCHAR}
+		  		</if>
+		  </where>
+	</select>
+	
 	<!-- 根据部门ID，部门名查询该部门所有的用户 -->
 	<select id="findDeptUsers" parameterType="User" resultMap="userMap">
 		select 	
@@ -94,8 +108,15 @@
 				create_time,
 				DATE_FORMAT(last_login_time,'%Y-%m-%d %T') last_login_time
 	      from user_account
-	  	where 
-	  			  deptID=#{deptID,jdbcType=INTEGER}
+	  	<where>
+					archived = 0
+		  		<if test="deptID !=null and deptID != ''">
+		  			and deptID=#{deptID,jdbcType=INTEGER}
+		  		</if>
+		  		<if test="deptName !=null and deptName != ''">
+		  			and deptName=#{deptName,jdbcType=VARCHAR}
+		  		</if>
+		  </where>
 		  limit #{startRow},#{pageSize}
 	</select>
 	
@@ -112,6 +133,7 @@
 				real_name,
 				nickname,
 				deptName,
+				deptID,
 				sha_password,
 				create_time
 			) 
@@ -121,6 +143,7 @@
 		 		#{realName,jdbcType=VARCHAR},
 		 		#{nickName,jdbcType=VARCHAR},
 		 		#{deptName,jdbcType=VARCHAR},
+		 		#{deptID,jdbcType=INTEGER},
 		 		#{password,jdbcType=VARCHAR},
 		 		#{createTime,jdbcType=BIGINT}
 		 	)

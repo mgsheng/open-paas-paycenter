@@ -12,20 +12,10 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-		<style type="text/css">
-			#father {
-			    position: absolute;
-			    left:30px;
-			    right:30px;
-			    top:30px;
-			    bottom:30px;
-			    overflow:auto;
-			}
-		</style>
 	</head>
 	<body >
-		<div id="father">
-			<div>
+		<div id="tt" class="easyui-tabs" data-options="tools:'AuthorizeRole'," fit="true" >
+				<div title="部门信息">
 				<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;">
 					<div class="top" style="width: 100%">
 						<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
@@ -100,7 +90,7 @@
 			icon="icon-save" style="width: 300px; height: 150px; background: #fafafa;">
 			<div class="easyui-layout" fit="true">
 				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-					<table cellpadding="10px" id="tb"  style="border: 0px;margin:10px 10px;font-weight: bold;"" >
+					<table cellpadding="10px" id="tb"  style="border: 0px;margin:15px 10px;font-weight: bold;"" >
 						<tr>
 							<td>部&nbsp;门&nbsp;名：</td>
 							<td><input id="dept_name" type="text" class="txt01" name="dept_name" />
@@ -145,31 +135,33 @@
 				</div>
 			</div>
 		</div>
-		<!--部门用户信息列表窗口  -->
-		<div id="deptUserList" class="easyui-window" title="部门用户信息" collapsible="false" minimizable="false" maximizable="false" 
-			icon="icon-save" style="background: #fafafa;">
-			<div class="easyui-layout" fit="true">
-				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">		
-					<table  id="deptTable"  class="easyui-datagrid" style="width:100%;max-width:100%;padding:20px 30px;"
-							data-options="rownumbers:true,singleSelect:true,method:'get'">
-						<thead>
-							<tr>
-								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-								<th data-options="field:'username',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
-								<th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th>
-								<th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
-								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">注册时间</th>
-								<th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th>
-								<th data-options="field:'deptName',align:'center'"  style="width:18%;max-width:100%;">所属部门</th>
-								<th data-options="field:'deptID',align:'center'" hidden="true"  style="width:18%;max-width:100%;">所属部门ID</th>
-							</tr>
-						</thead>
-					</table>
-				</div>	
-			</div>	
-		</div>
 	</body>
 	<script>
+		//添加tab页面
+		function addPanel(deptName,deptId){
+			if ($('#tt').tabs('exists', deptName)){
+			 	$('#tt').tabs('select', deptName);
+			} else {
+				 var url = '${pageContext.request.contextPath}/department/toDeptUsers?id='+deptId+'&deptName='+deptName;
+			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
+				 $('#tt').tabs('add',{
+					 title:'部门:'+deptName,
+					 content:content,
+					 closable:true,
+					 cache:true
+				 });
+			}
+		}	
+		//移除tab页面
+		function removePanel(){
+			var tab = $('#tt').tabs('getSelected');
+			if (tab){
+				var index = $('#tt').tabs('getTabIndex', tab);
+				$('#tt').tabs('close', index);
+			}
+		}
+	
+	
 		//设置部门用户信息窗口
 		 function winDeptUserList() {
             $('#deptUserList').window({
@@ -185,8 +177,9 @@
 		
 		//打开部门用户信息窗口
 		winDeptUserList();
-		function openWinDUL(){
+		function openWinDUL(deptName,deptId){
 			$('#deptUserList').window('open');
+			addPanel(deptName,deptId);
 		}
 		
 		 //设置修改部门窗口
@@ -206,7 +199,7 @@
         function winAdd() {
             $('#addDept').window({
                 title: '添加部门',
-                width: 300,
+                width: 320,
                 modal: true,
                 shadow: true,
                 closed: true,
@@ -230,11 +223,9 @@
 		function openWinDeptUserList(){
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
-				var deptID = row.id;
-				openWinDUL();
-				$(function(){
-					findDeptUsers(deptID);
-				});
+				var deptId = row.id;
+				var deptName = row.deptName;
+				openWinDUL(deptName,deptId);
 			}else{
 				msgShow('系统提示', '请选择部门！', 'error');
 			}

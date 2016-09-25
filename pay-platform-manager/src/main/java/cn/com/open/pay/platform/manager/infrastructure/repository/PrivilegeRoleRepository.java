@@ -14,7 +14,7 @@ public interface PrivilegeRoleRepository extends Repository {
 	 * 查询privilege_role表中所有角色
 	 * @return
 	 */
-	public List<PrivilegeRole> findRoleAll();
+	public List<PrivilegeRole> findRoleAll(PrivilegeRole pr);
 	
 	List<PrivilegeRole> findByRoleName(PrivilegeRole privilegeRole);
 

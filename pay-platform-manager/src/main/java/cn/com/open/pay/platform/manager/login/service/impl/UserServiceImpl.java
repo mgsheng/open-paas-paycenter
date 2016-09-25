@@ -3,8 +3,6 @@ package cn.com.open.pay.platform.manager.login.service.impl;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -155,8 +153,8 @@ public class UserServiceImpl implements UserService {
 	 * @return
 	 */
 	@Override
-	public List<PrivilegeRole> findRoleAll() {
-		return privilegeRoleRepository.findRoleAll();
+	public List<PrivilegeRole> findRoleAll(PrivilegeRole pr) {
+		return privilegeRoleRepository.findRoleAll(pr);
 	}
 	
 	/**

@@ -14,9 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
@@ -42,15 +41,17 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 	 * @return
 	 * @throws UnsupportedEncodingException
 	 */
-//	@RequestMapping("deptUsers")
-	public String  deptUsers(HttpServletRequest request,HttpServletResponse response,ModelAndView attr)throws UnsupportedEncodingException{
-		log.info("-------------------------deptUsers       start------------------------------------");
-		request.setCharacterEncoding("utf-8");
-		Integer id = Integer.valueOf(request.getParameter("id"));
-		attr.addObject("id", id);
-		
-		System.out.println(id);
-		
+	@RequestMapping("toDeptUsers")
+	public String  deptUsers(HttpServletRequest request,HttpServletResponse response,Model model)throws UnsupportedEncodingException{
+		log.info("-------------------------toDeptUsers       start------------------------------------");
+		String deptID = request.getParameter("id");
+		String deptName = request.getParameter("deptName");
+		System.out.println("deptID :"+deptID+"  deptName:"+deptName);
+		deptID =( deptID==null?null:new String(deptID.getBytes("iso-8859-1"),"utf-8"));
+		deptName =(deptName==null?null:new String(deptName.getBytes("iso-8859-1"),"utf-8"));
+
+		model.addAttribute("deptID",deptID);
+		model.addAttribute("deptName", deptName);
 		return "department/deptUsers";
 	}
 	
@@ -63,10 +64,15 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		log.info("-------------------------findDeptUsers        start------------------------------------");
 		
 		String deptID = request.getParameter("deptID");
+		String deptName =  request.getParameter("deptName");
 		if(deptID !=null){
 			deptID = new String(deptID.getBytes("iso-8859-1"),"utf-8");
 		}
-		System.out.println("**************deptID :   "+deptID);
+		if(deptName !=null){
+			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
+		}
+		
+		System.out.println("******deptID :   "+deptID+"     deptName:"+deptName);
 		//当前第几页
 		String page=request.getParameter("page");
 		System.out.println(page);
@@ -84,6 +90,7 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 		//将请求参数封装到Department对象中
 		User user = new User();
 		user.setDeptID(Integer.valueOf(deptID));
+		user.setDeptName(deptName);
 		user.setPageSize(pageSize);
 		user.setStartRow(startRow);
 		List<User> users = managerDepartmentService.findDeptUsers(user);

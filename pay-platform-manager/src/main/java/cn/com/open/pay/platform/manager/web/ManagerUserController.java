@@ -67,6 +67,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		id =( id==null?null:new String(id.getBytes("iso-8859-1"),"utf-8"));
 		role =( role==null?"":new String(role.getBytes("iso-8859-1"),"utf-8"));
 		System.out.println("****************id:"+id+"****************role:"+role);
+		
 		//将请求参数封装到User对象中
 		User user = new User();
 		user.setId(Integer.valueOf(id));
@@ -97,7 +98,24 @@ public class ManagerUserController  extends BaseControllerUtil {
 		User user = new User();
 		user.setId(Integer.valueOf(id));
 		String roles = userService.findUserRoles(user);
-		List<PrivilegeRole> prs = userService.findRoleAll();
+		
+		//当前第几页
+		String page=request.getParameter("page");
+		System.out.println(page);
+		//每页显示的记录数
+	    String rows=request.getParameter("rows"); 
+	    System.out.println(rows);
+		//当前页  
+		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+		//每页显示条数  
+		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+		//每页的开始记录  第一页为1  第二页为number +1   
+	    int startRow = (currentPage-1)*pageSize;
+	    PrivilegeRole privilegeRole = new PrivilegeRole();
+	    privilegeRole.setStartRow(startRow);
+	    privilegeRole.setPageSize(pageSize);
+	    
+		List<PrivilegeRole> prs = userService.findRoleAll(privilegeRole);
 		int  total = prs.size();
 		JSONObject jsonObjArr = new JSONObject();  
 		System.out.println("-------------total-------:"+total);
@@ -146,6 +164,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		String realname = new String(request.getParameter("realname").getBytes("iso-8859-1"),"utf-8");
 		String nickname = new String(request.getParameter("nickname").getBytes("iso-8859-1"),"utf-8");
 		String deptName = new String(request.getParameter("updateDeptName").getBytes("iso-8859-1"),"utf-8");
+		String deptID= new String(request.getParameter("updateDeptID").getBytes("iso-8859-1"),"utf-8");
 		Integer id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"),"utf-8"));
 		
 		//将请求参数封装到User对象中
@@ -154,6 +173,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		user.setRealName(realname);
 		user.setNickName(nickname);
 		user.setDeptName(deptName);
+		user.setDeptID(Integer.valueOf(deptID));
 		
 		boolean result = userService.updateUser(user);
 		// result = true表示该用户修改成功
@@ -252,21 +272,20 @@ public class ManagerUserController  extends BaseControllerUtil {
 		List<Department> list = userService.findAllDepts();
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
-		JSONObject json = new JSONObject();
+		String str=null;
 		if(list != null){
 			for(Department d : list){
 				map = new HashMap<String,Object>();
 				map.put("id", d.getId());
 				map.put("text", d.getDeptName());
 				maps.add(map);
-//				json.putAll(map);
 			} 
 			JSONArray jsonArr = JSONArray.fromObject(maps);
-			json.put("rows", jsonArr);
-			WebUtils.writeJson(response, json);
-			System.out.println(json);
+			str = jsonArr.toString();
+			WebUtils.writeJson(response, str);
+//			System.out.println(str);
 		}
-		return;
+		return ;
 	}
 	
 	/**
@@ -285,7 +304,9 @@ public class ManagerUserController  extends BaseControllerUtil {
 		String real_name = request.getParameter("real_name");
 		String nickname = request.getParameter("nickname");
 		String sha_password = request.getParameter("sha_password");
-//		log.info("--------------user_name："+user_name+"；real_name:"+real_name+"；nickname:"+nickname+"；sha_password:"+sha_password+"-------------------------");
+		String deptName = request.getParameter("addDeptName");
+		String deptID = request.getParameter("deptID");
+//		log.info("user_name："+user_name+"；real_name:"+real_name+"；nickname:"+nickname+"；sha_password:"+sha_password+";deptName:"+deptName);
 		JSONObject jsonObjArr = new JSONObject();  
 		//判断数据库是否已经存在该用户   
 		boolean result = false;
@@ -301,6 +322,8 @@ public class ManagerUserController  extends BaseControllerUtil {
 		user.setUsername(user_name);
 		user.setRealName(real_name);
 		user.setNickName(nickname);
+		user.setDeptName(deptName);
+		user.setDeptID(Integer.valueOf(deptID));
 		user.setCreateTime(new Date().getTime());
 		//MD5加密
 		user.setPlanPassword(sha_password);

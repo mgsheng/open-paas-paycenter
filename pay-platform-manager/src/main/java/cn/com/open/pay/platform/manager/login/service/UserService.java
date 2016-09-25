@@ -28,7 +28,7 @@ public interface UserService {
 	 * 查询privilege_role表中所有角色
 	 * @return
 	 */
-	public List<PrivilegeRole> findRoleAll();
+	public List<PrivilegeRole> findRoleAll(PrivilegeRole pr);
 	
 	/**
 	 * 查询指定用户的角色情况

@@ -14,93 +14,93 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 	</head>
 	<body >
-		<div id="tt" class="easyui-tabs" data-options="tools:'AuthorizeRole'" fit="true" >
-			<div title="用户信息">
-				<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;" fit="true" >
-					<div class="top" style="width: 100%">
-						<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
-							<form id="fm" method="post" action="/managerUser/findUsers">
-								<table cellpadding="5px">
-									<tr>
-										<td>用&nbsp;户&nbsp;名:</td>
-										<td>
-												<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:90%"></input> 
-										</td>
-										<td>真实姓名：</td>
-										<td>	
-												<input class="easyui-textbox" name="realname" id="rn" prompt="选填"  style="width:90%"></input> 
-										</td>
-										<td>昵&nbsp;&nbsp;&nbsp;&nbsp;称:</td>
-										<td> 
-												<input class="easyui-textbox" name="nickname" id="nn" prompt="选填" style="width:90%"></input> 
-										</td>
-										<td>部&nbsp;&nbsp;&nbsp;&nbsp;门:</td>
-										<td> 
-												<input class="easyui-textbox" name="deptname" id="dn" prompt="选填" style="width:90%"></input> 
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findUsers();" style="width: 100px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
-												<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="width:100px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">清&nbsp;&nbsp;
-													&nbsp;&nbsp;除</span>
-												<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openAddWin();" style="width: 100px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">添加用户</span>
-												<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeUserByID();" style="width: 100px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">删除用户</span>
-												<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateWin();" style="width: 100px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">修改用户</span>
-												<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinRole();" style="width:100px;">
-												<span style="font-weight:bold;margin-right:5px;margin-left:5px;">授权角色</span>
-												<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-									</tr>
-								</table>
-							</form>
+			<div id="tt" class="easyui-tabs" data-options="tools:'AuthorizeRole'," fit="true" >
+				<div title="用户信息">
+					<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;" fit="true" >
+						<div class="top" style="width: 100%">
+							<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
+								<form id="fm" method="post" action="/managerUser/findUsers">
+									<table cellpadding="5px">
+										<tr>
+											<td>用&nbsp;户&nbsp;名:</td>
+											<td>
+													<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:90%"></input> 
+											</td>
+											<td>真实姓名：</td>
+											<td>	
+													<input class="easyui-textbox" name="realname" id="rn" prompt="选填"  style="width:90%"></input> 
+											</td>
+											<td>昵&nbsp;&nbsp;&nbsp;&nbsp;称:</td>
+											<td> 
+													<input class="easyui-textbox" name="nickname" id="nn" prompt="选填" style="width:90%"></input> 
+											</td>
+											<td>部&nbsp;&nbsp;&nbsp;&nbsp;门:</td>
+											<td> 
+													<input class="easyui-textbox" name="deptname" id="dn" prompt="选填" style="width:90%"></input> 
+											</td>
+											<td>	
+												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findUsers();" style="width: 100px;">
+													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
+													<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+												</a>
+											</td>
+											<td>	
+												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="width:100px;">
+													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">清&nbsp;&nbsp;
+														&nbsp;&nbsp;除</span>
+													<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+												</a>
+											</td>	
+											<td>	
+												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openAddWin();" style="width: 100px;">
+													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">添加用户</span>
+													<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+												</a>
+											</td>
+											<td>	
+												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeUserByID();" style="width: 100px;">
+													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">删除用户</span>
+													<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+												</a>
+											</td>
+											<td>	
+												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateWin();" style="width: 100px;">
+													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">修改用户</span>
+													<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+												</a>
+											</td>
+											<td>	
+												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinRole();" style="width:100px;">
+													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">授权角色</span>
+													<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+												</a>
+											</td>	
+										</tr>
+									</table>
+								</form>
+							</div>
 						</div>
 					</div>
+					<div class="botton" style="margin-top:0px;width:100%;height:400px" fit="true">
+						<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
+							data-options="singleSelect:true,method:'get'" fit="true">
+							<thead>
+								<tr>
+									<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
+									<th data-options="field:'password',align:'center'" hidden="true" style="width:15%;max-width:100%;">密码</th>
+									<th data-options="field:'username',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
+									<th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th>
+									<th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
+									<th data-options="field:'deptName',align:'center'" style="width:15%;max-width:100%;">所属部门</th>
+									<th data-options="field:'deptID',align:'center'" hidden="true" style="width:15%;max-width:100%;">所属部门ID</th>
+									<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">注册时间</th>
+									<th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th>
+							 </tr>
+						</thead>
+					</table>
 				</div>
-				<div class="botton" style="margin-top:0px;width:100%;height:400px" fit="true">
-					<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
-						data-options="singleSelect:true,method:'get'" fit="true">
-						<thead>
-							<tr>
-								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-								<th data-options="field:'password',align:'center'" hidden="true" style="width:15%;max-width:100%;">密码</th>
-								<th data-options="field:'username',align:'center'" style="width:15%;max-width:100%;">用&nbsp;&nbsp;户&nbsp;&nbsp;名</th>
-								<th data-options="field:'realName',align:'center'" style="width:15%;max-width:100%;">真实姓名</th>
-								<th data-options="field:'nickName',align:'center'" style="width:15%;max-width:100%;">昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称</th>
-								<th data-options="field:'deptName',align:'center'" style="width:15%;max-width:100%;">所属部门</th>
-								<th data-options="field:'deptID',align:'center'" hidden="true" style="width:15%;max-width:100%;">所属部门ID</th>
-								<th data-options="field:'create_Time',align:'center'" style="width:18%;max-width:100%;">注册时间</th>
-								<th data-options="field:'lastLoginTime',align:'center'" style="width:18%;max-width:100%;">上次登陆时间</th>
-						 </tr>
-					</thead>
-				</table>
 			</div>
-		</div>
-	</div>	
+		</div>	
 	<!--修改用户窗口--> 
 	<div id="upda" class="easyui-window" title="用户信息" collapsible="false" minimizable="false" maximizable="false" 
 		icon="icon-save" style="background: #fafafa;">
@@ -122,13 +122,11 @@
 					</td>
 				</tr>
 				<tr>
-					<td>部&nbsp;门&nbsp;名：</td>
-					<td><input id="deptName" type="text" class="txt01" name="deptName" class="easyui-textbox" />
-					</td>
-				</tr>
-				<tr hidden="true">
-					<td>部门名ID</td>
-					<td><input id="deptID" type="text" class="txt01" name="deptID" class="easyui-textbox" />
+					<td>部门名称：</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false"  id="deptName" name="deptName" 
+							style="width:100%;height:35px;padding:5px;">
+						</select>
 					</td>
 				</tr>
 			</table>
@@ -140,9 +138,9 @@
 		</div>
 	</div>
 	<!-- 添加用户窗口 -->
-	<div id="addWin" class="easyui-window" title="添加用户" style="width:40%;padding:30px 45px;background: #fafafa;height:450px;"
+	<div id="addWin" class="easyui-window" title="添加用户" style="width:37%;padding:30px 45px;background: #fafafa;height:450px;"
 		minimizable="false" maximizable="false" icon="icon-add">
-		<form id="ff" method="post" style="margin:15px 30px;width:90%">
+		<form id="ff" class="easyui-form" method="post" style="margin:15px 30px;width:90%" data-options="novalidate:true">
 			<table>
 				<tr>
 					<td > 
@@ -194,9 +192,8 @@
 						部门名称：
 					</td>
 					<td style="width:80%;">	
-						<select class="easyui-combobox" data-options="editable:false" id="addDeptName" name="addDeptName" 
-							value="请选择部门" style="width:100%;height:35px;padding:5px;" required=true>
-							
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择部门'" id="addDeptName" name="addDeptName" 
+							style="width:100%;height:35px;padding:5px;">
 						</select>
 					</td>
 				</tr>
@@ -208,12 +205,6 @@
 			<a href="${pageContext.request.contextPath}/managerUser/userList" class="easyui-linkbutton" style="width:80px;margin:10px 15px">取消</a>
 		</div>
 	</div>
-	
-	
-	
-	
-	<!-- 授权角色窗口 -->
-	
 	</body>
 	<script>
 		
@@ -222,13 +213,14 @@
 			if ($('#tt').tabs('exists', userName)){
 			 	$('#tt').tabs('select', userName);
 			} else {
-				var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName;
+				 var url = '${pageContext.request.contextPath}/managerUser/toRole?id='+userId+'&userName='+userName;
+			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
 				 $('#tt').tabs('add',{
 					 title:userName,
-					 href:url,
-					closable: true,
-					cache:true
-				});
+					 content:content,
+					 closable:true,
+					 cache:true
+				 });
 			}
 		}	
 		//移除tab页面
@@ -266,13 +258,13 @@
 		//打开添加用户窗口
 		addWin();
 		function openAddWin(){
-			$('#addDeptName').combobox({
-			url:'${pageContext.request.contextPath}/managerUser/findAllDepts',
-			valueField:'id',
-			textField:'text'
-			
-		});
+			clearAddForm();
 			$('#addWin').window('open');
+			$('#addDeptName').combobox({
+				url:'${pageContext.request.contextPath}/managerUser/findAllDepts',
+				valueField:'id',
+				textField:'text'
+			});
 		}
 		
 		//关闭添加用户窗口
@@ -328,9 +320,17 @@
 				$('#userName').val(user_name);
 				$('#realname').val(real_name);
 				$('#nickname').val(nick_name);
-				$('#deptName').val(dept_Name);
-				$('#deptID').val(dept_ID);
+				
 				openWin();
+				$('#deptName').combobox({
+					url:'${pageContext.request.contextPath}/managerUser/findAllDepts',
+					valueField:'id',
+					textField:'text',
+					onLoadSuccess:function(){
+						$('#deptName').combobox('setValue',dept_ID);
+						$('#deptName').combobox('setText',dept_Name);
+				}
+			});
 			}else{
             	msgShow('系统提示', '请选择修改用户！', 'info');
             }
@@ -421,7 +421,8 @@
 			var id=row.id;
             var $realname = $('#realname').val().trim();
             var $nickname = $('#nickname').val().trim();
-            var $deptName = $('#deptName').val().trim();
+            var $deptID = $('#deptName').combobox('getValue');
+            var $deptName = $('#deptName').combobox('getText');
            	// alert($deptName);
             if ($realname == '') {
                 msgShow('系统提示', '请输入真实姓名！', 'warning');
@@ -436,7 +437,7 @@
                 return false;
             }
             var url=encodeURI('${pageContext.request.contextPath}/managerUser/updateUser?realname='+$realname+
-            		'&nickname='+$nickname+'&updateDeptName='+$deptName+'&id='+id);
+            		'&nickname='+$nickname+'&updateDeptName='+$deptName+'&updateDeptID='+$deptID+'&id='+id);
             $.post(url, function(data) {
                 if(data.result==true){
 	                 msgShow('系统提示', '修改成功！', 'info');
@@ -460,7 +461,7 @@
 			var nickname = $.trim($('#nname').val()) ;
 			var password = $.trim($('#pwd').val()) ;
 			var confirm_pass = $.trim($('#confirm_pwd').val()) ;
-			//var addDeptName = $.trim($('#addDeptName').val()) ;
+			var addDeptName = $('#addDeptName').combobox('getText');
 			if(username == "" || username == null || username == undefined || regex_username.test(username) != true){
 					$.messager.alert("系统提示","用户名不能为空或格式不正确，请重新填写！","error");	
 					return false;
@@ -477,10 +478,10 @@
 					$.messager.alert("系统提示","密码不能为空或格式不正确，请重新填写！","error");			
 					return false;
 			}
-			//if(addDeptName == "" || addDeptName == null || addDeptName == undefined){
-				//	$.messager.alert("系统提示","请选择部门！","error");			
-				//	return false;
-			//}
+			if(addDeptName == "" || addDeptName == null || addDeptName == undefined){
+					$.messager.alert("系统提示","请选择部门！","error");			
+					return false;
+			}
 			if(confirm_pass =="" || confirm_pass == null || confirm_pass == undefined || regex_password.test(confirm_pass) != true){
 					$.messager.alert("系统提示","确认密码不能为空或格式不正确，请重新填写！","error");		
 					return false;
@@ -498,7 +499,13 @@
 			var realname = $.trim($('#rname').val());
 			var nickname = $.trim($('#nname').val()) ;
 			var password = $.trim($('#pwd').val()) ;
-			//var addDeptName = $.trim($('#addDeptName').val()) ;
+			var addDeptName = $('#addDeptName').combobox('getText');
+			var deptID = $('#addDeptName').combobox('getValue');
+			$('#ff').form('submit',{
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				}
+			});
 			
 			// 提交信息前完成前端校验
 			var check_result = check();
@@ -508,13 +515,14 @@
 			$.ajax({
 				type:"post",
 				url:"/pay-platform-manager/managerUser/addUser",
-				data:{"user_name":username,"real_name":realname,"nickname":nickname,"sha_password":password},
+				data:{"user_name":username,"real_name":realname,"nickname":nickname,"sha_password":password,"addDeptName":addDeptName,"deptID":deptID},
 				dataType:"json",
 				success:function (data){
 					if(data.result == true){
 						$.messager.alert("系统提示","恭喜，添加用户成功!","info");
 						closeAddWin();
-						findUsers();
+						var url = "${pageContext.request.contextPath}/managerUser/userList";
+						window.location.reload();
 					}else if(data.result == false){
 						clearAddForm();
 						$.messager.alert("系统提示","该用户名已被注册，请重新填写用户名!","error");	
