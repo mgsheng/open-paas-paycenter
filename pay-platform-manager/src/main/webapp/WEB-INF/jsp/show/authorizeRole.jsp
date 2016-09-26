@@ -98,7 +98,6 @@
 				role.push(item.id);
 			 });             
 			 role.join(",");
-			 alert(role);
 			 if(role==""){
 			 	role = null;
 			 }
