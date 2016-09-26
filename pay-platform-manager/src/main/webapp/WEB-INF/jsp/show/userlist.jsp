@@ -14,74 +14,62 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 	</head>
 	<body >
-			<div id="tt" class="easyui-tabs" data-options="tools:'AuthorizeRole'," fit="true" >
+			<div id="tt" class="easyui-tabs" fit="true" style="font-size:1em;">
 				<div title="用户信息">
-					<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;" fit="true" >
+					<div style="border:0 solid;margin-bottom:0;" fit="true" >
 						<div class="top" style="width: 100%">
-							<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
+							<div class="easyui-panel" title="操作" style="padding-top:1%;" fit="true" >
 								<form id="fm" method="post" action="/managerUser/findUsers">
-									<table cellpadding="5px">
-										<tr>
-											<td>用&nbsp;户&nbsp;名:</td>
+									<table cellpadding="5%"  style="margin-left:4%;">
+										<tr style="width:100%;">
 											<td>
-													<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:90%"></input> 
+													<input class="easyui-textbox" name="username" id="un" prompt="选填" style="width:100%;" label="用&nbsp;户&nbsp;名:"></input> 
 											</td>
-											<td>真实姓名：</td>
+											
 											<td>	
-													<input class="easyui-textbox" name="realname" id="rn" prompt="选填"  style="width:90%"></input> 
+													<input class="easyui-textbox" name="realname" id="rn" prompt="选填"  style="width:100%" label="真实姓名:"></input> 
 											</td>
-											<td>昵&nbsp;&nbsp;&nbsp;&nbsp;称:</td>
 											<td> 
-													<input class="easyui-textbox" name="nickname" id="nn" prompt="选填" style="width:90%"></input> 
+													<input class="easyui-textbox" name="nickname" id="nn" prompt="选填" style="width:100%" label="昵&nbsp;&nbsp;&nbsp;&nbsp;称:"></input> 
 											</td>
-											<td>部&nbsp;&nbsp;&nbsp;&nbsp;门:</td>
 											<td> 
-													<input class="easyui-textbox" name="deptname" id="dn" prompt="选填" style="width:90%"></input> 
+													<input class="easyui-textbox" name="deptname" id="dn" prompt="选填" style="width:100%" label="部&nbsp;&nbsp;&nbsp;&nbsp;门:"></input> 
 											</td>
-											<td>	
-												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findUsers();" style="width: 100px;">
-													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
-													<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												</a>
-											</td>
-											<td>	
-												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="width:100px;">
-													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">清&nbsp;&nbsp;
-														&nbsp;&nbsp;除</span>
-													<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												</a>
-											</td>	
-											<td>	
-												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openAddWin();" style="width: 100px;">
-													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">添加用户</span>
-													<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												</a>
-											</td>
-											<td>	
-												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeUserByID();" style="width: 100px;">
-													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">删除用户</span>
-													<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												</a>
-											</td>
-											<td>	
-												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateWin();" style="width: 100px;">
-													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">修改用户</span>
-													<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												</a>
-											</td>
-											<td>	
-												<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinRole();" style="width:100px;">
-													<span style="font-weight:bold;margin-right:5px;margin-left:5px;">授权角色</span>
-													<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-												</a>
-											</td>	
 										</tr>
+										
 									</table>
+									<div style="width:100%;padding:0.8%;">
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findUsers();" style="margin-left:3.5%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">查&nbsp;&nbsp;&nbsp;&nbsp;询</span>
+											<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">清&nbsp;&nbsp;
+												&nbsp;&nbsp;除</span>
+											<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openAddWin();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">添加用户</span>
+											<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="removeUserByID();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">删除用户</span>
+											<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="updateWin();" style="margin-left:2%;padding-bottom:0.6%;display:inline;">
+											<span style="font-weight:bold;">修改用户</span>
+											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+										<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinRole();" style="margin-left:2%;padding-bottom:0.6%;display:inline; ">
+											<span style="font-weight:bold;">授权角色</span>
+											<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+										</a>
+									</div>
 								</form>
 							</div>
 						</div>
 					</div>
-					<div class="botton" style="margin-top:0px;width:100%;height:400px" fit="true">
+					<div class="botton" style="margin-top:0px;width:100%;height:68%">
 						<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
 							data-options="singleSelect:true,method:'get'" fit="true">
 							<thead>
