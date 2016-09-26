@@ -144,7 +144,6 @@ public class ManagerUserController  extends BaseControllerUtil {
 			}
 			list.add(map);
 		}
-//		maps.put("rows",list);
 		JSONArray jsonArr = JSONArray.fromObject(list);
 		jsonObjArr.put("total", total);
 		jsonObjArr.put("rows", jsonArr);

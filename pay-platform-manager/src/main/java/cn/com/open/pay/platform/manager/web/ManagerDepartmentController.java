@@ -72,14 +72,14 @@ public class ManagerDepartmentController extends BaseControllerUtil {
 			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
 		}
 		
-		System.out.println("******deptID :   "+deptID+"     deptName:"+deptName);
+//		System.out.println("******deptID :   "+deptID+"     deptName:"+deptName);
 		//当前第几页
 		String page=request.getParameter("page");
-		System.out.println(page);
+//		System.out.println(page);
 		
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-	    System.out.println(rows);
+//	    System.out.println(rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  
