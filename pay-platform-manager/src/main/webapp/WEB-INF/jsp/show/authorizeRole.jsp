@@ -93,18 +93,14 @@
 		//授权角色修改确认
 		function submitAuthorizeRole(){
 			var checkedItems = $('#AuthorizeRole').datagrid('getChecked');
-			//var userID = $('#userID').val();
-			//var userNameRole = $('#userNameRole').val();
 			var role = [];
 			$.each(checkedItems, function(index, item){
 				role.push(item.id);
 			 });             
 			 role.join(",");
+			 alert(role);
 			 if(role==""){
-			 	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
-			 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id};
-                reload(url,name);
-			 	return;
+			 	role = null;
 			 }
 			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+role;
             $.post(url, function(data) {

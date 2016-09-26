@@ -49,7 +49,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		userName =(userName==null?null:new String(userName.getBytes("iso-8859-1"),"utf-8"));
 		model.addAttribute("id", id);
 		model.addAttribute("userName", userName);
-		System.out.println("id:"+id+"userName:"+userName);
+//		System.out.println("id:"+id+"userName:"+userName);
 		return "show/authorizeRole";
 	}
 	
@@ -65,7 +65,11 @@ public class ManagerUserController  extends BaseControllerUtil {
 		String id = request.getParameter("id");
 		String role = request.getParameter("role");
 		id =( id==null?null:new String(id.getBytes("iso-8859-1"),"utf-8"));
-		role =( role==null?"":new String(role.getBytes("iso-8859-1"),"utf-8"));
+		if(role == null || role == ""){
+			role = null;
+		}else{
+			role = new String(role.getBytes("iso-8859-1"),"utf-8");
+		}
 		System.out.println("****************id:"+id+"****************role:"+role);
 		
 		//将请求参数封装到User对象中
@@ -93,7 +97,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		log.info("-------------------------role        start------------------------------------");
 		String id = request.getParameter("id");
 		id =( id==null?null:new String(id.getBytes("iso-8859-1"),"utf-8"));
-		System.out.println("****************id:"+id);
+//		System.out.println("****************id:"+id);
 		//将请求参数封装到User对象中
 		User user = new User();
 		user.setId(Integer.valueOf(id));
@@ -101,10 +105,10 @@ public class ManagerUserController  extends BaseControllerUtil {
 		
 		//当前第几页
 		String page=request.getParameter("page");
-		System.out.println(page);
+//		System.out.println(page);
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-	    System.out.println(rows);
+//	    System.out.println(rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  
@@ -118,10 +122,8 @@ public class ManagerUserController  extends BaseControllerUtil {
 		List<PrivilegeRole> prs = userService.findRoleAll(privilegeRole);
 		int  total = prs.size();
 		JSONObject jsonObjArr = new JSONObject();  
-		System.out.println("-------------total-------:"+total);
-//		Map<String,Object> maps = new LinkedHashMap<String,Object>();
+//		System.out.println("-------------total-------:"+total);
 		List<Map<String,Object>> list = new ArrayList<Map<String, Object>>();
-//		maps.put("total",total);
 		for(PrivilegeRole pr : prs){
 			Integer roleId = pr.getId();
 			String roleName = pr.getName();
@@ -130,20 +132,13 @@ public class ManagerUserController  extends BaseControllerUtil {
 			map.put("id",roleId);
 			map.put("name",roleName);
 			map.put("status", status);
-			if(roles != null && roles != ""){
+			if(roles == null || roles == ""){
+				map.put("checked",false);
+			}else{
 				String[] rls = roles.split(",");
 				for(int i = 0; i < rls.length; i++){
-					if(rls[i] == "" || rls[i] == null){
-						map.put("checked",false);
-						continue;
-					}else{
-						if(Integer.valueOf(rls[i]) == roleId){
-							map.put("checked",true);
-							continue;
-						}else{
-							map.put("checked",false);
-							continue;
-						}
+					if(String.valueOf(roleId).equals(rls[i])){
+						map.put("checked",true);
 					}
 				}
 			}
