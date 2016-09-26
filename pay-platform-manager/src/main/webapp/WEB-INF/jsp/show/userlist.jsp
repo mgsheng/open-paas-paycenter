@@ -546,8 +546,5 @@
 			findUsers();
 		});
 		
-		//
-		
-		
 	</script>
 </html>

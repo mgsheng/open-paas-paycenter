@@ -15,11 +15,11 @@
 </head>
 <body id="pub">
 	<div id="ep" class="easyui-panel" title="公共权限" style="width:100%;max-width:100%;padding:20px 30px;height:650px;">
-		<div style="margin:10px 0">
+		<div style="float:right;padding:10px 10px;" id="tb">
 			<a href="#" class="easyui-linkbutton" onclick="submitPub()" style="font-weight: bolder;margin-left:20px">确认</a>
 			<a href="#" class="easyui-linkbutton" onclick="getBack()" style="font-weight: bolder;margin-left:20px"> 取消</a> 
 		</div>
-		<div class="easyui-panel" style="padding:30px;overflow-x:scroll;height: 70%;">
+		<div class="easyui-panel" style="padding:30px;overflow-x:scroll;height: 70%;" data-options="toolbar:'#tb'">
 			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="url:'${pageContext.request.contextPath}/privilegePublic/tree2', 
 				method:'get',animate:true,checkbox:true"></ul>
 		</div>
@@ -67,8 +67,10 @@
 		
 		//提交
 		function submitPub(){
-			$.messager.confirm('系统提示','确认修改吗？',function(){
-				updatePub();
+			$.messager.confirm('系统提示','确认修改吗？',function(r){
+				if(r){
+					updatePub();
+				}
 			});	
 		}
 		//刷新
@@ -77,9 +79,11 @@
 		}
 		//取消
 		function getBack(){
-			$.messager.confirm('系统提示','确认取消吗？',function(){
-				var url= "${pageContext.request.contextPath}/privilegePublic/index";
-				reLoad(url);
+			$.messager.confirm('系统提示','确认取消吗？',function(r){
+				if(r){
+					var url= "${pageContext.request.contextPath}/privilegePublic/index";
+					reLoad(url);
+				}
 			});	
 		}
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
