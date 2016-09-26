@@ -236,9 +236,13 @@
 		function openWinRole(){
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
-				var userId = row.id;
-				var userName=row.username;
-				addPanel(userName,userId);
+				$.messager.confirm('系统提示', '是否确定授权?', function(r){
+					if(r){
+						var userId = row.id;
+						var userName=row.username;
+						addPanel(userName,userId);
+					}
+				});
 			}else{
             	msgShow('系统提示', '请选择用户！', 'warning');
             }
