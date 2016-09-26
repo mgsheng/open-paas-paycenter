@@ -100,6 +100,12 @@
 				role.push(item.id);
 			 });             
 			 role.join(",");
+			 if(role==""){
+			 	msgShow('系统提示', '恭喜，授权角色成功！', 'info');
+			 	var url='${pageContext.request.contextPath}/managerUser/role?id='+${id};
+                reload(url,name);
+			 	return;
+			 }
 			 var url='${pageContext.request.contextPath}/managerUser/authorizeRole?id='+${id}+'&role='+role;
             $.post(url, function(data) {
                 if(data.result==true){

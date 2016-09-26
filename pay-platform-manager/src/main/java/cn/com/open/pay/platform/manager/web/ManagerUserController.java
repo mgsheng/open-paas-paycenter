@@ -130,14 +130,20 @@ public class ManagerUserController  extends BaseControllerUtil {
 			map.put("id",roleId);
 			map.put("name",roleName);
 			map.put("status", status);
-			if(roles != null){
+			if(roles != null && roles != ""){
 				String[] rls = roles.split(",");
 				for(int i = 0; i < rls.length; i++){
-					if(Integer.valueOf(rls[i]) == roleId){
-						map.put("checked",true);
-						break;
-					}else{
+					if(rls[i] == "" || rls[i] == null){
 						map.put("checked",false);
+						continue;
+					}else{
+						if(Integer.valueOf(rls[i]) == roleId){
+							map.put("checked",true);
+							continue;
+						}else{
+							map.put("checked",false);
+							continue;
+						}
 					}
 				}
 			}
@@ -149,7 +155,7 @@ public class ManagerUserController  extends BaseControllerUtil {
 		jsonObjArr.put("rows", jsonArr);
 		System.out.println(jsonArr);
 	    WebUtils.writeJson(response,jsonObjArr);
-		return;
+		return ;
 	}
 	
 	
