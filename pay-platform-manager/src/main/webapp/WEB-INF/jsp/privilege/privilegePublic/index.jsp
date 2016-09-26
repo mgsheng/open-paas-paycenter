@@ -14,14 +14,20 @@
 	<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
 </head>
 <body id="pub">
-	<div id="ep" class="easyui-panel" title="公共权限" style="width:100%;max-width:100%;padding:20px 30px;height:650px;">
-		<div style="float:right;padding:10px 10px;" id="tb">
-			<a href="#" class="easyui-linkbutton" onclick="submitPub()" style="font-weight: bolder;margin-left:20px">确认</a>
-			<a href="#" class="easyui-linkbutton" onclick="getBack()" style="font-weight: bolder;margin-left:20px"> 取消</a> 
+	<div id="ep" class="easyui-panel" title="公共权限" style="width:95%;max-width:100%;padding:0.1% 2%;height:400%;background-color: #F4F4F4;">
+		<div style="float:top;padding:1% 0.01%;">
+			<a href="#" class="easyui-linkbutton" onclick="submitPub()" style="font-weight: bolder;margin-left:0;padding:2px;">
+				<span style="font-weight:bold;margin-right:5px;margin-left:10px;">确认</span>
+				<span class="icon-ok">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			</a>
+			<a href="#" class="easyui-linkbutton" onclick="getBack()" style="font-weight: bolder;margin-left:20px;padding:2px;">
+				<span style="font-weight:bold;margin-right:5px;margin-left:10px;">取消</span>
+				<span class="icon-cancel">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			</a> 
 		</div>
-		<div class="easyui-panel" style="padding:30px;overflow-x:scroll;height: 70%;" data-options="toolbar:'#tb'">
+		<div class="easyui-panel" style="padding:30px;overflow-x:scroll;height: 80%;" data-options="toolbar:'#tb'">
 			<ul id="tt" class="easyui-tree" style="height: 100%" data-options="url:'${pageContext.request.contextPath}/privilegePublic/tree2', 
-				method:'get',animate:true,checkbox:true"></ul>
+				method:'get',animate:true,checkbox:true,lines:true"></ul>
 		</div>
 	</div>
 	
