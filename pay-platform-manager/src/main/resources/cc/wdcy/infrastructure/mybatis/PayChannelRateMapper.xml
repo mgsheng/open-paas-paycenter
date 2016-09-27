@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PayChannelRateRepositoryMyBatis">
+	<resultMap type="Rate" id="rateMap">
+		<id property="id" column="ID" jdbcType="INTEGER" />
+		<result property="merchantID" column="MERCHANT_ID" jdbcType="VARCHAR" />
+		<result property="payChannelCode" column="PAY_CHANNEL_CODE" jdbcType="VARCHAR" />
+		<result property="payName" column="PAY_NAME" jdbcType="VARCHAR" />
+		<result property="payRate" column="PAY_RATE" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Column_List">
+		ID,
+		MERCHANT_ID,
+		PAY_CHANNEL_CODE,
+		PAY_NAME,
+		PAY_RATE
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	
+	<!--  查询所有符合条件的记录 -->
+	<select id="findRateAll" resultMap="rateMap" parameterType="cn.com.open.pay.platform.manager.paychannel.model.Rate" >
+		select * from PAY_CHANNEL_RATE 
+		where 1=1
+			<if test="payName != null and payName != '' ">
+				and PAY_NAME =#{payName,jdbcType=VARCHAR}
+			</if>
+		order by ID
+		limit #{startRow},#{pageSize}
+	</select>
+	
+	<!--  查询所有符合条件的记录条数 -->
+	<select id="findRateAllCount" resultType="int" parameterType="cn.com.open.pay.platform.manager.paychannel.model.Rate" >
+		select count(*) from PAY_CHANNEL_RATE  
+		where 1=1
+			<if test="payName != null and payName != '' ">
+				and PAY_NAME = #{payName,jdbcType=VARCHAR}
+			</if>
+	</select>
+	
+	<!--  -->
+	<update id="updateRate" parameterType="cn.com.open.pay.platform.manager.paychannel.model.Rate" >
+		update PAY_CHANNEL_RATE  set PAY_RATE=#{payRate,jdbcType=VARCHAR}
+		where ID=#{id,jdbcType=INTEGER}
+	</update>
+</mapper>

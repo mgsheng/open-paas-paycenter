@@ -130,6 +130,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/filter/Sessi
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerDepartmentRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelRateRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeModuleRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegePublicRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeResourceRepositoryMyBatis.java -text
@@ -140,6 +141,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructu
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/ManagerDepartmentRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/ManagerRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderInfoRepository.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelRateRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeModuleRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegePublicRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeResourceRepository.java -text
@@ -157,6 +159,9 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/servic
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/UserSerialRecordService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderInfoServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/UserSerialRecordServiceImpl.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/Rate.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/PayChannelRateService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/impl/PayChannelRateServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Common.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/Manager.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/privilege/model/PrivilegeModule.java -text
@@ -216,6 +221,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/AccountR
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerDepartmentController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerRoleController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserController.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PayChannelRateController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegePublicController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeResourceController.java -text
@@ -225,6 +231,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQuer
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerDepartmentMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
+pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegePublicMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeResourceMapper.xml -text
@@ -246,6 +253,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/departmentList.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/deptUsers.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/rate.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/privilegePublic/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text
