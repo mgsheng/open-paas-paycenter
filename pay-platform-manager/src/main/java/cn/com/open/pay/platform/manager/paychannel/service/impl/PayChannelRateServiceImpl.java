@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.com.open.pay.platform.manager.infrastructure.repository.PayChannelRateRepository;
-import cn.com.open.pay.platform.manager.paychannel.model.Rate;
+import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelRateService;
 /**
  * 渠道费率管理
@@ -20,12 +20,27 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	private PayChannelRateRepository payChannelRateRepository;
 	
 	/**
+	 * 根据id删除目标渠道费率记录
+	 * @param rate
+	 * @return
+	 */
+	@Override
+	public boolean removeChannelRate(ChannelRate rate){
+		try{
+			payChannelRateRepository.removeChannelRate(rate);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
+	
+	/**
 	 *  根据条件，查询所有符合要求的费率情况
 	 * @param rate
 	 * @return
 	 */
 	@Override
-	public List<Rate> findRateAll(Rate rate){
+	public List<ChannelRate> findRateAll(ChannelRate rate){
 		return payChannelRateRepository.findRateAll(rate);
 	}
 	
@@ -35,7 +50,7 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	 * @return
 	 */
 	@Override
-	public int findRateAllCount(Rate rate){
+	public int findRateAllCount(ChannelRate rate){
 		return payChannelRateRepository.findRateAllCount(rate);
 	}
 	
@@ -44,7 +59,7 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	 * @param rate
 	 * @return
 	 */
-	public boolean updateRate(Rate rate){
+	public boolean updateRate(ChannelRate rate){
 		try{
 			payChannelRateRepository.updateRate(rate);
 			return true;

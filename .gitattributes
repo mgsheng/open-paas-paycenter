@@ -159,6 +159,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/servic
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/UserSerialRecordService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderInfoServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/UserSerialRecordServiceImpl.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/ChannelRate.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/Rate.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/PayChannelRateService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/impl/PayChannelRateServiceImpl.java -text
@@ -253,6 +254,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/departmentList.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/deptUsers.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/channelRate.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/rate.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/privilegePublic/index.jsp -text

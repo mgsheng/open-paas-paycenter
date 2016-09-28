@@ -20,7 +20,7 @@
        	<typeAlias alias="Manager" type="cn.com.open.pay.platform.manager.privilege.model.Manager"/>
        	<typeAlias alias="PrivilegeRoleDetails" type="cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails"/>
        	<typeAlias alias="Department" type="cn.com.open.pay.platform.manager.department.model.Department"/>	 
-       	<typeAlias alias="Rate" type="cn.com.open.pay.platform.manager.paychannel.model.Rate"/>
+       	<typeAlias alias="ChannelRate" type="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate"/>
     </typeAliases>
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml"/>
