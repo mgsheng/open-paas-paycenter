@@ -229,8 +229,10 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/Privileg
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserDataStatsController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserLoginController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/UserQueryDownloadManage.java -text
+pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerDepartmentMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerMapper.xml -text
+pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml -text

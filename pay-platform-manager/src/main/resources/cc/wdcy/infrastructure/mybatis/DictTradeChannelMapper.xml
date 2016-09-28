@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.DictTradeChannelRepositoryMyBatis">
+	<resultMap type="DictTradeChannel"  id="dictTradeChannelMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
+		<result column="CHANNEL_STATUS" property="channelStatus" jdbcType="DECIMAL" />
+		<result column="PRIORITY" property="priority" jdbcType="DECIMAL" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="MERID" property="merId" jdbcType="VARCHAR" />
+		<result column="KEYVALUE" property="keyValue" jdbcType="VARCHAR" />
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+		<result column="OTHER" property="other" jdbcType="VARCHAR" />
+		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="INTEGER" />
+		<result column="BACKURL" property="backUrl" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="SIGN_TYPE" property="sighType" jdbcType="VARCHAR" />
+		<result column="input_charset" property="inputCharset" jdbcType="VARCHAR" />
+		<result column="payment_channel" property="paymentChannel" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  CHANNEL_NAME,
+	  CHANNEL_STATUS,
+	  PRIORITY,
+	  CREATE_DATE,
+	  MEMO,
+	  MERID,
+	  KEYVALUE,
+	  NOTIFY_URL,
+	  OTHER,
+	  PAYMENT_TYPE,
+	  BACKURL,
+	  type,
+	  SIGN_TYPE,
+	  input_charset,
+	  payment_channel
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.DictTradeChannel">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into DICT_TRADE_CHANNEL
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{channelName, jdbcType=VARCHAR},
+			#{channelStatus, jdbcType=INTEGER},
+			#{priority, jdbcType=DECIMAL},
+			#{createDate, jdbcType=DECIMAL},
+			#{memo, jdbcType=VARCHAR},
+			#{merId, jdbcType=VARCHAR},
+			#{keyValue, jdbcType=VARCHAR},
+			#{notifyUrl, jdbcType=VARCHAR},
+			#{other, jdbcType=DECIMAL},
+			#{paymentType, jdbcType=INTEGER},
+			#{backUrl, jdbcType=DECIMAL},
+			#{type, jdbcType=INTEGER},
+			#{sighType, jdbcType=DECIMAL},
+			#{inputCharset, jdbcType=DECIMAL},
+			#{paymentChannel, jdbcType=INTEGER}
+		)
+	</insert>
+	
+	
+	<select id="findQueryCount" resultType="int" parameterType="String" >
+        select count(*) from  DICT_TRADE_CHANNEL
+        where  1=1
+        <if test="channelName != null and channelName != '' ">
+        	and CHANNEL_NAME =#{channelName,jdbcType=VARCHAR}
+        </if>
+    </select>
+	
+	<select id="findDepts" resultMap="dictTradeChannelMap" parameterType="DictTradeChannel" >
+		select *
+		from DICT_TRADE_CHANNEL 
+		<if test="channelName != null and channelName != '' ">
+			CHANNEL_NAME =#{channelName,jdbcType=VARCHAR}
+		</if>
+		limit  #{startRow},#{pageSize}
+	</select>
+	
+	<delete id="removeDictTradeID"  parameterType="Integer">
+		delete from DICT_TRADE_CHANNEL where id = #{id}
+	</delete>
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
+</mapper>

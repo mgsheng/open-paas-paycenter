@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.MerchantInfoRepositoryMyBatis">
+	<resultMap type="MerchantInfo" id="merchantInfoMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
+		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="OPERATER" property="operater" jdbcType="VARCHAR" />
+		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />
+		<result column="RETURN_URL" property="returnUrl" jdbcType="VARCHAR" />
+		<result column="PAY_KEY" property="payKey" jdbcType="VARCHAR" />
+		<result column="PRODUCT_NAME" property="productName" jdbcType="VARCHAR" />
+		<result column="CONTACT" property="contact" jdbcType="VARCHAR" />
+		<result column="PHONE" property="phone" jdbcType="VARCHAR" />
+		<result column="MOBILE" property="mobile" jdbcType="VARCHAR" />
+		<result column="EMAIL" property="email" jdbcType="VARCHAR" />
+		<result column="DAY_NORM" property="dayNorm" jdbcType="DECIMAL" />
+		<result column="MONTH_NORM" property="monthNorm" jdbcType="DECIMAL" />
+		<result column="SINGLE_NORM" property="singleNorm" jdbcType="DECIMAL" />
+		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  ID,
+	  MERCHANT_NAME,
+	  STATUS,
+	  CREATE_DATE,
+	  OPERATER,
+	  NOTIFY_URL,
+	  RETURN_URL,
+	  PAY_KEY,
+	  PRODUCT_NAME,
+	  CONTACT,
+	  PHONE,
+	  MOBILE,
+	  EMAIL,
+	  DAY_NORM,
+	  MONTH_NORM,
+	  SINGLE_NORM,
+	  MEMO
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.MerchantInfo">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into MERCHANT_INFO
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{id, jdbcType=INTEGER},
+			#{merchantName, jdbcType=VARCHAR},
+			#{status, jdbcType=DECIMAL},
+			#{createDate, jdbcType=TIMESTAMP},
+			#{operater, jdbcType=VARCHAR},
+			#{notifyUrl, jdbcType=VARCHAR},
+			#{returnUrl, jdbcType=VARCHAR},
+			#{payKey, jdbcType=VARCHAR},
+			#{productName, jdbcType=VARCHAR},
+			#{contact, jdbcType=VARCHAR},
+			#{phone, jdbcType=VARCHAR},
+			#{mobile, jdbcType=VARCHAR},
+			#{email, jdbcType=VARCHAR},
+			#{dayNorm, jdbcType=DECIMAL},
+			#{monthNorm, jdbcType=DECIMAL},
+			#{singleNorm, jdbcType=DECIMAL},
+			#{memo, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="findQueryCount" resultType="int" >
+        select count(*) from  MERCHANT_INFO
+        where  1=1
+        <if test="merchantName != null and merchantName != '' ">
+        	and MERCHANT_NAME =#{merchantName,jdbcType=VARCHAR}
+        </if>
+    </select>
+	
+	<select id="findDepts" resultMap="merchantInfoMap"  >
+		select *
+		from MERCHANT_INFO 
+		<if test="merchantName != null and merchantName != '' ">
+			MERCHANT_NAME =#{merchantName,jdbcType=VARCHAR}
+		</if>
+		
+		limit  #{startRow},#{pageSize}
+	</select>
+	
+	<delete id="removeCommercialID"  parameterType="Integer">
+		delete from MERCHANT_INFO where id = #{id}
+	</delete>
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
+</mapper>
