@@ -168,6 +168,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/servic
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderInfoServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/UserSerialRecordServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/ChannelRate.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/PayChannelDictionary.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/Rate.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/PayChannelRateService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/service/impl/PayChannelRateServiceImpl.java -text
