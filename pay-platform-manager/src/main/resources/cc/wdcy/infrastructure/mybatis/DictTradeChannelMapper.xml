@@ -43,7 +43,7 @@
 	
 	<!-- 查询所有支付渠道名称 -->
 	<select id="findPayChannelNamesAll" resultMap="dictTradeChannelMap" >
-		select ID,CHANNEL_NAME from DICT_TRADE_CHANNEL 
+		select ID,CHANNEL_NAME from DICT_TRADE_CHANNEL  where CHANNEL_STATUS=1 
 	</select>
 	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.DictTradeChannel">

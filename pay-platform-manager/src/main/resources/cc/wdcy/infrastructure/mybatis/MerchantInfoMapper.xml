@@ -46,7 +46,7 @@
 	
 	<!-- 查询所有商户名称，商户号 -->
 	<select id="findMerchantNamesAll" resultMap="merchantInfoMap" >
-		select ID,MERCHANT_NAME from MERCHANT_INFO 
+		select ID,MERCHANT_NAME from MERCHANT_INFO where STATUS=1
 	</select>
 	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.MerchantInfo">
