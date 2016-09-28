@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelRateService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
@@ -45,6 +46,32 @@ public class PayChannelRateController extends BaseControllerUtil{
 	public String channelRate(){
 		log.info("---------------rate----------------");
 		return "paychannel/channelRate";
+	}
+	
+	/**
+	 * 查询所有渠道代码
+	 * @return 返回到前端json数据
+	 */
+	@RequestMapping(value="findPayChannelCode")
+	public void findPayChannelCode(HttpServletRequest request,HttpServletResponse response,Model model){
+		log.info("-------------------------findPayChannelCode         start------------------------------------");
+		List<PayChannelDictionary> list = payChannelRateService.findPayChannelCodesAll();
+		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+		Map<String,Object> map= null;
+		String str=null;
+		if(list != null){
+			for(PayChannelDictionary p : list){
+				map = new HashMap<String,Object>();
+				map.put("id", p.getId());
+				map.put("text", p.getChannelCode());
+				maps.add(map);
+			} 
+			JSONArray jsonArr = JSONArray.fromObject(maps);
+			str = jsonArr.toString();
+			WebUtils.writeJson(response, str);
+			System.out.println(str);
+		}
+		return ;
 	}
 	
 	/**

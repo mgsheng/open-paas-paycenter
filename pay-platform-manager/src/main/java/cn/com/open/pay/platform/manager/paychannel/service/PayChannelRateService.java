@@ -5,12 +5,19 @@ import java.util.List;
 import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 /**
  * 渠道费率管理
  * @author lvjq
  *
  */
 public interface PayChannelRateService {
+	
+	/**
+	 * 查询所有渠道编码
+	 * @return
+	 */
+	public List<PayChannelDictionary> findPayChannelCodesAll();
 	
 	/**
 	 * 查询所有商户名称，商户号

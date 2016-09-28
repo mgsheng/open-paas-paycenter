@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PayChannelDictionaryRepositoryMyBatis">
+	<resultMap type="PayChannelDictionary" id="payChannelDictionaryMap">
+		<id property="id" column="ID" jdbcType="INTEGER" />
+		<result property="channelName" column="CHANNEL_NAME" jdbcType="VARCHAR" />
+		<result property="channelID" column="CHANNEL_ID" jdbcType="VARCHAR" />
+		<result property="channelStatus" column="CHANNEL_STATUS" jdbcType="INTEGER" />
+		<result property="channelCode" column="CHANNEL_CODE" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Column_List">
+		ID,
+		CHANNEL_NAME,
+		CHANNEL_ID,
+		CHANNEL_STATUS,
+		CHANNEL_CODE
+	</sql>
+	
+	<!--  查询所有记录 -->
+	<select id="findPayChannelCodesAll" resultMap="payChannelDictionaryMap" >
+		select * from PAY_CHANNEL_DICTIONARY where  CHANNEL_STATUS=1
+	</select>
+	
+</mapper>

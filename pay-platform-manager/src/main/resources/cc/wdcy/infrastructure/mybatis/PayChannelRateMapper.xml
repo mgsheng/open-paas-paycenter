@@ -16,7 +16,7 @@
 		PAY_RATE
 	</sql>
 	
-	<!--  -->
+	<!-- 根据ID删除记录 -->
 	<delete id="removeChannelRate" parameterType="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate" >
 		delete from PAY_CHANNEL_RATE where ID=#{id,jdbcType=INTEGER}
 	</delete>
@@ -38,7 +38,7 @@
         <if test="merchantID != null and merchantID != '' ">and MERCHANT_ID =#{merchantID,jdbcType=VARCHAR}</if>
 	</select>
 	
-	<!--  -->
+	<!-- 根据ID更新记录 -->
 	<update id="updateRate" parameterType="cn.com.open.pay.platform.manager.paychannel.model.ChannelRate" >
 		update PAY_CHANNEL_RATE  set PAY_RATE=#{payRate,jdbcType=VARCHAR}
 		where ID=#{id,jdbcType=INTEGER}

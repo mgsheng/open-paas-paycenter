@@ -9,8 +9,10 @@ import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.infrastructure.repository.DictTradeChannelRepository;
 import cn.com.open.pay.platform.manager.infrastructure.repository.MerchantInfoRepository;
+import cn.com.open.pay.platform.manager.infrastructure.repository.PayChannelDictionaryRepository;
 import cn.com.open.pay.platform.manager.infrastructure.repository.PayChannelRateRepository;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelRateService;
 /**
  * 渠道费率管理
@@ -26,6 +28,18 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	private DictTradeChannelRepository dictTradeChannelRepository;
 	@Autowired
 	private MerchantInfoRepository merchantInfoRepository;
+	
+	@Autowired
+	private PayChannelDictionaryRepository payChannelDictionaryRepository;
+	
+	/**
+	 * 查询所有渠道编码
+	 * @return
+	 */
+	@Override
+	public List<PayChannelDictionary> findPayChannelCodesAll(){
+		return payChannelDictionaryRepository.findPayChannelCodesAll();
+	}
 	
 	/**
 	 * 查询所有商户名称，商户号
