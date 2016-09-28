@@ -263,8 +263,10 @@ pay-platform-manager/src/main/resources/spring/transaction.xml -text
 pay-platform-manager/src/main/webapp/META-INF/MANIFEST.MF -text
 pay-platform-manager/src/main/webapp/WEB-INF/decorators.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/decorators/main.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/commercial.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/departmentList.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/deptUsers.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/irrigationDitch.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/channelRate.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/rate.jsp -text
