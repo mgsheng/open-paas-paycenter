@@ -125,8 +125,12 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/datasource/D
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/model/Department.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/model/DictTradeChannel.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/model/MerchantInfo.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/DictTradeChannelService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/ManagerDepartmentService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/MerchantInfoService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/DictTradeChannelServiceImp.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/ManagerDepartmentServiceImp.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/department/service/imp/MerchantInfoServiceImp.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/dev/PayManagerDev.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/filter/SessionFilter.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerDepartmentRepositoryMyBatis.java -text
