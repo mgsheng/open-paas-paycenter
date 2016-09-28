@@ -43,6 +43,12 @@
 		ID,
 		<include refid="Insert_Column_List" />
 	</sql>
+	
+	<!-- 查询所有商户名称，商户号 -->
+	<select id="findMerchantNamesAll" resultMap="merchantInfoMap" >
+		select ID,MERCHANT_NAME from MERCHANT_INFO 
+	</select>
+	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.MerchantInfo">
 		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
 		select last_insert_id() as id

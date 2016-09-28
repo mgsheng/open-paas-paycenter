@@ -5,6 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
+import cn.com.open.pay.platform.manager.infrastructure.repository.DictTradeChannelRepository;
+import cn.com.open.pay.platform.manager.infrastructure.repository.MerchantInfoRepository;
 import cn.com.open.pay.platform.manager.infrastructure.repository.PayChannelRateRepository;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelRateService;
@@ -18,6 +22,28 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	
 	@Autowired
 	private PayChannelRateRepository payChannelRateRepository;
+	@Autowired
+	private DictTradeChannelRepository dictTradeChannelRepository;
+	@Autowired
+	private MerchantInfoRepository merchantInfoRepository;
+	
+	/**
+	 * 查询所有商户名称，商户号
+	 * @return
+	 */
+	@Override
+	public List<MerchantInfo> findMerchantNamesAll(){
+		return merchantInfoRepository.findMerchantNamesAll();
+	}
+	
+	/**
+	 * 查询所有支付渠道名称
+	 * @return
+	 */
+	@Override
+	public List<DictTradeChannel> findPayChannelNamesAll(){
+		return dictTradeChannelRepository.findPayChannelNamesAll();
+	}
 	
 	/**
 	 * 根据id删除目标渠道费率记录

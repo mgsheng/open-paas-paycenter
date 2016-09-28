@@ -39,7 +39,7 @@
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="removeChannelRate();"></a>
 	</div>
 	<!-- 修改费率窗口 -->
-	<div id="updateWin" class="easyui-window" title="费率管理" collapsible="false" minimizable="false" maximizable="false" 
+	<div id="updateWin" class="easyui-window" title="费率管理-修改" collapsible="false" minimizable="false" maximizable="false" 
 		icon="icon-save" style="padding: 5px; background: #fafafa;">
 		<div class="easyui-layout" >
 			<div border="false" style="padding: 10px; background: #fff; border: 1px solid #ccc;">
@@ -90,12 +90,175 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- 添加渠道费率窗口 -->
+	<div id="addWin" class="easyui-window" title="费率管理-添加" collapsible="false" minimizable="false" maximizable="false" 
+		icon="icon-save" style="padding: 5px; background: #fafafa;">
+		<div class="easyui-layout" >
+			<div border="false" style="padding: 10px; background: #fff; border: 1px solid #ccc;">
+				<form id="addForm" class="easyui-form" method="post"  data-options="novalidate:true">
+					<table cellpadding=3>
+						<tr>
+							<td style="margin-bottom:20px">
+								支&nbsp;&nbsp;付&nbsp;&nbsp;名&nbsp;&nbsp;称:
+							</td>
+							<td style="width:80%;">	
+								<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付名称" id="addPayName" 
+									 style="width:100%;height:35px;padding:5px;">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="margin-bottom:20px">
+								商&nbsp;&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;&nbsp;名:
+							</td>
+							<td style="width:80%;">	
+								<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名" id="addMerchantName" 
+									 style="width:100%;height:35px;padding:5px;">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td style="margin-bottom:20px">
+								支付渠道代码:
+							</td>
+							<td style="width:80%;">	
+								<select class="easyui-combobox" data-options="editable:false" id="addPayChannelCode" 
+									 style="width:100%;height:35px;padding:5px;">
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率&nbsp;&nbsp;:</td>
+							<td>
+				                 <input id="addPayRate" class="easyui-textbox" style="width:96%;"
+				                 	required="true"  missingMessage="费率为三位小数，且千分位只能是1位1-9的数字" />
+							</td>
+						</tr>
+					</table>
+				</form>
+			</div>
+			<div border="false" style="text-align:center; height: 3%;margin-top:4%;">
+				<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddChannelRate();"> 确定</a>
+				<a class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearAddForm()" style="margin-left:30px;">清空</a> 
+				<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeAddWin();" style="margin-left:30px;">取消</a>
+			</div>
+		</div>
+	</div>
 </body>
 <script>
+		//设置添加费率窗口
+        function addWin() {
+            $('#addWin').window({
+                title: '费率管理-添加',
+                width: '30%',
+                modal: true,
+                shadow: true,
+                closed: true,
+                height: '250%',
+                resizable:false
+            });
+        }
+		
+		//打开添加费率窗口
+        addWin();
+        function openAddWin() {
+        	clearAddForm();
+            $('#addWin').window('open');
+            $('#addPayName').combobox({
+				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
+				valueField:'id',
+				textField:'text'
+			});
+			 $('#addMerchantName').combobox({
+				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames',
+				valueField:'id',
+				textField:'text'
+			});
+			
+        }
+        
+        //单击支付名称后触发的事件
+		function onclickPayChannelName(){
+			 $('#addPayChannelCode').combobox({
+				url:'${pageContext.request.contextPath}/paychannel/findPayChannelCode',
+				valueField:'id',
+				textField:'text'
+			});
+		}
+        
+         //关闭添加费率窗口
+        function closeAddWin() {
+            $('#addWin').window('close');
+        }
+        
+        //清空添加表单
+        function clearAddForm(){
+        	$('#addForm').form('clear');
+        }
+		
+		//提交添加
+		function submitAddChannelRate(){
+			var addPayName = $('#addPayName').combobox('getText');
+			var addMerchantID= $('#addDeptName').combobox('getValue');
+			var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
+			var payRate = $("#addPayRate").val().trim(); 
+			$('#addForm').form('submit',{
+					onSubmit:function(){
+						return $(this).form('enableValidation').form('validate');
+					}
+				});
+			//校验
+			checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate);
+			$.ajax({
+				type:"post",
+				url:"/pay-platform-manager/paychannel/submitAddChannelRate",
+				data:{"addPayName":addPayName,"addMerchantID":addMerchantID,"addPayChannelCode":addPayChannelCode,"payRate":payRate},
+				dataType:"json",
+				success:function (data){
+					if(data.result == 1){
+						$.messager.alert("系统提示","恭喜，添加成功!","info");
+						closeAddWin();
+						var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
+						window.location.reload();
+					}else if(data.result == 2){
+						clearAddForm();
+						$.messager.alert("系统提示","该记录已被添加，请修改原纪录或重新填写!","error");	
+					}else if(data.result == 0){
+						clearAddForm();
+						$.messager.alert("系统提示","添加失败，请重新添加!","error");
+					}
+				},
+				error:function(){
+					$.messager.alert("系统提示","添加异常，请刷新页面!","error");
+				}
+			});
+			
+		}
+		
+		//提交添加前的校验
+		function checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate){
+			if(addPayName == "" || addPayName == null || addPayName == undefined){
+					$.messager.alert("系统提示","请选择支付名称！","error");	
+					return false;
+			}
+			if(addMerchantID == "" || addMerchantID == null || addMerchantID == undefined){
+					$.messager.alert("系统提示","请选择商户名！","error");		
+					return false;
+			}
+			if(addPayChannelCode == "" || addPayChannelCode == null || addPayChannelCode == undefined){
+					$.messager.alert("系统提示","支付渠道代码选择异常，请重刷新页面后重新添加！","error");		
+					return false;
+			}
+			checkRate(payRate);
+			return true;
+		}
+		
+		
         //设置修改费率窗口
         function updateWin() {
             $('#updateWin').window({
-                title: '费率管理',
+                title: '费率管理-修改',
                 width: '23%',
                 modal: true,
                 shadow: true,

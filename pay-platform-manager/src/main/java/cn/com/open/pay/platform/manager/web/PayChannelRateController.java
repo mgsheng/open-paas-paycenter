@@ -2,6 +2,7 @@ package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,8 +17,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelRateService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
@@ -41,6 +45,58 @@ public class PayChannelRateController extends BaseControllerUtil{
 	public String channelRate(){
 		log.info("---------------rate----------------");
 		return "paychannel/channelRate";
+	}
+	
+	/**
+	 * 查询所有商户名称，商户号
+	 * @return 返回到前端json数据
+	 */
+	@RequestMapping(value="findMerchantNames")
+	public void findMerchantNames(HttpServletRequest request,HttpServletResponse response,Model model){
+		log.info("-------------------------findMerchantNames         start------------------------------------");
+		List<MerchantInfo> list = payChannelRateService.findMerchantNamesAll();
+		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+		Map<String,Object> map= null;
+		String str=null;
+		if(list != null){
+			for(MerchantInfo m : list){
+				map = new HashMap<String,Object>();
+				map.put("id", m.getId());
+				map.put("text", m.getMerchantName());
+				maps.add(map);
+			} 
+			JSONArray jsonArr = JSONArray.fromObject(maps);
+			str = jsonArr.toString();
+			WebUtils.writeJson(response, str);
+			System.out.println(str);
+		}
+		return ;
+	}
+	
+	/**
+	 * 查询所有支付渠道名称
+	 * @return 返回到前端json数据
+	 */
+	@RequestMapping(value="findPayNames")
+	public void findPayNames(HttpServletRequest request,HttpServletResponse response,Model model){
+		log.info("-------------------------findPayNames         start------------------------------------");
+		List<DictTradeChannel> list = payChannelRateService.findPayChannelNamesAll();
+		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+		Map<String,Object> map= null;
+		String str=null;
+		if(list != null){
+			for(DictTradeChannel d : list){
+				map = new HashMap<String,Object>();
+				map.put("id", d.getId());
+				map.put("text", d.getChannelName());
+				maps.add(map);
+			} 
+			JSONArray jsonArr = JSONArray.fromObject(maps);
+			str = jsonArr.toString();
+			WebUtils.writeJson(response, str);
+			System.out.println(str);
+		}
+		return ;
 	}
 	
 	/**

@@ -40,6 +40,12 @@
 		ID,
 		<include refid="Insert_Column_List" />
 	</sql>
+	
+	<!-- 查询所有支付渠道名称 -->
+	<select id="findPayChannelNamesAll" resultMap="dictTradeChannelMap" >
+		select ID,CHANNEL_NAME from DICT_TRADE_CHANNEL 
+	</select>
+	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.DictTradeChannel">
 		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
 		select last_insert_id() as id

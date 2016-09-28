@@ -2,6 +2,8 @@ package cn.com.open.pay.platform.manager.paychannel.service;
 
 import java.util.List;
 
+import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 /**
  * 渠道费率管理
@@ -9,6 +11,18 @@ import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
  *
  */
 public interface PayChannelRateService {
+	
+	/**
+	 * 查询所有商户名称，商户号
+	 * @return
+	 */
+	public List<MerchantInfo> findMerchantNamesAll();
+	
+	/**
+	 * 查询所有支付渠道名称
+	 * @return
+	 */
+	public List<DictTradeChannel> findPayChannelNamesAll();
 	
 	/**
 	 * 根据id删除目标渠道费率记录
