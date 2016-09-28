@@ -46,35 +46,12 @@ public interface MerchantInfoRepository extends Repository {
 	 */
 	public void insert(MerchantInfo merchantInfo);
 	
-	
-	
-	
-	/**
-	 * 查询所有部门
-	 * @return
-	 */
-	public List<Department> findAllDepts();
-	
-	
 	/**
 	 * 根据ID修改部门信息
 	 * @return
 	 */
-	public void updateDept(Department department);
+	public void updateMerchantInfo(MerchantInfo merchantInfo);
 	
-	
-	
-	/**
-	 * 根据封装的Department对象中的属性添加Department对象
-	 * @return
-	 */
-	public void addDept(Department department);
-	
-	/**
-	 * 根据部门名查询Department对象
-	 * @return
-	 */
-	public Department findByDeptName(String deptName);
 	
 	
 }

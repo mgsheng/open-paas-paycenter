@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.DictTradeChannelRepositoryMyBatis">
 	<resultMap type="DictTradeChannel"  id="dictTradeChannelMap">
-		<id column="ID" property="id" jdbcType="INTEGER" />
+		<id column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="CHANNEL_NAME" property="channelName" jdbcType="VARCHAR" />
 		<result column="CHANNEL_STATUS" property="channelStatus" jdbcType="DECIMAL" />
 		<result column="PRIORITY" property="priority" jdbcType="DECIMAL" />
@@ -91,6 +91,53 @@
 		</if>
 		limit  #{startRow},#{pageSize}
 	</select>
+	
+	<update id="updateDictTrade" parameterType="DictTradeChannel">
+		update DICT_TRADE_CHANNEL set
+		<if test="channelName != null and channelName !=''">
+			CHANNEL_NAME = #{channelName}
+		</if>
+		<if test="channelStatus != null and channelStatus !=''">
+			,CHANNEL_STATUS = #{channelStatus}
+		</if>
+		<if test="priority != null and priority !=''">
+			,PRIORITY = #{priority}
+		</if>
+		<if test="memo != null and memo !=''">
+			,MEMO = #{memo}
+		</if>
+		<if test="merId != null and merId !=''">
+			,MERID = #{merId}
+		</if>
+		<if test="keyValue != null and keyValue !=''">
+			,KEYVALUE = #{keyValue}
+		</if>
+		<if test="notifyUrl != null and notifyUrl !=''">
+			,NOTIFY_URL = #{notifyUrl}
+		</if>
+		<if test="other != null and other !=''">
+			,OTHER = #{other}
+		</if>
+		<if test="paymentType != null and paymentType !=''">
+			,PAYMENT_TYPE = #{paymentType}
+		</if>
+		<if test="backUrl != null and backUrl !=''">
+			,BACKURL = #{backUrl}
+		</if>
+		<if test="type != null and type !=''">
+			,type = #{type}
+		</if>
+		<if test="sighType != null and sighType !=''">
+			,SIGN_TYPE = #{sighType}
+		</if>
+		<if test="inputCharset != null and inputCharset !=''">
+			,input_charset = #{inputCharset}
+		</if>
+		<if test="paymentChannel != null and paymentChannel !=''">
+			,payment_channel = #{paymentChannel}
+		</if>
+		where id = #{id}
+	</update>
 	
 	<delete id="removeDictTradeID"  parameterType="Integer">
 		delete from DICT_TRADE_CHANNEL where id = #{id}

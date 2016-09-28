@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.MerchantInfoRepositoryMyBatis">
 	<resultMap type="MerchantInfo" id="merchantInfoMap">
-		<id column="ID" property="id" jdbcType="INTEGER" />
+		<id column="ID" property="id" jdbcType="VARCHAR" />
 		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="DECIMAL" />
 		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
@@ -59,7 +59,7 @@
 		)
 		values 
 		(
-			#{id, jdbcType=INTEGER},
+			#{id, jdbcType=VARCHAR},
 			#{merchantName, jdbcType=VARCHAR},
 			#{status, jdbcType=DECIMAL},
 			#{createDate, jdbcType=TIMESTAMP},
@@ -96,6 +96,59 @@
 		
 		limit  #{startRow},#{pageSize}
 	</select>
+	
+	<update id="updateMerchantInfo" parameterType="MerchantInfo">
+		update MERCHANT_INFO set
+		<if test="id != null and id !=''">
+			ID = #{id}
+		</if>
+		<if test="merchantName != null and merchantName !=''">
+			,MERCHANT_NAME = #{merchantName}
+		</if>
+		<if test="status != null and status !=''">
+			,STATUS = #{status}
+		</if>
+		<if test="operater != null and operater !=''">
+			,OPERATER = #{operater}
+		</if>
+		<if test="notifyUrl != null and notifyUrl !=''">
+			,NOTIFY_URL = #{notifyUrl}
+		</if>
+		<if test="returnUrl != null and returnUrl !=''">
+			,RETURN_URL = #{returnUrl}
+		</if>
+		<if test="payKey != null and payKey !=''">
+			,PAY_KEY = #{payKey}
+		</if>
+		<if test="productName != null and productName !=''">
+			,PRODUCT_NAME = #{productName}
+		</if>
+		<if test="contact != null and contact !=''">
+			,CONTACT = #{contact}
+		</if>
+		<if test="phone != null and phone !=''">
+			,PHONE = #{phone}
+		</if>
+		<if test="mobile != null and mobile !=''">
+			,MOBILE = #{mobile}
+		</if>
+		<if test="email != null and email !=''">
+			,EMAIL = #{email}
+		</if>
+		<if test="dayNorm != null and dayNorm !=''">
+			,DAY_NORM = #{dayNorm}
+		</if>
+		<if test="monthNorm != null and monthNorm !=''">
+			,MONTH_NORM = #{monthNorm}
+		</if>
+		<if test="singleNorm != null and singleNorm !=''">
+			,SINGLE_NORM = #{singleNorm}
+		</if>
+		<if test="memo != null and memo !=''">
+			,MEMO = #{memo}
+		</if>
+		where id = #{id}
+	</update>
 	
 	<delete id="removeCommercialID"  parameterType="Integer">
 		delete from MERCHANT_INFO where id = #{id}
