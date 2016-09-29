@@ -16,9 +16,17 @@
 		CHANNEL_CODE
 	</sql>
 	
-	<!--  查询所有记录 -->
-	<select id="findPayChannelCodesAll" resultMap="payChannelDictionaryMap" >
-		select * from PAY_CHANNEL_DICTIONARY where  CHANNEL_STATUS=1
+	<!-- 查询所有渠道编码 -->
+	<select id="findPayChannelCodeAll" resultMap="payChannelDictionaryMap" >
+		select * from PAY_CHANNEL_DICTIONARY where  CHANNEL_STATUS=1 
+	</select>
+	
+	<!--  根据支付渠道名称查询渠道编码 -->
+	<select id="findPayChannelCode" resultMap="payChannelDictionaryMap" parameterType="PayChannelDictionary">
+		select * from PAY_CHANNEL_DICTIONARY where  CHANNEL_STATUS=1 
+		<if test="channelName != null and channelName != ''">
+			and CHANNEL_NAME = #{channelName,jdbcType=VARCHAR}
+		</if>
 	</select>
 	
 </mapper>

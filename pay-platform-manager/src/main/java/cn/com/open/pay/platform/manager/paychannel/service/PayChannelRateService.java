@@ -17,7 +17,27 @@ public interface PayChannelRateService {
 	 * 查询所有渠道编码
 	 * @return
 	 */
-	public List<PayChannelDictionary> findPayChannelCodesAll();
+	public List<PayChannelDictionary> findPayChannelCodeAll();
+	
+	/**
+	 * 添加支付渠道费率前，先根据条件查询数据库是否已经存在该记录
+	 * @param rate
+	 * @return
+	 */
+	public List<ChannelRate> findChannelRate(ChannelRate rate);
+	
+	/**
+	 * 添加支付渠道费率
+	 * @param rate
+	 * @return
+	 */
+	public boolean addPayChannelRate(ChannelRate rate);
+	
+	/**
+	 * 查询渠道编码
+	 * @return
+	 */
+	public List<PayChannelDictionary> findPayChannelCode(PayChannelDictionary payChannelDictionary);
 	
 	/**
 	 * 查询所有商户名称，商户号

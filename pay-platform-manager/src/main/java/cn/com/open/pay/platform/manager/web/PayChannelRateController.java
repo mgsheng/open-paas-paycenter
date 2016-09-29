@@ -51,26 +51,79 @@ public class PayChannelRateController extends BaseControllerUtil{
 	/**
 	 * 查询所有渠道代码
 	 * @return 返回到前端json数据
+	 * @throws UnsupportedEncodingException 
+	 */
+	@RequestMapping(value="submitAddChannelRate")
+	public void submitAddChannelRate(HttpServletRequest request,HttpServletResponse response,Model model) throws UnsupportedEncodingException{
+		log.info("-------------------------submitAddChannelRate         start------------------------------------");
+		request.setCharacterEncoding("utf-8");
+		String addPayName = request.getParameter("addPayName");
+		String addMerchantID = request.getParameter("addMerchantID");
+		String addPayChannelCode = request.getParameter("addPayChannelCode");
+		String payRate = request.getParameter("payRate");
+		
+		System.out.println("addPayName : "+addPayName+"     addMerchantID : "+addMerchantID+"    " +
+				"addPayChannelCode : "+addPayChannelCode+"      payRate:"+payRate);
+		
+		JSONObject json =  new JSONObject();
+		//封装参数
+		ChannelRate channelRate = new ChannelRate();
+		channelRate.setPayName(addPayName);
+		channelRate.setMerchantID(addMerchantID);
+		channelRate.setPayChannelCode(addPayChannelCode);
+		channelRate.setPayRate(payRate);
+		//result = 1 添加成功  result = 2 该记录已存在  result = 0 添加失败 
+		int result = -1;
+		//先查询该记录是否已经存在
+		List<ChannelRate> rates = payChannelRateService.findChannelRate(channelRate);
+		if(rates != null){
+			result = 2;
+		}else{
+			//添加费率
+			boolean isSuccess = payChannelRateService.addPayChannelRate(channelRate);
+			if(isSuccess){
+				result = 1;
+			}else{
+				result = 0;
+			}
+		}
+		json.put("result", result);
+		WebUtils.writeJson(response, json);
+		return ;
+	}
+	
+	/**
+	 * 查询渠道代码
+	 * @return 返回到前端json数据
+	 * @throws UnsupportedEncodingException 
 	 */
 	@RequestMapping(value="findPayChannelCode")
-	public void findPayChannelCode(HttpServletRequest request,HttpServletResponse response,Model model){
+	public void findPayChannelCode(HttpServletRequest request,HttpServletResponse response,Model model) throws UnsupportedEncodingException{
 		log.info("-------------------------findPayChannelCode         start------------------------------------");
-		List<PayChannelDictionary> list = payChannelRateService.findPayChannelCodesAll();
+		String payChannelName = request.getParameter("payChannelName");
+		payChannelName = ((payChannelName == null || payChannelName == "") ? "" : new String(payChannelName.getBytes("iso8859-1"),"utf-8" ));
+		System.out.println(payChannelName);
+		//封装参数支付名称
+		PayChannelDictionary payChannelDictionary = new PayChannelDictionary();
+		payChannelDictionary.setChannelName(payChannelName);
+		
+		List<PayChannelDictionary> list = payChannelRateService.findPayChannelCode(payChannelDictionary);
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
 		String str=null;
-		if(list != null){
-			for(PayChannelDictionary p : list){
-				map = new HashMap<String,Object>();
-				map.put("id", p.getId());
-				map.put("text", p.getChannelCode());
-				maps.add(map);
-			} 
-			JSONArray jsonArr = JSONArray.fromObject(maps);
-			str = jsonArr.toString();
-			WebUtils.writeJson(response, str);
-			System.out.println(str);
+		if(list == null || "".equals(list)){
+			list = payChannelRateService.findPayChannelCodeAll();
 		}
+		for(PayChannelDictionary p : list){
+			map = new HashMap<String,Object>();
+			map.put("id", p.getId());
+			map.put("text", p.getChannelCode());
+			maps.add(map);
+		} 
+		JSONArray jsonArr = JSONArray.fromObject(maps);
+		str = jsonArr.toString();
+		WebUtils.writeJson(response, str);
+		System.out.println(str);
 		return ;
 	}
 	

@@ -13,6 +13,20 @@ import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 public interface PayChannelRateRepository extends Repository{
 	
 	/**
+	 * 添加支付渠道费率前，先根据条件查询数据库是否已经存在该记录
+	 * @param rate
+	 * @return
+	 */
+	public List<ChannelRate> findChannelRate(ChannelRate rate);
+	
+	/**
+	 * 添加支付渠道费率
+	 * @param rate
+	 * @return
+	 */
+	public void addPayChannelRate(ChannelRate rate);
+	
+	/**
 	 * 根据id删除目标渠道费率记录
 	 * @param rate
 	 * @return

@@ -121,7 +121,7 @@
 							支付渠道代码:
 						</td>
 						<td style="width:80%;">	
-							<select class="easyui-combobox" data-options="editable:false" id="addPayChannelCode"  readonly
+							<select class="easyui-combobox" data-options="editable:false" id="addPayChannelCode" 
 								name="addPayChannelCode"  style="width:100%;height:30px;padding:5px;">
 							</select>
 						</td>
@@ -129,7 +129,7 @@
 					<tr>
 						<td style="margin-bottom:20px">费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率&nbsp;&nbsp;:</td>
 						<td>
-			                 <input id="addPayRate" class="easyui-textbox" style="width:96%;" type="text"
+			                 <input id="addPayRate" class="easyui-textbox" style="width:98%;"
 			                 	name="addPayRate"  required="true"  missingMessage="费率为三位小数，且千分位只能是1位1-9的数字" />
 						</td>
 					</tr>
@@ -157,7 +157,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '100%',
+                height: '180%',
                 resizable:false
             });
         }
@@ -186,7 +186,7 @@
 				valueField:'id',
 				textField:'text',
 				onSelect: function(rec){
-					var url = 'get_data2.php?id='+rec.id;
+					var url = '${pageContext.request.contextPath}/paychannel/findPayChannelCode?payChannelName='+rec.text;
 					$('#addPayChannelCode').combobox('reload', url);
 				}	
 			});
@@ -198,12 +198,16 @@
 				textField:'text'
 			});
 			
-			//
+			//对应的渠道代码
 			 $('#addPayChannelCode').combobox({
-				//url:'${pageContext.request.contextPath}/paychannel/findPayChannelCode',
+				url:'${pageContext.request.contextPath}/paychannel/findPayChannelCode',
 				valueField:'id',
 				textField:'text'
 			});
+			
+			var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
+			$('#addPayChannelCode').combobox('setText',addPayChannelCode);
+			
         }
         
 		//提交添加
@@ -214,41 +218,38 @@
 				}
 			});
 			var addPayName = $('#addPayName').combobox('getText');
-			alert("------1------");
-			var addMerchantID= $('#addDeptName').combobox('getValue');
-			alert("------2------");
+			var addMerchantID= $('#addMerchantName').combobox('getValue');
 			var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
-			alert("------3------");
-			var payRate = $("#addPayRate").val().trim(); 
-			alert("------4------");
+			var payRate = $("#addPayRate").textbox('getValue'); 
 			
-			//校验
-			checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate);
-			alert("------5------");
-			$.ajax({
-				type:"post",
-				url:"/pay-platform-manager/paychannel/submitAddChannelRate",
-				data:{"addPayName":addPayName,"addMerchantID":addMerchantID,"addPayChannelCode":addPayChannelCode,"payRate":payRate},
-				dataType:"json",
-				success:function (data){
-					if(data.result == 1){
-						$.messager.alert("系统提示","恭喜，添加成功!","info");
-						closeAddWin();
-						var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
-						window.location.reload();
-					}else if(data.result == 2){
-						clearAddForm();
-						$.messager.alert("系统提示","该记录已被添加，请修改原纪录或重新填写!","error");	
-					}else if(data.result == 0){
-						clearAddForm();
-						$.messager.alert("系统提示","添加失败，请重新添加!","error");
+			//若校验为true 提交
+			if(checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate)){
+				$.ajax({
+					type:"post",
+					url:"/pay-platform-manager/paychannel/submitAddChannelRate",
+					data:{"addPayName":addPayName,"addMerchantID":addMerchantID,"addPayChannelCode":addPayChannelCode,"payRate":payRate},
+					dataType:"json",
+					success:function (data){
+						if(data.result == 1){
+							$.messager.alert("系统提示","恭喜，添加成功!","info");
+							clearAddForm();
+							closeAddWin();
+							var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
+							//window.location.reload();
+							reload(url);
+						}else if(data.result == 2){
+							clearAddForm();
+							$.messager.alert("系统提示","该记录已被添加，请修改原纪录或重新填写!","error");	
+						}else{
+							clearAddForm();
+							$.messager.alert("系统提示","添加失败，请重新添加!","error");
+						}
+					},
+					error:function(){
+						$.messager.alert("系统提示","添加异常，请刷新页面!","error");
 					}
-				},
-				error:function(){
-					$.messager.alert("系统提示","添加异常，请刷新页面!","error");
-				}
-			});
-			
+				});
+			}
 		}
 		
 		//提交添加前的校验
@@ -262,10 +263,12 @@
 					return false;
 			}
 			if(addPayChannelCode == "" || addPayChannelCode == null || addPayChannelCode == undefined){
-					$.messager.alert("系统提示","支付渠道代码选择异常，请重刷新页面后重新添加！","error");		
+					$.messager.alert("系统提示","请选择支付渠道代码！","error");		
 					return false;
 			}
-			checkRate(payRate);
+			if(!checkRate(payRate)){
+				return false;
+			};
 			return true;
 		}
 		
@@ -325,7 +328,7 @@
       			return false;
       		}
       		if(regex_payRate.test(payRate) != true){
-      			msgShow('系统提示', '输入费率格式不正确或费率值过大！', 'warning');
+      			msgShow('系统提示', '输入费率格式不正确或费率值过大或过小！', 'warning');
       			return false;
       		}
       		return true;
