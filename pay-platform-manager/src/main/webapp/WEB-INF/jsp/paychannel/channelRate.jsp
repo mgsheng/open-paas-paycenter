@@ -34,7 +34,7 @@
 		<input class="easyui-textbox" name="merchant_id" id="merchant_id" style="width:8%;" prompt="选填">
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true" onclick="findChannelRates();"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addChannelRates();"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateChannelRate();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="removeChannelRate();"></a>
 	</div>
@@ -90,63 +90,65 @@
 			</div>
 		</div>
 	</div>
-	
 	<!-- 添加渠道费率窗口 -->
 	<div id="addWin" class="easyui-window" title="费率管理-添加" collapsible="false" minimizable="false" maximizable="false" 
-		icon="icon-save" style="padding: 5px; background: #fafafa;">
-		<div class="easyui-layout" >
-			<div border="false" style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-				<form id="addForm" class="easyui-form" method="post"  data-options="novalidate:true">
-					<table cellpadding=3>
-						<tr>
-							<td style="margin-bottom:20px">
-								支&nbsp;&nbsp;付&nbsp;&nbsp;名&nbsp;&nbsp;称:
-							</td>
-							<td style="width:80%;">	
-								<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付名称" id="addPayName" 
-									 style="width:100%;height:35px;padding:5px;">
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td style="margin-bottom:20px">
-								商&nbsp;&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;&nbsp;名:
-							</td>
-							<td style="width:80%;">	
-								<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名" id="addMerchantName" 
-									 style="width:100%;height:35px;padding:5px;">
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td style="margin-bottom:20px">
-								支付渠道代码:
-							</td>
-							<td style="width:80%;">	
-								<select class="easyui-combobox" data-options="editable:false" id="addPayChannelCode" 
-									 style="width:100%;height:35px;padding:5px;">
-								</select>
-							</td>
-						</tr>
-						<tr>
-							<td>费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率&nbsp;&nbsp;:</td>
-							<td>
-				                 <input id="addPayRate" class="easyui-textbox" style="width:96%;"
-				                 	required="true"  missingMessage="费率为三位小数，且千分位只能是1位1-9的数字" />
-							</td>
-						</tr>
-					</table>
-				</form>
-			</div>
-			<div border="false" style="text-align:center; height: 3%;margin-top:4%;">
-				<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddChannelRate();"> 确定</a>
-				<a class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearAddForm()" style="margin-left:30px;">清空</a> 
-				<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeAddWin();" style="margin-left:30px;">取消</a>
-			</div>
+		style=" background: #fafafa;">
+		<div border="false" style="padding: 20px; background: #fff; border: 1px solid #ccc;">
+			<form id="addForm" class="easyui-form" method="post"  data-options="novalidate:true">
+				<table cellpadding=3>
+					<tr>
+						<td style="margin-bottom:20px">
+							支&nbsp;&nbsp;付&nbsp;&nbsp;名&nbsp;&nbsp;称:
+						</td>
+						<td style="width:80%;">	
+							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付名称'" id="addPayName" 
+								name="addPayName"  style="width:100%;height:30px;padding:5px;">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">
+							商&nbsp;&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;&nbsp;名:
+						</td>
+						<td style="width:80%;">	
+							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="addMerchantName" 
+								name="addMerchantName"  style="width:100%;height:30px;padding:5px;">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">
+							支付渠道代码:
+						</td>
+						<td style="width:80%;">	
+							<select class="easyui-combobox" data-options="editable:false" id="addPayChannelCode"  readonly
+								name="addPayChannelCode"  style="width:100%;height:30px;padding:5px;">
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率&nbsp;&nbsp;:</td>
+						<td>
+			                 <input id="addPayRate" class="easyui-textbox" style="width:96%;" type="text"
+			                 	name="addPayRate"  required="true"  missingMessage="费率为三位小数，且千分位只能是1位1-9的数字" />
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<div border="false" style="text-align:center; height: 3%;margin-top:4%;">
+			<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddChannelRate();"> 确定</a>
+			<a class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearAddForm()" style="margin-left:30px;">清空</a> 
+			<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeAddWin();" style="margin-left:30px;">取消</a>
 		</div>
 	</div>
 </body>
 <script>
+		//页面预加载
+		$(function(){
+			findChannelRates();
+		});
+		
 		//设置添加费率窗口
         function addWin() {
             $('#addWin').window({
@@ -155,61 +157,74 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '250%',
+                height: '100%',
                 resizable:false
             });
         }
+	
+         //关闭添加费率窗口
+        function closeAddWin() {
+            $('#addWin').window('close');
+            //var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
+	      	window.location.reload();
+        }
+        
+        //清空添加表单
+        function clearAddForm(){
+        	$('#addForm').form('clear');
+        }	
 		
 		//打开添加费率窗口
         addWin();
         function openAddWin() {
-        	clearAddForm();
+        	//clearAddForm();
             $('#addWin').window('open');
+            
+            //加载所有支付名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
             $('#addPayName').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
 				valueField:'id',
-				textField:'text'
+				textField:'text',
+				onSelect: function(rec){
+					var url = 'get_data2.php?id='+rec.id;
+					$('#addPayChannelCode').combobox('reload', url);
+				}	
 			});
+			
+			//加载所有商户名
 			 $('#addMerchantName').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames',
 				valueField:'id',
 				textField:'text'
 			});
 			
-        }
-        
-        //单击支付名称后触发的事件
-		function onclickPayChannelName(){
+			//
 			 $('#addPayChannelCode').combobox({
-				url:'${pageContext.request.contextPath}/paychannel/findPayChannelCode',
+				//url:'${pageContext.request.contextPath}/paychannel/findPayChannelCode',
 				valueField:'id',
 				textField:'text'
 			});
-		}
-        
-         //关闭添加费率窗口
-        function closeAddWin() {
-            $('#addWin').window('close');
         }
         
-        //清空添加表单
-        function clearAddForm(){
-        	$('#addForm').form('clear');
-        }
-		
 		//提交添加
 		function submitAddChannelRate(){
-			var addPayName = $('#addPayName').combobox('getText');
-			var addMerchantID= $('#addDeptName').combobox('getValue');
-			var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
-			var payRate = $("#addPayRate").val().trim(); 
 			$('#addForm').form('submit',{
-					onSubmit:function(){
-						return $(this).form('enableValidation').form('validate');
-					}
-				});
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				}
+			});
+			var addPayName = $('#addPayName').combobox('getText');
+			alert("------1------");
+			var addMerchantID= $('#addDeptName').combobox('getValue');
+			alert("------2------");
+			var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
+			alert("------3------");
+			var payRate = $("#addPayRate").val().trim(); 
+			alert("------4------");
+			
 			//校验
 			checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate);
+			alert("------5------");
 			$.ajax({
 				type:"post",
 				url:"/pay-platform-manager/paychannel/submitAddChannelRate",
@@ -253,7 +268,6 @@
 			checkRate(payRate);
 			return true;
 		}
-		
 		
         //设置修改费率窗口
         function updateWin() {
@@ -360,7 +374,6 @@
 				$.messager.confirm('系统提示', '是否确定删除?', function(r){
 					if (r){
 					   var id=row.id;
-					   alert(id);
 					   var url='${pageContext.request.contextPath}/paychannel/removeChannelRate?id='+id;
 			            $.post(url, function(data) {
 			                if(data.result==true){
@@ -420,9 +433,6 @@
 		    }); 
 		}
 		
-		//页面预加载
-		$(function(){
-			findChannelRates();
-		});
+		
 	</script>
 </html>
