@@ -1,6 +1,8 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -58,11 +60,15 @@ public class CommercialTenant extends BaseControllerUtil {
 	@RequestMapping(value="findCommercial")
 	public void findCommercial(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------findDepts        start------------------------------------");
-		String deptName = request.getParameter("dept_name");
-		
-		if(deptName !=null ){
-			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
+		String MERCHANT_NAME = request.getParameter("MERCHANT_NAME");
+		String merchantName="";
+		if(MERCHANT_NAME !=null ){
+			merchantName = new String(MERCHANT_NAME.getBytes("iso-8859-1"),"utf-8");
 		}
+		String status = request.getParameter("STATUS");
+		String operater = request.getParameter("OPERATER");
+		String productName = request.getParameter("PRODUCT_NAME");
+		String contact = request.getParameter("CONTACT");
 		//当前第几页
 		String page=request.getParameter("page");
 		//每页显示的记录数
@@ -75,10 +81,32 @@ public class CommercialTenant extends BaseControllerUtil {
 	    int startRow = (currentPage-1)*pageSize;
 		//将请求参数封装到Department对象中
 	    MerchantInfo merchantInfo = new MerchantInfo();
-//	    merchantInfo.setDeptName(deptName);
+	    merchantInfo.setMerchantName(merchantName);
+	    if(status!=""&&status!=null){
+	    	merchantInfo.setStatus(Double.parseDouble(status));
+	    }
+	    merchantInfo.setOperater(operater);
+	    merchantInfo.setProductName(productName);
+	    merchantInfo.setContact(contact);
 	    merchantInfo.setPageSize(pageSize);
 	    merchantInfo.setStartRow(startRow);
 		List<MerchantInfo> departments = merchantInfoService.findDepts(merchantInfo);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		if(departments!=null){
+			for(int i=0;i<departments.size();i++){
+				MerchantInfo merchantInfo1= departments.get(i);
+				Date createDate1 = merchantInfo1.getCreateDate();
+				merchantInfo1.setFoundDate(df.format(createDate1));//交易时间
+				Double status1 = merchantInfo1.getStatus();
+				if(status1==1){
+					merchantInfo1.setStatusName("正常");
+				}else if(status1==2){
+					merchantInfo1.setStatusName("冻结");
+				}else{
+					merchantInfo1.setStatusName("注销");
+				}
+			}
+		}
 		int count = merchantInfoService.findQueryCount(merchantInfo);
 		System.out.println(count);
 		JSONArray jsonArr = JSONArray.fromObject(departments);
@@ -101,7 +129,7 @@ public class CommercialTenant extends BaseControllerUtil {
 		log.info("-------------------------addDept        start------------------------------------");
 		request.setCharacterEncoding("utf-8");
 		String id = request.getParameter("id");
-		String merchantName = request.getParameter("merchantName");
+		String merchantName=new String(request.getParameter("merchantName").getBytes("iso-8859-1"),"utf-8");
 		String status = request.getParameter("status");
 		String notifyUrl = request.getParameter("notifyUrl");
 		String returnUrl = request.getParameter("returnUrl");
@@ -114,6 +142,8 @@ public class CommercialTenant extends BaseControllerUtil {
 		String monthNorm = request.getParameter("monthNorm");
 		String singleNorm = request.getParameter("singleNorm");
 		String memo = request.getParameter("memo");
+		String operater = request.getParameter("operater");
+		String payKey = request.getParameter("payKey");
 		JSONObject jsonObjArr = new JSONObject();  
 		//判断数据库是否已经存在该商品
 		boolean result = false;
@@ -131,10 +161,10 @@ public class CommercialTenant extends BaseControllerUtil {
 		merchantInfo.setMerchantName(merchantName);
 		merchantInfo.setStatus(Double.parseDouble(status));
 		merchantInfo.setCreateDate(createTime);
-		merchantInfo.setOperater("hanjp"); //操作员
+		merchantInfo.setOperater(operater); //操作员
 		merchantInfo.setNotifyUrl(notifyUrl);
 		merchantInfo.setReturnUrl(returnUrl);
-		merchantInfo.setPayKey("miyao");//秘钥
+		merchantInfo.setPayKey(payKey);//秘钥
 		merchantInfo.setProductName(productName);
 		merchantInfo.setContact(contact);
 		merchantInfo.setPhone(phone);
@@ -180,9 +210,9 @@ public class CommercialTenant extends BaseControllerUtil {
 	@RequestMapping(value="updateMerchantInfo")
 	public void updateMerchantInfo(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------updateDeptByID       start------------------------------------");
-		request.setCharacterEncoding("utf-8");
+//		request.setCharacterEncoding("GBK");
 		String id = request.getParameter("id");
-		String merchantName = request.getParameter("merchantName");
+		String merchantName=new String(request.getParameter("merchantName").getBytes("iso-8859-1"),"utf-8");
 		String status = request.getParameter("status");
 		String notifyUrl = request.getParameter("notifyUrl");
 		String returnUrl = request.getParameter("returnUrl");
@@ -195,6 +225,8 @@ public class CommercialTenant extends BaseControllerUtil {
 		String monthNorm = request.getParameter("monthNorm");
 		String singleNorm = request.getParameter("singleNorm");
 		String memo = request.getParameter("memo");
+		String operater = request.getParameter("operater");
+		String payKey = request.getParameter("payKey");
 		JSONObject jsonobj = new JSONObject();
 //		//判断数据库是否已经存在该部门
 		boolean result = false;
@@ -212,10 +244,10 @@ public class CommercialTenant extends BaseControllerUtil {
 		merchantInfo.setMerchantName(merchantName);
 		merchantInfo.setStatus(Double.parseDouble(status));
 		merchantInfo.setCreateDate(createTime);
-		merchantInfo.setOperater("hanjp"); //操作员
+		merchantInfo.setOperater(operater); //操作员
 		merchantInfo.setNotifyUrl(notifyUrl);
 		merchantInfo.setReturnUrl(returnUrl);
-		merchantInfo.setPayKey("miyao");//秘钥
+		merchantInfo.setPayKey(payKey);//秘钥
 		merchantInfo.setProductName(productName);
 		merchantInfo.setContact(contact);
 		merchantInfo.setPhone(phone);

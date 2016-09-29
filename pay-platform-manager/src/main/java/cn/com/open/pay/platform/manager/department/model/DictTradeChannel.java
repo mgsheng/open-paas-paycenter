@@ -30,6 +30,9 @@ public class DictTradeChannel extends AbstractDomain{
 	
 	private Integer pageSize;//每页的显示条数
 	private Integer startRow;//每页的开始记录
+	private String foundDate;
+	private String  channelStatusName;
+	private String priorityName;
 	public Integer getId() {
 		return id;
 	}
@@ -139,6 +142,24 @@ public class DictTradeChannel extends AbstractDomain{
 	}
 	public void setStartRow(Integer startRow) {
 		this.startRow = startRow;
+	}
+	public String getFoundDate() {
+		return foundDate;
+	}
+	public void setFoundDate(String foundDate) {
+		this.foundDate = foundDate;
+	}
+	public String getChannelStatusName() {
+		return channelStatusName;
+	}
+	public void setChannelStatusName(String channelStatusName) {
+		this.channelStatusName = channelStatusName;
+	}
+	public String getPriorityName() {
+		return priorityName;
+	}
+	public void setPriorityName(String priorityName) {
+		this.priorityName = priorityName;
 	}
 	
 	

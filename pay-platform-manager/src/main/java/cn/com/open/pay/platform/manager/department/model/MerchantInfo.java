@@ -29,6 +29,9 @@ public class MerchantInfo extends AbstractDomain{
 	private Double singleNorm;
 	private String memo;
 	
+	private String foundDate;
+	private String statusName;
+	
 
 	private Integer pageSize;//每页的显示条数
 	private Integer startRow;//每页的开始记录
@@ -145,6 +148,18 @@ public class MerchantInfo extends AbstractDomain{
 	}
 	public void setStartRow(Integer startRow) {
 		this.startRow = startRow;
+	}
+	public String getFoundDate() {
+		return foundDate;
+	}
+	public void setFoundDate(String foundDate) {
+		this.foundDate = foundDate;
+	}
+	public String getStatusName() {
+		return statusName;
+	}
+	public void setStatusName(String statusName) {
+		this.statusName = statusName;
 	}
 	
 

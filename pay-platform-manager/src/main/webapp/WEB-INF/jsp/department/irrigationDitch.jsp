@@ -1,441 +1,328 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>渠道信息列表</title>
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/highcharts.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/highcharts/modules/exporting.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
-	</head>
-	<body >
+<head>
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/themes/icon.css">
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/dataList.css">
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+	<script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.easyui.min.js"></script>
+	<script type="text/javascript"
+	src="${pageContext.request.contextPath}/js/locale/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+
+<div class="easyui-panel" title="查询条件" style="width:100%;height:140px;padding: 20px 30px; ">
+	<form id="ff" method="post">
+	<table >
+		<tr style="padding-top:50px;">
+			<td style="text-align: right;">渠道名称：</td>
+			<td>
+				<input class="easyui-textbox" name="CHANNEL_NAME" id="CHANNEL_NAME" style="width:100%">
+			</td>
+			<td style="text-align: right;width: 130px">渠道状态：</td>
+			<td>
+				<select class="easyui-combobox" data-options="editable:false" id="CHANNEL_STATUS" name="CHANNEL_STATUS" style="width:100%">
+					<option value="">全部</option>
+					<option value="1">正常</option>
+					<option value="2">锁定</option>
+					<option value="3">关闭</option>
+				</select>
+			</td>
+			<td style="text-align: right;width: 150px">商户id：</td>
+			<td><input id="MERID" name="MERID" class="easyui-textbox" style="width:100%"></td>
+		</tr>
 		
-				<div style="border:0px solid;border-radius:8px;margin-bottom:0px;width: 100%;max-width:100%;">
-					<div class="top" style="width: 100%">
-						<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 25px;">
-							<form id="fm" method="post" action="/department/findDepts" >
-								<table cellpadding="5px">
-									<tr>
-										<td>
-												<input class="easyui-textbox" name="deptname" id="deptname" label="渠道名：" 
-													prompt="选填" style="width:200px"></input> 
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="findDepts();" style="width: 120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">查询</span>
-												<span class="icon-search">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="#" class="easyui-linkbutton"  style="width: 120px;margin-left:30px;" onclick="openWinAdd();">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;"">添加渠道</span>
-												<span class="icon-add">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearFormFind();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">清除</span>
-												<span class="icon-clear">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-										<td>	
-											<a href="#" class="easyui-linkbutton" onclick="removeDeptByID();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">删除</span>
-												<span class="icon-cut">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>	
-										<td>	
-											<a href="javascript:void(0)" class="easyui-linkbutton" onclick="openWinUpdate();" style="width:120px;margin-left:30px;">
-												<span style="font-weight:bold;margin-right:15px;margin-left:15px;">修改</span>
-												<span class="icon-edit">&nbsp;&nbsp;&nbsp;&nbsp;</span>
-											</a>
-										</td>
-											
-									</tr>
-								</table>
-							</form>
-						</div>
-					</div>
-				</div>
-				<div class="botton" style="margin-top:0px;width:100%;height:300px">
-					<table  id="dg"  class="easyui-datagrid" title="查询结果"  style="width:100%;max-width:100%;padding:20px 30px;"
-						data-options="singleSelect:true,method:'get'">
-						<thead>
-							<tr>
-								<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
-								<th data-options="field:'channelName',align:'center'" style="width:15%;max-width:100%;">渠道名称</th>
-								<th data-options="field:'channelStatus',align:'center'" style="width:18%;max-width:100%;">渠道状态</th>
-								<th data-options="field:'priority',align:'center'" style="width:18%;max-width:100%;">优先级</th>
-								<th data-options="field:'createDate',align:'center'" style="width:18%;max-width:100%;">优先级</th>
-								<th data-options="field:'mome',align:'center'" style="width:18%;max-width:100%;">备注</th>
-								<th data-options="field:'merId',align:'center'" style="width:18%;max-width:100%;">商户id</th>
-								<th data-options="field:'notifyUrl',align:'center'" style="width:18%;max-width:100%;">接口通知地址</th>
-								<th data-options="field:'paymentType',align:'center'" style="width:18%;max-width:100%;">支付类型</th>
-								<th data-options="field:'backurl',align:'center'" style="width:18%;max-width:100%;">商户返回地址</th>
-								<th data-options="field:'sighType',align:'center'" style="width:18%;max-width:100%;">签名方式</th>
-								<th data-options="field:'inputCharset',align:'center'" style="width:18%;max-width:100%;">字符编码格式</th>
-								<th data-options="field:'paymentChannel',align:'center'" style="width:18%;max-width:100%;">支付渠道</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			
+		<tr><td></td><td></td><td></td>
+			<td style="text-align: right;"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="onsearch()" style="width:80px">提交</a></td>
+			<td>
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
+			</td>
+		</tr>
 		
-		<!-- 添加渠道窗口 -->
-		<div id="addDept" class="easyui-window" title="渠道部门" collapsible="false" minimizable="false" maximizable="false" 
-			icon="icon-save" style="background: #fafafa;">
-			<div class="easyui-layout" fit="true">
-				<div region="center" border="false" style="background: #fff; border: 1px solid #ccc;">
-				<input id="id"  type="text" class="text" name="id" >
-					<table cellpadding="10px" id="addForm"  style="border: 0px;margin:50px 20px;font-weight: bold;" data-options="novalidate:true">
-						<tr>
-							
-							<td>渠道名称：</td>
-							<td>
-								<input id="channelName"  type="text" class="text" name="channelName" >
-							</td>
-							<td>渠道状态：</td>
-							<td>
-								<input id="channelStatus"  type="text" class="text" name="channelStatus" >
-							</td>
-						</tr>
-						<tr>
-							<td>渠道优先级：</td>
-							<td>
-								<input id="priority"  type="text" class="text" name="priority" >
-							</td>
-							<td>支付渠道：</td>
-							<td>
-								<input id="paymentChannel"  type="text" class="text" name="paymentChannel" >
-							</td>
-						</tr>
-						<tr>
-							<td>接口通知地址：</td>
-							<td>
-								<input id="notifyUrl"  type="text" class="text" name="notifyUrl" >
-							</td>
-							<td>支付类型：</td>
-							<td>
-								<input id="paymentType"  type="text" class="text" name="paymentType" >
-							</td>
-						</tr>
-						<tr>
-							<td>商户返回地址接口：</td>
-							<td>
-								<input id="backUrl"  type="text" class="text" name="backUrl" >
-							</td>
-							<td>type：</td>
-							<td>
-								<input id="type"  type="text" class="text" name="type" >
-							</td>
-						</tr>
-						<tr>
-							<td>签名方式：</td>
-							<td>
-								<input id="sighType"  type="text" class="text" name="sighType" >
-							</td>
-							<td>字符编码格式：</td>
-							<td>
-								<input id="inputCharset"  type="text" class="text" name="inputCharset" >
-							</td>
-						</tr>
-						<tr>
-							
-							<td>备注：</td>
-							<td>
-								<input id="memo"  type="text" class="text" name="memo" >
-							</td>
-							
-						</tr>
-						
-					</table>	
-				</div>
-				<div region="south" border="false" style="text-align:center; height: 50px; line-height: 50px;">
-					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-ok" onclick="submitForm()" style="margin:8px">提交</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-clear"  onclick="clearFormAdd()" style="margin:8px">清空</a>
-					<a href="javascript:void(0)" class="easyui-linkbutton" icon="icon-cancel" onclick="closeWinAdd()" style="margin:8px">取消</a>
-				</div>
+		
+		</table>
+	
+	</form>
+	</div>
+
+    
+	
+	<table id="dg" class="easyui-datagrid" title="渠道管理" style="width:100%;height:540px"
+			data-options="rownumbers:true,singleSelect:true,url:'',method:'get',toolbar:'#tb'">
+		<thead>
+				<tr>
+					<th data-options="field:'id',align:'center'" hidden="true" style="width:15%;max-width:100%;">ID</th>
+					<th data-options="field:'channelName',align:'center'" style="width:15%;max-width:100%;">渠道名称</th>
+					<th data-options="field:'channelStatusName',align:'center'" style="width:18%;max-width:100%;">渠道状态</th>
+					<th data-options="field:'priorityName',align:'center'" style="width:18%;max-width:100%;">优先级</th>
+					<th data-options="field:'foundDate',align:'center'" style="width:18%;max-width:100%;">创建时间</th>
+					<th data-options="field:'merId',align:'center'" style="width:18%;max-width:100%;">商户id</th>
+					<th data-options="field:'keyValue',align:'center'" style="width:18%;max-width:100%;">商户秘钥</th>
+					<th data-options="field:'notifyUrl',align:'center'" style="width:18%;max-width:100%;">接口通知地址</th>
+					<th data-options="field:'other',align:'center'" style="width:18%;max-width:100%;">其他参数</th>
+					<th data-options="field:'paymentType',align:'center'" style="width:18%;max-width:100%;">支付类型</th>
+					<th data-options="field:'backurl',align:'center'" style="width:18%;max-width:100%;">商户返回地址</th>
+					<th data-options="field:'sighType',align:'center'" style="width:18%;max-width:100%;">签名方式</th>
+					<th data-options="field:'type',align:'center'" style="width:18%;max-width:100%;">type</th>
+					<th data-options="field:'inputCharset',align:'center'" style="width:18%;max-width:100%;">字符编码格式</th>
+					<th data-options="field:'paymentChannel',align:'center'" style="width:18%;max-width:100%;">支付渠道</th>
+					<th data-options="field:'mome',align:'center'" style="width:18%;max-width:100%;">备注</th>
+				</tr>
+		</thead>
+	</table>
+	<div id="tb" style="padding:2px 5px;">
+	   <span style="margin-left: 75%;">
+		名称: 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
+		</span>
+	</div>
+	<div id="w" class="easyui-window" title="角色添加" collapsible="false"
+		minimizable="false" maximizable="false" icon="icon-save"
+		style="width: 300px; height: 150px; padding: 5px;
+        background: #fafafa;">
+		<div class="easyui-layout" fit="true">
+			<div border="false"
+				style="padding: 5px; background: #fff; border: 1px solid #ccc;">
+				<table cellpadding=3>
+					<input id="id" type="hidden" />
+					<tr style="height: 40px">
+						<td>渠道名称：</td>
+						<td><input id="channelName" name="channelName" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>渠道状态：</td>
+						<td>
+						<select class="easyui-combobox" data-options="editable:false" id="channelStatus" name="channelStatus" style="width:100%">
+							<option value="1">正常</option>
+							<option value="2">锁定</option>
+							<option value="3">关闭</option>
+						</select>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>渠道优先级：</td>
+						<td>
+						<select class="easyui-combobox" data-options="editable:false" id="priority" name="priority" style="width:100%">
+							<option value="0">高</option>
+							<option value="1">中</option>
+							<option value="2">低</option>
+						</select>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>支付渠道：</td>
+						<td><input id="paymentChannel" name="paymentChannel" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>商户ID：</td>
+						<td><input id="merId" name="merId" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>商户秘钥：</td>
+						<td><input id="keyValue" name="keyValue" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>其他参数：</td>
+						<td><input id="other" name="other" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>接口通知地址：</td>
+						<td><input id="notifyUrl" name="notifyUrl" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>支付类型：</td>
+						<td><input id="paymentType" name="paymentType" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>商户返回地址接口：</td>
+						<td><input id="backUrl" name="backUrl" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>type：</td>
+						<td><input id="type" name="type" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>签名方式：</td>
+						<td><input id="sighType" name="sighType" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>字符编码格式：</td>
+						<td><input id="inputCharset" name="inputCharset" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
+						<td>备注：</td>
+						<td><input id="memo" name="memo" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div region="south" border="false"
+				style="text-align:center; height: 30px; line-height: 30px;">
+				<a id="btnEp" class="easyui-linkbutton" icon="icon-ok"
+					href="javascript:void(0)"> 确定</a> <a id="btnCancel"
+					class="easyui-linkbutton" icon="icon-cancel"
+					href="javascript:void(0)">取消</a>
 			</div>
 		</div>
-	</body>
-	<script>
-	
-	 //设置添加部门窗口
-    function winAdd() {
-        $('#addDept').window({
-            title: '添加部门',
-            width: 800,
-            modal: true,
-            shadow: true,
-            closed: true,
-            height: 500,
-            resizable:false
-        });
-    }
-	// 提交（渠道信息）
-	function submitForm(){
-		var id = $.trim($('#id').val()) ;
-		var channelName = $.trim($('#channelName').val()) ;
-		var channelStatus = $.trim($('#channelStatus').val()) ;
-		var priority = $.trim($('#priority').val()) ;
-		var paymentChannel = $.trim($('#paymentChannel').val()) ;
-		var notifyUrl = $.trim($('#notifyUrl').val()) ;
-		var paymentType = $.trim($('#paymentType').val()) ;
-		var backUrl = $.trim($('#backUrl').val()) ;
-		var type = $.trim($('#type').val()) ;
-		var sighType = $.trim($('#sighType').val()) ;
-		var inputCharset = $.trim($('#inputCharset').val()) ;
-		var memo = $.trim($('#memo').val()) ;
-		// 提交信息前完成前端校验
-		//var check_result = checked();
-		//if(!check_result){
-		//	return;
-		//}
-		var urlValue=null;
-		if(id==""){
-			urlValue="/pay-platform-manager/irrigation/addDictTrade";
-		}else{
-			urlValue="/pay-platform-manager/irrigation/updateDictTrade";
-		}
-		$.ajax({
-			type:"post",
-			url:urlValue,
-			data:{"id":id,"channelName":channelName,"channelStatus":channelStatus,"priority":priority,"paymentChannel":paymentChannel,"notifyUrl":notifyUrl,"paymentType":paymentType,"backUrl":backUrl,"type":type,"sighType":sighType,"inputCharset":inputCharset,"memo":memo},
-			//data:"{"',paymentChannel:'" + paymentChannel + "',notifyUrl:'"+notifyUrl+"',paymentType:'" + paymentType + "',backurl:'"+backurl+"',type:'" + type + "',sighType:'"+sighType+"',inputCharset:'" + inputCharset + "',memo:'"+memo+"'}", 
-			dataType:"json",
-			success:function (data){
-				if(data.result == true){
-					$.messager.alert("系统提示","恭喜，添加渠道成功!","info");
-					var URL = '${pageContext.request.contextPath}/irrigation/findCommercial';
-					var name = $('#deptname').val().trim();
-					closeWinAdd();
-					reload(URL,name);
-				}else if(data.result == false){
-					$.messager.alert("系统提示","该渠道名已被注册，请重新填写渠道名!","error");	
-					clearFormAdd();
-				}else{
-					$.messager.alert("系统提示","添加渠道失败，请重新添加!","error");
-					clearFormAdd();
-				}
-			},
-			error:function(){
-				$.messager.alert("系统提示","部门渠道异常，请刷新页面!","error");
-			}
-		});
-	}
-	//根据部门ID删除部门
-	function removeDeptByID(){
-		var row = $('#dg').datagrid('getSelected');
-		if (row){
-			$.messager.confirm('系统提示', '是否确定删除?', function(r){
-				if (r){
-					   var id=row.id;
-					   var url='${pageContext.request.contextPath}/irrigation/removeDictTradeID?id='+id;
-			            $.post(url, function(data) {
-			                if(data.result==true){
-			                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-			                }else{
-			                  	msgShow('系统提示', '删除失败！', 'error');
-			                }
-			            });
-			              //刷新
-			              var url='${pageContext.request.contextPath}/irrigation/findCommercial';
-			              reload(url,name);
-				}
-		   });
-		}else{
-        	msgShow('系统提示', '请选择要删除的部门！', 'error');
-        }
-	}
-	//打开修改部门窗口
-	function openWinUpdate(){
-		
-		var row = $('#dg').datagrid('getSelected');
-		if (row){
-			var id = row.id;
-			var channelName = row.channelName;
-			var channelStatus = row.channelStatus;
-			var priority = row.priority;
-			var paymentChannel = row.paymentChannel;
-			var notifyUrl = row.notifyUrl;
-			var paymentType = row.paymentType;
-			var backUrl = row.backUrl;
-			var type = row.type;
-			var sighType = row.sighType;
-			var inputCharset = row.inputCharset;
-			var memo = row.memo;
-			
-			$('#id').val(id);
-			$('#channelName').val(channelName);
-			$('#channelStatus').val(channelStatus);
-			$('#priority').val(priority);
-			$('#paymentChannel').val(paymentChannel);
-			$('#notifyUrl').val(notifyUrl);
-			$('#paymentType').val(paymentType);
-			$('#backUrl').val(backUrl);
-			$('#type').val(type);
-			$('#sighType').val(sighType);
-			$('#inputCharset').val(inputCharset);
-			$('#memo').val(memo);
-			$('#addDept').window('open');
-		}else{
-			msgShow('系统提示', '请选择要修改的部门！', 'error');
-		}
-	};
-	// 清空添加渠道表单
-	function clearFormAdd(){
-		$('#addForm').form('clear');
-	}
-	//打开添加渠道窗口
-	function openWinAdd(){
-		//打开添加渠道窗口之前先清空
-		$('#id').val("");
-		clearFormAdd();
-		$('#addDept').window('open');
-	};
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		//添加tab页面
-		function addPanel(deptName,deptId){
-			if ($('#tt').tabs('exists', deptName)){
-			 	$('#tt').tabs('select', deptName);
-			} else {
-				 var url = '${pageContext.request.contextPath}/department/toDeptUsers?id='+deptId+'&deptName='+deptName;
-			 	 var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" style="width:100%;height:100%;"></iframe>';
-				 $('#tt').tabs('add',{
-					 title:'部门:'+deptName,
-					 content:content,
-					 closable:true,
-					 cache:true
-				 });
-			}
-		}	
-		//移除tab页面
-		function removePanel(){
-			var tab = $('#tt').tabs('getSelected');
-			if (tab){
-				var index = $('#tt').tabs('getTabIndex', tab);
-				$('#tt').tabs('close', index);
-			}
-		}
-	
-	
-		//设置部门用户信息窗口
-		 function winDeptUserList() {
-            $('#deptUserList').window({
-                title: '部门用户信息',
-                width: 600,
+	</div>
+</body>
+
+<script>
+         //设置登录窗口
+        function openPwd() {
+            $('#w').window({
+                title: '渠道添加',
+                width: 400,
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: 400,
+                height: 700,
                 resizable:false
             });
+           
         }
-		
-		//打开部门用户信息窗口
-		winDeptUserList();
-		function openWinDUL(deptName,deptId){
-			$('#deptUserList').window('open');
-			addPanel(deptName,deptId);
-		}
-		
-		 //设置修改部门窗口
-        function winUpdate() {
-            $('#upda').window({
-                title: '部门信息',
-                width: 800,
-                modal: true,
-                shadow: true,
-                closed: true,
-                height: 500,
-                resizable:false
+        //关闭登录窗口
+        function closePwd() {
+            $('#w').window('close');
+        }
+        //添加
+        function serverLogin() {
+        	
+        	var checkIds='';
+        	var bool=false;
+        	var ui = $('#deptree1').tree('getChecked', ['checked','indeterminate']);
+        	for(var i = 0;i<ui.length;i++){
+       			if(i>0){
+       				//模块节点(ismodule自定义参数=0标记的是模块)
+       				if(ui[i].ismodule=="0"){
+       					checkIds+=",,,";//模块与模块区分
+       					bool=false;
+       				}else if(bool){
+       					checkIds+=",";//资源与资源区分
+       				}else{
+       					checkIds+=",,";//模块与资源区分
+       					bool=true;
+       				}
+        		}
+       		    //去掉带r标示的id（用于区分资源和模块id）
+    			checkIds+=ui[i].id.replace('r','');
+        	}
+        	//alert(checkIds);
+        	
+        	
+        	var id = $('#id').val();
+            var $resourceName = $('#resourceName');
+            var $status= $('#status');
+            if ($resourceName.val() == '') {
+                msgShow('系统提示', '请输入名称！', 'warning');
+                return false;
+            }
+            var url=encodeURI('${pageContext.request.contextPath}/managerRole/addRole?name='+$resourceName.val()+'&status='+$status.val()+'&id='+id+'&temp='+checkIds);
+            $.post(url, function(data) {
+                if(data.returnMsg=='1'){
+	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				      reload(url,name);
+                }else if(data.returnMsg=='2'){
+                	msgShow('系统提示', '修改成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
+				      reload(url,name);
+                }else{
+                	msgShow('系统提示', '角色已存在！', 'info');
+	                 $newpass.val('');
+	                 $rePass.val('');
+	                 close();
+                }
             });
         }
         
-        
-        
-          // 清除查询表单
-		function clearFormFind(){
-			$('#fm').form('clear');
-		}
-		
-		// 清空修改部门窗口
-		function clearFormUpdate(){
-			$('#tb').form('clear');
-		};
-		
-		
-	
-		
-		winUpdate();
-		
-		
-		winAdd();
-		
-		
-		//关闭修改部门窗口
-		function closeWinDeptUserList(){
-			$('#deptUserList').window('close');
-		};
-		
-		//关闭修改部门窗口
-		function closeWinUpdate(){
-			$('#upda').window('close');
-		};
-		
-		//关闭添加部门窗口
-		function closeWinAdd(){
-			$('#addDept').window('close');
-		};
-		
+      //修改
+        function serverUpdate() {
+        	var id = $.trim($('#id').val()) ;
+    		var channelName = $.trim($('#channelName').val()) ;
+    		var channelStatus = $("input[name='channelStatus']").val();
+    		var merId = $.trim($('#merId').val()) ;
+    		var keyValue = $.trim($('#keyValue').val()) ;
+    		var priority = $("input[name='priority']").val();
+    		var paymentChannel = $.trim($('#paymentChannel').val()) ;
+    		var notifyUrl = $.trim($('#notifyUrl').val()) ;
+    		var other = $.trim($('#other').val()) ;
+    		var paymentType = $.trim($('#paymentType').val()) ;
+    		var backUrl = $.trim($('#backUrl').val()) ;
+    		var type = $.trim($('#type').val()) ;
+    		var sighType = $.trim($('#sighType').val()) ;
+    		var inputCharset = $.trim($('#inputCharset').val()) ;
+    		var memo = $.trim($('#memo').val()) ;
+            var url= "";
+            if(id==''){
+            	url=encodeURI('${pageContext.request.contextPath}/irrigation/addDictTrade?id='+id+'&channelName='+channelName+'&channelStatus='+channelStatus+'&merId='+merId+'&keyValue='+keyValue+'&priority='+priority+'&paymentChannel='+paymentChannel+'&notifyUrl='+notifyUrl+'&other='+other+'&paymentType='+paymentType+'&backUrl='+backUrl+'&type='+type+'&sighType='+sighType+'&inputCharset='+inputCharset+'&memo='+memo);
+            }else{
+            	url=encodeURI('${pageContext.request.contextPath}/irrigation/updateDictTrade?id='+id+'&channelName='+channelName+'&channelStatus='+channelStatus+'&merId='+merId+'&keyValue='+keyValue+'&priority='+priority+'&paymentChannel='+paymentChannel+'&notifyUrl='+notifyUrl+'&other='+other+'&paymentType='+paymentType+'&backUrl='+backUrl+'&type='+type+'&sighType='+sighType+'&inputCharset='+inputCharset+'&memo='+memo);
+            }
+             $.post(url, function(data) {
+            	 if(data.returnMsg=='1'){
+	                 msgShow('系统提示', '恭喜，添加成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/irrigation/findIrrigation';
+				      reload(url,name);
+                }else if(data.returnMsg=='2'){
+                	msgShow('系统提示', '修改成功！', 'info');
+	                 close();
+	                $('#w').window('close');
+	                //刷新
+				      var url='${pageContext.request.contextPath}/irrigation/findIrrigation';
+				      reload(url,name);
+                }else{
+                	msgShow('系统提示', '角色已存在！', 'info');
+	                 $newpass.val('');
+	                 $rePass.val('');
+	                 close();
+                }
+            });
+        }
+      
+      
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
 		}
-	
-		
-		
-		//列表重新加载
-		function reload(url,name){
-			$('#dg').datagrid('reload',{
-	            url: url, queryParams:{ name:name}, method: "post"
-	          }); 
-		}
-		
-		// 查询部门方法
-		function findDepts(){
-			//部门名
-			var dept_name = $('#deptname').val().trim();
-			$('#dg').datagrid({
+       $(function(){  
+       var name=$("#name").val();
+        $('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/irrigation/findIrrigation?dept_name="+dept_name,  
-		        pagination: true,//显示分页工具栏
+		        url: "${pageContext.request.contextPath}/irrigation/findIrrigation?name="+name,  
+		        pagination: true,
 		        onLoadSuccess:function(data){
                     if (data.total<1){
-                       $.messager.alert("系统提示","没有符合查询条件的数据!","info");
+                       $.messager.alert("提示","没有符合查询条件的数据!");
                   }
                 }
 		    }); 
-		    
 			 //设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 
 		    $(p).pagination({ 
@@ -448,97 +335,155 @@
 		            $(this).pagination('loading');
 		            $(this).pagination('loaded');
 		        } 
-		    }); 
-		}
-        
-        // 提交修改后的部门信息
-         function updateDept() {
+		    });
+		     openPwd();
+		     $('#add').click(function() {
+		    	 	$('#id').val("");
+					$('#channelName').val("");
+					$('#channelStatus').val("");
+					$('#priority').val("");
+					$('#paymentChannel').val("");
+					$('#merId').val("");
+					$('#keyValue').val("");
+					$('#notifyUrl').val("");
+					$('#other').val("");
+					$('#paymentType').val("");
+					$('#backUrl').val("");
+					$('#type').val("");
+					$('#sighType').val("");
+					$('#inputCharset').val("");
+					$('#memo').val("");
+                $('#w').window('open');
+            });
+            $('#btnEp').click(function() {
+            	serverUpdate();
+            });
+			$('#btnCancel').click(function(){closePwd();});
+		    });
+		  
+        function getSelected(){
 			var row = $('#dg').datagrid('getSelected');
-			if(row){	
-				var id=row.id;
-	            var dept_name = $('#dept_name').val().trim();
-	            var dept_name_check = $('#dept_name_check').val().trim();
-	            if (dept_name == '') {
-	                msgShow('系统提示', '请输入部门名！', 'warning');
-	                return false;
-	            }else if(dept_name_check==dept_name){
-	            	msgShow('系统提示', '修改成功！', 'info');
-	            	closeWinUpdate();
-		            var url='${pageContext.request.contextPath}/department/findDepts';
-			        reload(url,name);
-	                return;
-	            }
-	            dept_name = $('#dept_name').val().trim();
-	            var url=encodeURI('${pageContext.request.contextPath}/department/updateDept?dept_name='+dept_name+'&id='+id);
-	            $.post(url, function(data) {
-	                if(data.result==true){
-		                 msgShow('系统提示', '修改成功！', 'info');
-		                 closeWinUpdate();
-		                 var url='${pageContext.request.contextPath}/department/findDepts';
-			             reload(url,name);
-	                }else if(data.result==false){
-	                	 msgShow('系统提示', '该部门名已被注册！', 'error');
-		                 closeWinUpdate();
-		                 var url='${pageContext.request.contextPath}/department/findDepts';
-			             reload(url,name);
-	                }else{
-		                 msgShow('系统提示', '修改失败！', 'error');
-		                 closeWinUpdate();
-	                }
-	            });
-            }else{
-            	msgShow('系统提示', '请选择要修改的部门！', 'error');
-            }
-        }
-        
-        
-		
-		//前端校验
-		function checked(){
-			var regex_dept_Name=/^[\u4E00-\u9FA5A-Za-z0-9_]{2,20}$/;
-			var dept_Name = $.trim($('#dept_Name').val()) ;
-			if(dept_Name == "" || dept_Name == null || dept_Name == undefined || regex_dept_Name.test(dept_Name) != true){
-					$.messager.alert("系统提示","部门名不能为空或格式不正确，请重新填写！\n用户名由2-20位汉字、字母、数字、下划线组成","error");	
-					return false;
+			if (row){
+				$.messager.alert('Info', row.itemid+":"+row.productid+":"+row.attr1);
 			}
-			return true;
+		}
+        
+        function editMessage(){
+   			var row = $('#dg').datagrid('getSelected');
+	   		if(row==null){
+	   			msgShow('系统提示', '请选中要修改的数据', 'info');
+	   		}
+   			if (row){
+   			$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
+   				if (r){
+   					
+   					var id = row.id;
+   					var channelName = row.channelName;
+   					var channelStatus = row.channelStatus;
+   					var priority = row.priority;
+   					var paymentChannel = row.paymentChannel;
+   					var merId = row.merId;
+   					var keyValue = row.keyValue;
+   					var notifyUrl = row.notifyUrl;
+   					var other = row.other;
+   					var paymentType = row.paymentType;
+   					var backUrl = row.backUrl;
+   					var type = row.type;
+   					var sighType = row.sighType;
+   					var inputCharset = row.inputCharset;
+   					var memo = row.memo;
+   					
+   					$('#id').val(id);
+   					$('#channelName').val(channelName);
+   					$('#channelStatus').val(channelStatus);
+   					$('#priority').val(priority);
+   					$('#paymentChannel').val(paymentChannel);
+   					$('#merId').val(merId);
+   					$('#keyValue').val(keyValue);
+   					$('#notifyUrl').val(notifyUrl);
+   					$('#other').val(other);
+   					$('#paymentType').val(paymentType);
+   					$('#backUrl').val(backUrl);
+   					$('#type').val(type);
+   					$('#sighType').val(sighType);
+   					$('#inputCharset').val(inputCharset);
+   					$('#memo').val(memo);
+  					
+   					$('#w').window({
+		                title: '渠道修改',
+		                width: 400,
+		                modal: true,
+		                shadow: true,
+		                closed: true,
+		                height: 700,
+		                resizable:false
+		            });
+  					$('#w').window('open');
+   				}
+   			   });
+   			}
+   		}
+		
+		function removeit(){
+		var row = $('#dg').datagrid('getSelected');
+			if (row){
+			$.messager.confirm('系统提示', '是否确定删除?', function(r){
+				if (r){
+					   var id=row.id;
+					   var url="${pageContext.request.contextPath}/irrigation/removeDictTradeID?id="+id;
+			            $.post(url, function(data) {
+			                if(data.result==true){
+			                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
+			                 	var url='${pageContext.request.contextPath}/irrigation/findCommercial';
+					              reload(url);
+			                }else{
+			                  	msgShow('系统提示', '删除失败！', 'error');
+			                }
+			            });
+				}
+			   });
+			}
+		}
+		function reload(url,name){
+		$('#dg').datagrid('reload',{
+            url: url, queryParams:{ name:name}, method: "post"
+          }); 
 		}
 		
+		function onsearch(){
+			 var CHANNEL_NAME=$("#CHANNEL_NAME").val();
+			 var CHANNEL_STATUS = $("input[name='CHANNEL_STATUS']").val();
+			 var MERID=$("#MERID").val();
+			 var url=encodeURI("${pageContext.request.contextPath}/irrigation/findIrrigation?CHANNEL_NAME="+CHANNEL_NAME+"&CHANNEL_STATUS="+CHANNEL_STATUS+"&MERID="+MERID);
+	        $('#dg').datagrid({
+					collapsible:true,
+					rownumbers:true,
+					pagination:true,
+			        url: url,  
+			        pagination: true,
+			        onLoadSuccess:function(data){
+	                    if (data.total<1){
+	                       $.messager.alert("提示","没有符合查询条件的数据!");
+	                  }
+	                }
+			    }); 
+				 //设置分页控件 
+			    var p = $('#dg').datagrid('getPager'); 
+			    $(p).pagination({ 
+			        pageSize: 15,//每页显示的记录条数，默认为10 
+			        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
+			        beforePageText: '第',//页数文本框前显示的汉字 
+			        afterPageText: '页    共 {pages} 页', 
+			        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+			        onBeforeRefresh:function(){
+			            $(this).pagination('loading');
+			            $(this).pagination('loaded');
+			        } 
+			    }); 
+			}
 		
-		
-		 // 查询部门用户方法
-		function findDeptUsers(deptID){
-			$('#deptTable').datagrid({
-				collapsible:true,
-				rownumbers:true,
-				pagination:true,
-		        url: "${pageContext.request.contextPath}/managerUser/findDeptUsers?deptID="+deptID,  
-		        pagination: true,//显示分页工具栏
-		        onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("系统提示","没有符合查询条件的数据!","info");
-                  };
-                }
-		    }); 
-		    alert(deptID);
-			 //设置分页控件 
-		    var p = $('#deptTable').datagrid('getPager'); 
-		    $(p).pagination({ 
-		        pageSize: 15,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-		        beforePageText: '第',//页数文本框前显示的汉字 
-		        afterPageText: '页    共 {pages} 页', 
-		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        onBeforeRefresh:function(){
-		            $(this).pagination('loading');
-		            $(this).pagination('loaded');
-		        } 
-		    }); 
+		function clearForm(){
+			$('#ff').form('clear');
 		}
-		
-		//页面预加载
-		$(function(){
-			findDepts();
-		});
 	</script>
 </html>

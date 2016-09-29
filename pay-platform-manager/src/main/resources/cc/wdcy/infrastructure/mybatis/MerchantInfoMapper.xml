@@ -89,9 +89,21 @@
 	
 	<select id="findDepts" resultMap="merchantInfoMap"  >
 		select *
-		from MERCHANT_INFO 
+		from MERCHANT_INFO where 1=1
 		<if test="merchantName != null and merchantName != '' ">
-			MERCHANT_NAME =#{merchantName,jdbcType=VARCHAR}
+			and MERCHANT_NAME =#{merchantName,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null and status != '' ">
+			and STATUS =#{status,jdbcType=VARCHAR}
+		</if>
+		<if test="operater != null and operater != '' ">
+			and OPERATER =#{operater,jdbcType=VARCHAR}
+		</if>
+		<if test="productName != null and productName != '' ">
+			and PRODUCT_NAME =#{productName,jdbcType=VARCHAR}
+		</if>
+		<if test="contact != null and contact != '' ">
+			and CONTACT =#{contact,jdbcType=VARCHAR}
 		</if>
 		
 		limit  #{startRow},#{pageSize}

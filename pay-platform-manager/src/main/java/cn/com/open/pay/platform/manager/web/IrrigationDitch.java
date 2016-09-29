@@ -1,6 +1,8 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradeChannelService;
 import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
 import cn.com.open.pay.platform.manager.login.model.User;
@@ -56,11 +59,14 @@ public class IrrigationDitch extends BaseControllerUtil {
 	@RequestMapping(value="findIrrigation")
 	public void findIrrigation(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------findDepts        start------------------------------------");
-		String deptName = request.getParameter("dept_name");
-		
-		if(deptName !=null ){
-			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
+		String CHANNEL_NAME = request.getParameter("CHANNEL_NAME");
+		String channelName="";
+		if(CHANNEL_NAME !=null ){
+			channelName = new String(CHANNEL_NAME.getBytes("iso-8859-1"),"utf-8");
 		}
+		String channelStatus = request.getParameter("CHANNEL_STATUS");
+		String merId = request.getParameter("MERID");
+		
 //		System.out.println(deptName);
 		//当前第几页
 		String page=request.getParameter("page");
@@ -78,10 +84,38 @@ public class IrrigationDitch extends BaseControllerUtil {
 	    
 		//将请求参数封装到Department对象中
 	    DictTradeChannel dictTradeChannel = new DictTradeChannel();
-//	    dictTradeChannel.setDeptName(deptName);
+	    dictTradeChannel.setChannelName(channelName);
+	    if(channelStatus!=""&&channelStatus!=null){
+	    	dictTradeChannel.setChannelStatus(Double.parseDouble(channelStatus));
+	    }
+	    dictTradeChannel.setMerId(merId);
 	    dictTradeChannel.setPageSize(pageSize);
 	    dictTradeChannel.setStartRow(startRow);
 		List<DictTradeChannel> departments = dictTradeChannelService.findDepts(dictTradeChannel);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		if(departments!=null){
+			for(int i=0;i<departments.size();i++){
+				DictTradeChannel dictTradeChannel1= departments.get(i);
+				Date createDate1 = dictTradeChannel1.getCreateDate();
+				dictTradeChannel1.setFoundDate(df.format(createDate1));//交易时间
+				Double ChannelStatus = dictTradeChannel1.getChannelStatus();
+				if(ChannelStatus==1){
+					dictTradeChannel1.setChannelStatusName("正常");
+				}else if(ChannelStatus==2){
+					dictTradeChannel1.setChannelStatusName("锁定");
+				}else{
+					dictTradeChannel1.setChannelStatusName("关闭");
+				}
+				Double priority = dictTradeChannel1.getPriority();
+				if(priority==0){
+					dictTradeChannel1.setPriorityName("高");
+				}else if(priority==1){
+					dictTradeChannel1.setPriorityName("中");
+				}else{
+					dictTradeChannel1.setPriorityName("低");
+				}
+			}
+		}
 		int count = dictTradeChannelService.findQueryCount(dictTradeChannel);
 		System.out.println(count);
 		JSONArray jsonArr = JSONArray.fromObject(departments);
@@ -95,7 +129,7 @@ public class IrrigationDitch extends BaseControllerUtil {
 	
 	
 	/**
-	 * 根据ID删除部门
+	 * 根据ID删除
 	 * @return
 	 */
 	@RequestMapping(value="removeDictTradeID")
@@ -116,7 +150,7 @@ public class IrrigationDitch extends BaseControllerUtil {
 	}
 	
 	/**
-	 * 添加部门
+	 * 添加
 	 * @param request
 	 * @param response
 	 * @throws UnsupportedEncodingException
@@ -125,12 +159,16 @@ public class IrrigationDitch extends BaseControllerUtil {
 	public void addDictTrade(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------addDept        start------------------------------------");
 		request.setCharacterEncoding("utf-8");
-		String channelName = request.getParameter("channelName");
+		String channelName=new String(request.getParameter("channelName").getBytes("iso-8859-1"),"utf-8");
 		String channelStatus = request.getParameter("channelStatus");
 		String priority = request.getParameter("priority");
 		String paymentChannel = request.getParameter("paymentChannel");
+		String merId = request.getParameter("merId");
+		String keyValue = request.getParameter("keyValue");
 		String notifyUrl = request.getParameter("notifyUrl");
+		String other = request.getParameter("other");
 		String paymentType = request.getParameter("paymentType");
+		
 		String backUrl = request.getParameter("backUrl");
 		String type = request.getParameter("type");
 		String sighType = request.getParameter("sighType");
@@ -154,7 +192,10 @@ public class IrrigationDitch extends BaseControllerUtil {
 		dictTradeChannel.setPriority(Double.parseDouble(priority));
 		dictTradeChannel.setCreateDate(createTime);
 		dictTradeChannel.setPaymentChannel(paymentChannel);
+		dictTradeChannel.setMerId(merId);
+		dictTradeChannel.setKeyValue(keyValue);
 		dictTradeChannel.setNotifyUrl(notifyUrl);
+		dictTradeChannel.setOther(other);
 		dictTradeChannel.setPaymentType(Integer.parseInt(paymentType));
 		dictTradeChannel.setBackUrl(backUrl);
 		dictTradeChannel.setType(Integer.parseInt(type));
@@ -177,10 +218,8 @@ public class IrrigationDitch extends BaseControllerUtil {
 	@RequestMapping(value="updateDictTrade")
 	public void updateDictTrade(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------updateDeptByID       start------------------------------------");
-		request.setCharacterEncoding("utf-8");
-//		Integer id = Integer.valueOf(request.getParameter("id"));
 		String id = request.getParameter("id");
-		String channelName = request.getParameter("channelName");
+		String channelName=new String(request.getParameter("channelName").getBytes("iso-8859-1"),"utf-8");
 		String channelStatus = request.getParameter("channelStatus");
 		String priority = request.getParameter("priority");
 		String paymentChannel = request.getParameter("paymentChannel");

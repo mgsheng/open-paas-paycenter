@@ -57,9 +57,9 @@
 		values 
 		(
 			#{channelName, jdbcType=VARCHAR},
-			#{channelStatus, jdbcType=INTEGER},
+			#{channelStatus, jdbcType=DECIMAL},
 			#{priority, jdbcType=DECIMAL},
-			#{createDate, jdbcType=DECIMAL},
+			#{createDate, jdbcType=TIMESTAMP},
 			#{memo, jdbcType=VARCHAR},
 			#{merId, jdbcType=VARCHAR},
 			#{keyValue, jdbcType=VARCHAR},
@@ -85,9 +85,15 @@
 	
 	<select id="findDepts" resultMap="dictTradeChannelMap" parameterType="DictTradeChannel" >
 		select *
-		from DICT_TRADE_CHANNEL 
+		from DICT_TRADE_CHANNEL where 1=1
 		<if test="channelName != null and channelName != '' ">
-			CHANNEL_NAME =#{channelName,jdbcType=VARCHAR}
+			and CHANNEL_NAME =#{channelName,jdbcType=VARCHAR}
+		</if>
+		<if test="channelStatus != null and channelStatus != '' ">
+			and CHANNEL_STATUS =#{channelStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="merId != null and merId != '' ">
+			and MERID =#{merId,jdbcType=VARCHAR}
 		</if>
 		limit  #{startRow},#{pageSize}
 	</select>
