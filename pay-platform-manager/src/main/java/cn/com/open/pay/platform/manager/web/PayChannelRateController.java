@@ -38,6 +38,7 @@ public class PayChannelRateController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
 	private PayChannelRateService payChannelRateService;
+	
 	/**
 	 * 跳转到渠道费率维护页面
 	 * @return
@@ -62,8 +63,8 @@ public class PayChannelRateController extends BaseControllerUtil{
 		String addPayChannelCode = request.getParameter("addPayChannelCode");
 		String payRate = request.getParameter("payRate");
 		
-		System.out.println("addPayName : "+addPayName+"     addMerchantID : "+addMerchantID+"    " +
-				"addPayChannelCode : "+addPayChannelCode+"      payRate:"+payRate);
+		System.out.println("-----------addPayName : "+addPayName+"     addMerchantID : "+addMerchantID+"    " +
+				"addPayChannelCode : "+addPayChannelCode+"      payRate:"+payRate+"-----------");
 		
 		JSONObject json =  new JSONObject();
 		//封装参数
@@ -76,7 +77,8 @@ public class PayChannelRateController extends BaseControllerUtil{
 		int result = -1;
 		//先查询该记录是否已经存在
 		List<ChannelRate> rates = payChannelRateService.findChannelRate(channelRate);
-		if(rates != null){
+		if(rates.size()>=1){
+			System.out.println(rates.toString());
 			result = 2;
 		}else{
 			//添加费率
@@ -102,16 +104,16 @@ public class PayChannelRateController extends BaseControllerUtil{
 		log.info("-------------------------findPayChannelCode         start------------------------------------");
 		String payChannelName = request.getParameter("payChannelName");
 		payChannelName = ((payChannelName == null || payChannelName == "") ? "" : new String(payChannelName.getBytes("iso8859-1"),"utf-8" ));
-		System.out.println(payChannelName);
+		System.out.println("---------------payChannelName  : "+payChannelName);
 		//封装参数支付名称
 		PayChannelDictionary payChannelDictionary = new PayChannelDictionary();
 		payChannelDictionary.setChannelName(payChannelName);
 		
-		List<PayChannelDictionary> list = payChannelRateService.findPayChannelCode(payChannelDictionary);
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
 		String str=null;
-		if(list == null || "".equals(list)){
+		List<PayChannelDictionary> list = payChannelRateService.findPayChannelCode(payChannelDictionary);
+		if(list.size()>1){
 			list = payChannelRateService.findPayChannelCodeAll();
 		}
 		for(PayChannelDictionary p : list){
@@ -123,7 +125,7 @@ public class PayChannelRateController extends BaseControllerUtil{
 		JSONArray jsonArr = JSONArray.fromObject(maps);
 		str = jsonArr.toString();
 		WebUtils.writeJson(response, str);
-		System.out.println(str);
+//		System.out.println(str);
 		return ;
 	}
 	
@@ -160,12 +162,12 @@ public class PayChannelRateController extends BaseControllerUtil{
 	@RequestMapping(value="findPayNames")
 	public void findPayNames(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------findPayNames         start------------------------------------");
-		List<DictTradeChannel> list = payChannelRateService.findPayChannelNamesAll();
+		List<PayChannelDictionary> list = payChannelRateService.findPayChannelCodeAll();
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
 		String str=null;
 		if(list != null){
-			for(DictTradeChannel d : list){
+			for(PayChannelDictionary d : list){
 				map = new HashMap<String,Object>();
 				map.put("id", d.getId());
 				map.put("text", d.getChannelName());

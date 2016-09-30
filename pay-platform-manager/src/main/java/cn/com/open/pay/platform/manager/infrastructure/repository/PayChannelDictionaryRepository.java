@@ -13,8 +13,10 @@ import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
  */
 public interface PayChannelDictionaryRepository  extends Repository{
 	
+	
+	
 	/**
-	 * 查询所有渠道编码
+	 * 查询所有渠道编码，渠道名称
 	 * @return
 	 */
 	public List<PayChannelDictionary> findPayChannelCodeAll();

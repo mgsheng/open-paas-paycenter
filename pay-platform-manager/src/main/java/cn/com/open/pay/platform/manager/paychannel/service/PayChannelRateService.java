@@ -14,7 +14,7 @@ import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 public interface PayChannelRateService {
 	
 	/**
-	 * 查询所有渠道编码
+	 * 查询所有渠道编码,渠道名称
 	 * @return
 	 */
 	public List<PayChannelDictionary> findPayChannelCodeAll();
@@ -45,11 +45,6 @@ public interface PayChannelRateService {
 	 */
 	public List<MerchantInfo> findMerchantNamesAll();
 	
-	/**
-	 * 查询所有支付渠道名称
-	 * @return
-	 */
-	public List<DictTradeChannel> findPayChannelNamesAll();
 	
 	/**
 	 * 根据id删除目标渠道费率记录

@@ -17,7 +17,7 @@
 	</style>
 </head>
 <body style="height:100%">
-	<table id="dg" class="easyui-datagrid" title="渠道费率管理" style="height:250%;width:100%" 
+	<table id="dg" class="easyui-datagrid" title="渠道费率管理" style="height:400px;width:100%" 
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
@@ -36,7 +36,9 @@
 		<a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true" onclick="findChannelRates();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateChannelRate();"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="removeChannelRate();"></a>
+		<span hidden="true">
+			<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="removeChannelRate();"></a>
+		</span>
 	</div>
 	<!-- 修改费率窗口 -->
 	<div id="updateWin" class="easyui-window" title="费率管理-修改" collapsible="false" minimizable="false" maximizable="false" 
@@ -84,7 +86,7 @@
 					</table>
 				</form>
 			</div>
-			<div border="false" style="text-align:center; height: 3%;margin-top:4%;">
+			<div border="false" style="text-align:center; height: 4%;margin-top:4%;">
 				<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitRate();"> 确定</a> 
 				<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeUpdateWin();" style="margin-left:30px;">取消</a>
 			</div>
@@ -121,7 +123,7 @@
 							支付渠道代码:
 						</td>
 						<td style="width:80%;">	
-							<select class="easyui-combobox" data-options="editable:false" id="addPayChannelCode" 
+							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付渠道代码'" id="addPayChannelCode" 
 								name="addPayChannelCode"  style="width:100%;height:30px;padding:5px;">
 							</select>
 						</td>
@@ -157,7 +159,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '180%',
+                height: '70%',
                 resizable:false
             });
         }
@@ -186,8 +188,11 @@
 				valueField:'id',
 				textField:'text',
 				onSelect: function(rec){
-					var url = '${pageContext.request.contextPath}/paychannel/findPayChannelCode?payChannelName='+rec.text;
-					$('#addPayChannelCode').combobox('reload', url);
+					var payChannelName = rec.text;
+					if(payChannelName != null && payChannelName != ""){
+						var url = '${pageContext.request.contextPath}/paychannel/findPayChannelCode?payChannelName='+payChannelName;
+						$('#addPayChannelCode').combobox('reload', url);
+					}
 				}	
 			});
 			
@@ -280,7 +285,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '150%',
+                height: '60%',
                 resizable:false
             });
         }

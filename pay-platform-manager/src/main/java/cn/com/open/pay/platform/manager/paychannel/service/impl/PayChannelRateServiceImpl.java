@@ -33,7 +33,7 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	private PayChannelDictionaryRepository payChannelDictionaryRepository;
 	
 	/**
-	 * 查询所有渠道编码
+	 * 查询所有渠道编码，渠道名称
 	 * @return
 	 */
 	public List<PayChannelDictionary> findPayChannelCodeAll(){
@@ -82,15 +82,6 @@ public class PayChannelRateServiceImpl implements PayChannelRateService {
 	@Override
 	public List<MerchantInfo> findMerchantNamesAll(){
 		return merchantInfoRepository.findMerchantNamesAll();
-	}
-	
-	/**
-	 * 查询所有支付渠道名称
-	 * @return
-	 */
-	@Override
-	public List<DictTradeChannel> findPayChannelNamesAll(){
-		return dictTradeChannelRepository.findPayChannelNamesAll();
 	}
 	
 	/**
