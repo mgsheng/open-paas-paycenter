@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.MerchantInfoRepositoryMyBatis">
 	<resultMap type="MerchantInfo" id="merchantInfoMap">
-		<id column="ID" property="id" jdbcType="VARCHAR" />
+		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
 		<result column="STATUS" property="status" jdbcType="DECIMAL" />
 		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
@@ -50,16 +50,14 @@
 	</select>
 	
 	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.department.model.MerchantInfo">
-		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
-		select last_insert_id() as id
-		</selectKey>
+		
 		insert into MERCHANT_INFO
 		(
 			<include refid="Insert_Column_List" />
 		)
 		values 
 		(
-			#{id, jdbcType=VARCHAR},
+			#{id, jdbcType=INTEGER},
 			#{merchantName, jdbcType=VARCHAR},
 			#{status, jdbcType=DECIMAL},
 			#{createDate, jdbcType=TIMESTAMP},

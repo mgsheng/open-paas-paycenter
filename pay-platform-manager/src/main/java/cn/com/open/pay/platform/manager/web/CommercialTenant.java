@@ -190,7 +190,8 @@ public class CommercialTenant extends BaseControllerUtil {
 		
 		result = merchantInfoService.addMerchantInfo(merchantInfo);
 		// result = true 表示添加成功
-		jsonObjArr.put("result", result);
+//		jsonObjArr.put("result", result);
+		jsonObjArr.put("returnMsg", "1");
 		WebUtils.writeJson(response,jsonObjArr);
 	}
 	
@@ -284,7 +285,8 @@ public class CommercialTenant extends BaseControllerUtil {
 		merchantInfo.setMemo(memo);
 		// result = false表示修改失败
 		result = merchantInfoService.updateMerchantInfo(merchantInfo);
-		jsonobj.put("result",result);
+//		jsonobj.put("result",result);
+		jsonobj.put("returnMsg", "2");
 	    WebUtils.writeJson(response,jsonobj);
 		return;
 	}
