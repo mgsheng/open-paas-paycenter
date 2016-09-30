@@ -296,7 +296,7 @@
 				      var url='${pageContext.request.contextPath}/irrigation/findIrrigation';
 				      reload(url,name);
                 }else{
-                	msgShow('系统提示', '角色已存在！', 'info');
+                	msgShow('系统提示', '渠道保存成功！', 'info');
 	                 $newpass.val('');
 	                 $rePass.val('');
 	                 close();

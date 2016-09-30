@@ -101,7 +101,13 @@
 					</tr>
 					<tr style="height: 40px">
 						<td>状态：</td>
-						<td><input id="status" name="status" type="text" class="txt01" value=""/>
+						<td>
+						<select class="easyui-combobox" data-options="editable:false" id="status" name="status" style="width:100%">
+							<option value="1">正常</option>
+							<option value="2">冻结</option>
+							<option value="3">注销</option>
+						</select>
+						
 						</td>
 					</tr>
 					<tr style="height: 40px">
@@ -254,7 +260,7 @@
 				      var url='${pageContext.request.contextPath}/managerRole/QueryRoleMessage';
 				      reload(url,name);
                 }else{
-                	msgShow('系统提示', '角色已存在！', 'info');
+                	msgShow('系统提示', '商户保存成功！', 'info');
 	                 $newpass.val('');
 	                 $rePass.val('');
 	                 close();
@@ -267,7 +273,7 @@
         	var tab = $.trim($('#tab').val()) ;
     		var id = $.trim($('#id').val()) ;
     		var merchantName = $.trim($('#merchantName').val()) ;
-    		var status = $.trim($('#status').val()) ;
+    		var status = $("input[name='status']").val();
     		var notifyUrl = $.trim($('#notifyUrl').val()) ;
     		var returnUrl = $.trim($('#returnUrl').val()) ;
     		var productName = $.trim($('#productName').val()) ;
