@@ -274,6 +274,10 @@
     		var sighType = $.trim($('#sighType').val()) ;
     		var inputCharset = $.trim($('#inputCharset').val()) ;
     		var memo = $.trim($('#memo').val()) ;
+    		if(channelName==""){
+    			alert("渠道名不能为空！");
+    		}
+    		
             var url= "";
             if(id==''){
             	url=encodeURI('${pageContext.request.contextPath}/irrigation/addDictTrade?id='+id+'&channelName='+channelName+'&channelStatus='+channelStatus+'&merId='+merId+'&keyValue='+keyValue+'&priority='+priority+'&paymentChannel='+paymentChannel+'&notifyUrl='+notifyUrl+'&other='+other+'&paymentType='+paymentType+'&backUrl='+backUrl+'&type='+type+'&sighType='+sighType+'&inputCharset='+inputCharset+'&memo='+memo);

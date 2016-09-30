@@ -287,6 +287,10 @@
     		var memo = $.trim($('#memo').val()) ;
     		var operater = $.trim($('#operater').val()) ;
     		var payKey = $.trim($('#payKey').val()) ;
+    		if(merchantName==""){
+    			alert("商户名不能为空！");
+    			return;
+    		}
             var url= "";
             if(tab==''){
             	url=encodeURI('${pageContext.request.contextPath}/commercial/addMerchantInfo?id='+id+'&merchantName='+merchantName+'&status='+status+'&notifyUrl='+notifyUrl+'&returnUrl='+returnUrl+'&productName='+productName+'&contact='+contact+'&phone='+phone+'&mobile='+mobile+'&email='+email+'&dayNorm='+dayNorm+'&monthNorm='+monthNorm+'&singleNorm='+singleNorm+'&memo='+memo+'&operater='+operater+'&payKey='+payKey);
