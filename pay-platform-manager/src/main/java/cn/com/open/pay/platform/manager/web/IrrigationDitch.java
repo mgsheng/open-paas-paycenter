@@ -208,7 +208,9 @@ public class IrrigationDitch extends BaseControllerUtil {
 		
 		result = dictTradeChannelService.addDictTrade(dictTradeChannel);
 		// result = true 表示添加成功
-		jsonObjArr.put("result", result);
+		
+		jsonObjArr.put("returnMsg", "1");
+//		jsonObjArr.put("result", result);
 		WebUtils.writeJson(response,jsonObjArr);
 	}
 	
@@ -254,7 +256,8 @@ public class IrrigationDitch extends BaseControllerUtil {
 		dictTradeChannel.setMemo(memo);
 		// result = false表示修改失败
 		result = dictTradeChannelService.updateDictTrade(dictTradeChannel);
-		jsonobj.put("result",result);
+//		jsonobj.put("result",result);
+		jsonobj.put("returnMsg", "2");
 	    WebUtils.writeJson(response,jsonobj);
 		return;
 	}
