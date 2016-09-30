@@ -174,6 +174,9 @@ public class IrrigationDitch extends BaseControllerUtil {
 		String sighType = request.getParameter("sighType");
 		String inputCharset = request.getParameter("inputCharset");
 		String memo = request.getParameter("memo");
+		if(memo!=null){
+			memo=new String(memo.getBytes("iso-8859-1"),"utf-8");
+		}
 		JSONObject jsonObjArr = new JSONObject();  
 //		//判断数据库是否已经存在该渠道
 		boolean result = false;
@@ -230,6 +233,10 @@ public class IrrigationDitch extends BaseControllerUtil {
 		String sighType = request.getParameter("sighType");
 		String inputCharset = request.getParameter("inputCharset");
 		String memo = request.getParameter("memo");
+		if(memo!=null){
+			memo=new String(memo.getBytes("iso-8859-1"),"utf-8");
+		}
+		
 		JSONObject jsonobj = new JSONObject();
 		boolean result = false;
 		DictTradeChannel dictTradeChannel = new DictTradeChannel();
