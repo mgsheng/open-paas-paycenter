@@ -133,16 +133,16 @@ public class CommercialTenant extends BaseControllerUtil {
 		String status = request.getParameter("status");
 		String notifyUrl = request.getParameter("notifyUrl");
 		String returnUrl = request.getParameter("returnUrl");
-		String productName = request.getParameter("productName");
-		String contact = request.getParameter("contact");
+		String productName=new String(request.getParameter("productName").getBytes("iso-8859-1"),"utf-8");
+		String contact=new String(request.getParameter("contact").getBytes("iso-8859-1"),"utf-8");
 		String phone = request.getParameter("phone");
 		String mobile = request.getParameter("mobile");
 		String email = request.getParameter("email");
 		String dayNorm = request.getParameter("dayNorm");
 		String monthNorm = request.getParameter("monthNorm");
 		String singleNorm = request.getParameter("singleNorm");
-		String memo = request.getParameter("memo");
-		String operater = request.getParameter("operater");
+		String memo=new String(request.getParameter("memo").getBytes("iso-8859-1"),"utf-8");
+		String operater=new String(request.getParameter("operater").getBytes("iso-8859-1"),"utf-8");
 		String payKey = request.getParameter("payKey");
 		JSONObject jsonObjArr = new JSONObject();  
 		//判断数据库是否已经存在该商品
@@ -216,16 +216,16 @@ public class CommercialTenant extends BaseControllerUtil {
 		String status = request.getParameter("status");
 		String notifyUrl = request.getParameter("notifyUrl");
 		String returnUrl = request.getParameter("returnUrl");
-		String productName = request.getParameter("productName");
-		String contact = request.getParameter("contact");
+		String productName=new String(request.getParameter("productName").getBytes("iso-8859-1"),"utf-8");
+		String contact=new String(request.getParameter("contact").getBytes("iso-8859-1"),"utf-8");
 		String phone = request.getParameter("phone");
 		String mobile = request.getParameter("mobile");
 		String email = request.getParameter("email");
 		String dayNorm = request.getParameter("dayNorm");
 		String monthNorm = request.getParameter("monthNorm");
 		String singleNorm = request.getParameter("singleNorm");
-		String memo = request.getParameter("memo");
-		String operater = request.getParameter("operater");
+		String memo=new String(request.getParameter("memo").getBytes("iso-8859-1"),"utf-8");
+		String operater=new String(request.getParameter("operater").getBytes("iso-8859-1"),"utf-8");
 		String payKey = request.getParameter("payKey");
 		JSONObject jsonobj = new JSONObject();
 //		//判断数据库是否已经存在该部门
