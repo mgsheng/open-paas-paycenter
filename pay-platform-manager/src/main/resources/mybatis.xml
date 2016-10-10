@@ -24,6 +24,7 @@
     	<typeAlias alias="DictTradeChannel" type="cn.com.open.pay.platform.manager.department.model.DictTradeChannel"/>	 
        	<typeAlias alias="MerchantInfo" type="cn.com.open.pay.platform.manager.department.model.MerchantInfo"/>	
        	<typeAlias alias="PayChannelDictionary" type="cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary"/>
+    	<typeAlias alias="PrivilegeLog" type="cn.com.open.pay.platform.manager.log.model.PrivilegeLog"/>
     </typeAliases>
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeModuleMapper.xml"/>
@@ -40,7 +41,7 @@
       	<mapper resource="cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml"/>
     	<mapper resource="cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml"/>
     	<mapper resource="cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml"/>
-    	
+    	<mapper resource="cc/wdcy/infrastructure/mybatis/PrivilegeLogMapper.xml"/>
     </mappers>
 
 </configuration>

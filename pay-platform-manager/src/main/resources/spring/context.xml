@@ -21,6 +21,7 @@
     <context:component-scan base-package="cn.com.open.pay.platform.manager.privilege.service"/>
     <context:component-scan base-package="cn.com.open.pay.platform.manager.department.service"/>
     <context:component-scan base-package="cn.com.open.pay.platform.manager.paychannel.service"/>
+    <context:component-scan base-package="cn.com.open.pay.platform.manager.log.service"/>
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">

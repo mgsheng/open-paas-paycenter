@@ -300,7 +300,7 @@
 				      var url='${pageContext.request.contextPath}/irrigation/findIrrigation';
 				      reload(url,name);
                 }else{
-                	msgShow('系统提示', '渠道保存成功！', 'info');
+                	msgShow('系统提示', '渠道操作失败！', 'info');
 	                 $newpass.val('');
 	                 $rePass.val('');
 	                 close();

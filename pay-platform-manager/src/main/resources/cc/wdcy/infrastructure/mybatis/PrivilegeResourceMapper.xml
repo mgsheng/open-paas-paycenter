@@ -86,4 +86,8 @@
      <select id="findById" resultMap="privilegeResourceMap">
         select * from privilege_resource where id=#{id}
      </select>
+     <select id="findByCode" resultMap="privilegeResourceMap" parameterType="String">
+         select * from privilege_resource
+         where  code = #{code}
+	</select>
 </mapper>

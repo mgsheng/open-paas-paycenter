@@ -45,6 +45,9 @@
 										   {"menuid":"30","menuname":"部门信息列表","icon":"icon-role","url":"${pageContext.request.contextPath}/department/departmentList"},
 										   {"menuid":"31","menuname":"商户管理","icon":"icon-role","url":"${pageContext.request.contextPath}/commercial/commercial"},
 										   {"menuid":"32","menuname":"渠道管理","icon":"icon-role","url":"${pageContext.request.contextPath}/irrigation/irrigation"}			]
+						},{"menuid":"","icon":"icon-sys","menuname":"公共管理",
+							"menus":[
+										   {"menuid":"33","menuname":"日志管理","icon":"icon-role","url":"${pageContext.request.contextPath}/privilegeLog/privilegeLog"}			]
 						}
 				]};
         //设置登录窗口
