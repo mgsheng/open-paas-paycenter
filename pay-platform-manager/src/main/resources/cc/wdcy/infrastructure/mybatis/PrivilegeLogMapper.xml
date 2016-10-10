@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PrivilegeLogRepositoryMyBatis">
+	<resultMap type="PrivilegeLog" id="privilegeLogMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+		<result column="operation_content" property="operationContent" jdbcType="VARCHAR" />
+		<result column="one_levels" property="oneLevels" jdbcType="VARCHAR" />
+		<result column="tow_levels" property="towLevels" jdbcType="VARCHAR" />
+		<result column="operation_authority" property="operationAuthority" jdbcType="INTEGER" />
+		<result column="operation_time" property="operationTime" jdbcType="TIMESTAMP" />
+		<result column="operation_describe" property="operationDescribe" jdbcType="VARCHAR" />
+		<result column="operator_id" property="operatorId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  ID,
+	  operator,
+	  operation_content,
+	  one_levels,
+	  tow_levels,
+	  operation_authority,
+	  operation_time,
+	  operation_describe,
+	  operator_id
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	
+	
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.log.model.PrivilegeLog">
+		
+		insert into privilege_log
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{id, jdbcType=INTEGER},
+			#{operator, jdbcType=VARCHAR},
+			#{operationContent, jdbcType=DECIMAL},
+			#{oneLevels, jdbcType=TIMESTAMP},
+			#{towLevels, jdbcType=VARCHAR},
+			#{operationAuthority, jdbcType=INTEGER},
+			#{operationTime, jdbcType=TIMESTAMP},
+			#{operationDescribe, jdbcType=VARCHAR},
+			#{operatorId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<select id="findQueryCount" resultType="int" >
+        select count(*) from  privilege_log
+        where  1=1
+        <if test="operator != null and operator != '' ">
+        	and operator =#{operator,jdbcType=VARCHAR}
+        </if>
+        <if test="operationContent != null and operationContent != '' ">
+			and operation_content =#{operationContent,jdbcType=VARCHAR}
+		</if>
+    </select>
+	
+	<select id="findDepts" resultMap="privilegeLogMap" >
+		select *
+		from (select * from privilege_log tb order by tb.operation_time desc) pl where 1=1
+		<if test="operator != null and operator != '' ">
+			and pl.operator =#{operator,jdbcType=VARCHAR}
+		</if>
+		<if test="operationContent != null and operationContent != '' ">
+			and pl.operation_content =#{operationContent,jdbcType=VARCHAR}
+		</if>
+		limit  #{startRow},#{pageSize} 
+	</select>
+	
+	
+	
+	
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
+</mapper>
