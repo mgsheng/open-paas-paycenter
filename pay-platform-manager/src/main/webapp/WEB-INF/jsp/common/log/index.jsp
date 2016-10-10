@@ -61,9 +61,9 @@
 	   <span style="margin-left: 75%;">
 		 
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<!--  --><a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a> 
+		<!-- <a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a> 
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
-		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
+		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a> -->
 		</span>
 	</div>
 	<div id="w" class="easyui-window" title="日志添加" collapsible="false"
