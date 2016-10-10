@@ -67,6 +67,12 @@ public class PrivilegeResourceServiceImpl implements  PrivilegeResourceService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public PrivilegeResource findByCode(String code) {
+		// TODO Auto-generated method stub
+		return  privilegeResourceRepository.findByCode(code);
+	}
    
     
 }

@@ -16,4 +16,5 @@ public interface PrivilegeResourceService {
 	int findQueryCount(String name);
 	List<PrivilegeResource> findAllResource();
 	List<PrivilegeResource> findResource();
+	PrivilegeResource findByCode(String string);
 }

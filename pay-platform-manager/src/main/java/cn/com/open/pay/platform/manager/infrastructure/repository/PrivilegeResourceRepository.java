@@ -21,4 +21,5 @@ public interface PrivilegeResourceRepository extends Repository {
     int findQueryCount(@Param("name")String name);
     List<PrivilegeResource> findAllResource();
     List<PrivilegeResource> findResource();
+	PrivilegeResource findByCode(@Param("code")String code);
 }
