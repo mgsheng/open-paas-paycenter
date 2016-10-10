@@ -117,6 +117,7 @@ public class UserLoginController extends BaseControllerUtil {
 				session.setAttribute("serverHost",payManagerDev.getServer_host());
 				session.setAttribute("manager",manager);
 				session.setAttribute("modules",modules);
+				session.setAttribute("user",user);
 	    	return "login/index";
 	    }
 	    /**

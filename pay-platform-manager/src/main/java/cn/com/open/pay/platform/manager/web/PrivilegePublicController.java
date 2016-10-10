@@ -21,6 +21,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
+import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegePublic;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.TreeNode;
@@ -44,6 +47,9 @@ public class PrivilegePublicController extends BaseControllerUtil {
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
+	
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
 	
 	/**
 	 * 跳转到公共权限的页面
@@ -209,6 +215,16 @@ public class PrivilegePublicController extends BaseControllerUtil {
 					}
 				}
 			}
+			//添加日志
+			PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(92);
+			PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+			String  towLevels = privilegeModule.getName();
+			String  oneLevels = privilegeModule1.getName();
+			User user1 = (User)request.getSession().getAttribute("user");
+			String operator = user1.getUsername(); //操作人
+			String operatorId = user1.getId()+""; //操作人Id
+			PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改了公共权限",operatorId);
 			map.put("result", result);
 	    	WebUtils.writeErrorJson(response, map);
 	    }

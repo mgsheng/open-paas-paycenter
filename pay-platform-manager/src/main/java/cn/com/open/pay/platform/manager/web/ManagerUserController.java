@@ -23,9 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
@@ -35,6 +40,13 @@ public class ManagerUserController  extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
 	
 	/**
 	 * 跳转到用户信息列表的页面
@@ -77,6 +89,20 @@ public class ManagerUserController  extends BaseControllerUtil {
 		user.setId(Integer.valueOf(id));
 		user.setRole(role);
 		boolean result = userService.authorizeRole(user);
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels= privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("shouquan");
+		if(result = true){
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"给"+""+"用户授权成功",operatorId);
+		}else{
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"给"+""+"用户授权失败",operatorId);
+		}
 		// result = true表示该用户授权角色成功
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("result",result);
@@ -176,6 +202,22 @@ public class ManagerUserController  extends BaseControllerUtil {
 		user.setDeptID(Integer.valueOf(deptID));
 		
 		boolean result = userService.updateUser(user);
+		
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
+		if(result = true){
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改"+realname+"用户成功",operatorId);
+		}else{
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改"+realname+"用户失败",operatorId);
+		}
+		
 		// result = true表示该用户修改成功
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("result",result);
@@ -192,6 +234,21 @@ public class ManagerUserController  extends BaseControllerUtil {
 	public void removeUser(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		Integer	id = Integer.valueOf(new String(request.getParameter("id").getBytes("iso-8859-1"),"utf-8"));
 		boolean result = userService.removeUserByID(id);
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String towLevels = privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
+		User user = (User)request.getSession().getAttribute("user");
+		String operator = user.getUsername(); //操作人
+		String operatorId = user.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
+		if(result = true){
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"成功删除用户",operatorId);
+		}else{
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"用户删除失败",operatorId);
+		}
+		
 		// result = true表示该用户删除成功
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("result",result);
@@ -328,6 +385,21 @@ public class ManagerUserController  extends BaseControllerUtil {
 		//MD5加密
 		user.setPlanPassword(sha_password);
 		result = userService.addUser(user);
+		
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String towLevels = privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
+		if(result = true){
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"添加"+user_name+"用户成功",operatorId);
+		}else{
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"添加"+user_name+"用户失败",operatorId);
+		}
 		
 		// result = true 表示添加用户成功
 		jsonObjArr.put("result", result);

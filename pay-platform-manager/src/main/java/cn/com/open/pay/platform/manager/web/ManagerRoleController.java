@@ -26,6 +26,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
+import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
@@ -50,6 +52,10 @@ public class ManagerRoleController  extends BaseControllerUtil {
 	
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
+	
+	
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
 	/**
 	 * 跳转到查询角色的页面
 	 * @return 返回的是 jsp文件名路径及文件名
@@ -125,7 +131,17 @@ public class ManagerRoleController  extends BaseControllerUtil {
 
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
+    	//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String oneLevels = privilegeModule.getName();
+		String towLevels  = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		
     	if(id==""){
+    		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
 			List <PrivilegeRole> list= roleService.findByName(name);
 			if(list!=null&& list.size()>0){
 				map.put("returnMsg", "0");
@@ -157,15 +173,17 @@ public class ManagerRoleController  extends BaseControllerUtil {
 						}
 					}
 				}
-
+				privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"添加‘"+name+"’角色",operatorId);
 				map.put("returnMsg", "1");
 			}
     	}else{
+    		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
     		PrivilegeRole privilegeRole=new PrivilegeRole();
     		privilegeRole.setId(Integer.parseInt(id));
     		privilegeRole.setName(name);
     		privilegeRole.setStatus(Integer.parseInt(status));
     		roleService.updatePrivilegeRole(privilegeRole);
+    		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改‘"+name+"’角色",operatorId);
     		map.put("returnMsg", "2");
     	}
     	WebUtils.writeErrorJson(response, map);
@@ -213,6 +231,16 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				}
 			}
 		}
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String oneLevels = privilegeModule.getName();
+		String towLevels  = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
+		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"修改‘"+name+"’角色",operatorId);
 		map.put("returnMsg", "2");
     	WebUtils.writeErrorJson(response, map);
     }
@@ -227,6 +255,17 @@ public class ManagerRoleController  extends BaseControllerUtil {
     @RequestMapping(value = "deleteRole")
 	public void deleteRole(HttpServletRequest request,HttpServletResponse response,String id) {
 //    	String id = request.getParameter("id");
+    	//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String oneLevels = privilegeModule.getName();
+		String towLevels  = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
+				
+    			
     	Map<String,Object> map = new HashMap<String, Object>();
     	try {
     		if(nullEmptyBlankJudge(id)){
@@ -234,6 +273,7 @@ public class ManagerRoleController  extends BaseControllerUtil {
        		}else{
        			roleService.deletePrivilegeRole(Integer.parseInt(id));
        			privilegeRoleDetailsService.deletePrivilegeRoleDetail(id);
+       			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"删除id为"+id+"权限",operatorId);
            		map.put("returnMsg", "1");//修改成功	
        		}
 			} catch (Exception e) {

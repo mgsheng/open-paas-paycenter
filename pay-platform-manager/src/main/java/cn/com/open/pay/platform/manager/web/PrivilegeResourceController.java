@@ -19,7 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
+import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
@@ -34,6 +38,13 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 public class PrivilegeResourceController extends BaseControllerUtil {
 	@Autowired
 	private PrivilegeResourceService privilegeResourceService;
+	
+	
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	
 	 /**
      * 跳转资源管理页面
      * @param request
@@ -59,7 +70,17 @@ public class PrivilegeResourceController extends BaseControllerUtil {
     	Map<String,Object> map = new HashMap<String, Object>();
     	String name=new String(request.getParameter("name").getBytes("iso-8859-1"),"utf-8");
     	String id=request.getParameter("id");
+    	//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String  oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		
     	if(nullEmptyBlankJudge(id)){
+    		PrivilegeResource privilegeResource1 = privilegeResourceService.findByCode("add");
     		List <PrivilegeResource> list= privilegeResourceService.findByName(name);
         	if(list!=null&& list.size()>0){
         		map.put("returnMsg", "0");
@@ -73,10 +94,12 @@ public class PrivilegeResourceController extends BaseControllerUtil {
         		}
         		privilegeResource.setStatus(Integer.parseInt(status));
         		privilegeResourceService.savePrivilegeResource(privilegeResource);
+        		privilegeLogService.addPrivilegeLog(operator,privilegeResource1.getName(),oneLevels,towLevels,privilegeResource1.getId()+"",operator+"添加'"+name+"'资源",operatorId);
         		map.put("returnMsg", "1");
         	}
     	}else{
     		privilegeResource= privilegeResourceService.findById(Integer.parseInt(id));
+    		PrivilegeResource privilegeResource2 = privilegeResourceService.findByCode("update");
     		privilegeResource.setName(name);
     		privilegeResource.setCode(code);
     		if(nullEmptyBlankJudge(status)){
@@ -84,6 +107,7 @@ public class PrivilegeResourceController extends BaseControllerUtil {
     		}
     		privilegeResource.setStatus(Integer.parseInt(status));
     		privilegeResourceService.updatePrivilegeResource(privilegeResource);
+    		privilegeLogService.addPrivilegeLog(operator,privilegeResource2.getName(),oneLevels,towLevels,privilegeResource2.getId()+"",operator+"修改'"+name+"'资源",operatorId);
     		map.put("returnMsg", "2");
     		
     	}
@@ -127,11 +151,21 @@ public class PrivilegeResourceController extends BaseControllerUtil {
     @RequestMapping(value = "delete")
 	public void delete(HttpServletRequest request,HttpServletResponse response,String id) {
     	Map<String,Object> map = new HashMap<String, Object>();
+    	//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(55);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
     	try {
     		if(nullEmptyBlankJudge(id)){
        		 map.put("returnMsg", "0");//不存在	
        		}else{
        			privilegeResourceService.deletePrivilegeResource(Integer.parseInt(id));
+       			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),oneLevels,towLevels,privilegeResource.getId()+"",operator+"添加'"+id+"'资源",operatorId);
            		map.put("returnMsg", "1");//修改成功	
        		}
 			} catch (Exception e) {
