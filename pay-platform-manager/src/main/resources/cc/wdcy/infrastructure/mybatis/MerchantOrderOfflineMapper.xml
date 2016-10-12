@@ -40,7 +40,7 @@
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 		select last_insert_id() as id
 		</selectKey>
-		insert into MERCHANT_ORDER_INFO
+		insert into MECHANT_ORDER_OFFLINE
 		(
 			<include refid="Insert_Column_List" />
 		)
@@ -62,10 +62,12 @@
 		)
 	</insert>
 	
-	<!-- <select id="findByMerchantOrderId" resultMap="merchantOrderInfoMap">
-         select * from MERCHANT_ORDER_INFO
-         where  MERCHANT_ORDERID = #{merchantOrderId}
-	</select> -->
+	<select id="findAll" resultMap="merchantOrderOfflineMap">
+         select * from MECHANT_ORDER_OFFLINE
+	</select>
+	<select id="findQueryCount" resultType="int">
+        select count(*) from  MECHANT_ORDER_OFFLINE where 1=1
+    </select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
     </resultMap>
