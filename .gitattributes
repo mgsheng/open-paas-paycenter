@@ -138,6 +138,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructu
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/ManagerRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantInfoRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderOfflineRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelDictionaryRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelRateRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeLogRepositoryMyBatis.java -text
@@ -153,6 +154,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructu
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/ManagerRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantInfoRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderInfoRepository.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderOfflineRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelDictionaryRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelRateRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeLogRepository.java -text
@@ -171,6 +173,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/model/
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/UserService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/impl/UserServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderInfo.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderOffline.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/UserSerialRecord.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/MerchantOrderInfoService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/UserSerialRecordService.java -text
@@ -243,6 +246,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/Irrigati
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerDepartmentController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerRoleController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserController.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/MarchantOrderOfflineController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PayChannelRateController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeLogController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
@@ -256,6 +260,7 @@ pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerDe
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
+pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderOfflineMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeLogMapper.xml -text
