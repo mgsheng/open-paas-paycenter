@@ -4,7 +4,7 @@ package cn.com.open.openpaas.payservice.app.channel.alipay;
 public enum PayChannelRate{
     //通过括号赋值,而且必须带有一个参构造器和一个属性跟方法，否则编译出错
     //赋值必须都赋值或都不赋值，不能一部分赋值一部分不赋值；如果不赋值则不能写构造器，赋值编译也出错
-	ALIPAY(10001,"ALIPAY"),TCLPAY(10001,"TCLPAY"),ALIEBAKN(10001,"ALIEBAKN"),WEIXIN(10001,"WEIXIN"),YEEPAY(10001,"YEEPAY"),DEFAULT(0,"其他");
+	ALIPAY(10001,"ALIPAY"),TCLPAY(10001,"TCLPAY"),ALIEBAKN(10001,"ALIEBAKN"),WEIXIN(10001,"WEIXIN"),YEEPAY(10001,"YEEPAY"),PAYMAX(10001,"PAYMAX"),DEFAULT(0,"其他");
     public int type;
 	public String value;
 

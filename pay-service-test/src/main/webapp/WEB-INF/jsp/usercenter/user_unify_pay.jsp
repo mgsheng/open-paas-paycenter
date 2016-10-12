@@ -181,7 +181,10 @@
 								<option value="ALIPAY">支付宝-即时到账</option>
 								<!-- <option value="ALIFAF">支付宝-当面付</option> -->
 								<option value="WEIXIN">微信-扫码支付</option>
+								<option value="WECHAT_WAP">微信-公众号支付</option>
 								<option value="PAYMAX">拉卡拉-网关支付</option>
+								<option value="PAYMAX_H5">拉卡拉-移动支付</option>
+								<option value="YEEPAY_EHK">易宝-扫码支付</option>
 								<option value="UPOP">银联</option>
 								<option value="CMB">招商银行</option>
 								<option value="ICBC">工商银行</option>
@@ -211,6 +214,7 @@
 								<option value="10005">直连银行</option>
 								<option value="10003">银联</option>
 								<option value="10007">拉卡拉</option>
+								<option value="10006">易宝</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>
@@ -281,7 +285,7 @@
                 </div>
                 <br/>
                 <br/>
-                <button type="submit" class="btn btn-primary">调用即时转账接口</button>
+                <button type="submit" class="btn btn-primary">调用支付接口</button>
                 <button type="button"  class="btn btn-primary" onclick="btnSubmit();">获取接口调用地址</button>
                 
             </form>

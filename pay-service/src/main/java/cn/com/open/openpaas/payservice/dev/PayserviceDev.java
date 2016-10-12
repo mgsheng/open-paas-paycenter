@@ -26,9 +26,16 @@ public class PayserviceDev {
 	private Map<String, String> bank_map;
 	private String banks_switch;
 	private String oes_merchantId;
+	private String lakla_show_url;
 	
 	
 	
+	public String getLakla_show_url() {
+		return lakla_show_url;
+	}
+	public void setLakla_show_url(String lakla_show_url) {
+		this.lakla_show_url = lakla_show_url;
+	}
 	public String getOes_merchantId() {
 		return oes_merchantId;
 	}

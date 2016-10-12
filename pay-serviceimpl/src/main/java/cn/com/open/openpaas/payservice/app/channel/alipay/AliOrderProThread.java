@@ -114,7 +114,7 @@ public class AliOrderProThread implements Runnable {
 		    	  if(returnValue!=null)
 		    	  {
 		    		  
-		    		  if(merchantOrderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
+		    		 /* if(merchantOrderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
 		    			  callBackSend= analysisOesValue(returnValue);
 		    			  if(callBackSend){
 							  merchantOrderInfo.setNotifyStatus(1);
@@ -135,7 +135,7 @@ public class AliOrderProThread implements Runnable {
 								UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 							sendMsg="通知失败！";
 			    	   }
-		    		  }else{
+		    		  }else{*/
 		    			  JSONObject reqjson = JSONObject.fromObject(returnValue);
 						  callBackSend=analysisValue(reqjson);
 						  if(callBackSend){
@@ -157,7 +157,7 @@ public class AliOrderProThread implements Runnable {
 								UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 							sendMsg="通知失败！";
 			    	   } 
-		    		  }
+		    		//  }
 				  }
 		    	  else{
 		    		  if(count>1){

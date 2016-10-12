@@ -11,7 +11,4 @@
   <body>
   ${res}
   </body>
-  <script>
-  
-</script>
 </html>

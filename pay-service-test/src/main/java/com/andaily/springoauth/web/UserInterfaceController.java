@@ -57,6 +57,8 @@ public class UserInterfaceController {
     private String unifyPayUri;
     @Value("#{properties['alipay-order-callback']}")
     private String aliPayCallBackUri;
+    @Value("#{properties['ehk-order-callback']}")
+    private String ehkCallBackUri;
     @Value("#{properties['order-manual-send']}")
     private String orderManualSendUri;
     @Value("#{properties['order-query-uri']}")
@@ -116,6 +118,27 @@ public class UserInterfaceController {
     	 String subject=AlipayCallbackConfig.subject;
     	 String body=AlipayCallbackConfig.body;
          final String fullUri =aliPayCallBackUri+"?notify_time="+notify_time+"&notify_type="+notify_type+"&notify_id="+notify_id+"&sign_type="+sign_type+"&sign="+sign+"&out_trade_no="+out_trade_no+"&total_fee="+total_fee+"&trade_status="+trade_status+"&subject="+subject+"&body="+body;
+         LOG.debug("Send to Oauth-Server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     }
+     
+     /*
+      *  Entrance:   step-1
+      * */
+ 	@RequestMapping(value = "ehkCallBack", method = RequestMethod.GET)
+ 	public String ehkCallBack(Model model) {
+ 		model.addAttribute("ehkCallBackUri", ehkCallBackUri);
+ 		return "usercenter/ehk_order_callback";
+ 	}
+ 	/* 
+     * Redirect to oauth-server bind page:   step-2
+     * */
+     @RequestMapping(value = "ehkCallBack", method = RequestMethod.POST)
+     public String ehkCallBack(String notify_time,String notify_type,String notify_id,String sign_type,String sign) throws Exception {
+    	 String requestId=EhkCallbackConfig.requestId;
+    	 String serialNumber=EhkCallbackConfig.serialNumber;
+    	 String orderAmount=EhkCallbackConfig.orderAmount;
+         final String fullUri =ehkCallBackUri+"?requestId="+requestId+"&serialNumber="+serialNumber+"&orderAmount="+orderAmount;
          LOG.debug("Send to Oauth-Server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }

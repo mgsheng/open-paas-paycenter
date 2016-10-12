@@ -89,6 +89,9 @@
         <li>
             <p><a href="querySerialRecord">查询流水记录</a> <br/>查询流水记录</p>
         </li>
+        <li>
+            <p><a href="ehkCallBack">ehkCallBack</a> <br/>支付回调接口测试</p>
+        </li> 
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
         </li> -->

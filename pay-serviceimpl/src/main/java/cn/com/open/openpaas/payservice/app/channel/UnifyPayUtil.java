@@ -85,6 +85,9 @@ public class UnifyPayUtil {
 			}else if(merchantOrderInfo.getSourceType()==2){
 				//易宝支付
 				payChannelCode=PayChannelRate.YEEPAY.value;
+			}else if(merchantOrderInfo.getSourceType()==3){
+				//易宝支付
+				payChannelCode=PayChannelRate.PAYMAX.value;
 			}
 			ChannelRate channelRate=channelRateService.getChannelRate(String.valueOf(merchantOrderInfo.getMerchantId()), payChannelCode);
 			if(channelRate!=null){

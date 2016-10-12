@@ -864,6 +864,7 @@ pay-service-test/src/main/java/com/andaily/springoauth/tools/StringTools.java -t
 pay-service-test/src/main/java/com/andaily/springoauth/tools/WebUtils.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/tools/aa.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/web/AlipayCallbackConfig.java -text
+pay-service-test/src/main/java/com/andaily/springoauth/web/EhkCallbackConfig.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/web/UserInterfaceController.java -text
 pay-service-test/src/main/resources/logging.properties -text
 pay-service-test/src/main/resources/spring-oauth-client.properties -text
@@ -892,6 +893,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~](2)[!!-~]of[!!
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~]of[!!-~]user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/alipay_order_callback.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/dynamic_login.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/ehk_order_callback.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/order_manual_send.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login_callback.jsp -text
@@ -1048,6 +1050,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5Util.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/Main.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayChannelRate.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PaySwitch.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayType.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PaymentType.java -text
@@ -1118,6 +1121,12 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/RefundResult.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/YeeNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/YeeOrderCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/ehking/Base64Image.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/ehking/EHKOrderController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/ehking/EHKOrderUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/ehking/EhkNotifyCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/ehking/EhkOrderCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/ehking/OrderInfoDto.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceAdvice.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DataSourceSwitcher.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/datasource/DynamicDataSource.java -text
@@ -1191,6 +1200,7 @@ pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserSerialReco
 pay-serviceimpl/src/main/resources/cert/800075500030008.cer -text
 pay-serviceimpl/src/main/resources/cert/800075500030008.p12 -text
 pay-serviceimpl/src/main/resources/disconf.properties -text
+pay-serviceimpl/src/main/resources/ehking-config.properties -text
 pay-serviceimpl/src/main/resources/emailtemplate/activation.html -text
 pay-serviceimpl/src/main/resources/emailtemplate/resetpassword.html -text
 pay-serviceimpl/src/main/resources/log4j.properties -text
@@ -1229,6 +1239,7 @@ pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payIndex.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payMaxRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/selectPayChannel.jsp -text
+pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/weixinRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/wxCodePay.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/unity/dashboard.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/user_bind.jsp -text

@@ -186,6 +186,7 @@
             <property name="payIndex_url" value="${payIndex_url}"></property>
             <property name="banks_switch" value="${banks_switch}"></property>
             <property name="oes_merchantId" value="${oes_merchantId}"></property>
+            <property name="lakla_show_url" value="lakla_show_url"></property>
             
             
         </bean>
