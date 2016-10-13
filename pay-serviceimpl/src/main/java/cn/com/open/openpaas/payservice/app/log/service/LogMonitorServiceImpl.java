@@ -21,4 +21,10 @@ public class LogMonitorServiceImpl implements LogMonitorService {
 		logMonitorRepository.insert(logMonitor);
     }
 
+	@Override
+	public Integer connectionTest() {
+		// TODO Auto-generated method stub
+		return logMonitorRepository.connectionTest();
+	}
+
 }
