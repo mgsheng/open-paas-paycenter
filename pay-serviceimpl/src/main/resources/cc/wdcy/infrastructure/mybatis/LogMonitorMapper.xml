@@ -49,4 +49,7 @@
 			#{logTime,jdbcType=TIMESTAMP}
 		)
 	</insert>
+	   <select id="connectionTest" resultType="Integer">
+         select 1
+	</select>
 </mapper>
