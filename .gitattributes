@@ -947,6 +947,7 @@ pay-service/lib/commons-logging-1.1.1-sources.jar -text
 pay-service/lib/commons-logging-1.1.1.jar -text
 pay-service/lib/commons-pool-1.5.4.jar -text
 pay-service/lib/dom4j-1.6.1.jar -text
+pay-service/lib/ehking-sdk-core-1.0.0.jar -text
 pay-service/lib/jedis-2.1.0.jar -text
 pay-service/lib/json-lib-2.4-jdk15.jar -text
 pay-service/lib/jstl-1.1.2.jar -text
