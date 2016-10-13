@@ -26,7 +26,6 @@ import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytConstants;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.config.HytParamKeys;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.data.OrderQryData;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.sign.RSASign;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytDateUtils;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.utils.HytPacketUtils;

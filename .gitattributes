@@ -1122,7 +1122,6 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxpayController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxpayInfo.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/Configuration.java -text
-pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/CopyOfYeeOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/DigestUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/HmacUtils.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/yeepay/HttpUtils.java -text

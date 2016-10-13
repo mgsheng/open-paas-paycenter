@@ -1,11 +1,8 @@
 package cn.com.open.openpaas.payservice.app.channel.yeepay.ehking;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,21 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.alibaba.fastjson15.JSONObject;
-import com.ehking.sdk.FastJsonUtils;
-import com.ehking.sdk.exception.HmacVerifyException;
-import com.ehking.sdk.exception.ResponseException;
-import com.ehking.sdk.exception.UnknownException;
-import com.ehking.sdk.executer.ResultListenerAdpater;
-import com.ehking.sdk.onlinepay.executer.OnlinePayOrderExecuter;
-
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
-import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
-import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
-import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -44,6 +30,14 @@ import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
+
+import com.alibaba.fastjson15.JSONObject;
+import com.ehking.sdk.FastJsonUtils;
+import com.ehking.sdk.exception.HmacVerifyException;
+import com.ehking.sdk.exception.ResponseException;
+import com.ehking.sdk.exception.UnknownException;
+import com.ehking.sdk.executer.ResultListenerAdpater;
+import com.ehking.sdk.onlinepay.executer.OnlinePayOrderExecuter;
 
 
 /**

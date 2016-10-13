@@ -1,15 +1,10 @@
 package cn.com.open.openpaas.payservice.app.channel.yeepay.ehking;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +12,6 @@ import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 
 import com.alibaba.fastjson15.JSONArray;
 import com.alibaba.fastjson15.JSONObject;
-import com.ehking.sdk.entity.BankCard;
-import com.ehking.sdk.entity.CustomsInfo;
-import com.ehking.sdk.entity.Payer;
 import com.ehking.sdk.entity.ProductDetail;
 import com.ehking.sdk.exception.HmacVerifyException;
 import com.ehking.sdk.exception.RequestException;
