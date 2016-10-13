@@ -17,5 +17,7 @@ public interface MerchantOrderOfflineRepository extends Repository {
 	List<MerchantOrderOffline> findAll();
 	
 	int findQueryCount(MerchantOrderOffline merchantOrderOffline);
+
+	void addOrderOffline(MerchantOrderOffline merchantOrderOffline);
 	
 }

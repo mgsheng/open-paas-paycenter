@@ -22,9 +22,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.department.model.DictTradePayment;
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradePaymentService;
+import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
+import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline;
+import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderOfflineService;
+import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -40,6 +45,10 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	private MerchantOrderOfflineService merchantOrderOfflineService;
 	@Autowired
 	private DictTradePaymentService dictTradePaymentService;
+	@Autowired
+	private MerchantOrderInfoService merchantOrderInfoService;
+	@Autowired
+	private MerchantInfoService merchantInfoService;
 	
 	/**
 	 * 跳转到线下收费维护页面
@@ -84,15 +93,26 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    JSONObject json =  new JSONObject();
 	    json.put("total", total);
 	    List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+	    MerchantInfo merchantInfo=null;
 	    if(offlines != null){
 	    	Map<String,Object> map = null;
 	    	for(MerchantOrderOffline r : offlines){
 	    		map = new LinkedHashMap<String,Object>();
-	    		/*map.put("id", r.getId());
-	    		map.put("merchantID", r.getMerchantID());
-	    		map.put("payChannelCode", r.getPayChannelCode());
-	    		map.put("payName", r.getPayName());
-	    		map.put("payRate", r.getPayRate());*/
+	    		map.put("id", r.getId());
+	    		map.put("merchantOrderId", r.getMerchantOrderId());
+	    		map.put("money", r.getMoney());
+	    		map.put("sourceUserName", r.getSourceUserName());
+	    		map.put("realName", r.getRealName());
+	    		map.put("phone", r.getPhone());
+	    		merchantInfo=merchantInfoService.findNameById(r.getMerchantId());
+	    		if(merchantInfo!=null){
+		    		map.put("merchantId", merchantInfo.getMerchantName());
+	    		}
+	    		map.put("appId", r.getAppId());
+	    		map.put("channelId", r.getChannelId());
+	    		map.put("remark", r.getRemark());
+	    		map.put("operator", r.getOperator());
+	    		map.put("bankCode", r.getBankCode());
 	    		maps.add(map);
 	    	}
 	    	JSONArray jsonArr = JSONArray.fromObject(maps);
@@ -126,6 +146,65 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 			WebUtils.writeJson(response, str);
 			System.out.println(str);
 		}
+		return ;
+	}
+	
+	/**
+	 * 提交添加线下订单单据
+	 * @return 返回到前端json数据
+	 * @throws UnsupportedEncodingException 
+	 */
+	@RequestMapping(value="submitAddOrderOffline")
+	public void submitAddOrderOffline(HttpServletRequest request,HttpServletResponse response,Model model) throws UnsupportedEncodingException{
+		log.info("-------------------------submitAddOrderOffline         start------------------------------------");
+		request.setCharacterEncoding("utf-8");
+		String addMerchantOrderId = request.getParameter("addMerchantOrderId");
+		Double addMoney = Double.parseDouble(request.getParameter("addMoney"));
+		String addSourceUserName = request.getParameter("addSourceUserName");
+		String addRealName = request.getParameter("addRealName");
+		String addPhone = request.getParameter("addPhone");
+		String addMerchantName = request.getParameter("addMerchantName");
+		Integer merchantId = Integer.parseInt(addMerchantName);
+		String addAppId = request.getParameter("addAppId");
+		String addChannelId = request.getParameter("addChannelId");
+		String addBankCode = request.getParameter("addBankCode");
+		String addRemark = request.getParameter("addRemark");
+		
+		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addMoney : "+addMoney+"    " +
+				"addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
+				"   addMerchantName : "+addMerchantName+"   addAppId : "+addAppId+"   addChannelId : "+addChannelId+
+				"   addBankCode : "+addBankCode+"   addRemark : "+addRemark+"-----------");
+		
+		JSONObject json =  new JSONObject();
+		//封装参数
+		MerchantOrderOffline merchantOrderOffline = new MerchantOrderOffline();
+		merchantOrderOffline.setMerchantOrderId(addMerchantOrderId);
+		merchantOrderOffline.setMoney(addMoney);
+		merchantOrderOffline.setSourceUserName(addSourceUserName);
+		merchantOrderOffline.setRealName(addRealName);
+		merchantOrderOffline.setPhone(addPhone);
+		merchantOrderOffline.setMerchantId(merchantId);
+		merchantOrderOffline.setAppId(addAppId);
+		merchantOrderOffline.setChannelId(addChannelId);
+		merchantOrderOffline.setBankCode(addBankCode);
+		merchantOrderOffline.setRemark(addRemark);
+		//result = 1 添加成功  result = 2 该记录(线下订单号)已存在  result = 0 添加失败 
+		int result = -1;
+		//先查询该订单号是否已经存在
+		MerchantOrderInfo merchantOrderInfo = merchantOrderInfoService.findByMerchantOrderId(addMerchantOrderId);
+		if(merchantOrderInfo != null){
+			result = 2;
+		}else{
+			//添加费率
+			boolean isSuccess = merchantOrderOfflineService.addOrderOffline(merchantOrderOffline);
+			if(isSuccess){
+				result = 1;
+			}else{
+				result = 0;
+			}
+		}
+		json.put("result", result);
+		WebUtils.writeJson(response, json);
 		return ;
 	}
 }

@@ -43,6 +43,8 @@ public interface MerchantInfoService {
 	 * @return
 	 */
 	public boolean updateMerchantInfo(MerchantInfo merchantInfo);
+
+	public MerchantInfo findNameById(Integer merchantId);
 	
 	
 	

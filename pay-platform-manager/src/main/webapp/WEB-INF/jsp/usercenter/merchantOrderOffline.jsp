@@ -127,7 +127,7 @@
 						</td>
 						<td>
 			                 <input id="addMoney" class="easyui-textbox" style="width:98%;"
-			                 	name="addMoney"  required="true"  missingMessage="" />
+			                 	name="addMoney"  required="true"  missingMessage="金额可以精确到分" />
 						</td>
 					
 						<td style="margin-bottom:20px">
@@ -148,7 +148,7 @@
 						</td>
 						<td>
 			                 <input id="addSourceUserName" class="easyui-textbox" style="width:98%;"
-			                 	name="addSourceUserName"  required="true"  missingMessage="" />
+			                 	name="addSourceUserName"  />
 						</td>
 					
 						<td style="margin-bottom:20px">
@@ -166,7 +166,7 @@
 						</td>
 						<td>
 			                 <input id="addRealName" class="easyui-textbox" style="width:98%;"
-			                 	name="addRealName"  required="true"  missingMessage="" />
+			                 	name="addRealName"  />
 						</td>
 					
 						<td style="margin-bottom:20px">
@@ -184,7 +184,7 @@
 						</td>
 						<td>
 			                 <input id="addPhone" class="easyui-textbox" style="width:98%;"
-			                 	name="addPhone"  required="true"  missingMessage="" />
+			                 	name="addPhone"/>
 						</td>
 					
 						<td style="margin-bottom:20px">
@@ -192,7 +192,7 @@
 						</td>
 						<td>
 			                 <input id="addRemark" class="easyui-textbox" style="width:98%;"
-			                 	name="addRemark"  required="true"  missingMessage="" />
+			                 	name="addRemark" />
 						</td>
 						<!-- <td style="margin-bottom:20px">
 							操作人:
@@ -206,7 +206,7 @@
 			</form>
 		</div>
 		<div border="false" style="text-align:center; height: 3%;margin-top:4%;">
-			<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddChannelRate();"> 确定</a>
+			<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddOffline();"> 确定</a>
 			<a class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearAddForm()" style="margin-left:30px;">清空</a> 
 			<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeAddWin();" style="margin-left:30px;">取消</a>
 		</div>
@@ -276,49 +276,44 @@
 				valueField:'id',
 				textField:'text'
 			});
-
-			//对应的渠道代码
-			 /* $('#addPayChannelCode').combobox({
-				url:'${pageContext.request.contextPath}/paychannel/findPayChannelCode',
-				valueField:'id',
-				textField:'text'
-			}); */
-			
-			/* var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
-			$('#addPayChannelCode').combobox('setText',addPayChannelCode); */
 			
         }
         
 		//提交添加
-		function submitAddChannelRate(){
+		function submitAddOffline(){
 			$('#addForm').form('submit',{
 				onSubmit:function(){
 					return $(this).form('enableValidation').form('validate');
 				}
 			});
-			var addPayName = $('#addPayName').combobox('getText');
-			var addMerchantID= $('#addMerchantName').combobox('getValue');
-			var addPayChannelCode = $('#addPayChannelCode').combobox('getText');
-			var payRate = $("#addPayRate").textbox('getValue'); 
-			
+			var addMerchantOrderId = $('#addMerchantOrderId').textbox('getValue');
+			var addMoney = $('#addMoney').textbox('getValue');
+			var addSourceUserName = $('#addSourceUserName').textbox('getValue');
+			var addRealName = $('#addRealName').textbox('getValue');
+			var addPhone = $('#addPhone').textbox('getValue');
+			var addMerchantName = $('#addMerchantName').combobox('getValue');
+			var addAppId = $('#addAppId').combobox('getValue');
+			var addChannelId = $('#addChannelId').combobox('getValue');
+			var addBankCode = $('#addBankCode').combobox('getValue');
+			var addRemark = $('#addRemark').textbox('getValue');
 			//若校验为true 提交
-			if(checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate)){
+			if(checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone)){
 				$.ajax({
 					type:"post",
-					url:"/pay-platform-manager/paychannel/submitAddChannelRate",
-					data:{"addPayName":addPayName,"addMerchantID":addMerchantID,"addPayChannelCode":addPayChannelCode,"payRate":payRate},
+					url:"/pay-platform-manager/manage/submitAddOrderOffline",
+					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark},
 					dataType:"json",
 					success:function (data){
 						if(data.result == 1){
 							$.messager.alert("系统提示","恭喜，添加成功!","info");
 							clearAddForm();
 							closeAddWin();
-							var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
+							var url = "${pageContext.request.contextPath}/manage/getMerchantOrderOffline";
 							//window.location.reload();
 							reload(url);
 						}else if(data.result == 2){
 							clearAddForm();
-							$.messager.alert("系统提示","该记录已被添加，请修改原纪录或重新填写!","error");	
+							$.messager.alert("系统提示","该订单号已存在，请核实后再填写!","error");	
 						}else{
 							clearAddForm();
 							$.messager.alert("系统提示","添加失败，请重新添加!","error");
@@ -332,22 +327,36 @@
 		}
 		
 		//提交添加前的校验
-		function checkAddChannelRate(addPayName,addMerchantID,addPayChannelCode,payRate){
-			if(addPayName == "" || addPayName == null || addPayName == undefined){
-					$.messager.alert("系统提示","请选择支付名称！","error");	
+		function checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone){
+			if(addMerchantOrderId == "" || addMerchantOrderId == null || addMerchantOrderId == undefined){
+					$.messager.alert("系统提示","请填写线下订单号！","error");	
 					return false;
 			}
-			if(addMerchantID == "" || addMerchantID == null || addMerchantID == undefined){
-					$.messager.alert("系统提示","请选择商户名！","error");		
+			if(addMoney == "" || addMoney == null || addMoney == undefined){
+					$.messager.alert("系统提示","请填写收费金额！","error");		
 					return false;
 			}
-			if(addPayChannelCode == "" || addPayChannelCode == null || addPayChannelCode == undefined){
-					$.messager.alert("系统提示","请选择支付渠道代码！","error");		
+			if(addMerchantName == "" || addMerchantName == null || addMerchantName == undefined){
+					$.messager.alert("系统提示","请选择商户名称！","error");		
 					return false;
 			}
-			if(!checkRate(payRate)){
-				return false;
-			};
+			if(addAppId == "" || addAppId == null || addAppId == undefined){
+					$.messager.alert("系统提示","请选择业务来源！","error");		
+					return false;
+			}
+			if(addChannelId == "" || addChannelId == null || addChannelId == undefined){
+					$.messager.alert("系统提示","请选择支付方式！","error");		
+					return false;
+			}
+			if(addBankCode == "" || addBankCode == null || addBankCode == undefined){
+					$.messager.alert("系统提示","请选择发卡行！","error");		
+					return false;
+			}
+			if(addPhone != "" && addPhone != null){
+				if(!checkPhone(addPhone)){
+					return false;
+				}
+			}
 			return true;
 		}
 		
@@ -399,19 +408,15 @@
 			}
 	    }; */
       	
-      	//费率格式校验
-      	/* function checkRate(payRate){
-      		var regex_payRate = /^[0]\.[0]{2}[1-9]$/;
-      		if(payRate==null || payRate == "" || payRate == undefined){
-      			msgShow('系统提示', '请输入费率！', 'warning');
-      			return false;
-      		}
-      		if(regex_payRate.test(payRate) != true){
-      			msgShow('系统提示', '输入费率格式不正确或费率值过大或过小！', 'warning');
-      			return false;
-      		}
+      	//手机号格式校验
+      	 function checkPhone(addPhone){
+      	 	var phone1=/^([1])([1-9]{1}[0-9]{9})?$/;
+			if(phone.length!=11 || !phone.match(phone1)){
+				$(".mess").text("请填写正确联系方式！");
+				return false;
+			}
       		return true;
-      	} */
+      	} 
       	
       	//提交修改
       	/* function submitRate(){

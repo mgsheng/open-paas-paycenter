@@ -36,7 +36,7 @@
 		ID,
 		<include refid="Insert_Column_List" />
 	</sql>
-	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline">
+	<insert id="addOrderOffline" parameterType="cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline">
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 		select last_insert_id() as id
 		</selectKey>

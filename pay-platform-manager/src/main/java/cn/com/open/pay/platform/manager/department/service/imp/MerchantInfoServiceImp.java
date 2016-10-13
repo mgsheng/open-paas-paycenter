@@ -89,6 +89,11 @@ public class MerchantInfoServiceImp implements  MerchantInfoService{
 			return false;
 		}
 	}
+
+	@Override
+	public MerchantInfo findNameById(Integer merchantId) {
+		return merchantInfoRepository.findNameById(merchantId);
+	}
 	
 	
 	

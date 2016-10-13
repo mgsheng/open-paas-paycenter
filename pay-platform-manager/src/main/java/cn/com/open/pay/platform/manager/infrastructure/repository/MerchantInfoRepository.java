@@ -51,6 +51,8 @@ public interface MerchantInfoRepository extends Repository {
 	 * @return
 	 */
 	public void updateMerchantInfo(MerchantInfo merchantInfo);
+
+	public MerchantInfo findNameById(Integer merchantId);
 	
 	
 	

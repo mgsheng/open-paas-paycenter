@@ -31,5 +31,13 @@ public class MerchantOrderOfflineServiceImpl implements MerchantOrderOfflineServ
 		return merchantOrderOfflineList;
 	}
 
-
+	@Override
+	public boolean addOrderOffline(MerchantOrderOffline merchantOrderOffline) {
+		try{
+			merchantOrderOfflineRepository.addOrderOffline(merchantOrderOffline);
+			return true;
+		}catch(Exception e){
+			return false;
+		}
+	}
 }

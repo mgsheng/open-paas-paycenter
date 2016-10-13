@@ -305,7 +305,6 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/authorizeRole.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/show/userlist.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/chart.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text
-pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~]of[!!-~]merchantOrderOffline.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/accountRunningMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantOrderOffline.jsp -text
