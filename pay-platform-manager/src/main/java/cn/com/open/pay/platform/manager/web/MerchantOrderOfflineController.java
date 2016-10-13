@@ -106,6 +106,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    		map.put("id", r.getId());
 	    		map.put("merchantOrderId", r.getMerchantOrderId());
 	    		map.put("money", r.getMoney());
+	    		map.put("sourceUID", r.getSourceUid());
 	    		map.put("sourceUserName", r.getSourceUserName());
 	    		map.put("realName", r.getRealName());
 	    		map.put("phone", r.getPhone());
@@ -181,6 +182,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		String addBankCode = request.getParameter("addBankCode");
 		String addRemark = request.getParameter("addRemark");
 		String addOperator = request.getParameter("addOperator");
+		String addSourceUID = request.getParameter("addSourceUID");
 		
 		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addMoney : "+addMoney+"    " +
 				"addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
@@ -204,6 +206,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		merchantOrderOffline.setBankCode(addBankCode);
 		merchantOrderOffline.setRemark(addRemark);
 		merchantOrderOffline.setOperator(addOperator);
+		merchantOrderOffline.setSourceUid(addSourceUID);
 		//result = 1 添加成功  result = 2 该记录(线下订单号)已存在  result = 0 添加失败 
 		int result = -1;
 		//先查询该线下订单号是否已经存在

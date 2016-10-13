@@ -21,11 +21,12 @@
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-			    <th data-options="field:'id',width:160">订单号</th>
+			    <th data-options="field:'id',width:170">订单号</th>
 				<th data-options="field:'merchantOrderId',width:150">线下订单号</th>
-				<th data-options="field:'merchantId',width:100">收费商户</th>
+				<th data-options="field:'merchantId',width:90">收费商户</th>
 				<th data-options="field:'money',width:60,align:'center'">收费金额</th>
 				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
+				<th data-options="field:'sourceUID',align:'center',width:50">用户ID</th>
 				<th data-options="field:'sourceUserName',align:'center',width:60">用户名</th>
 				<th data-options="field:'realName',align:'center',width:60">真实姓名</th>
 				<th data-options="field:'phone',align:'center',width:95">手机号</th>
@@ -180,19 +181,19 @@
 					</tr>
 					<tr>
 						<td style="margin-bottom:20px">
+							用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;ID:
+						</td>
+						<td>
+			                 <input id="addSourceUID" class="easyui-textbox" style="width:98%;"
+			                 	name="addSourceUID" value=''/>
+						</td>
+					
+						<td style="margin-bottom:20px">
 							手&nbsp;&nbsp;&nbsp;机&nbsp;&nbsp;&nbsp;号:
 						</td>
 						<td>
 			                 <input id="addPhone" class="easyui-textbox" style="width:98%;"
 			                 	name="addPhone"/>
-						</td>
-					
-						<td style="margin-bottom:20px">
-							操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人:
-						</td>
-						<td>
-			                 <input id="addOperator"  style="width:98%;border:none;"
-			                 	name="addOperator" value=''/>
 						</td>
 					</tr>
 					<tr>
@@ -202,6 +203,15 @@
 						<td colspan="3">
 			                 <input id="addRemark" class="easyui-textbox" data-options="multiline:true" style="width:98%;"
 			                 	name="addRemark" />
+						</td>
+					</tr>
+					<tr hidden="true">
+						<td >
+							操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人:
+						</td>
+						<td>
+			                 <input id="addOperator"  style="width:98%;border:none;"
+			                 	name="addOperator" value=''/>
 						</td>
 					</tr>
 				</table>
@@ -230,7 +240,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '90%',
+                height: '95%',
                 resizable:false
             });
         }
@@ -303,12 +313,13 @@
 			var addBankCode = $('#addBankCode').combobox('getValue');
 			var addRemark = $('#addRemark').textbox('getValue');
 			var addOperator = $('#addOperator').val();
+			var addSourceUID = $('#addSourceUID').textbox('getValue');
 			//若校验为true 提交
 			if(checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone)){
 				$.ajax({
 					type:"post",
 					url:"/pay-platform-manager/manage/submitAddOrderOffline",
-					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark,"addOperator":addOperator},
+					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark,"addOperator":addOperator,"addSourceUID":addSourceUID},
 					dataType:"json",
 					success:function (data){
 						if(data.result == 1){
