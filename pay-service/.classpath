@@ -45,10 +45,11 @@
 	<classpathentry kind="lib" path="lib/alipay-sdk-java20151021120052.jar"/>
 	<classpathentry kind="lib" path="lib/alipay-trade-sdk.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
-	<classpathentry kind="lib" path="lib/commons-httpclient-3.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-httpclient-3.0.1.jar" sourcepath="C:/Users/ERIC/.m2/repository/commons-httpclient/commons-httpclient/3.0.1/commons-httpclient-3.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/junit-3.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/QRCode.jar"/>
+	<classpathentry kind="lib" path="lib/bcprov-jdk16-1.45.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
