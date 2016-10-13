@@ -18,5 +18,7 @@ public interface DictTradePaymentRepository extends Repository {
 	 * @return
 	 */
 	public List<DictTradePayment> findPaymentNamesAll();
+
+	public DictTradePayment findNameById(String bankCode);
 	
 }

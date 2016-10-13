@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.MerchantOrderOfflineRepositoryMyBatis">
 	<resultMap type="MerchantOrderOffline" id="merchantOrderOfflineMap">
-		<id column="Id" property="id" jdbcType="INTEGER" />
+		<id column="Id" property="id" jdbcType="VARCHAR" />
 		<result column="MERCHANT_ORDERID" property="merchantOrderId" jdbcType="VARCHAR" />
 		<result column="MERCHANT_ID" property="merchantId" jdbcType="INTEGER" />
 		<result column="MONEY" property="money" jdbcType="DECIMAL" />
@@ -32,11 +32,12 @@
 	  BANK_CODE,
 	  OPERATOR
 	</sql>
+	
 	<sql id="Base_Column_List">
 		ID,
 		<include refid="Insert_Column_List" />
 	</sql>
-	<insert id="addOrderOffline" parameterType="cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline">
+	<insert id="insert" parameterType="cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline">
 		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 		select last_insert_id() as id
 		</selectKey>
@@ -61,6 +62,31 @@
 			#{operator, jdbcType=VARCHAR}
 		)
 	</insert>
+	
+	<insert id="addOrderOffline" parameterType="MerchantOrderOffline" useGeneratedKeys="true" keyProperty="id">
+        insert into MECHANT_ORDER_OFFLINE(Id,<include refid="Insert_Column_List" />)
+        values
+        (
+			#{id, jdbcType=VARCHAR},
+			#{merchantOrderId, jdbcType=VARCHAR},
+			#{merchantId, jdbcType=INTEGER},
+			#{money, jdbcType=DECIMAL},
+			#{appId, jdbcType=VARCHAR},
+			#{remark, jdbcType=VARCHAR},
+			#{sourceUid, jdbcType=VARCHAR},
+			#{sourceUserName, jdbcType=VARCHAR},
+			#{createTime, jdbcType=TIMESTAMP},
+			#{realName, jdbcType=VARCHAR},
+			#{phone, jdbcType=VARCHAR},
+			#{channelId, jdbcType=VARCHAR},
+			#{bankCode, jdbcType=VARCHAR},
+			#{operator, jdbcType=VARCHAR}
+		)
+    </insert>
+	
+	<select id="findByMerchantOrderId" resultMap="merchantOrderOfflineMap">
+         select * from MECHANT_ORDER_OFFLINE where MERCHANT_ORDERID=#{merchantOrderId}
+	</select>
 	
 	<select id="findAll" resultMap="merchantOrderOfflineMap">
          select * from MECHANT_ORDER_OFFLINE

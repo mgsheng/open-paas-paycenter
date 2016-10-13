@@ -40,4 +40,10 @@ public class MerchantOrderOfflineServiceImpl implements MerchantOrderOfflineServ
 			return false;
 		}
 	}
+
+	@Override
+	public MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId) {
+		MerchantOrderOffline offline=merchantOrderOfflineRepository.findByMerchantOrderId(addMerchantOrderId);
+		return offline;
+	}
 }

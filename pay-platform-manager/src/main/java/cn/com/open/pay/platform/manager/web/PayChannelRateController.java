@@ -169,7 +169,8 @@ public class PayChannelRateController extends BaseControllerUtil{
 		if(list != null){
 			for(PayChannelDictionary d : list){
 				map = new HashMap<String,Object>();
-				map.put("id", d.getId());
+				//map.put("id", d.getId());
+				map.put("id", d.getChannelID());
 				map.put("text", d.getChannelName());
 				maps.add(map);
 			} 

@@ -14,5 +14,7 @@ public interface MerchantOrderOfflineService {
 	int findOfflineAllCount(MerchantOrderOffline merchantOrderOffline);
 
 	boolean addOrderOffline(MerchantOrderOffline merchantOrderOffline);
+
+	MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId);
 	
 }

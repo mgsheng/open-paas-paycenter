@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.tools.SysUtil;
 import cn.com.open.pay.platform.manager.department.model.DictTradePayment;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradePaymentService;
@@ -30,6 +31,8 @@ import cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderOfflineService;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
+import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -46,9 +49,9 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	@Autowired
 	private DictTradePaymentService dictTradePaymentService;
 	@Autowired
-	private MerchantOrderInfoService merchantOrderInfoService;
-	@Autowired
 	private MerchantInfoService merchantInfoService;
+	@Autowired
+	private PayChannelDictionaryService payChannelDictionaryService;
 	
 	/**
 	 * 跳转到线下收费维护页面
@@ -94,6 +97,8 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    json.put("total", total);
 	    List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 	    MerchantInfo merchantInfo=null;
+	    PayChannelDictionary channel=null;
+	    DictTradePayment payment=null;
 	    if(offlines != null){
 	    	Map<String,Object> map = null;
 	    	for(MerchantOrderOffline r : offlines){
@@ -109,10 +114,16 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		    		map.put("merchantId", merchantInfo.getMerchantName());
 	    		}
 	    		map.put("appId", r.getAppId());
-	    		map.put("channelId", r.getChannelId());
+	    		channel=payChannelDictionaryService.findNameById(r.getChannelId());
+	    		if(channel!=null){
+	    			map.put("channelId", channel.getChannelName());
+	    		}
 	    		map.put("remark", r.getRemark());
 	    		map.put("operator", r.getOperator());
-	    		map.put("bankCode", r.getBankCode());
+	    		payment=dictTradePaymentService.findNameById(r.getBankCode());
+	    		if(payment!=null){
+	    			map.put("bankCode", payment.getRemark());
+	    		}
 	    		maps.add(map);
 	    	}
 	    	JSONArray jsonArr = JSONArray.fromObject(maps);
@@ -169,6 +180,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		String addChannelId = request.getParameter("addChannelId");
 		String addBankCode = request.getParameter("addBankCode");
 		String addRemark = request.getParameter("addRemark");
+		String addOperator = request.getParameter("addOperator");
 		
 		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addMoney : "+addMoney+"    " +
 				"addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
@@ -177,7 +189,10 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		
 		JSONObject json =  new JSONObject();
 		//封装参数
+		String newId="";
+		newId=SysUtil.careatePayOrderId();
 		MerchantOrderOffline merchantOrderOffline = new MerchantOrderOffline();
+		merchantOrderOffline.setId(newId);
 		merchantOrderOffline.setMerchantOrderId(addMerchantOrderId);
 		merchantOrderOffline.setMoney(addMoney);
 		merchantOrderOffline.setSourceUserName(addSourceUserName);
@@ -188,14 +203,15 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		merchantOrderOffline.setChannelId(addChannelId);
 		merchantOrderOffline.setBankCode(addBankCode);
 		merchantOrderOffline.setRemark(addRemark);
+		merchantOrderOffline.setOperator(addOperator);
 		//result = 1 添加成功  result = 2 该记录(线下订单号)已存在  result = 0 添加失败 
 		int result = -1;
-		//先查询该订单号是否已经存在
-		MerchantOrderInfo merchantOrderInfo = merchantOrderInfoService.findByMerchantOrderId(addMerchantOrderId);
-		if(merchantOrderInfo != null){
+		//先查询该线下订单号是否已经存在
+		MerchantOrderOffline OrderOffline = merchantOrderOfflineService.findByMerchantOrderId(addMerchantOrderId);
+		if(OrderOffline != null){
 			result = 2;
 		}else{
-			//添加费率
+			//添加线下收费
 			boolean isSuccess = merchantOrderOfflineService.addOrderOffline(merchantOrderOffline);
 			if(isSuccess){
 				result = 1;

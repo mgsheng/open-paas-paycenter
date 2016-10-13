@@ -21,18 +21,18 @@
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-			    <th data-options="field:'id',width:180">订单号</th>
+			    <th data-options="field:'id',width:160">订单号</th>
 				<th data-options="field:'merchantOrderId',width:150">线下订单号</th>
-				<th data-options="field:'merchantId',width:150">收费商户</th>
-				<th data-options="field:'money',width:80,align:'center'">收费金额</th>
-				<th data-options="field:'appId',width:60,align:'center'">业务来源</th>
+				<th data-options="field:'merchantId',width:100">收费商户</th>
+				<th data-options="field:'money',width:60,align:'center'">收费金额</th>
+				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
 				<th data-options="field:'sourceUserName',align:'center',width:60">用户名</th>
 				<th data-options="field:'realName',align:'center',width:60">真实姓名</th>
-				<th data-options="field:'phone',align:'center',width:100">手机号</th>
+				<th data-options="field:'phone',align:'center',width:95">手机号</th>
 				<th data-options="field:'channelId',width:60,align:'center'">支付方式</th>
-				<th data-options="field:'bankCode',width:80,align:'center'">发卡行</th>
-				<th data-options="field:'operator',align:'center',width:80">操作人</th>
-				<th data-options="field:'remark',align:'center',width:85">备注</th>
+				<th data-options="field:'bankCode',width:110,align:'center'">发卡行</th>
+				<th data-options="field:'operator',align:'center',width:55">操作人</th>
+				<th data-options="field:'remark',align:'center',width:70">备注</th>
 			</tr>
 		</thead>
 	</table>
@@ -126,7 +126,7 @@
 							收&nbsp;费&nbsp;金&nbsp;额:
 						</td>
 						<td>
-			                 <input id="addMoney" class="easyui-textbox" style="width:98%;"
+			                 <input id="addMoney" class="easyui-numberbox" style="width:98%;" data-options="precision:2"
 			                 	name="addMoney"  required="true"  missingMessage="金额可以精确到分" />
 						</td>
 					
@@ -188,19 +188,21 @@
 						</td>
 					
 						<td style="margin-bottom:20px">
+							操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人:
+						</td>
+						<td>
+			                 <input id="addOperator"  style="width:98%;border:none;"
+			                 	name="addOperator" value=''/>
+						</td>
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">
 							备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:
 						</td>
-						<td>
-			                 <input id="addRemark" class="easyui-textbox" style="width:98%;"
+						<td colspan="3">
+			                 <input id="addRemark" class="easyui-textbox" data-options="multiline:true" style="width:98%;"
 			                 	name="addRemark" />
 						</td>
-						<!-- <td style="margin-bottom:20px">
-							操作人:
-						</td>
-						<td>
-			                 <input id="addOperator" class="easyui-textbox" style="width:98%;"
-			                 	name="addOperator"  required="true"  missingMessage="" />
-						</td> -->
 					</tr>
 				</table>
 			</form>
@@ -215,6 +217,8 @@
 <script>
 		//页面预加载
 		$(function(){
+			var operator=$("#realName",window.parent.document).text();
+			$("#addOperator").val(operator);
 			findOrderOffline();
 		});
 		
@@ -241,6 +245,8 @@
         //清空添加表单
         function clearAddForm(){
         	$('#addForm').form('clear');
+        	var operator=$("#realName",window.parent.document).text();
+			$("#addOperator").val(operator);
         }	
 		
 		//打开线下收费录入窗口
@@ -253,14 +259,14 @@
             $('#addChannelId').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
 				valueField:'id',
-				textField:'text',
+				textField:'text'/* ,
 				onSelect: function(rec){
 					var payChannelName = rec.text;
 					if(payChannelName != null && payChannelName != ""){
 						var url = '${pageContext.request.contextPath}/paychannel/findPayChannelCode?payChannelName='+payChannelName;
 						$('#addPayChannelCode').combobox('reload', url);
 					}
-				}	
+				}	 */
 			});
 			
 			//加载所有商户名
@@ -296,12 +302,13 @@
 			var addChannelId = $('#addChannelId').combobox('getValue');
 			var addBankCode = $('#addBankCode').combobox('getValue');
 			var addRemark = $('#addRemark').textbox('getValue');
+			var addOperator = $('#addOperator').val();
 			//若校验为true 提交
 			if(checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone)){
 				$.ajax({
 					type:"post",
 					url:"/pay-platform-manager/manage/submitAddOrderOffline",
-					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark},
+					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark,"addOperator":addOperator},
 					dataType:"json",
 					success:function (data){
 						if(data.result == 1){
@@ -340,7 +347,7 @@
 					$.messager.alert("系统提示","请选择商户名称！","error");		
 					return false;
 			}
-			if(addAppId == "" || addAppId == null || addAppId == undefined){
+			if(addAppId == "" || addAppId == null || addAppId == undefined || addAppId == 0){
 					$.messager.alert("系统提示","请选择业务来源！","error");		
 					return false;
 			}
@@ -353,7 +360,7 @@
 					return false;
 			}
 			if(addPhone != "" && addPhone != null){
-				if(!checkPhone(addPhone)){
+				if(!checkPhone(addPhone)){	
 					return false;
 				}
 			}
@@ -411,8 +418,8 @@
       	//手机号格式校验
       	 function checkPhone(addPhone){
       	 	var phone1=/^([1])([1-9]{1}[0-9]{9})?$/;
-			if(phone.length!=11 || !phone.match(phone1)){
-				$(".mess").text("请填写正确联系方式！");
+			if(addPhone.length!=11 || !addPhone.match(phone1)){
+				$.messager.alert("系统提示","请输入正确手机号！","error");	
 				return false;
 			}
       		return true;
@@ -530,7 +537,7 @@
 		        onLoadSuccess:function(data){
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
-                  }
+                  	}
                 }
 		    }); 
 			
@@ -547,6 +554,14 @@
 		            $(this).pagination('loaded');
 		        } 
 		    }); 
+		}
+		
+		function formatAppId(val,row){
+			if (val == 1){
+				return 'OES学历';
+			} else if (val == 10026){
+				return 'mooc2u';
+			}
 		}
 		
 	</script>

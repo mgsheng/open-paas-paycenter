@@ -11,7 +11,7 @@ public class MerchantOrderOffline implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private Integer id;
+	private String id;
     
 	private String merchantOrderId;
 	
@@ -37,7 +37,7 @@ public class MerchantOrderOffline implements Serializable {
 	
 	private String bankCode;
 	
-	private Double operator;
+	private String operator;
 	
 	private Integer startRow;
 	private Integer pageSize;
@@ -87,11 +87,11 @@ public class MerchantOrderOffline implements Serializable {
 		this.appId = appId;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -150,15 +150,15 @@ public class MerchantOrderOffline implements Serializable {
 	public void setBankCode(String bankCode) {
 		this.bankCode = bankCode;
 	}
-
-	public Double getOperator() {
+	
+	public String getOperator() {
 		return operator;
 	}
 
-	public void setOperator(Double operator) {
+	public void setOperator(String operator) {
 		this.operator = operator;
 	}
-	
+
 	public Integer getStartRow() {
 		return startRow;
 	}

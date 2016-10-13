@@ -19,5 +19,7 @@ public interface MerchantOrderOfflineRepository extends Repository {
 	int findQueryCount(MerchantOrderOffline merchantOrderOffline);
 
 	void addOrderOffline(MerchantOrderOffline merchantOrderOffline);
+
+	MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId);
 	
 }

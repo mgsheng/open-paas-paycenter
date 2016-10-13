@@ -20,8 +20,10 @@
 	  PAYMENT_SORT,
 	  PAYMENT_STATUS
 	</sql>
-	
-	<!-- 查询所有支付渠道名称 -->
+	<select id="findNameById" resultMap="dictTradePaymentMap" >
+		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where ID=#{bankCode} 
+	</select>
+	<!-- 查询所有支付银行名称 -->
 	<select id="findPaymentNamesAll" resultMap="dictTradePaymentMap" >
 		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where PAYMENT_STATUS=1 
 	</select>

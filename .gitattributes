@@ -244,6 +244,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/Proper
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/SerializeUtil.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/SmsTools.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/StringTool.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/SysUtil.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/ValidateUtil.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/WebUtils.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/test.java -text

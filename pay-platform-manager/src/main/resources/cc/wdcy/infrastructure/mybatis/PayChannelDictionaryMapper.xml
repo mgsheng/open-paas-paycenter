@@ -16,6 +16,11 @@
 		CHANNEL_CODE
 	</sql>
 	
+	<!-- 查询指定渠道编码 -->
+	<select id="findNameById" resultMap="payChannelDictionaryMap" >
+		select CHANNEL_NAME from PAY_CHANNEL_DICTIONARY where  CHANNEL_ID=#{channelId} 
+	</select>
+	
 	<!-- 查询所有渠道编码 -->
 	<select id="findPayChannelCodeAll" resultMap="payChannelDictionaryMap" >
 		select * from PAY_CHANNEL_DICTIONARY where  CHANNEL_STATUS=1 

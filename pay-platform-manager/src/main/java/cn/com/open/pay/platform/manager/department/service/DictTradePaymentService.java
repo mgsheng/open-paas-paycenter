@@ -19,4 +19,6 @@ public interface DictTradePaymentService {
 	 */
 	public List<DictTradePayment> findPaymentNamesAll();
 
+	public DictTradePayment findNameById(String bankCode);
+
 }

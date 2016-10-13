@@ -26,4 +26,6 @@ public interface PayChannelDictionaryRepository  extends Repository{
 	 * @return
 	 */
 	public List<PayChannelDictionary> findPayChannelCode(PayChannelDictionary payChannelDictionary);
+
+	public PayChannelDictionary findNameById(String channelId);
 }
