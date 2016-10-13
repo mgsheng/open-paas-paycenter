@@ -104,6 +104,11 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		return merchantOrderInfoRepository.getTotalAmountByTime(startTime, endTime, appId);
 	}
 
+	@Override
+	public Integer connectionTest() {
+		return merchantOrderInfoRepository.connectionTest() ;
+	}
+
 
 
 

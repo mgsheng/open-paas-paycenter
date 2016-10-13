@@ -52,5 +52,5 @@ public interface MerchantOrderInfoRepository extends Repository {
 			MerchantOrderInfo merchantOrderInfo);
 	
 	int findQueryCount(MerchantOrderInfo merchantOrderInfo);
-	
+	Integer connectionTest();
 }
