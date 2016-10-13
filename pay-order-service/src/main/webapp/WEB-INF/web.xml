@@ -40,23 +40,15 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
- <!--  <servlet>
-    <servlet-name>soc</servlet-name>
+<servlet>
+    <servlet-name>wdcy</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
   <servlet-mapping>
-    <servlet-name>soc</servlet-name>
+    <servlet-name>wdcy</servlet-name>
     <url-pattern>/</url-pattern>
-  </servlet-mapping> -->
-  <servlet>
-    <servlet-name>fucilu</servlet-name>
-    <servlet-class>com.andaily.forLoad.web.TestLoadServlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>fucilu</servlet-name>
-    <url-pattern>/a</url-pattern>
-  </servlet-mapping>
+  </servlet-mapping> 
   <servlet-mapping>
     <servlet-name>default</servlet-name>
     <url-pattern>*.png</url-pattern>

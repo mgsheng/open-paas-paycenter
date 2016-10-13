@@ -451,5 +451,7 @@
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
     </resultMap>
 	
-	
+	   <select id="connectionTest" resultType="Integer">
+         select 1
+	</select>
 </mapper>
