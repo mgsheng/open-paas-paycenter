@@ -582,7 +582,7 @@
     <artifactId>jcl-over-slf4j</artifactId>
     <version>1.7.5</version>
 </dependency>
-<dependency>
+<!-- <dependency>
     <groupId>org.slf4j</groupId>
     <artifactId>log4j-over-slf4j</artifactId>
     <version>1.7.5</version>
@@ -596,7 +596,7 @@
     <groupId>ch.qos.logback</groupId>
     <artifactId>logback-core</artifactId>
     <version>1.0.13</version>
-</dependency>
+</dependency> -->
 
     </dependencies>
 
