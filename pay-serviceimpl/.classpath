@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/pay-service"/>
+	<classpathentry kind="lib" path="/pay-service/lib/alipay-sdk-java20151021120052.jar"/>
+	<classpathentry kind="lib" path="/pay-service/lib/alipay-trade-sdk.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
+	<classpathentry kind="lib" path="/pay-service/lib/QRCode.jar"/>
+	<classpathentry kind="lib" path="/pay-service/lib/ehking-sdk-core-1.0.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
