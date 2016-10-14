@@ -395,7 +395,6 @@
 		}
 
 		function findOrderOffline(){
-		 	
 		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline";
         	$('#dg').datagrid({
 				collapsible:true,
@@ -420,7 +419,7 @@
 		        onBeforeRefresh:function(){
 		            $(this).pagination('loading');
 		            $(this).pagination('loaded');
-		        } 
+		        }
 		    }); 
 		}
 		

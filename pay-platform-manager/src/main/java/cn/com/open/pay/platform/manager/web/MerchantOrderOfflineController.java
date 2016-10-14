@@ -103,7 +103,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    offline.setPageSize(pageSize);
 	    offline.setStartRow(startRow);
 	    
-	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAll();
+	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAll(offline);
 	    int total = merchantOrderOfflineService.findOfflineAllCount(offline);
 	    JSONObject json =  new JSONObject();
 	    json.put("total", total);

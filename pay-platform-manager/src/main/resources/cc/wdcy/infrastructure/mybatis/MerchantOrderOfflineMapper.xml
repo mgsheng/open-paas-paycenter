@@ -91,6 +91,9 @@
 	<select id="findAll" resultMap="merchantOrderOfflineMap">
          select * from MECHANT_ORDER_OFFLINE
 	</select>
+	<select id="findAllByPage" resultMap="merchantOrderOfflineMap">
+         select * from MECHANT_ORDER_OFFLINE limit #{startRow},#{pageSize} 
+	</select>
 	<select id="findQueryCount" resultType="int">
         select count(*) from  MECHANT_ORDER_OFFLINE where 1=1
     </select>

@@ -9,7 +9,7 @@ import cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline;
  */
 public interface MerchantOrderOfflineService {
 	
-	List<MerchantOrderOffline> findOfflineAll();
+	List<MerchantOrderOffline> findOfflineAll(MerchantOrderOffline offline);
 	
 	int findOfflineAllCount(MerchantOrderOffline merchantOrderOffline);
 

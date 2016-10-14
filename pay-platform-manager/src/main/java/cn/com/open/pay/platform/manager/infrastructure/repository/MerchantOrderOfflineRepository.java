@@ -21,5 +21,7 @@ public interface MerchantOrderOfflineRepository extends Repository {
 	void addOrderOffline(MerchantOrderOffline merchantOrderOffline);
 
 	MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId);
+
+	List<MerchantOrderOffline> findAllByPage(MerchantOrderOffline offline);
 	
 }
