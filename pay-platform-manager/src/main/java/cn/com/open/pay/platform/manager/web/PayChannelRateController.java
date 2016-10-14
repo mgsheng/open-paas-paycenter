@@ -22,9 +22,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
+import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelRateService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -38,7 +44,12 @@ public class PayChannelRateController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
 	private PayChannelRateService payChannelRateService;
-	
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
 	/**
 	 * 跳转到渠道费率维护页面
 	 * @return
@@ -73,6 +84,7 @@ public class PayChannelRateController extends BaseControllerUtil{
 		channelRate.setMerchantID(addMerchantID);
 		channelRate.setPayChannelCode(addPayChannelCode);
 		channelRate.setPayRate(payRate);
+		
 		//result = 1 添加成功  result = 2 该记录已存在  result = 0 添加失败 
 		int result = -1;
 		//先查询该记录是否已经存在
@@ -83,6 +95,16 @@ public class PayChannelRateController extends BaseControllerUtil{
 		}else{
 			//添加费率
 			boolean isSuccess = payChannelRateService.addPayChannelRate(channelRate);
+			//添加日志
+			PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+			PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+			String  towLevels = privilegeModule.getName();
+			String   oneLevels= privilegeModule1.getName();
+			User user1 = (User)request.getSession().getAttribute("user");
+			String operator = user1.getUsername(); //操作人
+			String operatorId = user1.getId()+""; //操作人Id
+			PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","渠道费率维护",privilegeResource.getId()+"",operator+"添加渠道汇率名称为"+addPayName,operatorId);
 			if(isSuccess){
 				result = 1;
 			}else{
@@ -197,6 +219,16 @@ public class PayChannelRateController extends BaseControllerUtil{
 		ChannelRate rate = new ChannelRate();
 		rate.setId(Integer.valueOf(id));
 		boolean result = payChannelRateService.removeChannelRate(rate);
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
+		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","渠道费率维护",privilegeResource.getId()+"",operator+"删除订单号为"+id+"渠道费率信息",operatorId);
 		JSONObject json =  new JSONObject();
 		json.put("result", result);
 		WebUtils.writeJson(response, json);
@@ -274,6 +306,18 @@ public class PayChannelRateController extends BaseControllerUtil{
 		rate.setPayRate(payRate);
 		
 		boolean result = payChannelRateService.updateRate(rate);
+		
+		//添加日志
+				PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+				PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+				String  towLevels = privilegeModule.getName();
+				String   oneLevels= privilegeModule1.getName();
+				User user1 = (User)request.getSession().getAttribute("user");
+				String operator = user1.getUsername(); //操作人
+				String operatorId = user1.getId()+""; //操作人Id
+				PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
+				privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","渠道费率维护",privilegeResource.getId()+"",operator+"修改订单号为"+id+"渠道费率信息",operatorId);
+				
 		JSONObject json =  new JSONObject();
 		json.put("result", result);
 		WebUtils.writeJson(response, json);

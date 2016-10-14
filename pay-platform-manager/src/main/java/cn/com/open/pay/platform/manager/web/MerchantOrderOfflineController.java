@@ -26,6 +26,8 @@ import cn.com.open.pay.platform.manager.department.model.DictTradePayment;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradePaymentService;
 import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
+import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
@@ -33,6 +35,10 @@ import cn.com.open.pay.platform.manager.order.service.MerchantOrderOfflineServic
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -52,6 +58,12 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	private MerchantInfoService merchantInfoService;
 	@Autowired
 	private PayChannelDictionaryService payChannelDictionaryService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
 	
 	/**
 	 * 跳转到线下收费维护页面
@@ -216,6 +228,17 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		}else{
 			//添加线下收费
 			boolean isSuccess = merchantOrderOfflineService.addOrderOffline(merchantOrderOffline);
+			//添加日志
+			PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+			PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+			String towLevels = privilegeModule.getName();
+			String  oneLevels = privilegeModule1.getName();
+			User user1 = (User)request.getSession().getAttribute("user");
+			String operator = user1.getUsername(); //操作人
+			String operatorId = user1.getId()+""; //操作人Id
+			PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","线下收费维护",privilegeResource.getId()+"",operator+"添加了收费记录，订单号为"+newId,operatorId);
+			
 			if(isSuccess){
 				result = 1;
 			}else{
