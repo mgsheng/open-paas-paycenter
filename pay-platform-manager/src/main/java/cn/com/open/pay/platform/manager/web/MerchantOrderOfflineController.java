@@ -84,9 +84,15 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	@RequestMapping("getMerchantOrderOffline")
 	public void getMerchantOrderOffline(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderOffline----------------");
-		//String merchantID = request.getParameter("merchantID");
+		String merchantOrderId = request.getParameter("merchantOrderId");
+		String sourceUserName = request.getParameter("sourceUserName");
+		String merchantName = request.getParameter("merchantName");
+		String appId = request.getParameter("appId");
+		String channelId = request.getParameter("channelId");
+		String operator = request.getParameter("operator");
+		String orderId = request.getParameter("orderId");
 		//merchantID = ((merchantID == null || merchantID == "") ? null : (new String(merchantID.getBytes("iso8859-1"),"utf-8")));
-//		System.out.println("merchantID  :   "+merchantID);
+		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator);
 		//当前第几页
 		String page=request.getParameter("page");
 //				System.out.println("page  :" +page);
@@ -102,6 +108,16 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    MerchantOrderOffline offline = new MerchantOrderOffline();
 	    offline.setPageSize(pageSize);
 	    offline.setStartRow(startRow);
+	    
+	    offline.setId(orderId);
+	    offline.setMerchantOrderId(merchantOrderId);
+	    if(merchantName!=null){
+	    	offline.setMerchantId(Integer.parseInt(merchantName));
+	    }
+	    offline.setSourceUserName(sourceUserName);
+	    offline.setAppId(appId);
+	    offline.setChannelId(channelId);
+	    offline.setOperator(operator);
 	    
 	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAll(offline);
 	    int total = merchantOrderOfflineService.findOfflineAllCount(offline);

@@ -23,11 +23,11 @@
 				<tr>
 					<td style="text-align: right;">订&nbsp;&nbsp;&nbsp;单&nbsp;&nbsp;&nbsp;号：</td>
 					<td>
-						<input class="easyui-textbox" name="orderId" id="orderId" style="width:180px;">
+						<input class="easyui-textbox" name="queryOrderId" id="queryOrderId" style="width:180px;">
 					</td>
 					<td style="text-align: right;">线下订单号：</td>
 					<td>
-						<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:180px;">
+						<input class="easyui-textbox" name="queryMerchantOrderId" id="queryMerchantOrderId" style="width:180px;">
 					</td>
 					<td style="text-align: right;">收&nbsp;费&nbsp;商&nbsp;户：</td>
 					<td>
@@ -40,11 +40,11 @@
 				<tr>
 					<td style="text-align: right;">用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;名：</td>
 					<td>
-						<input id="sourceUserName" name="sourceUserName" class="easyui-textbox" style="width:180px;">
+						<input id="querySourceUserName" name="querySourceUserName" class="easyui-textbox" style="width:180px;">
 					</td>
 					<td style="text-align: right;">操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人：</td>
 					<td>
-						<input id="operator" name="operator" class="easyui-textbox" style="width:180px;">
+						<input id="queryOperator" name="queryOperator" class="easyui-textbox" style="width:180px;">
 					</td>
 					<td style="text-align: right;">业&nbsp;务&nbsp;来&nbsp;源：</td>
 					<td>
@@ -408,7 +408,11 @@
                 }
 		    }); 
 			
-			 //设置分页控件 
+			 setPage();
+		}
+		
+		function setPage(){
+			//设置分页控件 
 		    var p = $('#dg').datagrid('getPager'); 
 		    $(p).pagination({ 
 		        pageSize: 15,//每页显示的记录条数，默认为10 
@@ -431,5 +435,35 @@
 			}
 		}
 		
+		function clearForm(){
+			$('#ff').form('clear');
+		}
+		
+		function submitForm(){
+			var queryOrderId = $('#queryOrderId').textbox('getValue');
+			var queryMerchantOrderId = $('#queryMerchantOrderId').textbox('getValue');
+			var querySourceUserName = $('#querySourceUserName').textbox('getValue');
+			var queryMerchantName = $('#queryMerchantName').combobox('getValue');
+			var queryAppId = $('#queryAppId').combobox('getValue');
+			var queryChannelId = $('#queryChannelId').combobox('getValue');
+			var queryOperator = $('#queryOperator').val();
+			
+			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""){
+				$.messager.alert("提示","请输入查询条件!");
+			}else{
+			 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator;
+	        	$('#dg').datagrid({
+					collapsible:true,
+					rownumbers:true,
+					pagination:true,
+			        url: url,  
+			        onLoadSuccess:function(data){
+	                    if (data.total<1){
+	                       $.messager.alert("提示","没有符合查询条件的数据!");
+	                  	}
+	                }
+			    }); 
+			}
+		}
 	</script>
 </html>

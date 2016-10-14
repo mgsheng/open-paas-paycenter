@@ -92,10 +92,53 @@
          select * from MECHANT_ORDER_OFFLINE
 	</select>
 	<select id="findAllByPage" resultMap="merchantOrderOfflineMap">
-         select * from MECHANT_ORDER_OFFLINE limit #{startRow},#{pageSize} 
+         select * from MECHANT_ORDER_OFFLINE where 1=1
+         <if test="id != null and id !=''" >
+           and Id=#{id} 
+        </if>
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+        </if>
+        <if test="sourceUserName != null and sourceUserName !=''" >
+           and SOURCE_USERNAME=#{sourceUserName} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="appId != null and appId !='' and appId != 0" >
+           and APPID=#{appId} 
+        </if>
+        <if test="operator != null and operator !=''" >
+           and OPERATOR=#{operator} 
+        </if>
+          limit #{startRow},#{pageSize} 
 	</select>
 	<select id="findQueryCount" resultType="int">
         select count(*) from  MECHANT_ORDER_OFFLINE where 1=1
+        <if test="id != null and id !=''" >
+           and Id=#{id} 
+        </if>
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+        </if>
+        <if test="sourceUserName != null and sourceUserName !=''" >
+           and SOURCE_USERNAME=#{sourceUserName} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="appId != null and appId !='' and appId != 0" >
+           and APPID=#{appId} 
+        </if>
+        <if test="operator != null and operator !=''" >
+           and OPERATOR=#{operator} 
+        </if>
     </select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
