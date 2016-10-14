@@ -134,8 +134,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	//添加日志
 		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
 		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String oneLevels = privilegeModule.getName();
-		String towLevels  = privilegeModule1.getName();
+		String  towLevels = privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
 		User user1 = (User)request.getSession().getAttribute("user");
 		String operator = user1.getUsername(); //操作人
 		String operatorId = user1.getId()+""; //操作人Id
@@ -234,8 +234,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
 		//添加日志
 		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
 		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String oneLevels = privilegeModule.getName();
-		String towLevels  = privilegeModule1.getName();
+		String towLevels = privilegeModule.getName();
+		String  oneLevels = privilegeModule1.getName();
 		User user1 = (User)request.getSession().getAttribute("user");
 		String operator = user1.getUsername(); //操作人
 		String operatorId = user1.getId()+""; //操作人Id
@@ -258,8 +258,8 @@ public class ManagerRoleController  extends BaseControllerUtil {
     	//添加日志
 		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
 		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-		String oneLevels = privilegeModule.getName();
-		String towLevels  = privilegeModule1.getName();
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
 		User user1 = (User)request.getSession().getAttribute("user");
 		String operator = user1.getUsername(); //操作人
 		String operatorId = user1.getId()+""; //操作人Id
