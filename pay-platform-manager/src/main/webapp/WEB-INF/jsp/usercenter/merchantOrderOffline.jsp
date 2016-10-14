@@ -240,7 +240,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '95%',
+                height: '70%',
                 resizable:false
             });
         }
