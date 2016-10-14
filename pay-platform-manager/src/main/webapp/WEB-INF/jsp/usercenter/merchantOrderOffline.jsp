@@ -17,6 +17,62 @@
 	</style>
 </head>
 <body style="height:100%">
+	<div class="easyui-panel" title="查询条件" style="width:100%; border-bottom:none;padding:1%;">
+		<form id="ff" method="post">
+			<table style="width:100%;">
+				<tr>
+					<td style="text-align: right;">订&nbsp;&nbsp;&nbsp;单&nbsp;&nbsp;&nbsp;号：</td>
+					<td>
+						<input class="easyui-textbox" name="orderId" id="orderId" style="width:180px;">
+					</td>
+					<td style="text-align: right;">线下订单号：</td>
+					<td>
+						<input class="easyui-textbox" name="merchantOrderId" id="merchantOrderId" style="width:180px;">
+					</td>
+					<td style="text-align: right;">收&nbsp;费&nbsp;商&nbsp;户：</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="queryMerchantName" 
+								name="queryMerchantName"  style="width:180px;height:25px;padding:5px;">
+						</select>
+					</td>
+					
+				</tr>
+				<tr>
+					<td style="text-align: right;">用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;名：</td>
+					<td>
+						<input id="sourceUserName" name="sourceUserName" class="easyui-textbox" style="width:180px;">
+					</td>
+					<td style="text-align: right;">操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人：</td>
+					<td>
+						<input id="operator" name="operator" class="easyui-textbox" style="width:180px;">
+					</td>
+					<td style="text-align: right;">业&nbsp;务&nbsp;来&nbsp;源：</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择业务来源'" id="queryAppId" 
+								name="queryAppId"  style="width:180px;height:25px;padding:5px;">
+							<option value="0">请选择业务来源</option>
+							<option value="1">OES学历</option>
+							<option value="10026" >mooc2u</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">支&nbsp;付&nbsp;方&nbsp;式：</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付方式'" id="queryChannelId" 
+								name="queryChannelId"  style="width:180px;height:25px;padding:5px;">
+						</select>
+					</td>
+					<td style="text-align: left;padding-left:80px;" colspan="4">
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">查询</a>
+						&nbsp;&nbsp;
+						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
 	<table id="dg" class="easyui-datagrid" title="线下收费记录" style="height:400px;width:100%" 
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
 		<thead>
@@ -37,67 +93,10 @@
 			</tr>
 		</thead>
 	</table>
-	<div id="tb" style="padding:0.4% 3%; text-align: right;">
-		<!-- 商户号: 
-		<input class="easyui-textbox" name="merchant_id" id="merchant_id" style="width:8%;" prompt="选填">
-		&nbsp;&nbsp;&nbsp;&nbsp; -->
-		<!-- <a href="#" class="easyui-linkbutton" iconCls="icon-search " plain="true" onclick="findChannelRates();"></a> -->
+	<div id="tb" style="padding:0.4% 2%; text-align: right;">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openAddWin();"></a>
-		<!-- <a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="updateChannelRate();"></a> -->
-		<!-- <a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" onclick="removeChannelRate();"></a> -->
 	</div>
-	<!-- 修改线下收费单据窗口 -->
-	<!-- <div id="updateWin" class="easyui-window" title="费率管理-修改" collapsible="false" minimizable="false" maximizable="false" 
-		icon="icon-save" style="padding: 5px; background: #fafafa;">
-		<div class="easyui-layout" >
-			<div border="false" style="padding: 10px; background: #fff; border: 1px solid #ccc;">
-				<form id="ff" class="easyui-form" method="post"  data-options="novalidate:true">
-					<table cellpadding=3>
-						<tr hidden="true">
-							<td>ID:</td>
-							<td>
-								<input id="id" type="hidden" readonly/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>支&nbsp;&nbsp;付&nbsp;&nbsp;名&nbsp;&nbsp;称:</td>
-							<td>
-								<input id="payName" type="text" class="txt01" readonly/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>商&nbsp;&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;&nbsp;号:</td>
-							<td>
-				                 <input id="merchantID" type="text" class="txt01" readonly/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>支付渠道代码:</td>
-							<td>
-								<input id="payChannelCode" type="text" class="txt01" readonly/>
-							</td>
-							<td></td>
-						</tr>
-						<tr>
-							<td>费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;率&nbsp;&nbsp;:</td>
-							<td>
-				                 <input id="payRate" class="easyui-textbox" style="width:96%;"
-				                 	required="true"  missingMessage="费率为三位小数，且千分位只能是1位1-9的数字" />
-							</td>
-							<td><span style="color: red;font-size: 20px;">*</span></td>
-						</tr>
-					</table>
-				</form>
-			</div>
-			<div border="false" style="text-align:center; height: 4%;margin-top:4%;">
-				<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitRate();"> 确定</a> 
-				<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeUpdateWin();" style="margin-left:30px;">取消</a>
-			</div>
-		</div>
-	</div> -->
+
 	<!-- 添加线下收费单据窗口 -->
 	<div id="addWin" class="easyui-window" title="线下收费-添加" collapsible="false" minimizable="false" maximizable="false" 
 		style=" background: #fafafa;">
@@ -230,6 +229,7 @@
 			var operator=$("#realName",window.parent.document).text();
 			$("#addOperator").val(operator);
 			findOrderOffline();
+			loadSelect();
 		});
 		
 		//设置添加费率窗口
@@ -248,7 +248,6 @@
          //关闭添加费率窗口
         function closeAddWin() {
             $('#addWin').window('close');
-            //var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
 	      	window.location.reload();
         }
         
@@ -262,25 +261,21 @@
 		//打开线下收费录入窗口
         addWin();
         function openAddWin() {
-        	//clearAddForm();
             $('#addWin').window('open');
-            
-            //加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
-            $('#addChannelId').combobox({
+            loadSelect();			
+        }
+        
+        //加载select
+        function loadSelect(){
+        	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
+            $('#addChannelId,#queryChannelId').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
 				valueField:'id',
-				textField:'text'/* ,
-				onSelect: function(rec){
-					var payChannelName = rec.text;
-					if(payChannelName != null && payChannelName != ""){
-						var url = '${pageContext.request.contextPath}/paychannel/findPayChannelCode?payChannelName='+payChannelName;
-						$('#addPayChannelCode').combobox('reload', url);
-					}
-				}	 */
+				textField:'text'
 			});
 			
 			//加载所有商户名
-			 $('#addMerchantName').combobox({
+			 $('#addMerchantName,#queryMerchantName').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames',
 				valueField:'id',
 				textField:'text'
@@ -292,7 +287,6 @@
 				valueField:'id',
 				textField:'text'
 			});
-			
         }
         
 		//提交添加
@@ -378,54 +372,6 @@
 			return true;
 		}
 		
-        //设置修改费率窗口
-        /* function updateWin() {
-            $('#updateWin').window({
-                title: '费率管理-修改',
-                width: '23%',
-                modal: true,
-                shadow: true,
-                closed: true,
-                height: '60%',
-                resizable:false
-            });
-        } */
-        
-        //打开修改费率窗口
-        /* updateWin();
-        function openUpdateWin() {
-            $('#updateWin').window('open');
-        } */
-        
-         //关闭修改费率窗口
-        /* function closeUpdateWin() {
-            $('#updateWin').window('close');
-        } */
-        
-        //修改费率
-        /* function updateChannelRate(){  
-	        var row = $('#dg').datagrid('getSelected');
-			if (row){
-				$.messager.confirm('系统提示', '是否确定修改本条数据?', function(r){
-					if (r){
-						var id=row.id;
-					    var merchantID=row.merchantID;
-					    var payChannelCode=row.payChannelCode;
-					    var payName=row.payName;
-					    var payRate=row.payRate;
-					    $("#id").val(id);
-						$("#merchantID").val(merchantID);
-						$("#payChannelCode").val(payChannelCode);
-						$("#payName").val(payName);
-						$('#payRate').textbox('setValue',payRate);
-						openUpdateWin();
-					}
-		   		});
-			}else{
-				 msgShow('系统提示', '请选择所要修改的记录行！', 'warning');
-			}
-	    }; */
-      	
       	//手机号格式校验
       	 function checkPhone(addPhone){
       	 	var phone1=/^([1])([1-9]{1}[0-9]{9})?$/;
@@ -435,108 +381,19 @@
 			}
       		return true;
       	} 
-      	
-      	//提交修改
-      	/* function submitRate(){
-      		var row = $('#dg').datagrid('getSelected');
-			if(row){	
-				var id=row.id;
-	            var payRate = $("#payRate").val().trim();
-	            $('#ff').form('submit',{
-					onSubmit:function(){
-						return $(this).form('enableValidation').form('validate');
-					}
-				});
-	            var checked_result = checkRate(payRate);
-	            if (checked_result) {
-		            var url=encodeURI("${pageContext.request.contextPath}/paychannel/submitRate?id="+id+"&payRate="+payRate);
-		            $.post(url, function(data) {
-		                if(data.result==true){
-			                 msgShow('系统提示', '修改成功！', 'info');
-			                 closeUpdateWin();
-			                 var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
-	      					 reload(url);
-		                }else{
-			                 msgShow('系统提示', '修改失败,请稍候再试！', 'error');
-			                 closeUpdateWin();
-	      					 var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
-	      					 reload(url);
-		                }
-		            });
-	            }
-      		}
-      	} */
-      	
+ 
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
 			$.messager.alert(title, msgString, msgType);
 		}
 
-		//刪除
-		/* function removeChannelRate(){
-			var row = $('#dg').datagrid('getSelected');
-			if (row){
-				$.messager.confirm('系统提示', '是否确定删除?', function(r){
-					if (r){
-					   var id=row.id;
-					   var url='${pageContext.request.contextPath}/paychannel/removeChannelRate?id='+id;
-			            $.post(url, function(data) {
-			                if(data.result==true){
-			                 	msgShow('系统提示', '恭喜，删除成功！', 'info');
-			                 	var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
-      							reload(url);
-			                }else{
-			                  	msgShow('系统提示', '删除失败，请稍候再试！', 'error');
-			                  	//刷新
-					            var url = "${pageContext.request.contextPath}/paychannel/getChannelRate";
-		      					reload(url);
-			                }
-			            });
-					}
-				 });
-			}else{
-				 msgShow('系统提示', '请选择所要删除的记录行！', 'warning');
-			}
-		} */
-		
 		//重新加載
 		function reload(url){
 		$('#dg').datagrid('reload',{
             url: url, method: "post"
           }); 
 		}
-		
-		//查询
-		/* function findChannelRates(){
-		 	var merchant_id=$("#merchant_id").val().trim();
-		 	
-		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRate?merchantID="+merchant_id;
-        	$('#dg').datagrid({
-				collapsible:true,
-				rownumbers:true,
-				pagination:true,
-		        url: url,  
-		        onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("提示","没有符合查询条件的数据!");
-                  }
-                }
-		    }); 
-			
-			 //设置分页控件 
-		    var p = $('#dg').datagrid('getPager'); 
-		    $(p).pagination({ 
-		        pageSize: 15,//每页显示的记录条数，默认为10 
-		        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
-		        beforePageText: '第',//页数文本框前显示的汉字 
-		        afterPageText: '页    共 {pages} 页', 
-		        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
-		        onBeforeRefresh:function(){
-		            $(this).pagination('loading');
-		            $(this).pagination('loaded');
-		        } 
-		    }); 
-		} */
+
 		function findOrderOffline(){
 		 	
 		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline";
