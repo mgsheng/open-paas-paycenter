@@ -24,7 +24,10 @@ import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradeChannelService;
 import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
+import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -41,6 +44,11 @@ public class IrrigationDitch extends BaseControllerUtil {
 	
 	@Autowired
 	private DictTradeChannelService dictTradeChannelService;
+	
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
 	
 	/**
 	 * 跳转到渠道信息列表的页面
@@ -144,6 +152,11 @@ public class IrrigationDitch extends BaseControllerUtil {
 		if(id != null && id !=""){
 			result = dictTradeChannelService.removeDictTradeID(Integer.valueOf(id));
 		}
+//		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById();
+		User user = (User)request.getSession().getAttribute("user");
+		String operator = user.getUsername(); //操作人
+		String operatorId = user.getId()+""; //操作人Id
+		privilegeLogService.addPrivilegeLog(operator,"删除","","","","渠道删除操作",operatorId);
 		jsonobj.put("result",result);
 	    WebUtils.writeJson(response,jsonobj);
 		return;
@@ -207,9 +220,19 @@ public class IrrigationDitch extends BaseControllerUtil {
 		dictTradeChannel.setMemo(memo);
 		
 		result = dictTradeChannelService.addDictTrade(dictTradeChannel);
-		// result = true 表示添加成功
+		User user = (User)request.getSession().getAttribute("user");
+		String operator = user.getUsername(); //操作人
+		String operatorId = user.getId()+""; //操作人Id
 		
-		jsonObjArr.put("returnMsg", "1");
+		// result = true 表示添加成功
+		if(result=true){
+			privilegeLogService.addPrivilegeLog(operator,"添加","","","","渠道添加成功",operatorId);
+			jsonObjArr.put("returnMsg", "1");
+		}else{
+			privilegeLogService.addPrivilegeLog(operator,"添加","","","","渠道添加失败",operatorId);
+			jsonObjArr.put("returnMsg", "3");
+		}
+		
 //		jsonObjArr.put("result", result);
 		WebUtils.writeJson(response,jsonObjArr);
 	}
@@ -257,7 +280,17 @@ public class IrrigationDitch extends BaseControllerUtil {
 		// result = false表示修改失败
 		result = dictTradeChannelService.updateDictTrade(dictTradeChannel);
 //		jsonobj.put("result",result);
-		jsonobj.put("returnMsg", "2");
+		User user = (User)request.getSession().getAttribute("user");
+		String operator = user.getUsername(); //操作人
+		String operatorId = user.getId()+""; //操作人Id
+		if(result=true){
+			privilegeLogService.addPrivilegeLog(operator,"修改","","","","渠道添加成功",operatorId);
+			jsonobj.put("returnMsg", "2");
+		}else{
+			privilegeLogService.addPrivilegeLog(operator,"修改","","","","渠道添加失败",operatorId);
+			jsonobj.put("returnMsg", "3");
+		}
+		
 	    WebUtils.writeJson(response,jsonobj);
 		return;
 	}
