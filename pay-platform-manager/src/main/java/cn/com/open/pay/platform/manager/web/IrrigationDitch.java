@@ -19,15 +19,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
-import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradeChannelService;
 import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -49,6 +49,8 @@ public class IrrigationDitch extends BaseControllerUtil {
 	private PrivilegeLogService privilegeLogService;
 	@Autowired
 	private PrivilegeModuleService privilegeModuleService;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
 	
 	/**
 	 * 跳转到渠道信息列表的页面
@@ -74,22 +76,16 @@ public class IrrigationDitch extends BaseControllerUtil {
 		}
 		String channelStatus = request.getParameter("CHANNEL_STATUS");
 		String merId = request.getParameter("MERID");
-		
-//		System.out.println(deptName);
 		//当前第几页
 		String page=request.getParameter("page");
-//		System.out.println(page);
-		
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-//	    System.out.println(rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
 		//每页的开始记录  第一页为1  第二页为number +1   
 	    int startRow = (currentPage-1)*pageSize;
-	    
 		//将请求参数封装到Department对象中
 	    DictTradeChannel dictTradeChannel = new DictTradeChannel();
 	    dictTradeChannel.setChannelName(channelName);
@@ -130,7 +126,6 @@ public class IrrigationDitch extends BaseControllerUtil {
 		JSONObject jsonObjArr = new JSONObject();  
 		jsonObjArr.put("total", count);
 		jsonObjArr.put("rows", jsonArr);
-//		System.out.println(jsonArr);
 	    WebUtils.writeJson(response,jsonObjArr);
 		return;
 	}
@@ -152,11 +147,17 @@ public class IrrigationDitch extends BaseControllerUtil {
 		if(id != null && id !=""){
 			result = dictTradeChannelService.removeDictTradeID(Integer.valueOf(id));
 		}
-//		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById();
-		User user = (User)request.getSession().getAttribute("user");
-		String operator = user.getUsername(); //操作人
-		String operatorId = user.getId()+""; //操作人Id
-		privilegeLogService.addPrivilegeLog(operator,"删除","","","","渠道删除操作",operatorId);
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
+		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","渠道管理",privilegeResource.getId()+"",operator+"删除id为"+id+"商户成功",operatorId);
+				
 		jsonobj.put("result",result);
 	    WebUtils.writeJson(response,jsonobj);
 		return;
@@ -220,20 +221,25 @@ public class IrrigationDitch extends BaseControllerUtil {
 		dictTradeChannel.setMemo(memo);
 		
 		result = dictTradeChannelService.addDictTrade(dictTradeChannel);
-		User user = (User)request.getSession().getAttribute("user");
-		String operator = user.getUsername(); //操作人
-		String operatorId = user.getId()+""; //操作人Id
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
 		
 		// result = true 表示添加成功
 		if(result=true){
-			privilegeLogService.addPrivilegeLog(operator,"添加","","","","渠道添加成功",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","渠道管理",privilegeResource.getId()+"",operator+"添加"+channelName+"渠道成功",operatorId);
 			jsonObjArr.put("returnMsg", "1");
 		}else{
-			privilegeLogService.addPrivilegeLog(operator,"添加","","","","渠道添加失败",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","渠道管理",privilegeResource.getId()+"",operator+"添加"+channelName+"渠道成功",operatorId);
 			jsonObjArr.put("returnMsg", "3");
 		}
 		
-//		jsonObjArr.put("result", result);
 		WebUtils.writeJson(response,jsonObjArr);
 	}
 	
@@ -280,14 +286,20 @@ public class IrrigationDitch extends BaseControllerUtil {
 		// result = false表示修改失败
 		result = dictTradeChannelService.updateDictTrade(dictTradeChannel);
 //		jsonobj.put("result",result);
-		User user = (User)request.getSession().getAttribute("user");
-		String operator = user.getUsername(); //操作人
-		String operatorId = user.getId()+""; //操作人Id
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
 		if(result=true){
-			privilegeLogService.addPrivilegeLog(operator,"修改","","","","渠道添加成功",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","渠道管理",privilegeResource.getId()+"",operator+"修改渠道"+channelName+"成功",operatorId);
 			jsonobj.put("returnMsg", "2");
 		}else{
-			privilegeLogService.addPrivilegeLog(operator,"修改","","","","渠道添加失败",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","渠道管理",privilegeResource.getId()+"",operator+"修改渠道"+channelName+"失败",operatorId);
 			jsonobj.put("returnMsg", "3");
 		}
 		
@@ -312,7 +324,6 @@ public class IrrigationDitch extends BaseControllerUtil {
 		System.out.println("deptID :"+deptID+"  deptName:"+deptName);
 		deptID =( deptID==null?null:new String(deptID.getBytes("iso-8859-1"),"utf-8"));
 		deptName =(deptName==null?null:new String(deptName.getBytes("iso-8859-1"),"utf-8"));
-
 		model.addAttribute("deptID",deptID);
 		model.addAttribute("deptName", deptName);
 		return "department/deptUsers";
@@ -325,7 +336,6 @@ public class IrrigationDitch extends BaseControllerUtil {
 	@RequestMapping(value="findDeptUsers")
 	public void findDeptUsers(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("-------------------------findDeptUsers        start------------------------------------");
-		
 		String deptID = request.getParameter("deptID");
 		String deptName =  request.getParameter("deptName");
 		if(deptID !=null){
@@ -334,22 +344,16 @@ public class IrrigationDitch extends BaseControllerUtil {
 		if(deptName !=null){
 			deptName = new String(deptName.getBytes("iso-8859-1"),"utf-8");
 		}
-		
-//		System.out.println("******deptID :   "+deptID+"     deptName:"+deptName);
 		//当前第几页
 		String page=request.getParameter("page");
-//		System.out.println(page);
-		
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-//	    System.out.println(rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
 		//每页的开始记录  第一页为1  第二页为number +1   
 	    int startRow = (currentPage-1)*pageSize;
-	    
 		//将请求参数封装到Department对象中
 		User user = new User();
 		user.setDeptID(Integer.valueOf(deptID));
@@ -363,7 +367,6 @@ public class IrrigationDitch extends BaseControllerUtil {
 		JSONObject jsonObjArr = new JSONObject();  
 		jsonObjArr.put("total", count);
 		jsonObjArr.put("rows", jsonArr);
-//		System.out.println(jsonArr);
 	    WebUtils.writeJson(response,jsonObjArr);
 		return;
 	}
