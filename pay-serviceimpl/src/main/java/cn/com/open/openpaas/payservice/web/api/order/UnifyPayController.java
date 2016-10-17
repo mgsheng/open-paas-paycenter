@@ -31,6 +31,7 @@ import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceSer
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
 import cn.com.open.openpaas.payservice.app.channel.alipay.BusinessType;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PaySwitch;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.paymax.example.ChargeUtil;
@@ -450,7 +451,7 @@ public class UnifyPayController extends BaseControllerUtil{
              log.info("-----------------------pay start-----------------------------------------");
 		     if(String.valueOf(Channel.ALI.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payZhifubao);
-		    	 if("0".equals(payZhifubao)){
+		    	 if(String.valueOf(PaySwitch.ALI.getValue()).equals(payZhifubao)){
 				    	//支付宝-即时到账支付
 			        		if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
 			            		//调用支付宝即时支付方法  
@@ -467,7 +468,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			        			test_trade_precreate(merchantOrderInfo.getId(),merchantOrderInfo.getMerchantProductName(),String.valueOf(merchantOrderInfo.getOrderAmount()),"0","",String.valueOf(merchantOrderInfo.getMerchantId()),merchantOrderInfo.getMerchantProductDesc(),"test_operator_id","120m");
 			            	}
 				    	 
-				     }else if("1".equals(payZhifubao)){
+				     }else if(String.valueOf(PaySwitch.TCL.getValue()).equals(payZhifubao)){
 					    	//支付宝-即时到账支付
 				    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 				    	  if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
@@ -486,7 +487,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		     }else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payWx);
 		    	if(PaymentType.WEIXIN.getValue().equals(paymentType)){
-		    		 if("0".equals(payWx)){
+		    		 if(String.valueOf(PaySwitch.ALI.getValue()).equals(payWx)){
 			    		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
 				    		//微信-扫码支付
 			        		if(String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
@@ -517,7 +518,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			                	 return "redirect:" + fullUri;
 			        		}
 				     	}  	
-			    	 else if("1".equals(payWx)){
+			    	 else if(String.valueOf(PaySwitch.TCL.getValue()).equals(payWx)){
 				    	 if(String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
 				    	 //TCL微信
 				    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
@@ -533,10 +534,10 @@ public class UnifyPayController extends BaseControllerUtil{
 		    	 }
 		     }else if(String.valueOf(Channel.UPOP.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payTcl);
-		    	 if("0".equals(payTcl)){
+		    	 if(String.valueOf(PaySwitch.ALI.getValue()).equals(payTcl)){
 			    	 
 			     	}  	
-		    	 else if("1".equals(payTcl)){
+		    	 else if(String.valueOf(PaySwitch.TCL.getValue()).equals(payTcl)){
 			    	 //TCL微信
 			    	if(String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)){ 
 			    	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
@@ -558,7 +559,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		     }else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payEbank);
 		    	  payEbank=getBankSwitch(paymentType, bank_map);
-		    	 if(!nullEmptyBlankJudge(payEbank)&&"0".equals(payEbank)){
+		    	 if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.ALI.getValue()).equals(payEbank)){
 				    	// 支付宝-网银支付
 				    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
 		         		String defaultbank=getDefaultbank(paymentType);
@@ -568,7 +569,7 @@ public class UnifyPayController extends BaseControllerUtil{
 		         		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
 				    	 }
 				     	}  	
-		    	 else if(!nullEmptyBlankJudge(payEbank)&&"1".equals(payEbank)){
+		    	 else if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.TCL.getValue()).equals(payEbank)){
 				  	   //TCL直连银行
 				    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
 				    		 
@@ -592,7 +593,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			       			//return "redirect:" + URL;
 				    	  }	 
 				      } 
-				  }else if(!nullEmptyBlankJudge(payEbank)&&"2".equals(payEbank)){
+				  }else if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.YEEPAY.getValue()).equals(payEbank)){
 					  	   //易宝支付
 					    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
 					    		totalFee=AmountUtil.changeF2Y(totalFee);
@@ -604,7 +605,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				         		 return "pay/payRedirect";
 					        }
 				      }
-				  else if(!nullEmptyBlankJudge(payEbank)&&"3".equals(payEbank)){
+				  else if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.PAYMAX.getValue()).equals(payEbank)){
 					  //拉卡拉直连银行
 
 			    	  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());

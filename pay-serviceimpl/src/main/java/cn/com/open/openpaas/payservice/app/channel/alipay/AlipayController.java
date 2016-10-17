@@ -55,7 +55,8 @@ public class AlipayController {
 		Map<String, String> others = new HashMap<String, String>();
 		others=getPartner(other);
 	
-		
+		//sign_type:MD5#payment_type:1#input_charset:utf-sign_type:MD5#payment_type:1#input_charset:utf-8#service:create_direct_pay_by_user#
+		//partner:2088801478647757#payment_type:1#it_b_pay:90m
     	String partner=others.get("partner");
     	String seller_id=others.get("partner"); 
     	String it_b_pay=others.get("it_b_pay"); 
