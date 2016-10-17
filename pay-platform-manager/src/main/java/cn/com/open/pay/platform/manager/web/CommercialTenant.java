@@ -25,6 +25,10 @@ import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentServ
 import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
+import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
+import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
@@ -44,6 +48,11 @@ public class CommercialTenant extends BaseControllerUtil {
 	
 	@Autowired
 	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
 	
 	
 	/**
@@ -194,15 +203,20 @@ public class CommercialTenant extends BaseControllerUtil {
 		
 		result = merchantInfoService.addMerchantInfo(merchantInfo);
 		//添加日志
-		User user = (User)request.getSession().getAttribute("user");
-		String operator = user.getUsername(); //操作人
-		String operatorId = user.getId()+""; //操作人Id
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
 	
 		if(result=true){
-			privilegeLogService.addPrivilegeLog(operator,"添加","","","","商户添加成功",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","商户管理",privilegeResource.getId()+"",operator+"添加"+merchantName+"商户成功",operatorId);
 			jsonObjArr.put("returnMsg", "1");
 		}else{
-			privilegeLogService.addPrivilegeLog(operator,"添加","","","","商户添加失败",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","商户管理",privilegeResource.getId()+"",operator+"添加"+merchantName+"商户失败",operatorId);
 			jsonObjArr.put("returnMsg", "1");
 		}
 		// result = true 表示添加成功
@@ -228,10 +242,15 @@ public class CommercialTenant extends BaseControllerUtil {
 			result = merchantInfoService.removeCommercialID(Integer.valueOf(id));
 		}
 		//添加日志
-		User user = (User)request.getSession().getAttribute("user");
-		String operator = user.getUsername(); //操作人
-		String operatorId = user.getId()+""; //操作人Id
-		privilegeLogService.addPrivilegeLog(operator,"删除","","","","商户删除操作",operatorId);
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("delete");
+		privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","商户管理",privilegeResource.getId()+"",operator+"删除id为"+id+"商户成功",operatorId);
 		jsonobj.put("result",result);
 	    WebUtils.writeJson(response,jsonobj);
 		return;
@@ -306,14 +325,20 @@ public class CommercialTenant extends BaseControllerUtil {
 		merchantInfo.setMemo(memo);
 		// result = false表示修改失败
 		result = merchantInfoService.updateMerchantInfo(merchantInfo);
-		User user = (User)request.getSession().getAttribute("user");
-		String operator = user.getUsername(); //操作人
-		String operatorId = user.getId()+""; //操作人Id
+		//添加日志
+		PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
+		PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
+		String  towLevels = privilegeModule.getName();
+		String   oneLevels= privilegeModule1.getName();
+		User user1 = (User)request.getSession().getAttribute("user");
+		String operator = user1.getUsername(); //操作人
+		String operatorId = user1.getId()+""; //操作人Id
+		PrivilegeResource privilegeResource = privilegeResourceService.findByCode("update");
 		if(result=true){
-			privilegeLogService.addPrivilegeLog(operator,"修改","","","","商户修改成功",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","商户管理",privilegeResource.getId()+"",operator+"修改商户"+merchantName+"成功",operatorId);
 			jsonobj.put("returnMsg", "2");
 		}else{
-			privilegeLogService.addPrivilegeLog(operator,"修改","","","","商户修改失败",operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"部门管理","商户管理",privilegeResource.getId()+"",operator+"修改商户"+merchantName+"失败",operatorId);
 			jsonobj.put("returnMsg", "3");
 		}
 //		jsonobj.put("result",result);
