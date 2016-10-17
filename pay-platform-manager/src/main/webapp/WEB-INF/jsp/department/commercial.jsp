@@ -95,6 +95,11 @@
 				<table cellpadding=3>
 					<input id="tab" type="hidden" />
 					<tr style="height: 40px">
+						<td>唯一标示id：</td>
+						<td><input id="id" name="id" type="text" class="txt01" value=""/>
+						</td>
+					</tr>
+					<tr style="height: 40px">
 						<td>商户名：</td>
 						<td><input id="merchantName" name="merchantName" type="text" class="txt01" value=""/>
 						</td>
@@ -165,11 +170,7 @@
 						<td><input id="memo" name="memo" type="text" class="txt01" value=""/>
 						</td>
 					</tr>
-					<tr style="height: 40px">
-						<td>唯一标示id：</td>
-						<td><input id="id" name="id" type="text" class="txt01" value=""/>
-						</td>
-					</tr>
+					
 					<tr style="height: 40px">
 						<td>操作员：</td>
 						<td><input id="operater" name="operater" type="text" class="txt01" value=""/>
