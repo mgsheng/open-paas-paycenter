@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
+import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
@@ -47,6 +49,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	 
 	 @Autowired
 	 private UserSerialRecordService userSerialRecordService;
+	 
+	 @Autowired
+	 private MerchantInfoService merchantInfoService;
 	
 	 /**
 	  * 页面跳转
@@ -182,18 +187,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
 			 String paymentName = payChange(pMid);
 			 merchantOrderInfo1.setPaymentName(paymentName);
-			 String appValue = merchantOrderInfo1.getAppId();
+			 int appValue = merchantOrderInfo1.getMerchantId();
 			 String appName="";
-			 if(appValue!=null){
-				 if(appValue.equals("1")){
-					 appName = "OES学历";
-				 }else if(appValue.equals("10026")){
-					 appName = "mooc2u";
-				 }else{
-					 appName = "未定";
+			 if(appValue!=0){
+				 MerchantInfo merchantInfo = merchantInfoService.findNameById(appValue);
+				 if(merchantInfo!=null){
+					 appName = merchantInfo.getMerchantName();
 				 }
 			 }
-			 merchantOrderInfo1.setAppId(appName);
+			 merchantOrderInfo1.setAppId(appName); 
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
 				 if(status==0){
@@ -315,18 +317,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
 			 String paymentName = payChange(pMid);
 			 merchantOrderInfo1.setPaymentName(paymentName);
-			 String appValue = merchantOrderInfo1.getAppId();
+			 int appValue = merchantOrderInfo1.getMerchantId();
 			 String appName="";
-			 if(appValue!=null){
-				 if(appValue.equals("1")){
-					 appName = "OES学历";
-				 }else if(appValue.equals("10026")){
-					 appName = "mooc2u";
-				 }else{
-					 appName = "未定";
+			 if(appValue!=0){
+				 MerchantInfo merchantInfo = merchantInfoService.findNameById(appValue);
+				 if(merchantInfo!=null){
+					 appName = merchantInfo.getMerchantName();
 				 }
 			 }
-			 merchantOrderInfo1.setAppId(appName);
+			 merchantOrderInfo1.setAppId(appName); 
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
 				 if(status==0){
@@ -444,18 +443,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
 			 String paymentName = payChange(pMid);
 			 merchantOrderInfo1.setPaymentName(paymentName);
-			 String appValue = merchantOrderInfo1.getAppId();
+			 int appValue = merchantOrderInfo1.getMerchantId();
 			 String appName="";
-			 if(appValue!=null){
-				 if(appValue.equals("1")){
-					 appName = "OES学历";
-				 }else if(appValue.equals("10026")){
-					 appName = "mooc2u";
-				 }else{
-					 appName = "未定";
+			 if(appValue!=0){
+				 MerchantInfo merchantInfo = merchantInfoService.findNameById(appValue);
+				 if(merchantInfo!=null){
+					 appName = merchantInfo.getMerchantName();
 				 }
 			 }
-			 merchantOrderInfo1.setAppId(appName);
+			 merchantOrderInfo1.setAppId(appName); 
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
 				 if(status==0){
