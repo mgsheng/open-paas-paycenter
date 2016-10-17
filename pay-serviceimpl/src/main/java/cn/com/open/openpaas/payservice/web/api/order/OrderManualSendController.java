@@ -32,6 +32,7 @@ import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
+import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
 
@@ -175,34 +176,36 @@ public class OrderManualSendController extends BaseControllerUtil{
     		}
     		if(result != null && !("").equals(result)){
     			log.info("~~~~~~~~~~~~~~orderManualSend result："+result+"~~~~~~~~~~~~~~~~~~~~");
-    			if(orderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
-    				boolean callBackSend= analysisOesValue(result);
-    				if(callBackSend){
-    					orderInfo.setNotifyStatus(1);
-       				 payServiceLog.setStatus("ok");
-       			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
-       			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-    				}else{
-    					payServiceLog.setStatus("error");
-      			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
-      			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-      				    orderInfo.setNotifyStatus(2);
-    				}
-    			}else{
+//    			if(orderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
+//    				boolean callBackSend= analysisOesValue(result);
+//    				if(callBackSend){
+//    					orderInfo.setNotifyStatus(1);
+//       				 payServiceLog.setStatus("ok");
+//       			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+//       			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+//    				}else{
+//    					payServiceLog.setStatus("error");
+//      			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+//      			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+//      				    orderInfo.setNotifyStatus(2);
+//    				}
+//    			}else{
     				Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
         			if("ok".equals(map.get("state"))){//商户处理成功
         				orderInfo.setNotifyStatus(1);
         				 payServiceLog.setStatus("ok");
         			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
         			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+        			        WebUtils.writeJson(response,"order send ok");
         			}else{
         				    payServiceLog.setStatus("error");
         				    payServiceLog.setErrorCode(map.get("errorCode").toString());
         			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
         			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-        				orderInfo.setNotifyStatus(2);
+        				    orderInfo.setNotifyStatus(2);
+        				WebUtils.writeJson(response,"order send error");
         			}
-    			}
+    		//	}
     			
 				orderInfo.setNotifyTimes();
 				orderInfo.setNotifyDate(new Date());
