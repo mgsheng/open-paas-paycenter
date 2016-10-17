@@ -80,11 +80,9 @@ public class OrderAutoSendController extends BaseControllerUtil{
 				params.put("goodsId", orderInfo.getMerchantProductId());
 				params.put("goodsName",orderInfo.getMerchantProductName());
 				params.put("goodsDesc", orderInfo.getMerchantProductDesc());
-				params.put("parameter", orderInfo.getParameter1());
+				params.put("parameter", orderInfo.getParameter1()+"payCharge="+String.valueOf((int)(orderInfo.getPayCharge()*100))+";");
 				params.put("userName", orderInfo.getSourceUserName());
-			
 	    		log.info("~~~~~~~~~orderAutoSend params："+AlipayCore.createLogString(params));
-	    		
 	    		 payServiceLog.setAmount(String.valueOf(orderInfo.getAmount()*100));
 	    		 payServiceLog.setAppId(orderInfo.getAppId());
 	    		 payServiceLog.setChannelId(String.valueOf(orderInfo.getChannelId()));
@@ -98,7 +96,6 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    		 payServiceLog.setRealAmount(String.valueOf(orderInfo.getPayAmount()*100));
 	    		 payServiceLog.setSourceUid(orderInfo.getSourceUid());
 	    		 payServiceLog.setUsername(orderInfo.getUserName());
-	    		
 	    		String secret=PayUtil.createSign(payserviceDev.getAli_input_charset(),params,merchantInfo.getPayKey());
 	    		params.put("secret", secret);
 	    		
@@ -113,23 +110,40 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    			}
 	    		}
 	    		if(result != null && !("").equals(result)){
-	    			log.info("~~~~~~~~~~~~~~orderAutoSend result："+result+"~~~~~~~~~~~~~~~~~~~~");
-	    			Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
-	    			if("ok".equals(map.get("state"))){//商户处理成功
-	    				orderInfo.setNotifyStatus(1);	
-	    				payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
-	       		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    
+	    			log.info("~~~~~~~~~~~~~~orderManualSend result："+result+"~~~~~~~~~~~~~~~~~~~~");
+	    			if(orderInfo.getMerchantId()==Integer.parseInt(payserviceDev.getOes_merchantId())){
+	    				boolean callBackSend= analysisOesValue(result);
+	    				if(callBackSend){
+	    					orderInfo.setNotifyStatus(1);
+	       				 payServiceLog.setStatus("ok");
+	       			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	       			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	    				}else{
+	    					payServiceLog.setStatus("error");
+	      			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	      			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	      				    orderInfo.setNotifyStatus(2);
+	    				}
 	    			}else{
-	    			     orderInfo.setNotifyStatus(2);
-	    			   //日志添加
-	    				payServiceLog.setStatus("error");
-	    				 payServiceLog.setErrorCode(map.get("errorCode").toString());
-	    				payServiceLog.setLogName(PayLogName.ORDER_AUTO_END);
-	       		        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    
+	    				Map map=(Map) JSONObject.toBean(JSONObject.fromObject(result),Map.class);
+	        			if("ok".equals(map.get("state"))){//商户处理成功
+	        				orderInfo.setNotifyStatus(1);
+	        				 payServiceLog.setStatus("ok");
+	        			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	        			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        			}else{
+	        				    payServiceLog.setStatus("error");
+	        				    payServiceLog.setErrorCode(map.get("errorCode").toString());
+	        			        payServiceLog.setLogName(PayLogName.ORDER_MANUAL_END);
+	        			        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        				orderInfo.setNotifyStatus(2);
+	        			}
 	    			}
-    				orderInfo.setNotifyTimes();//方法中自动+1
-    				orderInfo.setNotifyDate(new Date());
-    				merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
+	    			
+					orderInfo.setNotifyTimes();
+					orderInfo.setNotifyDate(new Date());
+					merchantOrderInfoService.updateNotifyStatus(orderInfo);//更新订单状态
+			       
 	    		}
 	    		else{
 	    			orderInfo.setNotifyStatus(2);
@@ -144,5 +158,11 @@ public class OrderAutoSendController extends BaseControllerUtil{
 	    }
 	    log.info("~~~~~~~~~~~~~~~orderAutoSend end~~~~~~~~~~~~~~~~");
     }
-	
+    public static Boolean analysisOesValue(String obj ){
+		if(obj.indexOf("SUCCESS")!=-1){
+			return true;
+		}else{
+			return false;
+		}
+    }	
 }

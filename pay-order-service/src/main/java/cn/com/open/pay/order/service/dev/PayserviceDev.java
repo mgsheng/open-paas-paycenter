@@ -20,8 +20,16 @@ public class PayserviceDev {
 	private String log_type;
 	private String yeepayCommonReqURL;
 	private String payIndex_url;
+	private String oes_merchantId;
 	
 	
+	
+	public String getOes_merchantId() {
+		return oes_merchantId;
+	}
+	public void setOes_merchantId(String oes_merchantId) {
+		this.oes_merchantId = oes_merchantId;
+	}
 	public String getPayIndex_url() {
 		return payIndex_url;
 	}
