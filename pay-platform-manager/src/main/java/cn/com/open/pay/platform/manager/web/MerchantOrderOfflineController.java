@@ -111,7 +111,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    
 	    offline.setId(orderId);
 	    offline.setMerchantOrderId(merchantOrderId);
-	    if(merchantName!=null){
+	    if(merchantName!=null && merchantName!=""){
 	    	offline.setMerchantId(Integer.parseInt(merchantName));
 	    }
 	    offline.setSourceUserName(sourceUserName);
