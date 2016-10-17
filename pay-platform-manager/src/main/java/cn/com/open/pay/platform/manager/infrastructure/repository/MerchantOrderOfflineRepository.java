@@ -14,7 +14,7 @@ import cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline;
  */
 public interface MerchantOrderOfflineRepository extends Repository {
 
-	List<MerchantOrderOffline> findAll();
+	List<MerchantOrderOffline> findAllNoPage(MerchantOrderOffline offline);
 	
 	int findQueryCount(MerchantOrderOffline merchantOrderOffline);
 

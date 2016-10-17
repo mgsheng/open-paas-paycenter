@@ -16,5 +16,7 @@ public interface MerchantOrderOfflineService {
 	boolean addOrderOffline(MerchantOrderOffline merchantOrderOffline);
 
 	MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId);
+
+	List<MerchantOrderOffline> findOfflineAllNoPage(MerchantOrderOffline offline);
 	
 }

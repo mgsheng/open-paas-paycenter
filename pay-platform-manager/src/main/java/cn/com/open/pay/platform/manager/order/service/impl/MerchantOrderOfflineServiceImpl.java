@@ -46,4 +46,10 @@ public class MerchantOrderOfflineServiceImpl implements MerchantOrderOfflineServ
 		MerchantOrderOffline offline=merchantOrderOfflineRepository.findByMerchantOrderId(addMerchantOrderId);
 		return offline;
 	}
+
+	@Override
+	public List<MerchantOrderOffline> findOfflineAllNoPage(MerchantOrderOffline offline) {
+		List<MerchantOrderOffline> merchantOrderOfflines=merchantOrderOfflineRepository.findAllNoPage(offline);
+		return merchantOrderOfflines;
+	}
 }

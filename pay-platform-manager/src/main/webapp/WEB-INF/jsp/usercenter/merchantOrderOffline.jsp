@@ -67,6 +67,8 @@
 						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">查询</a>
 						&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
+						&nbsp;&nbsp;
+						<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="downloadSubmit()" style="width:80px">下载</a>
 					</td>
 				</tr>
 			</table>
@@ -464,6 +466,21 @@
 	                }
 			    }); 
 			}
+		}
+		
+		function downloadSubmit(){			
+			var queryOrderId = $('#queryOrderId').textbox('getValue');
+			var queryMerchantOrderId = $('#queryMerchantOrderId').textbox('getValue');
+			var querySourceUserName = $('#querySourceUserName').textbox('getValue');
+			var queryMerchantName = $('#queryMerchantName').combobox('getValue');
+			var queryAppId = $('#queryAppId').combobox('getValue');
+			var queryChannelId = $('#queryChannelId').combobox('getValue');
+			var queryOperator = $('#queryOperator').val();
+			
+		 	var url="${pageContext.request.contextPath}/manage/offlineDownloadSubmit?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator;
+			
+			document.getElementById("ff").action=url;
+		    document.getElementById("ff").submit();
 		}
 	</script>
 </html>

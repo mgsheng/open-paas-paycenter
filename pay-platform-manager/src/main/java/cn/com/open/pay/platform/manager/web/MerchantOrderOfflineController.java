@@ -3,7 +3,11 @@ package cn.com.open.pay.platform.manager.web;
 import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,6 +44,7 @@ import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
+import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
  * 线下收费管理
@@ -264,5 +269,86 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		json.put("result", result);
 		WebUtils.writeJson(response, json);
 		return ;
+	}
+	
+	/**
+	 * 下载为excel
+	 * @param request
+	 * @param response
+	 * @return 
+	 * @throws UnsupportedEncodingException
+	 */
+	@RequestMapping("offlineDownloadSubmit")
+	public String offlineDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+		log.info("---------------getMerchantOrderOfflineDownloadSubmit----------------");
+		String merchantOrderId = request.getParameter("merchantOrderId");
+		String sourceUserName = request.getParameter("sourceUserName");
+		String merchantName = request.getParameter("merchantName");
+		String appId = request.getParameter("appId");
+		String channelId = request.getParameter("channelId");
+		String operator = request.getParameter("operator");
+		String orderId = request.getParameter("orderId");
+		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator);
+		
+	    MerchantOrderOffline offline = new MerchantOrderOffline();
+	    
+	    offline.setId(orderId);
+	    offline.setMerchantOrderId(merchantOrderId);
+	    if(merchantName!=null && merchantName!=""){
+	    	offline.setMerchantId(Integer.parseInt(merchantName));
+	    }
+	    offline.setSourceUserName(sourceUserName);
+	    offline.setAppId(appId);
+	    offline.setChannelId(channelId);
+	    offline.setOperator(operator);
+	    
+	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAllNoPage(offline);
+	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+	    MerchantInfo merchantInfo = null;
+	    PayChannelDictionary channel = null;
+	    DictTradePayment payment=null;
+	    for(MerchantOrderOffline r : offlines){
+			 Date createDate1 = r.getCreateTime();
+			 r.setFoundDate(df.format(createDate1));
+			 String appId1=r.getAppId();
+			 String appName="";
+			 if(appId1!=null && appId1!="" && appId1!="0"){
+				 if(appId1.equals("1")){
+					 appName = "OES学历";
+				 }else if(appId1.equals("10026")){
+					 appName = "mooc2u";
+				 }
+			 }
+			 r.setAppName(appName);
+			 String channelId1=r.getChannelId();
+			 String channelName="";
+			 if(channelId1!=null && channelId1!=""){
+				channel=payChannelDictionaryService.findNameById(channelId1);
+	    		if(channel!=null){
+	    			channelName=channel.getChannelName();
+	    		}
+    			r.setChannelName(channelName);
+			 }
+			 Integer merchantId1=r.getMerchantId();
+			 String merchantName1="";
+			 if(merchantId1!=null){				 
+				merchantInfo=merchantInfoService.findNameById(merchantId1);
+	    		if(merchantInfo!=null){
+		    		merchantName1=merchantInfo.getMerchantName();
+	    		}
+	    		r.setMerchantName(merchantName1);
+			 }
+			 String bankCode1=r.getBankCode();
+			 String bankName="";
+			 if(bankCode1!=null && bankCode1!=""){
+				payment=dictTradePaymentService.findNameById(bankCode1);
+	    		if(payment!=null){
+	    			bankName=payment.getRemark();
+	    		}
+	    		r.setBankName(bankName);
+			 }
+	    }
+	    OrderDeriveExport.exportOrderOffline(response, offlines);
+	    return "usercenter/merchantOrderOffline";
 	}
 }

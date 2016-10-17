@@ -41,6 +41,13 @@ public class MerchantOrderOffline implements Serializable {
 	
 	private Integer startRow;
 	private Integer pageSize;
+	
+	
+	private String foundDate; //创建时间
+	private String appName;
+	private String channelName;
+	private String merchantName;
+	private String bankName;
 
 	public MerchantOrderOffline(){
 		
@@ -174,4 +181,45 @@ public class MerchantOrderOffline implements Serializable {
 	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 	}
+
+	public String getFoundDate() {
+		return foundDate;
+	}
+
+	public void setFoundDate(String foundDate) {
+		this.foundDate = foundDate;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getChannelName() {
+		return channelName;
+	}
+
+	public void setChannelName(String channelName) {
+		this.channelName = channelName;
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	
 }
