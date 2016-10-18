@@ -636,7 +636,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				          String newpaymentType=getPayMaxbank(paymentType);
 				  	    //请根据渠道要求确定是否需要传递extra字段
 				          Map<String, Object> extra = new HashMap<String, Object>();
-					          extra.put("user_id",merchantOrderInfo.getMerchantId());
+					          extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 					          extra.put("return_url",dictTradeChannels.getBackurl());
 					          if(!nullEmptyBlankJudge(newpaymentType)){
 					        	  extra.put("bank_code",newpaymentType);  
@@ -700,11 +700,11 @@ public class UnifyPayController extends BaseControllerUtil{
 			          Map<String, Object> extra = new HashMap<String, Object>();
 		    	    if(PaymentType.PAYMAX.getValue().equals(paymentType)){
 		    		     //拉卡拉网关支付
-				          extra.put("user_id",merchantOrderInfo.getMerchantId());
+				          extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 				          extra.put("return_url",dictTradeChannels.getBackurl());
 		    	    }else if(PaymentType.PAYMAX_H5.getValue().equals(paymentType)){
 		    		  //拉卡拉移动H5支付
-			          extra.put("user_id",merchantOrderInfo.getMerchantId());
+			          extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 			          extra.put("return_url",dictTradeChannels.getBackurl());
 			          extra.put("show_url",dictTradeChannels.getBackurl());
 		    	    }else if(PaymentType.WECHAT_WAP.getValue().equals(paymentType)){

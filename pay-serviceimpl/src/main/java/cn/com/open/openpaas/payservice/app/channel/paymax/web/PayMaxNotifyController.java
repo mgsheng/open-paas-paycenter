@@ -1,5 +1,6 @@
 package cn.com.open.openpaas.payservice.app.channel.paymax.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -17,6 +18,8 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.sf.json.JSONObject;
 
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
@@ -82,135 +85,151 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 	 */
 	@RequestMapping(value = "callBack")
 	public void payCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
-		    log.info("-----------------------callBack paxmax/order-----------------------------------------");
-		    
-		    long startTime = System.currentTimeMillis();
-		    //amount=0.01&amount_refunded=0&amount_settle=0&body=testGoodsDesc&client_ip=127.0.0.1&currency=CNY&description=&extra=%7B%22user_id%22%3A%2220160920155907385438%22%2C%22return_url%22%3A%22http%3A%2F%2F10.96.5.174%3A8080%2Fpay-service%2Fpaymax%2FcallBack%22%7D&id=ch_edf13224121f1f1c322b326f&livemode=false&order_no=20160920155907385438&status=PROCESSING&subject=testGoodsName&time_created=1474358348000&time_expire=1474361948402&sign=vfXIUf483Ec0n3QTX458JcmvshwkRf44UhQsYTgX%2BkkqNlhclmwrYw2I2M9aoxShF99eeY9cjnXTcUf5qVDwQGq7ZFazOAOyjUHqni7zW2OqmsaQw5hRHfcKJcXYig19vmmpfZgbVsvFGi2NHILrU1j7LKJ9nYfOj56%2FN7S0j1s%3D
-		    //商户订单号
-			String order_no = new String(request.getParameter("order_no").getBytes("ISO-8859-1"),"UTF-8");
-			//拉卡拉唯一订单id
-			String id=request.getParameter("id");
-			String amount=request.getParameter("amount");
-			String status=request.getParameter("status");
-			MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(order_no);
-			 String backMsg="";
-			 PayServiceLog payServiceLog=new PayServiceLog();
-			 if(merchantOrderInfo!=null){
-				 DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
-				 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
-				 payServiceLog.setAppId(merchantOrderInfo.getAppId());
-				 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-				 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
-				 payServiceLog.setLogType(payserviceDev.getLog_type());
-				 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
-				 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-				 payServiceLog.setOrderId(order_no);
-				 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-				 payServiceLog.setPayOrderId(id);
-				 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
-				 payServiceLog.setProductName(merchantOrderInfo.getMerchantProductName());
-				 payServiceLog.setRealAmount(String.valueOf(Double.parseDouble(amount)*100));
-				 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
-				 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-				 payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_START);
-		         payServiceLog.setStatus("ok");
-		         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-		         String returnUrl=merchantOrderInfo.getReturnUrl();
-		  		MerchantInfo merchantInfo = null;
-		  		if(nullEmptyBlankJudge(returnUrl)){
-		  			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
-		  			returnUrl=merchantInfo.getReturnUrl();
-		  		}
-		  		 String other= dictTradeChannel.getOther();
-			  	Map<String, String> others = new HashMap<String, String>();
-			  	others=getPartner(other);
-		  	    String paymaxPublicKey =others.get("paymax_public_key");
-		  	    //验证签名
-			    boolean flag = _verifySign(request, paymaxPublicKey);
-			    if(flag){
-			    	if(status.equals("SUCCEED")){
-			    		//订单处理成功
-			    		 payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
-						 if(!nullEmptyBlankJudge(returnUrl)){
-							 //Map<String, String> dataMap=new HashMap<String, String>();
-							 String buf="";
-							    int notifyStatus=merchantOrderInfo.getNotifyStatus();
-								int payStatus=merchantOrderInfo.getPayStatus();
-								Double payCharge=0.0;
-								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
-								if(payStatus!=1){
-									merchantOrderInfo.setPayStatus(1);
-									merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
-									merchantOrderInfo.setAmount(Double.parseDouble(amount));
-									merchantOrderInfo.setPayCharge(payCharge);
-									merchantOrderInfo.setDealDate(new Date());
-									merchantOrderInfo.setPayOrderId(id);
-									merchantOrderInfoService.updateOrder(merchantOrderInfo);
-									if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
-										String rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(amount)*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
-									}
+		log.info("-----------------------callBack paxmax/order-----------------------------------------");
+		String requestBody = getRequestBody(request);
+		log.info("request boay:"+ requestBody);
+		JSONObject obj = JSONObject.fromObject(requestBody);
+		String sign = request.getHeader("sign");
+		log.info("header sign:" + sign);
+	    long startTime = System.currentTimeMillis();
+	    //amount=0.01&amount_refunded=0&amount_settle=0&body=testGoodsDesc&client_ip=127.0.0.1&currency=CNY&description=&extra=%7B%22user_id%22%3A%2220160920155907385438%22%2C%22return_url%22%3A%22http%3A%2F%2F10.96.5.174%3A8080%2Fpay-service%2Fpaymax%2FcallBack%22%7D&id=ch_edf13224121f1f1c322b326f&livemode=false&order_no=20160920155907385438&status=PROCESSING&subject=testGoodsName&time_created=1474358348000&time_expire=1474361948402&sign=vfXIUf483Ec0n3QTX458JcmvshwkRf44UhQsYTgX%2BkkqNlhclmwrYw2I2M9aoxShF99eeY9cjnXTcUf5qVDwQGq7ZFazOAOyjUHqni7zW2OqmsaQw5hRHfcKJcXYig19vmmpfZgbVsvFGi2NHILrU1j7LKJ9nYfOj56%2FN7S0j1s%3D
+		String data = obj.getString("data");
+		JSONObject dataobj = JSONObject.fromObject(data);
+		//商户订单号
+		String order_no = obj.getString("order_no");
+		//拉卡拉唯一订单id
+		String id=dataobj.getString("id");
+		String amount=dataobj.getString("amount");
+		String status=dataobj.getString("status");
+		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(order_no);
+		 String backMsg="";
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		 if(merchantOrderInfo!=null){
+			 DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
+			 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
+			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
+			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
+			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			 payServiceLog.setLogType(payserviceDev.getLog_type());
+			 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
+			 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
+			 payServiceLog.setOrderId(order_no);
+			 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
+			 payServiceLog.setPayOrderId(id);
+			 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
+			 payServiceLog.setProductName(merchantOrderInfo.getMerchantProductName());
+			 payServiceLog.setRealAmount(String.valueOf(Double.parseDouble(amount)*100));
+			 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
+			 payServiceLog.setUsername(merchantOrderInfo.getUserName());
+			 payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_START);
+	         payServiceLog.setStatus("ok");
+	         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	         String returnUrl=merchantOrderInfo.getReturnUrl();
+	  		MerchantInfo merchantInfo = null;
+	  		if(nullEmptyBlankJudge(returnUrl)){
+	  			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+	  			returnUrl=merchantInfo.getReturnUrl();
+	  		}
+	  		 String other= dictTradeChannel.getOther();
+		  	Map<String, String> others = new HashMap<String, String>();
+		  	others=getPartner(other);
+	  	    String paymaxPublicKey =others.get("paymax_public_key");
+	  	    //验证签名
+	  	    boolean signCheck = RSA.verify(requestBody, sign, paymaxPublicKey);
+		    if(signCheck){
+		    	if(status.equals("SUCCEED")){
+		    		//订单处理成功
+		    		 payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
+					 if(!nullEmptyBlankJudge(returnUrl)){
+						 //Map<String, String> dataMap=new HashMap<String, String>();
+						 String buf="";
+						    int notifyStatus=merchantOrderInfo.getNotifyStatus();
+							int payStatus=merchantOrderInfo.getPayStatus();
+							Double payCharge=0.0;
+							payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+							if(payStatus!=1){
+								merchantOrderInfo.setPayStatus(1);
+								merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
+								merchantOrderInfo.setAmount(Double.parseDouble(amount));
+								merchantOrderInfo.setPayCharge(payCharge);
+								merchantOrderInfo.setDealDate(new Date());
+								merchantOrderInfo.setPayOrderId(id);
+								merchantOrderInfoService.updateOrder(merchantOrderInfo);
+								if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+									String rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(amount)*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 								}
-							    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
-								sParaTemp.put("orderId", merchantOrderInfo.getId());
-						        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
-						        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
-						        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
-								sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
-								sParaTemp.put("feeType", "CNY");
-								sParaTemp.put("guid", merchantOrderInfo.getGuid());
-								sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
-								//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-								sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
-								sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
-								sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
-								sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
-								sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
-								sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf((int)(merchantOrderInfo.getPayCharge()*100))+";");
-								sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
-							    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
-							    sParaTemp.put("secret", mySign);
-							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
-							    model.addAttribute("res", buf);
-							    //并且异步通知
-							   if(notifyStatus!=1){
-									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
-									   thread.run();	
-								}
-						 }else{
-							 backMsg="success";
-						 }
-			    		
-			    	}else if(status.equals("PROCESSING")){
-			    		//订单处理中
-			    		merchantOrderInfoService.updatePayStatus(3,String.valueOf(merchantOrderInfo.getId()));
-			    	}else{
-			    		//订单处理失败
-						  payServiceLog.setErrorCode("2");
-				          payServiceLog.setStatus("error");
-				          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
-				          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				          merchantOrderInfoService.updatePayStatus(4,String.valueOf(merchantOrderInfo.getId()));
-						 backMsg="error";
-			    	}
-			    	
-			    }else{
-			    	  payServiceLog.setErrorCode("2");
+							}
+						    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+							sParaTemp.put("orderId", merchantOrderInfo.getId());
+					        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+					        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+					        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+							sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+							sParaTemp.put("feeType", "CNY");
+							sParaTemp.put("guid", merchantOrderInfo.getGuid());
+							sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+							//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+							sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
+							sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
+							sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+							sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+							sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+							sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf((int)(merchantOrderInfo.getPayCharge()*100))+";");
+							sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+						    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+						    sParaTemp.put("secret", mySign);
+						    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+						    model.addAttribute("res", buf);
+						    //并且异步通知
+						   if(notifyStatus!=1){
+								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
+								   thread.run();	
+							}
+						   backMsg="success";
+					 }else{
+						  merchantOrderInfoService.updatePayStatus(4,String.valueOf(merchantOrderInfo.getId()));
+					 }
+		    		
+		    	}else if(status.equals("PROCESSING")){
+		    		//订单处理中
+		    		merchantOrderInfoService.updatePayInfo(3,String.valueOf(merchantOrderInfo.getId()),"PAYPROCESSING");
+		    	}else{
+		    		//订单处理失败
+					  payServiceLog.setErrorCode("2");
 			          payServiceLog.setStatus("error");
 			          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 merchantOrderInfoService.updatePayStatus(2,String.valueOf(merchantOrderInfo.getId()));
+			          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 					 backMsg="error";
-			    }
-			    
-			 }else{
-				 payServiceLog.setErrorCode("2");
+		    	}
+		    	
+		    }else{
+		    	  payServiceLog.setErrorCode("2");
 		          payServiceLog.setStatus("error");
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+		          merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 				 backMsg="error";
-			 }
-			 WebUtils.writeJson(response, backMsg);
+		    }
+		    
+		 }else{
+			 payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			 backMsg="error";
+		 }
+		 WebUtils.writeJson(response, backMsg);
 	  } 
+	private String getRequestBody(HttpServletRequest request) throws IOException {
+		StringBuilder buffer = new StringBuilder();
+		BufferedReader reader = request.getReader();
+		String line;
+		while ((line = reader.readLine()) != null) {
+		buffer.append(line);
+		}
+		return buffer.toString();
+		}
 	private boolean _verifySign(HttpServletRequest request, String paymaxPublicKey) {
 		Map<String, String> map = new HashMap<String, String>();
 		Enumeration names = request.getParameterNames();

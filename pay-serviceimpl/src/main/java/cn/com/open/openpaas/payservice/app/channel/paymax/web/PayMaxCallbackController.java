@@ -177,13 +177,14 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			    		
 			    	}else if(status.equals("PROCESSING")){
 			    		//订单处理中
-			    		merchantOrderInfoService.updatePayStatus(3,String.valueOf(merchantOrderInfo.getId()));
+			    		merchantOrderInfoService.updatePayInfo(3,String.valueOf(merchantOrderInfo.getId()),"PAYPROCESSING");
 			    	}else{
 			    		//订单处理失败
 						  payServiceLog.setErrorCode("2");
 				          payServiceLog.setStatus("error");
 				          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 				          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 				          //merchantOrderInfoService.updatePayStatus(4,String.valueOf(merchantOrderInfo.getId()));
 						 backMsg="error";
 			    	}
@@ -193,7 +194,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			          payServiceLog.setStatus("error");
 			          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 merchantOrderInfoService.updatePayStatus(2,String.valueOf(merchantOrderInfo.getId()));
+					// merchantOrderInfoService.updatePayStatus(2,String.valueOf(merchantOrderInfo.getId()));
 					 backMsg="error";
 			    }
 			    

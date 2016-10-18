@@ -105,7 +105,7 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  	       		 payServiceLog.setRealAmount(orderAmount);
  	       		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
  	       		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
- 	       		 payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
+ 	       		 payServiceLog.setLogName(PayLogName.YEEPAY_RETURN_START);
  	                payServiceLog.setStatus("ok");
  	                UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	            	log.info("-----------------------callBack  success-start-----------------------------------------");
@@ -137,6 +137,8 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  						   thread.run();
  						 log.info("-----------------------callBack  thread-end-----------------------------------------");
  					}
+			          payServiceLog.setLogName(PayLogName.YEEPAY_RETURN_END);
+			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	              }
  	            }
  	            public void failure(JSONObject jsonObject) {
@@ -145,10 +147,9 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  	            	//更新状态为失败
  	            	 String out_trade_no =  jsonObject.getString("requestId");
  	 	       	    //易汇金系统交易流水号
- 	 	       		 String serialNumber= jsonObject.getString("serialNumber");
- 	 	       	     String orderAmount=jsonObject.getString("orderAmount");
  	 	       	     MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
- 	            	 updateError(serialNumber, orderAmount,merchantOrderInfo);
+ 	 	       	     
+ 	 	       	     merchantOrderInfoService.updatePayStatus(2,String.valueOf(merchantOrderInfo.getId()));
  	            }
  	          
  	        });
@@ -177,6 +178,7 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
 			final MerchantOrderInfo merchantOrderInfo) {
 		Double payCharge=0.0;
 		payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+		merchantOrderInfo.setPayStatus(2);
 		merchantOrderInfo.setPayAmount(Double.parseDouble(orderAmount)/100-payCharge);
 		merchantOrderInfo.setAmount(Double.parseDouble(orderAmount)/100);
 		merchantOrderInfo.setPayCharge(payCharge);
