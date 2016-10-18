@@ -17,6 +17,8 @@ public class MerchantOrderOffline implements Serializable {
 	
 	private Integer merchantId;
 		
+	private Date payTime;
+	
 	private Double money;
 	
 	private String appId;
@@ -220,6 +222,14 @@ public class MerchantOrderOffline implements Serializable {
 
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
+	}
+
+	public Date getPayTime() {
+		return payTime;
+	}
+
+	public void setPayTime(Date payTime) {
+		this.payTime = payTime;
 	}
 	
 }

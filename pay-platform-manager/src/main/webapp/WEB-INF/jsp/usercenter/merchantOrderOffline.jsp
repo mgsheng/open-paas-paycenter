@@ -83,6 +83,7 @@
 				<th data-options="field:'merchantOrderId',width:150">线下订单号</th>
 				<th data-options="field:'merchantId',width:90">收费商户</th>
 				<th data-options="field:'money',width:60,align:'center'">收费金额</th>
+				<th data-options="field:'payTime',width:60,align:'center'">缴费日期</th>
 				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
 				<th data-options="field:'sourceUID',align:'center',width:50">用户ID</th>
 				<th data-options="field:'sourceUserName',align:'center',width:60">用户名</th>
@@ -199,6 +200,15 @@
 					</tr>
 					<tr>
 						<td style="margin-bottom:20px">
+							 缴&nbsp;费&nbsp;日&nbsp;期:
+						</td>
+						<td>
+							<input id="addPayTime" name="addPayTime" class="easyui-datebox" style="width:98%;" data-options="sharedCalendar:'#cc'" editable="false">
+						</td>
+						<td></td><td></td>
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">
 							备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:
 						</td>
 						<td colspan="3">
@@ -224,6 +234,8 @@
 			<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeAddWin();" style="margin-left:30px;">取消</a>
 		</div>
 	</div>
+	
+	<div id="cc" class="easyui-calendar"></div>
 </body>
 <script>
 		//页面预加载
@@ -242,7 +254,7 @@
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '70%',
+                height: '75%',
                 resizable:false
             });
         }
@@ -299,6 +311,7 @@
 				}
 			});
 			var addMerchantOrderId = $('#addMerchantOrderId').textbox('getValue');
+			var addPayTime = $('#addPayTime').datebox('getValue');
 			var addMoney = $('#addMoney').textbox('getValue');
 			var addSourceUserName = $('#addSourceUserName').textbox('getValue');
 			var addRealName = $('#addRealName').textbox('getValue');
@@ -311,11 +324,11 @@
 			var addOperator = $('#addOperator').val();
 			var addSourceUID = $('#addSourceUID').textbox('getValue');
 			//若校验为true 提交
-			if(checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone)){
+			if(checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone,addPayTime)){
 				$.ajax({
 					type:"post",
 					url:"/pay-platform-manager/manage/submitAddOrderOffline",
-					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark,"addOperator":addOperator,"addSourceUID":addSourceUID},
+					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addPayTime":addPayTime,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark,"addOperator":addOperator,"addSourceUID":addSourceUID},
 					dataType:"json",
 					success:function (data){
 						if(data.result == 1){
@@ -341,13 +354,17 @@
 		}
 		
 		//提交添加前的校验
-		function checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone){
+		function checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone,addPayTime){
 			if(addMerchantOrderId == "" || addMerchantOrderId == null || addMerchantOrderId == undefined){
 					$.messager.alert("系统提示","请填写线下订单号！","error");	
 					return false;
 			}
 			if(addMoney == "" || addMoney == null || addMoney == undefined){
 					$.messager.alert("系统提示","请填写收费金额！","error");		
+					return false;
+			}
+			if(addPayTime == "" || addPayTime == null || addPayTime == undefined){
+					$.messager.alert("系统提示","请选择缴费日期！","error");		
 					return false;
 			}
 			if(addMerchantName == "" || addMerchantName == null || addMerchantName == undefined){

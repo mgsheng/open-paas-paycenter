@@ -5,6 +5,7 @@
 		<id column="Id" property="id" jdbcType="VARCHAR" />
 		<result column="MERCHANT_ORDERID" property="merchantOrderId" jdbcType="VARCHAR" />
 		<result column="MERCHANT_ID" property="merchantId" jdbcType="INTEGER" />
+		<result column="PAY_TIME" property="payTime" jdbcType="DATE" />
 		<result column="MONEY" property="money" jdbcType="DECIMAL" />
 		<result column="APPID" property="appId" jdbcType="VARCHAR" />
 		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
@@ -20,6 +21,7 @@
 	<sql id="Insert_Column_List">
 	  MERCHANT_ORDERID,
 	  MERCHANT_ID,
+	  PAY_TIME,
 	  MONEY,
 	  APPID,
 	  REMARK,
@@ -49,6 +51,7 @@
 		(
 			#{merchantOrderId, jdbcType=VARCHAR},
 			#{merchantId, jdbcType=INTEGER},
+			#{payTime, jdbcType=DATE},
 			#{money, jdbcType=DECIMAL},
 			#{appId, jdbcType=VARCHAR},
 			#{remark, jdbcType=VARCHAR},
@@ -70,6 +73,7 @@
 			#{id, jdbcType=VARCHAR},
 			#{merchantOrderId, jdbcType=VARCHAR},
 			#{merchantId, jdbcType=INTEGER},
+			#{payTime, jdbcType=DATE},
 			#{money, jdbcType=DECIMAL},
 			#{appId, jdbcType=VARCHAR},
 			#{remark, jdbcType=VARCHAR},

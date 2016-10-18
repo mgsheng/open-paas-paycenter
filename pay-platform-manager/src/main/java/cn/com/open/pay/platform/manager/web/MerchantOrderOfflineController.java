@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -138,6 +139,10 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    		map = new LinkedHashMap<String,Object>();
 	    		map.put("id", r.getId());
 	    		map.put("merchantOrderId", r.getMerchantOrderId());
+	    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
+	    		if(r.getPayTime()!=null){
+	    			map.put("payTime", sdf.format(r.getPayTime()));
+	    		}
 	    		map.put("money", r.getMoney());
 	    		map.put("sourceUID", r.getSourceUid());
 	    		map.put("sourceUserName", r.getSourceUserName());
@@ -205,6 +210,14 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		request.setCharacterEncoding("utf-8");
 		String addMerchantOrderId = request.getParameter("addMerchantOrderId");
 		Double addMoney = Double.parseDouble(request.getParameter("addMoney"));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		Date addPayTime=null;
+		try {
+			addPayTime = sdf.parse(request.getParameter("addPayTime"));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		String addSourceUserName = request.getParameter("addSourceUserName");
 		String addRealName = request.getParameter("addRealName");
 		String addPhone = request.getParameter("addPhone");
@@ -218,7 +231,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		String addSourceUID = request.getParameter("addSourceUID");
 		
 		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addMoney : "+addMoney+"    " +
-				"addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
+				"addPayTime : "+addPayTime+"   addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
 				"   addMerchantName : "+addMerchantName+"   addAppId : "+addAppId+"   addChannelId : "+addChannelId+
 				"   addBankCode : "+addBankCode+"   addRemark : "+addRemark+"-----------");
 		
@@ -230,6 +243,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		merchantOrderOffline.setId(newId);
 		merchantOrderOffline.setMerchantOrderId(addMerchantOrderId);
 		merchantOrderOffline.setMoney(addMoney);
+		merchantOrderOffline.setPayTime(addPayTime);
 		merchantOrderOffline.setSourceUserName(addSourceUserName);
 		merchantOrderOffline.setRealName(addRealName);
 		merchantOrderOffline.setPhone(addPhone);
