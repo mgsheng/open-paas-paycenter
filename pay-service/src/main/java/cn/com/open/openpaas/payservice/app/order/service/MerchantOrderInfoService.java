@@ -23,6 +23,7 @@ public interface MerchantOrderInfoService {
 	void updateOrder(MerchantOrderInfo merchantOrderInfo);
 	void updateNotifyTimes(Integer notifyTimes,String id);
 	void updatePayStatus(Integer payStatus,String id);
+	void updatePayInfo(Integer payStatus, String id,String statusMsg);
 	void updateSourceType(Integer sourceType,String id);
 	void updatePayWay(MerchantOrderInfo merchantOrderInfo);
 
