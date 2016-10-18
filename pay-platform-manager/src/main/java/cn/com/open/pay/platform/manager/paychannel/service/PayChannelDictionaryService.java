@@ -1,5 +1,7 @@
 package cn.com.open.pay.platform.manager.paychannel.service;
 
+import java.util.List;
+
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 
 /**
@@ -10,5 +12,7 @@ import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 public interface PayChannelDictionaryService {
 
 	PayChannelDictionary findNameById(String channelId);
+
+	List<PayChannelDictionary> findPayChannelCodeAll();
 
 }

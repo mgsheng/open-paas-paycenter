@@ -3,9 +3,12 @@ package cn.com.open.pay.platform.manager.web;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,8 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.login.model.User;
@@ -27,6 +32,8 @@ import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.order.service.UserSerialRecordService;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
+import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
@@ -52,6 +59,11 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	 
 	 @Autowired
 	 private MerchantInfoService merchantInfoService;
+	 
+	 @Autowired
+	 private PayChannelDictionaryService payChannelDictionaryService;
+	 
+	 
 	
 	 /**
 	  * 页面跳转
@@ -122,19 +134,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 String startDate1 = null;
 		 String endDate1 = null;
 		 if(!startDate.equals("")&&!endDate.equals("")){
-//			 SimpleDateFormat format1 = new SimpleDateFormat("MM/dd/yyyy");
-//			 Date Date1=null;
-//			 Date Date2=null;
-//			try {
-//				Date1 = format1.parse(startDate);
-//				Date2 = format1.parse(endDate);
-//			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			format1 = new SimpleDateFormat("yyyy-MM-dd");
-//			 startDate1 = format1.format(Date1)+" 00:00:00";
-//			 endDate1 = format1.format(Date2)+" 23:59:59";
 			 startDate1 = startDate+" 00:00:00";
 			 endDate1 = endDate+" 23:59:59";
 		 }
@@ -149,13 +148,16 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
-		 merchantOrderInfo.setAppId(appId);				//业务类型
+		 //merchantOrderInfo.setAppId(appId);				//业务类型
+		 if(appId!=""){
+			 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
+		 }
 		 merchantOrderInfo.setPageSize(pageSize); //结束条数
 		 merchantOrderInfo.setStartRow(startRow); //开始条数
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
@@ -166,22 +168,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }
 			 Integer channeId = merchantOrderInfo1.getChannelId();
 			 if(channeId!=null){
-				 if(channeId==10001){
-					 merchantOrderInfo1.setChannelName("支付宝");
-				 }else if(channeId==10002){
-					 merchantOrderInfo1.setChannelName("微信");
-				 }else if(channeId==10004){
-					 merchantOrderInfo1.setChannelName("TCL-支付");
-				 }else if(channeId==10005){
-					 merchantOrderInfo1.setChannelName("支付宝");
-				 }else if(channeId==10006){
-					 merchantOrderInfo1.setChannelName("TCL-支付");
-				 }else if(channeId==10007){
-					 merchantOrderInfo1.setChannelName("易宝支付");
-				 }else if(channeId==10008){
-					 merchantOrderInfo1.setChannelName("易宝支付");
-				 }else{
-					 merchantOrderInfo1.setChannelName("待定");
+				 PayChannelDictionary payChannelDictionary = payChannelDictionaryService.findNameById(channeId+"");
+				 if(payChannelDictionary.getChannelName()!=null){
+					 merchantOrderInfo1.setChannelName(payChannelDictionary.getChannelName()); 
 				 }
 			 }
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
@@ -249,17 +238,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 channelId=Integer.parseInt(CI);
 		 }
 		 String appId=request.getParameter("appId");//业务类型  字段暂时不确定
-//		 String source=request.getParameter("source"); //缴费来源 1、pc端2、移动端 11
-//		 int paymentId=0;
-//		 String pt=request.getParameter("paymentId"); //发卡行 字段暂时不确定 11
-//		 if(pt!=null&&!pt.equals("")){
-//			 paymentId=Integer.parseInt(pt);
-//		 }
-//		 String PS=request.getParameter("payStatus"); //交易状态
-//		 int payStatus=0;
-//		 if(PS!=null&&!PS.equals("")){
-//			 payStatus=Integer.parseInt(PS);
-//		 }
+
 		 String startDate=request.getParameter("startDate"); //交易时间开始时间
 		 String endDate=request.getParameter("endDate"); //交易时间结束时间
 		 String startDate1 = null;
@@ -279,13 +258,16 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 //		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setUserName(userName);		//发卡行
-		 merchantOrderInfo.setAppId(appId);				//业务类型
+//		 merchantOrderInfo.setAppId(appId);				//业务类型
+		 if(appId!=""){
+			 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
+		 }
 		 merchantOrderInfo.setPageSize(pageSize); //结束条数
 		 merchantOrderInfo.setStartRow(startRow); //开始条数
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
@@ -296,22 +278,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }
 			 Integer channeId = merchantOrderInfo1.getChannelId();
 			 if(channeId!=null){
-				 if(channeId==10001){
-					 merchantOrderInfo1.setChannelName("支付宝");
-				 }else if(channeId==10002){
-					 merchantOrderInfo1.setChannelName("微信");
-				 }else if(channeId==10004){
-					 merchantOrderInfo1.setChannelName("TCL-支付");
-				 }else if(channeId==10005){
-					 merchantOrderInfo1.setChannelName("支付宝");
-				 }else if(channeId==10006){
-					 merchantOrderInfo1.setChannelName("TCL-支付");
-				 }else if(channeId==10007){
-					 merchantOrderInfo1.setChannelName("易宝支付");
-				 }else if(channeId==10008){
-					 merchantOrderInfo1.setChannelName("易宝支付");
-				 }else{
-					 merchantOrderInfo1.setChannelName("待定");
+				 PayChannelDictionary payChannelDictionary = payChannelDictionaryService.findNameById(channeId+"");
+				 if(payChannelDictionary.getChannelName()!=null){
+					 merchantOrderInfo1.setChannelName(payChannelDictionary.getChannelName()); 
 				 }
 			 }
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
@@ -411,7 +380,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setAppId(appId);				//业务类型
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findDownloadMerchant(merchantOrderInfo);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
@@ -422,22 +391,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }
 			 Integer channeId = merchantOrderInfo1.getChannelId();
 			 if(channeId!=null){
-				 if(channeId==10001){
-					 merchantOrderInfo1.setChannelName("支付宝");
-				 }else if(channeId==10002){
-					 merchantOrderInfo1.setChannelName("微信");
-				 }else if(channeId==10004){
-					 merchantOrderInfo1.setChannelName("TCL-支付");
-				 }else if(channeId==10005){
-					 merchantOrderInfo1.setChannelName("支付宝");
-				 }else if(channeId==10006){
-					 merchantOrderInfo1.setChannelName("TCL-支付");
-				 }else if(channeId==10007){
-					 merchantOrderInfo1.setChannelName("易宝支付");
-				 }else if(channeId==10008){
-					 merchantOrderInfo1.setChannelName("易宝支付");
-				 }else{
-					 merchantOrderInfo1.setChannelName("待定");
+				 PayChannelDictionary payChannelDictionary = payChannelDictionaryService.findNameById(channeId+"");
+				 if(payChannelDictionary.getChannelName()!=null){
+					 merchantOrderInfo1.setChannelName(payChannelDictionary.getChannelName()); 
 				 }
 			 }
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
@@ -554,7 +510,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 				 startDate1 = format1.format(Date1)+" 00:00:00";
 				 endDate1 = format1.format(Date2)+" 23:59:59";
 			 }else{
-	//			 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 				 if(createDate==0){
 					    String date = df.format(new Date());
@@ -588,58 +543,56 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	     return "usercenter/merchantMessage";
 	 }
 	 
-//	 @RequestMapping("downloadSubmit")
-//	 public void  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
-//		 log.info("-----------------------login start----------------");
-////		 String e="";//下单时间 
-//		 String merchantOrderDate="1";//交易时间 (今日，昨日，最近7天，最近30天，自定义日期)
-//		 String merchantOrderId="";//商户订单号、
-//		 String payOrderId="";//第三方订单号、
-//		 int paymentId=0;//支付方式（支付宝、微信、银联、易宝、易宝POS和TCL汇银通）、
-////		 String //业务类型（学历教育、慕课中国…）、发卡行、缴费来源（PC端和移动端）、
-//		 int payStatus=0;//交易状态
-//		 
-//		 
-//		 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//		 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//		 String startDate="";
-//		 String endDate="";
-//		 int day=30;
-////		 String date = df.format(new Date());
-////			startDate = date+" 00:00:00";
-//		 if(merchantOrderDate.equals("2")){
-//			    String date = df.format(new Date());
-//				startDate = date+" 00:00:00";
-//				endDate = date+" 23:59:59";
-//		 }else if(merchantOrderDate.equals("1")){
-//			 String date = df.format(new Date());
-//			 Date dat = null;
-//			 Calendar cd = Calendar.getInstance();
-//			 cd.add(Calendar.DATE, (day > 0) ? -day : day);
-//			 dat = cd.getTime();
-//			 String date1 = df.format(dat);
-//			 System.out.println(date);
-//			 startDate = date1+" 00:00:00";
-//			 endDate = date+" 23:59:59";
-//		 }
-//		 System.out.println(startDate+"**************************"+endDate);
-//		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
-//		 
-//		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
-//		 merchantOrderInfo.setStartDate(startDate);
-//		 merchantOrderInfo.setEndDate(endDate);
-//		 
-//		 merchantOrderInfo.setMerchantOrderId(merchantOrderId);
-//		 merchantOrderInfo.setPayOrderId(payOrderId);
-//		 merchantOrderInfo.setPaymentId(paymentId);
-//		 merchantOrderInfo.setPayStatus(payStatus);
-//		 
-//		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
-//		 
-//		 
-//		 orderMessageExport.exportChuBei(response, merchantOrderInfoList);
-//		 
-//	 }	
-	 
+	 /**
+		 * 查询所有商户
+		 * @return 返回到前端json数据
+		 */
+		@RequestMapping(value="findAllDepts")
+		public void findAllDepts(HttpServletRequest request,HttpServletResponse response,Model model){
+			log.info("-------------------------findAllDepts         start------------------------------------");
+			List<MerchantInfo> list = merchantInfoService.findMerchantNamesAll();
+			List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+			Map<String,Object> map= null;
+			String str=null;
+			if(list != null){
+				for(MerchantInfo d : list){
+					map = new HashMap<String,Object>();
+					map.put("id", d.getId());
+					map.put("text", d.getMerchantName());
+					maps.add(map);
+				} 
+				JSONArray jsonArr = JSONArray.fromObject(maps);
+				str = jsonArr.toString();
+				WebUtils.writeJson(response, str);
+			}
+			return ;
+		}
+		
+		 /**
+		 * 查询所有商户
+		 * @return 返回到前端json数据
+		 */
+		@RequestMapping(value="findAllPayChannel")
+		public void findAllPayChannel(HttpServletRequest request,HttpServletResponse response,Model model){
+			log.info("-------------------------findAllDepts         start------------------------------------");
+			List<PayChannelDictionary> list = payChannelDictionaryService.findPayChannelCodeAll();
+			List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+			Map<String,Object> map= null;
+			String str=null;
+			if(list != null){
+				for(PayChannelDictionary d : list){
+					map = new HashMap<String,Object>();
+					map.put("id", d.getChannelID());
+					map.put("text", d.getChannelName());
+					maps.add(map);
+				} 
+				JSONArray jsonArr = JSONArray.fromObject(maps);
+				str = jsonArr.toString();
+				WebUtils.writeJson(response, str);
+//				System.out.println(str);
+			}
+			return ;
+		}
+		
 	 	
 }

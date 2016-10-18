@@ -179,6 +179,9 @@
         <if test="id != null and id !=''" >
            and ID=#{id} 
         </if>
+        <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+        </if>
         <if test="merchantOrderId != null and merchantOrderId !=''" >
            and MERCHANT_ORDERID=#{merchantOrderId} 
         </if>
