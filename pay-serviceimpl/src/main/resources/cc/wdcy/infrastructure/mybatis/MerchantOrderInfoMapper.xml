@@ -227,6 +227,7 @@
        <![CDATA[
         update MERCHANT_ORDER_INFO set
         ID = #{id},
+        CHANNEL_ORDERID = #{channelOrderId},
 		CREATE_DATE = #{createDate}
         where MERCHANT_ORDERID = #{merchantOrderId} and APPID=#{appId}
     ]]>
