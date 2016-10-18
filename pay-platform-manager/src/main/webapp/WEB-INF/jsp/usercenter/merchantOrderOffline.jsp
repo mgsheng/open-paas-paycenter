@@ -520,8 +520,10 @@
 			var queryAppId = $('#queryAppId').combobox('getValue');
 			var queryChannelId = $('#queryChannelId').combobox('getValue');
 			var queryOperator = $('#queryOperator').val();
-			
-		 	var url="${pageContext.request.contextPath}/manage/offlineDownloadSubmit?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator;
+			var startDate = $('#startDate').datebox('getValue');
+			var endDate = $('#endDate').datebox('getValue');
+		
+		 	var url="${pageContext.request.contextPath}/manage/offlineDownloadSubmit?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
 			
 			document.getElementById("ff").action=url;
 		    document.getElementById("ff").submit();

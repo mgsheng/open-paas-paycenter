@@ -313,6 +313,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	@RequestMapping("offlineDownloadSubmit")
 	public String offlineDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderOfflineDownloadSubmit----------------");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		String merchantOrderId = request.getParameter("merchantOrderId");
 		String sourceUserName = request.getParameter("sourceUserName");
 		String merchantName = request.getParameter("merchantName");
@@ -320,7 +321,9 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		String channelId = request.getParameter("channelId");
 		String operator = request.getParameter("operator");
 		String orderId = request.getParameter("orderId");
-		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator);
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator+" startDate:"+startDate+" endDate:"+endDate);
 		
 	    MerchantOrderOffline offline = new MerchantOrderOffline();
 	    
@@ -333,6 +336,23 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    offline.setAppId(appId);
 	    offline.setChannelId(channelId);
 	    offline.setOperator(operator);
+	    
+	    if(startDate!=null && startDate!=""){
+	    	try {
+				offline.setStartDate(sdf.parse(startDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    if(endDate!=null && endDate!=""){
+	    	try {
+				offline.setEndDate(sdf.parse(endDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
 	    
 	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAllNoPage(offline);
 	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
