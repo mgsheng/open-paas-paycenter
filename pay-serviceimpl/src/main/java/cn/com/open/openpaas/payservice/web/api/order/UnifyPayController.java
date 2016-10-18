@@ -297,6 +297,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			if(merchantOrderInfo.getPayStatus()==0){
 				merchantOrderInfo.setId(newId);
 				merchantOrderInfo.setCreateDate(new Date());
+				merchantOrderInfo.setChannelOrderId(merchantOrderInfo.getId());
 				merchantOrderInfoService.updateOrderId(merchantOrderInfo);
  			}
 		       else if(merchantOrderInfo.getPayStatus()==2){
