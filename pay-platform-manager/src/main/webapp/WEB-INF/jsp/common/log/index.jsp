@@ -52,7 +52,7 @@
 					<th data-options="field:'operationContent',align:'center'" style="width:18%;max-width:100%;">操作</th>
 					<th data-options="field:'operationAuthority',align:'center'" style="width:8%;max-width:100%;">操作权限</th>
 					<th data-options="field:'foundDate',align:'center'" style="width:18%;max-width:100%;">操作时间</th>
-					<th data-options="field:'operationDescribe',align:'center'" style="width:18%;max-width:100%;">操作描述</th>
+					<th data-options="field:'operationDescribe',align:'center'" style="width:40%;max-width:100%;">操作描述</th>
 					
 				</tr>
 		</thead>
