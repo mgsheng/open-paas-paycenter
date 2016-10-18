@@ -36,7 +36,7 @@ table {
 			<div>
 				<span> <select class="easyui-combobox" name="channelId"
 					id="channelId" label="支付方式" style="width:200px"
-					data-options="editable:false">
+					data-options="editable:false,prompt:'全部'">
 						<option value="" selected="selected">全部</option>
 						<option value="10001">支付宝</option>
 						<option value="10002">微信</option>
@@ -71,7 +71,7 @@ table {
 			<div style="margin-top: 5px">
 				<span style=""> <select class="easyui-combobox" name="appId"
 					id="appId" label="业务类型" style="width:200px"
-					data-options="editable:false">
+					data-options="editable:false,prompt:'全部'">
 						<option value="" selected="selected">全部</option>
 						<option value="1">OES学历</option>
 						<option value="10026">mooc2u</option>
@@ -128,7 +128,7 @@ table {
 		style="border:1px solid;margin-top: 25px;border-radius:8px;margin-bottom: 10px; border-color:grey;background-color:#DDDDDD;height: 30px; width: 988px;padding-top: 10px;padding-left: 10px ;">趋势</div>
 	<div class="easyui-tabs" style="width:1000px;height:445px">
 		<div title="成交金额" style="padding:10px">
-			<div id="payAmount" style=""></div>
+			<div id="orderAmount" style=""></div>
 		</div>
 		<div title="成交笔数" style="width:1000px;">
 			<div id="payCount" style=""></div>
@@ -231,7 +231,7 @@ table {
 								var payAmountchart;
 								var options = {
 									chart : {
-										renderTo : 'payAmount',
+										renderTo : 'orderAmount',
 										width : 900,
 										colors : [ '#3E8940', '#F9536E', ],
 									},
@@ -280,8 +280,8 @@ table {
 									series : data.payAmountListMap
 								};
 
-								$('#payAmount').highcharts(options); //创建图表动画
-								payAmountchart = $('#payAmount').highcharts(); //获取图表对象
+								$('#orderAmount').highcharts(options); //创建图表动画
+								payAmountchart = $('#orderAmount').highcharts(); //获取图表对象
 
 								$('#payCount')
 										.highcharts(
@@ -483,5 +483,30 @@ table {
 			}
 		});
 	};
+	
+	//页面加载  
+	$(document).ready(function(){ 
+				initialise();
+				payIrrigation();
+	            
+	});  
+	
+	
+	function  initialise(){
+		$('#appId').combobox({
+			url:'${pageContext.request.contextPath}/manage/findAllDepts',
+			valueField:'id',
+			textField:'text'
+		});
+	}
+	
+	function  payIrrigation(){
+		$('#channelId').combobox({
+			url:'${pageContext.request.contextPath}/manage/findAllPayChannel',
+			valueField:'id',
+			textField:'text'
+		});
+	}
+	
 </script>
 </html>
