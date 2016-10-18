@@ -90,6 +90,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	@RequestMapping("getMerchantOrderOffline")
 	public void getMerchantOrderOffline(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderOffline----------------");
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		String merchantOrderId = request.getParameter("merchantOrderId");
 		String sourceUserName = request.getParameter("sourceUserName");
 		String merchantName = request.getParameter("merchantName");
@@ -97,8 +98,10 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		String channelId = request.getParameter("channelId");
 		String operator = request.getParameter("operator");
 		String orderId = request.getParameter("orderId");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		//merchantID = ((merchantID == null || merchantID == "") ? null : (new String(merchantID.getBytes("iso8859-1"),"utf-8")));
-		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator);
+		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator+" startDate:"+startDate+" endDate:"+endDate);
 		//当前第几页
 		String page=request.getParameter("page");
 //				System.out.println("page  :" +page);
@@ -124,6 +127,22 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    offline.setAppId(appId);
 	    offline.setChannelId(channelId);
 	    offline.setOperator(operator);
+	    if(startDate!=null && startDate!=""){
+	    	try {
+				offline.setStartDate(sdf.parse(startDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    if(endDate!=null && endDate!=""){
+	    	try {
+				offline.setEndDate(sdf.parse(endDate));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
 	    
 	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAll(offline);
 	    int total = merchantOrderOfflineService.findOfflineAllCount(offline);
@@ -138,8 +157,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    	for(MerchantOrderOffline r : offlines){
 	    		map = new LinkedHashMap<String,Object>();
 	    		map.put("id", r.getId());
-	    		map.put("merchantOrderId", r.getMerchantOrderId());
-	    		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");  
+	    		map.put("merchantOrderId", r.getMerchantOrderId());  
 	    		if(r.getPayTime()!=null){
 	    			map.put("payTime", sdf.format(r.getPayTime()));
 	    		}

@@ -50,6 +50,9 @@ public class MerchantOrderOffline implements Serializable {
 	private String channelName;
 	private String merchantName;
 	private String bankName;
+	
+	private Date startDate;//查询缴费日期开始
+	private Date endDate;//查询缴费日期结束
 
 	public MerchantOrderOffline(){
 		
@@ -230,6 +233,22 @@ public class MerchantOrderOffline implements Serializable {
 
 	public void setPayTime(Date payTime) {
 		this.payTime = payTime;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 	
 }

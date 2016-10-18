@@ -142,6 +142,12 @@
         <if test="operator != null and operator !=''" >
            and OPERATOR=#{operator} 
         </if>
+        <if test="startDate != null and startDate !=''" >
+           and (PAY_TIME > #{startDate, jdbcType=DATE} or PAY_TIME = #{startDate, jdbcType=DATE})
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and (#{endDate, jdbcType=DATE} > PAY_TIME or PAY_TIME = #{endDate, jdbcType=DATE})
+        </if>
           limit #{startRow},#{pageSize} 
 	</select>
 	<select id="findQueryCount" resultType="int">
@@ -166,6 +172,12 @@
         </if>
         <if test="operator != null and operator !=''" >
            and OPERATOR=#{operator} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and (PAY_TIME > #{startDate, jdbcType=DATE} or PAY_TIME = #{startDate, jdbcType=DATE})
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and (#{endDate, jdbcType=DATE} > PAY_TIME or PAY_TIME = #{endDate, jdbcType=DATE})
         </if>
     </select>
     <resultMap id="allInfo" type="java.util.Map">

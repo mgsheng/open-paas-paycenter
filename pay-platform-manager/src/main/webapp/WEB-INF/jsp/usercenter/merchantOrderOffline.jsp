@@ -63,7 +63,14 @@
 								name="queryChannelId"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
-					<td style="text-align: left;padding-left:80px;" colspan="4">
+					<td style="text-align: right;">缴&nbsp;费&nbsp;日&nbsp;期：</td>
+					<td style="text-align: left;" colspan="4">
+						<input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">~
+						<input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: center;" colspan="6">
 						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">查询</a>
 						&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
@@ -466,11 +473,31 @@
 			var queryAppId = $('#queryAppId').combobox('getValue');
 			var queryChannelId = $('#queryChannelId').combobox('getValue');
 			var queryOperator = $('#queryOperator').val();
+			var startDate = $('#startDate').datebox('getValue');
+			var endDate = $('#endDate').datebox('getValue');
 			
-			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""){
+			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""&&startDate==""&&endDate==""){
 				$.messager.alert("提示","请输入查询条件!");
+			}else if(!startDate==""&&!endDate==""){
+				if(startDate>endDate){
+					 $.messager.alert("提示","开始时间大于结束时间!");
+				}else{
+					var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+		        	alert(url);
+		        	$('#dg').datagrid({
+						collapsible:true,
+						rownumbers:true,
+						pagination:true,
+				        url: url,  
+				        onLoadSuccess:function(data){
+		                    if (data.total<1){
+		                       $.messager.alert("提示","没有符合查询条件的数据!");
+		                  	}
+		                }
+				    }); 
+				}
 			}else{
-			 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator;
+				var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,
