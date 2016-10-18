@@ -367,7 +367,7 @@
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
 	</select>
 	<select id="getPayAmount"  resultType="java.util.Map" flushCache="true" >
-         select sum(PAY_AMOUNT) payAmount from MERCHANT_ORDER_INFO
+         select sum(ORDER_AMOUNT) orderAmount from MERCHANT_ORDER_INFO
          where 1=1
           <if test="appId != null and appId !=''" >
            and APPID=#{appId} 
@@ -382,7 +382,7 @@
 	</select>
 	
 	<select id="getTotalPayAmount"  resultType="java.util.Map" flushCache="true" >
-         select sum(PAY_AMOUNT) payAmount from MERCHANT_ORDER_INFO
+         select sum(ORDER_AMOUNT) orderAmount from MERCHANT_ORDER_INFO
          where 1=1
           <if test="appId != null and appId !=''" >
            and APPID=#{appId} 

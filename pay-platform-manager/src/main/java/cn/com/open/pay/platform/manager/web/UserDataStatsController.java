@@ -131,7 +131,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				for(int i =0;i<payAmountList.size();i++){
 						payAmountMap = new LinkedHashMap<String, Object>();
 						try {
-							payAmountTotal[i]=Double.parseDouble(payAmountList.get(i).get("payAmount").toString());
+							payAmountTotal[i]=Double.parseDouble(payAmountList.get(i).get("orderAmount").toString());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -196,8 +196,8 @@ public class UserDataStatsController extends BaseControllerUtil {
 			String totalPayCount="0";
 			String totalUserCount="0";
 			String totalPayCharge="0.0";
-			if(totalPayAmountMap!=null&&!nullEmptyBlankJudge(totalPayAmountMap.get("payAmount").toString())){
-				totalPayAmount=totalPayAmountMap.get("payAmount").toString();	
+			if(totalPayAmountMap!=null&&!nullEmptyBlankJudge(totalPayAmountMap.get("orderAmount").toString())){
+				totalPayAmount=totalPayAmountMap.get("orderAmount").toString();	
 			}
 			if(totalPayCountMap!=null&&!nullEmptyBlankJudge(totalPayCountMap.get("payCount").toString())){
 				totalPayCount=totalPayCountMap.get("payCount").toString();	
