@@ -146,6 +146,8 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 			          payServiceLog.setStatus("error");
 			          payServiceLog.setLogName(PayLogName.CALLBACK_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			          merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
+			          
 					  backMsg="error";
 				}else{
 					 if (!return_code.equals("000000")) { //请求异常
@@ -154,6 +156,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 					          payServiceLog.setStatus("error");
 					          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 					          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 							
 						}else{
 							//判断该笔订单是否在商户网站中已经做过处理
@@ -183,7 +186,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 							}
 							backMsg="success";
 							payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
-							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);		
+							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 							}
 							
 						}
@@ -192,7 +195,6 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 				backMsg="error";	
 			}
 			    WebUtils.writeJson(response, backMsg);
-			   
 					//如果有做过处理，不执行商户的业务程序
 		
 	  } 

@@ -139,6 +139,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 			          payServiceLog.setStatus("error");
 			          payServiceLog.setLogName(PayLogName.CALLBACK_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			         // merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 					  backMsg="error";
 				}else{
 					 if (!return_code.equals("000000")) { //请求异常
@@ -147,6 +148,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 					          payServiceLog.setStatus("error");
 					          payServiceLog.setLogName(PayLogName.CALLBACK_END);
 					          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 							
 						}else{
 							//判断该笔订单是否在商户网站中已经做过处理

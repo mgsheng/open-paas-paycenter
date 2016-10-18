@@ -187,11 +187,17 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
 						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					}
+				}else{
+					payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+					payServiceLog.setStatus("error");
+					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 				}
 			  } else {
-				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
+				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 				payServiceLog.setStatus("error");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 				backMsg="error";
 			}	
 		}else{

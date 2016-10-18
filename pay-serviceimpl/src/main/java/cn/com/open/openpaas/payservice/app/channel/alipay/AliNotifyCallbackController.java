@@ -170,12 +170,19 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 			  payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
 	          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+	          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
 	
+	    }else{
+	    	  payServiceLog.setErrorCode("4");
+	          payServiceLog.setStatus("error");
+	          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+	    	merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 	    }
 		}else{
+			
 			backMsg="error";
 		} 
 		WebUtils.writeJson(response, backMsg);

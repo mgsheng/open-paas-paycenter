@@ -104,5 +104,11 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		return merchantOrderInfoRepository.getTotalAmountByTime(startTime, endTime, appId);
 	}
 
+	@Override
+	public void updatePayInfo(Integer payStatus, String id, String statusMsg) {
+		merchantOrderInfoRepository.updatePayInfo(payStatus, id, statusMsg);
+		
+	}
+
 
 }

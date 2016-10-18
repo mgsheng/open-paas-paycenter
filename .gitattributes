@@ -1097,6 +1097,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/sign/RSAKeyGenerateUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/sign/Request.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxNotifyController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/ChannelRateServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/CommonConfig.java -text

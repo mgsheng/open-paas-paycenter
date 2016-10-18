@@ -199,15 +199,18 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 						        payServiceLog.setStatus("error");
 						        payServiceLog.setLogName(PayLogName.CALLBACK_END);
 						        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+						        merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 					        	log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 					            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
+					            
 					        }
 					    } else{
 					    	payServiceLog.setErrorCode("3");
 					        payServiceLog.setStatus("error");
 					        payServiceLog.setLogName(PayLogName.CALLBACK_END);
 					        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					        merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 					    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
 					                    + "<return_msg><![CDATA[报文为空]]></return_msg>" + "</xml> ";
 					    	log.info("通知签名验证失败");

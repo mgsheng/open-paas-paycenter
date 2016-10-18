@@ -47,6 +47,7 @@ import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordServic
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
+import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 
@@ -54,9 +55,9 @@ import cn.com.open.openpaas.payservice.dev.PayserviceDev;
  * 
  */
 @Controller
-@RequestMapping("/paymax/")
-public class PayMaxCallbackController extends BaseControllerUtil {
-	private static final Logger log = LoggerFactory.getLogger(PayMaxCallbackController.class);
+@RequestMapping("/paymax/notify")
+public class PayMaxNotifyController extends BaseControllerUtil {
+	private static final Logger log = LoggerFactory.getLogger(PayMaxNotifyController.class);
 	 @Autowired
 	 private MerchantOrderInfoService merchantOrderInfoService;
 	 @Autowired
@@ -80,7 +81,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 	 * @throws MalformedURLException 
 	 */
 	@RequestMapping(value = "callBack")
-	public String payCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
+	public void payCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
 		    log.info("-----------------------callBack paxmax/order-----------------------------------------");
 		    
 		    long startTime = System.currentTimeMillis();
@@ -133,6 +134,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 						 if(!nullEmptyBlankJudge(returnUrl)){
 							 //Map<String, String> dataMap=new HashMap<String, String>();
 							 String buf="";
+							    int notifyStatus=merchantOrderInfo.getNotifyStatus();
 								int payStatus=merchantOrderInfo.getPayStatus();
 								Double payCharge=0.0;
 								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
@@ -169,8 +171,11 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 							    sParaTemp.put("secret", mySign);
 							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
 							    model.addAttribute("res", buf);
-			     			    return "pay/payMaxRedirect"; 
-			     			    
+							    //并且异步通知
+							   if(notifyStatus!=1){
+									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
+									   thread.run();	
+								}
 						 }else{
 							 backMsg="success";
 						 }
@@ -184,7 +189,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 				          payServiceLog.setStatus("error");
 				          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 				          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				          //merchantOrderInfoService.updatePayStatus(4,String.valueOf(merchantOrderInfo.getId()));
+				          merchantOrderInfoService.updatePayStatus(4,String.valueOf(merchantOrderInfo.getId()));
 						 backMsg="error";
 			    	}
 			    	
@@ -203,11 +208,8 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				 backMsg="error";
-				 
 			 }
-			 model.addAttribute("backMsg", backMsg);
-			 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
-			 return "pay/callBack";	
+			 WebUtils.writeJson(response, backMsg);
 	  } 
 	private boolean _verifySign(HttpServletRequest request, String paymaxPublicKey) {
 		Map<String, String> map = new HashMap<String, String>();

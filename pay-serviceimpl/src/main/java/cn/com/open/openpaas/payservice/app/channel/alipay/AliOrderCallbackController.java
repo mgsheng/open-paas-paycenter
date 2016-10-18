@@ -128,7 +128,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
  		}
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params,dictTradeChannel.getKeyValue(),dictTradeChannel.getInputCharset());
-		
+		verify_result=false;
 		if(verify_result){//验证成功
 			//////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代码
@@ -172,8 +172,6 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 						sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
 						sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf(merchantOrderInfo.getPayCharge()));
 						sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
-						
-						
 					    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 					    sParaTemp.put("secret", mySign);
 					    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
@@ -182,22 +180,26 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				 }else{
 					 backMsg="success";
 				 }
-				  
-				  
+			}else{
+				  payServiceLog.setErrorCode("2");
+		          payServiceLog.setStatus("PAYFAIL");
+		          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
+				 merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 			}
 		}else{
 			//该页面可做页面美工编辑
-			  payServiceLog.setErrorCode("2");
-	          payServiceLog.setStatus("error");
+			  payServiceLog.setErrorCode("4");
+	          payServiceLog.setStatus("VERIFYERROR");
 	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			backMsg="error";
+	          //merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
+			backMsg="VERIFYERROR";
 		}
 		}else{
-			  payServiceLog.setErrorCode("2");
+			  payServiceLog.setErrorCode("5");
 	          payServiceLog.setStatus("error");
 	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
-			backMsg="error";
+			  backMsg="error";
 		} 
 		 model.addAttribute("backMsg", backMsg);
 		 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());

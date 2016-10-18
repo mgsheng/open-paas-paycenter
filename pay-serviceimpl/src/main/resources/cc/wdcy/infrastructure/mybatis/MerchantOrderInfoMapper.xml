@@ -193,6 +193,12 @@
         PAY_STATUS = #{payStatus}
         where ID = #{id}
     </update>
+      <update id="updatePayInfo"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAY_STATUS = #{payStatus},
+        STATUS_MESSAGE=#{statusMsg}
+        where ID = #{id}
+    </update>
       <update id="updateSourceType"  flushCache="true">
         update MERCHANT_ORDER_INFO set
         SOURCE_TYPE = #{sourceType}

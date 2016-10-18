@@ -26,6 +26,7 @@ public interface MerchantOrderInfoRepository extends Repository {
 	//更新订单状态处理，实收金额计算，手续费
 	void updateNotifyTimes(@Param("notifyTimes")Integer notifyTimes,@Param("id")String id);
 	void updatePayStatus(@Param("payStatus")Integer payStatus,@Param("id")String id);
+	void updatePayInfo(@Param("payStatus")Integer payStatus, @Param("id")String id,@Param("statusMsg")String statusMsg);
 	void updateSourceType(@Param("sourceType")Integer sourceType, @Param("id")String id);
 	List<MerchantOrderInfo> findByPayAndNotifyStatus();
 	void updateNotifyStatus(MerchantOrderInfo orderInfo);

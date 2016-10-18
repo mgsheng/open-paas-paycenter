@@ -147,12 +147,19 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 					} else if(r9_BType.equals("2")) {
 				
 					}
+				}else{
+					payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+					payServiceLog.setStatus("PAYFAIL");
+					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					backMsg="PAYFAIL";
+					merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 				}
 			  } else {
 				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
-				payServiceLog.setStatus("error");
+				payServiceLog.setStatus("VERIFYERROR");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				backMsg="error";
+				//merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
+				backMsg="VERIFYERROR";
 			}	
 		}else{
 			backMsg="error";
