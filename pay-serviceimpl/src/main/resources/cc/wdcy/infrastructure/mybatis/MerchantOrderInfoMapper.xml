@@ -167,7 +167,7 @@
 	
 	<select id="findById" resultMap="merchantOrderInfoMap">
          select * from MERCHANT_ORDER_INFO
-         where  ID = #{id}
+         where  ID = #{id} or CHANNEL_ORDERID = #{id} limit 1
 	</select>
 	<select id="findByPayAndNotifyStatus" resultMap="merchantOrderInfoMap">
          select * from MERCHANT_ORDER_INFO
