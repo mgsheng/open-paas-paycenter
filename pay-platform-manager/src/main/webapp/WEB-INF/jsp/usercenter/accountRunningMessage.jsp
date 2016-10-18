@@ -38,10 +38,8 @@
 			
 			<td style="text-align: right;">业务类型：</td>
 			<td>
-				<select class="easyui-combobox" data-options="editable:false"  name="appId" style="width:100%">
-						<option value="" selected="selected">全部</option>
-						<option value="1">OES学历</option>
-						<option value="10026" >mooc2u</option>
+				<select class="easyui-combobox" data-options="editable:false" id="appId" name="appId" style="width:100%">
+						
 				</select>
 			</td>
 			<td style="text-align: right;">下单时间：</td>
@@ -164,9 +162,17 @@
 		$(document).ready(function(){ 
 					var hy="seven";
 					getDayType(hy);
+					initialise();
 		            loadGrid();  
 		});  
 		  
+		function  initialise(){
+			$('#appId').combobox({
+				url:'${pageContext.request.contextPath}/manage/findAllDepts',
+				valueField:'id',
+				textField:'text'
+			});
+		}
 		
 		function getDayType(date) {
 			var input6=getnowtime();

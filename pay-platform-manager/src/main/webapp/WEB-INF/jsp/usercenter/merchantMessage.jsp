@@ -43,20 +43,12 @@
 			<td>
 				<select class="easyui-combobox" data-options="editable:false" id="channelId" name="channelId" style="width:100%">
 					<option value="">全部</option>
-					<option value="10001">支付宝</option>
-					<option value="10002">微信</option>
-					<option value="10003">银联</option>
-					<option value="10005">易宝</option>
-					<option value="10006">易宝pos</option>
-					<option value="10004">TCL汇银通</option>
+					
 				</select>
 			</td>
 			<td style="text-align: right;">业务类型：</td>
 			<td>
-				<select class="easyui-combobox" data-options="editable:false"  name="appId" style="width:100%">
-						<option value="" selected="selected">全部</option>
-						<option value="1">OES学历</option>
-						<option value="10026" >mooc2u</option>
+				<select class="easyui-combobox" data-options="editable:false,prompt:'全部'"  id="appId" name="appId" style="width:100%">
 				</select>
 			</td>
 			
@@ -241,10 +233,34 @@
 		}
 		//页面加载  
 		$(document).ready(function(){ 
+			
 					var hy="seven";
 					getDayType(hy);
+					initialise();
+					payIrrigation();
 		            loadGrid();  
+		            
 		});  
+		
+		
+		function  initialise(){
+			$('#appId').combobox({
+				url:'${pageContext.request.contextPath}/manage/findAllDepts',
+				valueField:'id',
+				textField:'text'
+			});
+		}
+		
+		function  payIrrigation(){
+			$('#channelId').combobox({
+				url:'${pageContext.request.contextPath}/manage/findAllPayChannel',
+				valueField:'id',
+				textField:'text'
+			});
+		}
+		
+		
+		  
 		  
 		
 		function getDayType(date) {
