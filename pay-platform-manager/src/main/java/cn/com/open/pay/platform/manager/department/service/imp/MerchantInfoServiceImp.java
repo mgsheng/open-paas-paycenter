@@ -94,6 +94,16 @@ public class MerchantInfoServiceImp implements  MerchantInfoService{
 	public MerchantInfo findNameById(Integer merchantId) {
 		return merchantInfoRepository.findNameById(merchantId);
 	}
+
+	/**
+	 * 查询所有的商户
+	 * @return
+	 */
+	@Override
+	public List<MerchantInfo> findMerchantNamesAll() {
+		// TODO Auto-generated method stub
+		return merchantInfoRepository.findMerchantNamesAll();
+	}
 	
 	
 	

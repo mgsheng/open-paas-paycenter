@@ -13,6 +13,13 @@ import cn.com.open.pay.platform.manager.login.model.User;
 public interface MerchantInfoService {
 	
 	
+	
+	/**
+	 * 查询所有商户
+	 * @return
+	 */
+	public List<MerchantInfo> findMerchantNamesAll();
+	
 	/**
 	 * 查询list
 	 * @return
