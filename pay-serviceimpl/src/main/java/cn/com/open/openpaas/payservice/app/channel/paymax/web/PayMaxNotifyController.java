@@ -206,10 +206,15 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 						    model.addAttribute("res", buf);
 						    log.info("==========================notify-start======================================");
 						    //并且异步通知
-						   if(notifyStatus!=1){
-								 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
-								   thread.run();	
+						    try {
+						    	if(notifyStatus!=1){
+									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
+									   thread.run();	
+								}
+							} catch (Exception e) {
+								backMsg="success";
 							}
+						   
 						   log.info("==========================notify--end======================================");
 						   backMsg="success";
 					 }else{
