@@ -216,10 +216,14 @@ public class OrderDeriveExport {
 		cell.setCellValue("操作人");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 13);
-		cell.setCellValue("备注");
+		cell.setCellValue("录入时间");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 14);
+		cell.setCellValue("备注");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 15);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		// 向单元格里填充数据
 		for (short i = 0; i < offlines.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -238,7 +242,10 @@ public class OrderDeriveExport {
 			row.createCell(10).setCellValue(offlines.get(i).getChannelName());//支付方式
 			row.createCell(11).setCellValue(offlines.get(i).getBankName());//发卡行
 			row.createCell(12).setCellValue(offlines.get(i).getOperator());//操作人
-			row.createCell(13).setCellValue(offlines.get(i).getRemark());//备注
+			if(offlines.get(i).getCreateTime()!=null){
+				row.createCell(13).setCellValue(sdf1.format(offlines.get(i).getCreateTime()));//录入时间
+			}
+			row.createCell(14).setCellValue(offlines.get(i).getRemark());//备注
 		}
 		try {
 			response.setContentType("application/vnd.ms-excel");

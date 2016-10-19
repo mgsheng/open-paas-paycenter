@@ -91,6 +91,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	public void getMerchantOrderOffline(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderOffline----------------");
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String merchantOrderId = request.getParameter("merchantOrderId");
 		String sourceUserName = request.getParameter("sourceUserName");
 		String merchantName = request.getParameter("merchantName");
@@ -181,6 +182,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    		if(payment!=null){
 	    			map.put("bankCode", payment.getRemark());
 	    		}
+	    		map.put("createTime", sdf1.format(r.getCreateTime()));
 	    		maps.add(map);
 	    	}
 	    	JSONArray jsonArr = JSONArray.fromObject(maps);

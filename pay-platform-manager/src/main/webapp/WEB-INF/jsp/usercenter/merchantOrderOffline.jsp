@@ -82,15 +82,15 @@
 		</form>
 	</div>
 	
-	<table id="dg" class="easyui-datagrid" title="线下收费记录" style="height:400px;width:100%" 
-			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
+	<table id="dg" class="easyui-datagrid" title="线下收费记录" style="height:400px;width:100%;max-width:100%;" 
+			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:false,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-			    <th data-options="field:'id',width:170">订单号</th>
+			    <th data-options="field:'id',width:180">订单号</th>
 				<th data-options="field:'merchantOrderId',width:150">线下订单号</th>
-				<th data-options="field:'merchantId',width:90">收费商户</th>
+				<th data-options="field:'merchantId',width:80">收费商户</th>
 				<th data-options="field:'money',width:60,align:'center'">收费金额</th>
-				<th data-options="field:'payTime',width:60,align:'center'">缴费日期</th>
+				<th data-options="field:'payTime',width:85,align:'center'">缴费日期</th>
 				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
 				<th data-options="field:'sourceUID',align:'center',width:50">用户ID</th>
 				<th data-options="field:'sourceUserName',align:'center',width:60">用户名</th>
@@ -99,7 +99,8 @@
 				<th data-options="field:'channelId',width:60,align:'center'">支付方式</th>
 				<th data-options="field:'bankCode',width:110,align:'center'">发卡行</th>
 				<th data-options="field:'operator',align:'center',width:55">操作人</th>
-				<th data-options="field:'remark',align:'center',width:70">备注</th>
+				<th data-options="field:'createTime',align:'center',width:150">录入时间</th>
+				<th data-options="field:'remark',align:'center',width:80">备注</th>
 			</tr>
 		</thead>
 	</table>
