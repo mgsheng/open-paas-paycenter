@@ -71,7 +71,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				}else{
 					//七天内
 					startTime=DateTools.getStatetime("yyyy-MM-dd");
-					endTime=DateTools.getCurrDate("yyyy-MM-dd");
+					endTime=DateTools.getTmotime("yyyy-MM-dd");
 				}
 			}else if(nullEmptyBlankJudge(timeType)&&nullEmptyBlankJudge(startTime)&&nullEmptyBlankJudge(endTime)){
 				startTime=DateTools.getStatetime("yyyy-MM-dd");
@@ -92,6 +92,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 					dateMap.put(DateTools.dateSub(DateTools.SUB_DAY, DateTools.stringtoDate(startTime, "yyyy-MM-dd"), i, "yyyy-MM-dd"), i);
 				}
 			//查询成交金额
+			endTime=DateTools.getTmotime("yyyy-MM-dd");
 			List<Map<String, Object>> payAmountList=merchantOrderInfoService.getPayAmount(startTime, endTime, appId, paymentId, channelId);
 			List<Map<String, Object>>getPayCountList=merchantOrderInfoService.getPayCount(startTime, endTime, appId, paymentId, channelId);
 			List<Map<String, Object>>userCountList=merchantOrderInfoService.getUserCount(startTime, endTime, appId, paymentId, channelId);
@@ -130,8 +131,11 @@ public class UserDataStatsController extends BaseControllerUtil {
 				//循环所有的数据
 				for(int i =0;i<payAmountList.size();i++){
 						payAmountMap = new LinkedHashMap<String, Object>();
+						payChargeMap = new LinkedHashMap<String, Object>();
+						String createDate=payAmountList.get(i).get("createDate").toString();
+						int index=dateMap.get(createDate);
 						try {
-							payAmountTotal[i]=Double.parseDouble(payAmountList.get(i).get("orderAmount").toString());
+							payAmountTotal[index]=Double.parseDouble(payAmountList.get(i).get("orderAmount").toString());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -145,8 +149,10 @@ public class UserDataStatsController extends BaseControllerUtil {
 				//循环所有的数据
 				for(int i =0;i<payAmountList.size();i++){
 					   payCountMap = new LinkedHashMap<String, Object>();
+					   String createDate=getPayCountList.get(i).get("createDate").toString();
+						int index=dateMap.get(createDate);
 						try {
-							payCountTotal[i]=Integer.parseInt(getPayCountList.get(i).get("payCount").toString());
+							payCountTotal[index]=Integer.parseInt(getPayCountList.get(i).get("payCount").toString());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -159,8 +165,10 @@ public class UserDataStatsController extends BaseControllerUtil {
 				//循环所有的数据
 				for(int i =0;i<userCountList.size();i++){
 					   userCountMap = new LinkedHashMap<String, Object>();
+						String createDate=userCountList.get(i).get("createDate").toString();
+						int index=dateMap.get(createDate);
 						try {
-							userCountTotal[i]=Integer.parseInt(userCountList.get(i).get("userCount").toString());
+							userCountTotal[index]=Integer.parseInt(userCountList.get(i).get("userCount").toString());
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	
@@ -174,8 +182,11 @@ public class UserDataStatsController extends BaseControllerUtil {
 				//循环所有的数据
 				for(int i =0;i<payChargeList.size();i++){
 					payChargeMap = new LinkedHashMap<String, Object>();
+					String createDate=payChargeList.get(i).get("createDate").toString();
+					int index=dateMap.get(createDate);
 						try {
-							payChargeTotal[i]=Double.parseDouble(payChargeList.get(i).get("payCharge").toString());
+							payChargeTotal[index]=Double.parseDouble(payChargeList.get(i).get("payCharge").toString());
+						
 						} catch (Exception e) {
 							e.printStackTrace();
 						}	

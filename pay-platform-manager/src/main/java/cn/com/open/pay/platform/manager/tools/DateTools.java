@@ -110,6 +110,19 @@ public class DateTools {
         return dateToString(new Date(), format);
     }
     /**
+     * 获取下一天的时间
+     * @param format
+     * @return
+     */
+    public  static String getTmotime(String format) {
+    	  SimpleDateFormat sdf = new SimpleDateFormat(format);
+    	        Calendar c = Calendar.getInstance();  
+    	        c.add(Calendar.DATE, +1);  
+    	        Date monday = c.getTime();
+    	        String preMonday = sdf.format(monday);
+    	        return preMonday;
+    	   } 
+    /**
      * 获取上一周的时间
      * @param format
      * @return
@@ -117,7 +130,7 @@ public class DateTools {
     public  static String getStatetime(String format) {
     	  SimpleDateFormat sdf = new SimpleDateFormat(format);
     	        Calendar c = Calendar.getInstance();  
-    	        c.add(Calendar.DATE, - 7);  
+    	        c.add(Calendar.DATE, - 6);  
     	        Date monday = c.getTime();
     	        String preMonday = sdf.format(monday);
     	        return preMonday;
