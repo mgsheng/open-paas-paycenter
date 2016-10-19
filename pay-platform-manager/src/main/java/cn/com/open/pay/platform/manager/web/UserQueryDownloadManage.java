@@ -553,6 +553,10 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			List<MerchantInfo> list = merchantInfoService.findMerchantNamesAll();
 			List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map= null;
+			map = new HashMap<String,Object>();
+			map.put("id", "");
+			map.put("text", "全部");
+			maps.add(map);
 			String str=null;
 			if(list != null){
 				for(MerchantInfo d : list){
@@ -578,6 +582,10 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			List<PayChannelDictionary> list = payChannelDictionaryService.findPayChannelCodeAll();
 			List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map= null;
+			map = new HashMap<String,Object>();
+			map.put("id", "");
+			map.put("text", "全部");
+			maps.add(map);
 			String str=null;
 			if(list != null){
 				for(PayChannelDictionary d : list){
