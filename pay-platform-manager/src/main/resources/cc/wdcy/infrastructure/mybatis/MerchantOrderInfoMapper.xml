@@ -175,7 +175,7 @@
 	</select>
 	
 	<select id="findQueryMerchant" resultMap="merchantOrderInfoMap" >
-        select * from  MERCHANT_ORDER_INFO where 1=1
+        select * from (select * from MERCHANT_ORDER_INFO tb order by tb.CREATE_DATE desc) MERCHANT_ORDER_INFO where 1=1
         <if test="id != null and id !=''" >
            and ID=#{id} 
         </if>
