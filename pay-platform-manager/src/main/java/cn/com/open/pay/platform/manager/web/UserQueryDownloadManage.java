@@ -157,7 +157,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS"); 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
@@ -267,7 +267,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS"); 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
@@ -380,7 +380,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setAppId(appId);				//业务类型
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findDownloadMerchant(merchantOrderInfo);
-		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:MM:SS"); 
+		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
