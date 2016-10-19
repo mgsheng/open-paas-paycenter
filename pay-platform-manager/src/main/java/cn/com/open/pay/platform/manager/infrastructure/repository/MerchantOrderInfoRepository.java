@@ -35,15 +35,15 @@ public interface MerchantOrderInfoRepository extends Repository {
 	List<MerchantOrderInfo> findOrderByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 	
-	List<Map<String, Object>> getPayCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
-	List<Map<String, Object>> getPayAmount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
-	List<Map<String, Object>> getUserCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
-	List<Map<String, Object>> payCharge(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	List<Map<String, Object>> getPayCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	List<Map<String, Object>> getPayAmount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	List<Map<String, Object>> getUserCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	List<Map<String, Object>> payCharge(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
 	
-	HashMap<String, Object> getTotalPayCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
-	HashMap<String, Object> getTotalPayAmount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
-	HashMap<String, Object> getTotalUserCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
-	HashMap<String, Object> payTotalCharge(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	HashMap<String, Object> getTotalPayCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	HashMap<String, Object> getTotalPayAmount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	HashMap<String, Object> getTotalUserCount(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
+	HashMap<String, Object> payTotalCharge(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")String merchantId,@Param("paymentId")String paymentId,@Param("channelId")String channelId);
 	
 	
 	List<MerchantOrderInfo> findQueryMerchant(

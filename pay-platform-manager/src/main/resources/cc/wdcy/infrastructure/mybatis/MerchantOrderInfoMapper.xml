@@ -341,8 +341,8 @@
 	<select id="getPayCount"  resultType="java.util.Map" flushCache="true">
          select count(MERCHANT_ORDERID) payCount , date_format(CREATE_DATE,'%Y-%m-%d') createDate from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -355,8 +355,8 @@
 	<select id="getTotalPayCount"  resultType="java.util.Map" flushCache="true">
          select count(MERCHANT_ORDERID) payCount  from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -369,8 +369,8 @@
 	<select id="getPayAmount"  resultType="java.util.Map" flushCache="true" >
          select sum(ORDER_AMOUNT) orderAmount, date_format(CREATE_DATE,'%Y-%m-%d') createDate  from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -384,8 +384,8 @@
 	<select id="getTotalPayAmount"  resultType="java.util.Map" flushCache="true" >
          select sum(ORDER_AMOUNT) orderAmount from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -398,8 +398,8 @@
 	<select id="getUserCount"  resultType="java.util.Map" flushCache="true">
          select count(SOURCE_UID) userCount , date_format(CREATE_DATE,'%Y-%m-%d') createDate from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -413,8 +413,8 @@
 	<select id="getTotalUserCount"  resultType="java.util.Map" flushCache="true">
          select count(SOURCE_UID) userCount  from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -428,8 +428,8 @@
 	<select id="payCharge"  resultType="java.util.Map" flushCache="true">
          select sum(PAY_CHARGE) payCharge , date_format(CREATE_DATE,'%Y-%m-%d') createDate from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
@@ -442,8 +442,8 @@
 	<select id="payTotalCharge"  resultType="java.util.Map" flushCache="true">
          select sum(PAY_CHARGE) payCharge  from MERCHANT_ORDER_INFO
          where 1=1
-          <if test="appId != null and appId !=''" >
-           and APPID=#{appId} 
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
           </if>
            <if test="paymentId != null and paymentId !=''" >
            and PAYMENT_ID=#{paymentId} 
