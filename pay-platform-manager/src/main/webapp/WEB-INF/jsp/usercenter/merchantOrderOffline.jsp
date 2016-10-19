@@ -478,13 +478,13 @@
 			var endDate = $('#endDate').datebox('getValue');
 			
 			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""&&startDate==""&&endDate==""){
-				$.messager.alert("提示","请输入查询条件!");
+				//$.messager.alert("提示","请输入查询条件!");
+				findOrderOffline();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
 					var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
-		        	alert(url);
 		        	$('#dg').datagrid({
 						collapsible:true,
 						rownumbers:true,
