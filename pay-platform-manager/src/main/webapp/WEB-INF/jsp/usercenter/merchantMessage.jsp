@@ -126,8 +126,8 @@
 				<th data-options="field:'openingBank',width:100">卡类型</th><!-- 不确定字段 -->
 				<th data-options="field:'source',width:80,align:'right'">缴费来源</th>
 				<th data-options="field:'payStatusName',width:80,align:'right'">交易状态</th>
-				<th data-options="field:'amount',width:80">缴费金额</th>
-				<th data-options="field:'orderAmount',width:60,align:'center'">实收金额</th>
+				<th data-options="field:'orderAmount',width:80">缴费金额</th>
+				<th data-options="field:'payAmount',width:60,align:'center'">实收金额</th>
 				<th data-options="field:'payCharge',width:60,align:'center'">手续费</th>
 			</tr>
 		</thead>
