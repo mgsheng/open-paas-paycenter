@@ -41,7 +41,7 @@
 			<td><input id="payOrderId" name="payOrderId" class="easyui-textbox" style="width:100%"></td>
 			<td style="text-align: right;">支付方式：</td>
 			<td>
-				<select class="easyui-combobox" data-options="editable:false" id="channelId" name="channelId" style="width:100%">
+				<select class="easyui-combobox" data-options="editable:false,prompt:'全部'" id="channelId" name="channelId" style="width:100%">
 					<option value="">全部</option>
 					
 				</select>
