@@ -98,6 +98,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
 		}
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		log.info("ali callback out_trade_no========="+out_trade_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		if(merchantOrderInfo!=null){
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
@@ -265,7 +266,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
                 result += line;  
                 
             }  
-            System.out.println(result);
+            //System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
             return null;

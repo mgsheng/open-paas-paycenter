@@ -99,7 +99,9 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 //		if(!nullEmptyBlankJudge(request.getParameter("body"))){
 //			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
 //		}
+		
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		log.info("ali notify out_trade_no========="+out_trade_no);
 		if(merchantOrderInfo!=null){
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		        String key = dictTradeChannel.getKeyValue(); // key

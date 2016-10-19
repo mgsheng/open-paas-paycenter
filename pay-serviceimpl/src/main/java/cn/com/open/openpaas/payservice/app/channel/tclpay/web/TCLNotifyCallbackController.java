@@ -94,6 +94,7 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 		String attach= request.getParameter("attach") ;
 		String backMsg="error";
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		log.info("tcl notify orderId======================="+ out_trade_no);
 		if(merchantOrderInfo!=null){
 		Map<String, String> orderDataMap = new HashMap<String, String>();
 		orderDataMap.put("out_trade_no", out_trade_no);

@@ -71,6 +71,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
+		log.info("yeepay callback orderId======================="+ r6_Order);
 		String 	backMsg="";
 		if(merchantOrderInfo!=null){
 			Double total_fee=0.0;

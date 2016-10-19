@@ -254,7 +254,7 @@ public class AliOrderProThread implements Runnable {
                 result += line;  
                 
             }  
-            System.out.println(result);
+            //System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
             return null;

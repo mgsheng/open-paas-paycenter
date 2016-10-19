@@ -92,6 +92,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			String amount=request.getParameter("amount");
 			String status=request.getParameter("status");
 			MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(order_no);
+			log.info("paymax callback out_trade_no========="+order_no);
 			 String backMsg="";
 			 PayServiceLog payServiceLog=new PayServiceLog();
 			 if(merchantOrderInfo!=null){

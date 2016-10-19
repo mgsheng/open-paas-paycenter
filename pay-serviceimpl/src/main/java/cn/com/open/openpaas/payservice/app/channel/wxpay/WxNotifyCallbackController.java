@@ -129,6 +129,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 		        
 			        //log.info(packageParams);
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+			    	log.info("wx notify orderId======================="+ out_trade_no);
 			    	 PayServiceLog payServiceLog=new PayServiceLog();
 			    	if(merchantOrderInfo!=null){
 			    		//添加日志

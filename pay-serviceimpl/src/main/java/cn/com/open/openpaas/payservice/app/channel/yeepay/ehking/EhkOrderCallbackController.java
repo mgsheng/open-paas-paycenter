@@ -73,6 +73,7 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 		String status = new String(request.getParameter("status").getBytes("ISO-8859-1"),"UTF-8");
 		
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		log.info("ehk callback orderId======================="+ out_trade_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		if(merchantOrderInfo!=null){
 		//添加日志
@@ -95,6 +96,7 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
  		MerchantInfo merchantInfo = null;
  		if(nullEmptyBlankJudge(returnUrl)){
  			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+ 			
  			returnUrl=merchantInfo.getReturnUrl();
  		}
 			//////////////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +212,7 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
                 result += line;  
                 
             }  
-            System.out.println(result);
+            //System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
             return null;

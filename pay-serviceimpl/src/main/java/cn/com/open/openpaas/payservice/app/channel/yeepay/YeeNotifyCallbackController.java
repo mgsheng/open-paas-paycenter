@@ -85,6 +85,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
+		log.info("yeepay notify orderId======================="+ r6_Order);
 		String 	backMsg="error";
 		if(merchantOrderInfo!=null){
 			Double total_fee=0.0;

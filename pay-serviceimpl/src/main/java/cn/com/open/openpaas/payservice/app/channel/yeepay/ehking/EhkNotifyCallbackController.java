@@ -79,16 +79,17 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  		    executer.callback(FastJsonUtils.convert(request.getInputStream()), new ResultListenerAdpater() {
  		    	
  	            public void success(JSONObject jsonObject) {
- 	            log.info("jsonObject========="+jsonObject.toJSONString());
+ 	            //log.info("jsonObject========="+jsonObject.toJSONString());
  	       		 String out_trade_no =  jsonObject.getString("requestId");
  	       	    //易汇金系统交易流水号
  	       		 String serialNumber= jsonObject.getString("serialNumber");
  	       	     String orderAmount=jsonObject.getString("orderAmount");
- 	       	    log.info("requestId========="+out_trade_no);
- 	       	    log.info("serialNumber========="+serialNumber);
- 	            log.info("orderAmount========="+orderAmount);
+ 	       	    //log.info("requestId========="+out_trade_no);
+ 	       	    //log.info("serialNumber========="+serialNumber);
+ 	            //log.info("orderAmount========="+orderAmount);
  	        
  	       		 MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+ 	       		log.info("ehk notify orderId======================="+ out_trade_no);
  	       		if(merchantOrderInfo!=null){
  	       		//添加日志
  	       		 PayServiceLog payServiceLog=new PayServiceLog();

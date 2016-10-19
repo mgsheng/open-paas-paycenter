@@ -40,7 +40,7 @@ public class SdkOrderService {
 		RSASign util = HytUtils.getRSASignObject();
 		String url = CommonConfig.HYT_SERVICE_URL;
 		String reqData = HytPacketUtils.map2Str(dataMap);
-		System.out.println("待签名报文----------"+reqData);
+		//System.out.println("待签名报文----------"+reqData);
 		String response = "";
 		try {
 			String merchant_sign = util.sign(reqData, HytConstants.CHARSET_GBK);

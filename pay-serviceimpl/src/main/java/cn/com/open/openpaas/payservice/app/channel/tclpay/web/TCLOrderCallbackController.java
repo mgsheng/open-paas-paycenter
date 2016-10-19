@@ -87,6 +87,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 		String attach= request.getParameter("attach") ;
 		String backMsg="";
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		log.info("tcl callback orderId======================="+ out_trade_no);
 		if(merchantOrderInfo!=null){
 		Map<String, String> orderDataMap = new HashMap<String, String>();
 		orderDataMap.put("out_trade_no", out_trade_no);

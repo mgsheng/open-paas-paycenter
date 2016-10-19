@@ -70,7 +70,7 @@ public class ChargeUtil {
     private static Map<String, Object> printResult(Charge charge) {
     	Map<String, Object>returnValue=new HashMap<String, Object>();
         if (charge.getReqSuccessFlag()){//http请求成功
-        	 System.out.println(JSON.toJSONString(charge));
+        	 //System.out.println(JSON.toJSONString(charge));
              Map<String, Object> credential=charge.getCredential();
         	if(charge.getChannel().equals("wechat_wap")){
         	    String wechat_wap=credential.get("wechat_wap").toString();
@@ -83,16 +83,16 @@ public class ChargeUtil {
                   returnValue.put("lakala_web",lakala_web);
                   returnValue.put("status", "ok");	
         	}
-            System.out.println(returnValue);
+           // System.out.println(returnValue);
         }else {//http请求失败
-	        System.out.println(JSON.toJSONString(charge));
+	       // System.out.println(JSON.toJSONString(charge));
             String failureCode = charge.getFailureCode();
             String failureMsg = charge.getFailureMsg();
             returnValue.put("failureCode",failureCode);
             returnValue.put("failureMsg",failureMsg);
             returnValue.put("status", "error");
-            System.out.println("failureCode:"+failureCode);
-            System.out.println("failureMsg:"+failureMsg);
+          //  System.out.println("failureCode:"+failureCode);
+           // System.out.println("failureMsg:"+failureMsg);
         }
         return returnValue;
     }

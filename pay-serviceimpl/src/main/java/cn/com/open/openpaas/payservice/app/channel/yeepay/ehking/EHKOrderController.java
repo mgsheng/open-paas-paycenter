@@ -139,7 +139,7 @@ public class EHKOrderController extends BaseControllerUtil{
 				public void success(JSONObject jsonObject) {
 					LOGGER.debug("success jsonObject:[" + jsonObject + "]");
 					//out.println("提交成功</br>");
-					System.out.println(jsonObject.toJSONString());
+					//System.out.println(jsonObject.toJSONString());
 					
 					 Map<String, Object> map=new HashMap<String,Object>();
 				    	   map.put("status", "ok");

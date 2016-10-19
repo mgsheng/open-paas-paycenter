@@ -53,12 +53,12 @@ public class HytHttpsClient {
 
 		outputStream = httpsURLConnection.getOutputStream();
 		outputStreamWriter = new OutputStreamWriter(outputStream);
-        System.out.println("待发送报文--------"+postData);
+        //System.out.println("待发送报文--------"+postData);
 		outputStreamWriter.write(postData);
 		outputStreamWriter.flush();
 
 		if (httpsURLConnection.getResponseCode() >= 300) {
-			System.out.println(httpsURLConnection.getHeaderFields());
+			//System.out.println(httpsURLConnection.getHeaderFields());
 			throw new Exception(
 					"HTTP Request is not success, Response code is "
 							+ httpsURLConnection.getResponseCode());
