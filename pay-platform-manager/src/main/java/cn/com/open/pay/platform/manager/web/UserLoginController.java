@@ -67,7 +67,31 @@ public class UserLoginController extends BaseControllerUtil {
 	     if(user!=null){
 	    	  if(user.checkPasswod(password)){
 	    		  flag = true;
-	    		  errorCode="ok"; 
+	    		  errorCode="ok";
+//	    		  Manager manager=managerService.getManagerById(user.getId());
+//					int role=0;
+//					List<PrivilegeRoleDetails> list=null;
+//					List<PrivilegeModule> modules=null;
+//					if(manager!=null){
+//						role=manager.getRole();
+//						list=privilegeRoleDetailsService.findRoleDetailsByRoleId(role);
+//						List<Integer>ids=new ArrayList<Integer>(list.size());
+//						for(int i=0;i<list.size();i++){
+//							ids.add(list.get(i).getModuleId());
+//						}
+//						if(ids!=null&&list.size()>0){
+//							modules= privilegeModuleService.findModuleByIds(ids);
+//							for(int j=0;j<modules.size();j++){
+//								
+//							}
+//						}
+//					}
+					HttpSession session = request.getSession();
+					//session.setAttribute("serverHost",payManagerDev.getServer_host());
+//					session.setAttribute("manager",manager);
+//					session.setAttribute("modules",modules);
+					session.setAttribute("user",user);
+	    		  
 				}else{
 					errorCode="error"; 
 				}
@@ -88,37 +112,25 @@ public class UserLoginController extends BaseControllerUtil {
 	   */
 	    @RequestMapping(value = "login")
 		public String login(HttpServletRequest request,HttpServletResponse response,Model model) {
-	    	   String username = request.getParameter("userName");
-				User user=null;
-				user=userService.findByUsername(username);
-				if(user != null){
-			    	model.addAttribute("userName",username);
-			    	model.addAttribute("realName",user.getRealName());
-		    	}
-				Manager manager=managerService.getManagerById(user.getId());
-				int role=0;
-				List<PrivilegeRoleDetails> list=null;
-				List<PrivilegeModule> modules=null;
-				if(manager!=null){
-					role=manager.getRole();
-					list=privilegeRoleDetailsService.findRoleDetailsByRoleId(role);
-					List<Integer>ids=new ArrayList<Integer>(list.size());
-					for(int i=0;i<list.size();i++){
-						ids.add(list.get(i).getModuleId());
-					}
-					if(ids!=null&&list.size()>0){
-						modules= privilegeModuleService.findModuleByIds(ids);
-						for(int j=0;j<modules.size();j++){
-							
-						}
-					}
-				}
-				HttpSession session = request.getSession();
-				session.setAttribute("serverHost",payManagerDev.getServer_host());
-				session.setAttribute("manager",manager);
-				session.setAttribute("modules",modules);
-				session.setAttribute("user",user);
-	    	return "login/index";
+	    	User user =(User) request.getSession().getAttribute("user");
+	    	 String username = request.getParameter("userName");
+	    	if(user!=null&&user.getUsername().equals(username)){
+	    		model.addAttribute("userName",username);
+		    	model.addAttribute("realName",user.getRealName());
+	    		return "login/index";
+	    	}
+	    	
+//	    	   String username = request.getParameter("userName");
+//				User user=null;
+//				user=userService.findByUsername(username);
+//				if(user != null){
+//			    	model.addAttribute("userName",username);
+//			    	model.addAttribute("realName",user.getRealName());
+//		    	}else{
+//		    		
+//		    	}
+//				
+	    	return "/index";
 	    }
 	    /**
 	     * 修改密码

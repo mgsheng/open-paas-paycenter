@@ -305,6 +305,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/commercial.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/departmentList.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/deptUsers.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/department/irrigationDitch.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/login/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/channelRate.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
