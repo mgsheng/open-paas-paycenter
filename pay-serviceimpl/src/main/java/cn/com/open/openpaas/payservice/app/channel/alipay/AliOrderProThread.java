@@ -74,7 +74,7 @@ public class AliOrderProThread implements Runnable {
 		sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
 		sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
-		sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getPayAmount()*100)));
+		sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
 		sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
 		sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
 		sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());

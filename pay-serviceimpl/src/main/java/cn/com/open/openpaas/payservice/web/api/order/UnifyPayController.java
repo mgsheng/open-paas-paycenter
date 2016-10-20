@@ -317,6 +317,7 @@ public class UnifyPayController extends BaseControllerUtil{
  				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"7";
  			}
+			payEbank=getBankSwitch(paymentType, bank_map);
 		}else{ 
 			//创建订单
 			merchantOrderInfo=new MerchantOrderInfo();
@@ -351,7 +352,9 @@ public class UnifyPayController extends BaseControllerUtil{
 					merchantOrderInfo.setSourceType(Integer.parseInt(payTcl));	
 				}
 				else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
+					payEbank=getBankSwitch(paymentType, bank_map);
 					merchantOrderInfo.setSourceType(Integer.parseInt(payEbank));	
+					
 				}else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(3);	
 				}else if(String.valueOf(Channel.YEEPAY.getValue()).equals(paymentChannel)){
@@ -558,8 +561,10 @@ public class UnifyPayController extends BaseControllerUtil{
 			     }
 		    	 
 		     }else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
-		    	 payServiceLog.setPaySwitch(payEbank);
-		    	  payEbank=getBankSwitch(paymentType, bank_map);
+		    	 
+		    	  payServiceLog.setPaySwitch(payEbank);
+		    	 // payEbank=getBankSwitch(paymentType, bank_map);
+		    	  
 		    	 if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.ALI.getValue()).equals(payEbank)){
 				    	// 支付宝-网银支付
 				    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){ 
@@ -608,7 +613,6 @@ public class UnifyPayController extends BaseControllerUtil{
 				      }
 				  else if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.PAYMAX.getValue()).equals(payEbank)){
 					  //拉卡拉直连银行
-
 			    	  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
 			    	  if(dictTradeChannels!=null){
 			    		String other= dictTradeChannels.getOther();
@@ -796,6 +800,15 @@ public class UnifyPayController extends BaseControllerUtil{
 						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
 						  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
 						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
+			    	 } if(PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
+						  //易宝直连银行
+					    		totalFee=AmountUtil.changeF2Y(totalFee);
+					    		 String res = getYeePayUrl(totalFee,
+										merchantOrderInfo,paymentType);
+					    		 model.addAttribute("res", res);
+					    		 payServiceLog.setLogName(PayLogName.PAY_END);
+							     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
+				         		 return "pay/payRedirect";
 			    	 }
 			     }
 		}
@@ -950,8 +963,14 @@ public class UnifyPayController extends BaseControllerUtil{
 		 String p8_Url=dictTradeChannels.getNotifyUrl();
 		 String p9_SAF=others.get("p9_SAF");
 		 String pa_MP="";
-		 String pd_FrpId=getYeePayFrpId(paymentType);
-		 
+		// String pd_FrpId=getYeePayFrpId(paymentType);
+		 String pd_FrpId="";
+		 if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.YEEPAY_GW.getValue())){
+			 pd_FrpId="";
+		 }else{
+			 pd_FrpId=getYeePayFrpId(paymentType);
+		 }
+		
 		 String pr_NeedResponse=others.get("pr_NeedResponse");
 		 String keyValue=others.get("keyValue");
 		 String hmac=HmacUtils.getReqMd5HmacForOnlinePayment(others.get("p0_Cmd"), p1_MerId, p2_Order, p3_Amt, p4_Cur, p5_Pid, p6_Pcat, p7_Pdesc, p8_Url, p9_SAF, pa_MP, pd_FrpId, pr_NeedResponse, keyValue);
@@ -999,6 +1018,8 @@ public class UnifyPayController extends BaseControllerUtil{
 				   returnValue="CEB-NET-B2C";
 	 		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
 				   returnValue="PINGANBANK-NET";
+			 }else if(PaymentType.BOB.getValue().equals(paymentType)){
+				   returnValue="BCCB-NET-B2C";
 			 } 
 		 }
 		 return returnValue;
@@ -1072,6 +1093,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			   returnValue="CEB-DEBIT";
  		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
 			   returnValue="SPABANK";
+		 }else if(PaymentType.BOB.getValue().equals(paymentType)){
+			   returnValue="BJBANK";
 		 }
 	   }else{
 		   returnValue="";  
@@ -1133,6 +1156,8 @@ public class UnifyPayController extends BaseControllerUtil{
        	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY.getValue()))){
     		if(paymentType!=null&&PaymentType.YEEPAY_EHK.getValue().equals(paymentType)){
          		 returnValue=true;
+         	 }else if(paymentType!=null&&PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
+         		 returnValue=true; 
          	 }else{
          		 returnValue=false; 
          	 }

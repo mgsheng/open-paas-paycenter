@@ -152,7 +152,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 			//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
 			params.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 			
-			params.put("totalFee", String.valueOf((int)(orderInfo.getPayAmount()*100)));
+			params.put("totalFee", String.valueOf((int)(orderInfo.getOrderAmount()*100)));
 			params.put("goodsId", orderInfo.getMerchantProductId());
 			params.put("goodsName",orderInfo.getMerchantProductName());
 			params.put("goodsDesc", orderInfo.getMerchantProductDesc());
