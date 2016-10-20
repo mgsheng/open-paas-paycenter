@@ -86,7 +86,7 @@
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-			    <th data-options="field:'merchantOrderId',width:180">商户订单号</th>
+			    <th data-options="field:'merchantOrderd',width:180">商户订单号</th>
 				<th data-options="field:'merchantId',width:80">退费商户</th>
 				<th data-options="field:'money',width:60,align:'center'">退费金额</th>
 				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
@@ -104,42 +104,68 @@
 	</div>
 
 	<!-- 添加线下收费单据窗口 -->
-<!-- 	<div id="addWin" class="easyui-window" title="线下收费-添加" collapsible="false" minimizable="false" maximizable="false" 
+ 	<div id="addWin" class="easyui-window" title="线下收费-添加" collapsible="false" minimizable="false" maximizable="false" 
 		style=" background: #fafafa;">
 		<div border="false" style="padding: 20px; background: #fff; border: 1px solid #ccc;">
 			<form id="addForm" class="easyui-form" method="post"  data-options="novalidate:true">
 				<table cellpadding=3>
 					<tr>
 						<td style="margin-bottom:20px">
-							线下订单号:
+							商户订单号:
 						</td>
-						<td style="width:35%;">	
+						<td style="width:40%">	
 							<input id="addMerchantOrderId" class="easyui-textbox" style="width:98%;"
 			                 	name="addMerchantOrderId"  required="true"  missingMessage="输入有效订单号" />
 						</td>
 					
 						<td style="margin-bottom:20px">
-							收&nbsp;费&nbsp;商&nbsp;户:
+							用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;ID:
 						</td>
-						<td style="width:35%;">	
-							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="addMerchantName" 
-								name="addMerchantName"  style="width:100%;height:30px;padding:5px;">
-							</select>
-						</td>
+						<td style="width:40%">
+			                 <input id="addSourceUID" class="easyui-textbox" style="width:98%;"
+			                 	name="addSourceUID" value=''/>
+						</td>						
 					</tr>
 					<tr>
 						<td style="margin-bottom:20px">
 							收&nbsp;费&nbsp;金&nbsp;额:
 						</td>
-						<td>
+						<td style="width:40%">
 			                 <input id="addMoney" class="easyui-numberbox" style="width:98%;" data-options="precision:2"
 			                 	name="addMoney"  required="true"  missingMessage="金额可以精确到分" />
 						</td>
 					
 						<td style="margin-bottom:20px">
+							真&nbsp;实&nbsp;姓&nbsp;名:
+						</td>
+						<td style="width:40%">
+			                 <input id="addRealName" class="easyui-textbox" style="width:98%;"
+			                 	name="addRealName"  />
+						</td>						
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">
+							退&nbsp;费&nbsp;商&nbsp;户:
+						</td>
+						<td style="width:40%;">	
+							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="addMerchantName" 
+								name="addMerchantName"  style="width:100%;height:30px;padding:5px;">
+							</select>
+						</td>
+					
+						<td style="margin-bottom:20px">
+							用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;名:
+						</td>
+						<td style="width:40%">
+			                 <input id="addSourceUserName" class="easyui-textbox" style="width:98%;"
+			                 	name="addSourceUserName"  />
+						</td>								
+					</tr>
+					<tr>
+						<td style="margin-bottom:20px">
 							业&nbsp;务&nbsp;来&nbsp;源:
 						</td>
-						<td style="width:35%;">	
+						<td style="width:40%;">	
 							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择业务来源'" id="addAppId" 
 								name="addAppId"  style="width:100%;height:30px;padding:5px;">
 								<option value="0">请选择业务来源</option>
@@ -147,68 +173,14 @@
 								<option value="10026" >mooc2u</option>
 							</select>
 						</td>
-					</tr>
-					<tr>
-						<td style="margin-bottom:20px">
-							用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;名:
-						</td>
-						<td>
-			                 <input id="addSourceUserName" class="easyui-textbox" style="width:98%;"
-			                 	name="addSourceUserName"  />
-						</td>
-					
-						<td style="margin-bottom:20px">
-							支&nbsp;付&nbsp;方&nbsp;式:
-						</td>
-						<td style="width:35%;">	
-							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付方式'" id="addChannelId" 
-								name="addChannelId"  style="width:100%;height:30px;padding:5px;">
-							</select>
-						</td>											
-					</tr>
-					<tr>
-						<td style="margin-bottom:20px">
-							真&nbsp;实&nbsp;姓&nbsp;名:
-						</td>
-						<td>
-			                 <input id="addRealName" class="easyui-textbox" style="width:98%;"
-			                 	name="addRealName"  />
-						</td>
-					
-						<td style="margin-bottom:20px">
-							发&nbsp;&nbsp;&nbsp;卡&nbsp;&nbsp;&nbsp;行:
-						</td>
-						<td style="width:35%;">	
-							<select class="easyui-combobox" data-options="editable:false,prompt:'请选择发卡行'" id="addBankCode" 
-								name="addBankCode"  style="width:100%;height:30px;padding:5px;">
-							</select>
-						</td>	
-					</tr>
-					<tr>
-						<td style="margin-bottom:20px">
-							用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;ID:
-						</td>
-						<td>
-			                 <input id="addSourceUID" class="easyui-textbox" style="width:98%;"
-			                 	name="addSourceUID" value=''/>
-						</td>
 					
 						<td style="margin-bottom:20px">
 							手&nbsp;&nbsp;&nbsp;机&nbsp;&nbsp;&nbsp;号:
 						</td>
-						<td>
+						<td style="width:40%">
 			                 <input id="addPhone" class="easyui-textbox" style="width:98%;"
 			                 	name="addPhone"/>
 						</td>
-					</tr>
-					<tr>
-						<td style="margin-bottom:20px">
-							 缴&nbsp;费&nbsp;日&nbsp;期:
-						</td>
-						<td>
-							<input id="addPayTime" name="addPayTime" class="easyui-datebox" style="width:98%;" data-options="sharedCalendar:'#cc'" editable="false">
-						</td>
-						<td></td><td></td>
 					</tr>
 					<tr>
 						<td style="margin-bottom:20px">
@@ -217,15 +189,6 @@
 						<td colspan="3">
 			                 <input id="addRemark" class="easyui-textbox" data-options="multiline:true" style="width:98%;"
 			                 	name="addRemark" />
-						</td>
-					</tr>
-					<tr hidden="true">
-						<td >
-							操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人:
-						</td>
-						<td>
-			                 <input id="addOperator"  style="width:98%;border:none;"
-			                 	name="addOperator" value=''/>
 						</td>
 					</tr>
 				</table>
@@ -243,53 +206,49 @@
 <script>
 		//页面预加载
 		$(function(){
-			//var operator=$("#realName",window.parent.document).text();
-			//$("#addOperator").val(operator);
 			findOrderRefund();
-			//loadSelect();
+			loadSelect();
 		});
 		
-		//设置添加费率窗口
-        /* function addWin() {
+		//设置添加退费单据窗口
+         function addWin() {
             $('#addWin').window({
-                title: '线下收费单据-添加',
-                width: '50%',
+                title: '退费单据-添加',
+                width: '60%',
                 modal: true,
                 shadow: true,
                 closed: true,
-                height: '75%',
+                height: '80%',
                 resizable:false
             });
-        } */
+        } 
 	
-         //关闭添加费率窗口
-        /* function closeAddWin() {
+         //关闭添加退费单据窗口
+         function closeAddWin() {
             $('#addWin').window('close');
 	      	window.location.reload();
-        } */
+        } 
         
         //清空添加表单
-        /* function clearAddForm(){
+        function clearAddForm(){
         	$('#addForm').form('clear');
-        	var operator=$("#realName",window.parent.document).text();
-			$("#addOperator").val(operator);
-        } */	
+        } 	
 		
 		//打开线下收费录入窗口
-        /* addWin();
+         addWin();
         function openAddWin() {
             $('#addWin').window('open');
             loadSelect();			
-        } */
+        } 
         
         //加载select
-       /*  function loadSelect(){
+        function loadSelect(){
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
-            $('#addChannelId,#queryChannelId').combobox({
+            /* $('#addChannelId,#queryChannelId').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
 				valueField:'id',
 				textField:'text'
-			});
+			}); */
 			
 			//加载所有商户名
 			 $('#addMerchantName,#queryMerchantName').combobox({
@@ -299,12 +258,12 @@
 			});
 			
 			//加载所有BankCode
-			$('#addBankCode').combobox({
+			/* $('#addBankCode').combobox({
 				url:'${pageContext.request.contextPath}/manage/findBankCode',
 				valueField:'id',
 				textField:'text'
-			});
-        } */
+			}); */
+        } 
         
 		//提交添加
 		/* function submitAddOffline(){
