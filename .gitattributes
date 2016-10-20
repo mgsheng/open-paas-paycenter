@@ -152,6 +152,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructu
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantInfoRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderOfflineRepositoryMyBatis.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/MerchantOrderRefundRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelDictionaryRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PayChannelRateRepositoryMyBatis.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/mybatis/PrivilegeLogRepositoryMyBatis.java -text
@@ -169,6 +170,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructu
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantInfoRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderInfoRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderOfflineRepository.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/MerchantOrderRefundRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelDictionaryRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PayChannelRateRepository.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/infrastructure/repository/PrivilegeLogRepository.java -text
@@ -188,12 +190,15 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/servic
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/login/service/impl/UserServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderInfo.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderOffline.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/MerchantOrderRefund.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/model/UserSerialRecord.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/MerchantOrderInfoService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/MerchantOrderOfflineService.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/MerchantOrderRefundService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/UserSerialRecordService.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderInfoServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderOfflineServiceImpl.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/MerchantOrderRefundServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/order/service/impl/UserSerialRecordServiceImpl.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/ChannelRate.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/paychannel/model/PayChannelDictionary.java -text
@@ -264,6 +269,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerD
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerRoleController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/ManagerUserController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/MerchantOrderOfflineController.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/MerchantOrderRefundController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PayChannelRateController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeLogController.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/web/PrivilegeModuleController.java -text
@@ -279,6 +285,7 @@ pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/ManagerMa
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderOfflineMapper.xml -text
+pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderRefundMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelDictionaryMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PayChannelRateMapper.xml -text
 pay-platform-manager/src/main/resources/cc/wdcy/infrastructure/mybatis/PrivilegeLogMapper.xml -text
@@ -319,6 +326,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/stats/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/accountRunningMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantOrderOffline.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/merchantOrderRefund.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/usercenter/userQueryMessage.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/log4j.xml -text
 pay-platform-manager/src/main/webapp/WEB-INF/soc-servlet.xml -text
