@@ -1,8 +1,11 @@
 package cn.com.open.pay.platform.manager.web;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +14,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +24,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
+import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.DateTools;
+import cn.com.open.pay.platform.manager.tools.OrderCountExport;
+import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 
 
@@ -226,4 +237,141 @@ public class UserDataStatsController extends BaseControllerUtil {
 			WebUtils.writeSuccessJson(response, map);
 			//JsonUtil.writeJson(response,JsonUtil.getContentData(map));
 		}
+		
+		 /**
+		  * 查询统计信息
+		  * @param request
+		  * @param response
+		  * @return
+		  */
+		 @RequestMapping("queryMerchant")
+		 public String  queryMerchant(HttpServletRequest request,HttpServletResponse response) {
+			
+			  //当前第几页
+			  String page=request.getParameter("page");
+			  //每页显示的记录数
+			  String rows=request.getParameter("rows"); 
+			  //当前页  
+			        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+			        //每页显示条数  
+			        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+			        //每页的开始记录  第一页为1  第二页为number +1   
+			        int startRow = (currentPage-1)*pageSize;
+			 log.info("-----------------------login start----------------");
+			 int channelId=0;
+			 String CI=request.getParameter("channelId");//支付方式是
+			 String payClient=request.getParameter("payClient");//缴费来源
+			 String pt=request.getParameter("paymentId");//缴费银行
+			 String appId=request.getParameter("appId");//业务来源
+			 String startDate=request.getParameter("startDate"); //支付方式
+			 String endDate=request.getParameter("endDate"); //支付方式
+			 if(CI!=null&&!CI.equals("")){
+				 channelId=Integer.parseInt(CI);
+			 }
+			 int paymentId=0;
+			 if(pt!=null&&!pt.equals("")){
+				 paymentId=Integer.parseInt(pt);
+			 }
+			 String startDate1 = null;
+			 String endDate1 = null;
+			 if(!startDate.equals("")&&!endDate.equals("")){
+				 startDate1 = startDate+" 00:00:00";
+				 endDate1 = endDate+" 23:59:59";
+			 }
+			
+			 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
+			 merchantOrderInfo.setStartDate(startDate1);
+			 merchantOrderInfo.setEndDate(endDate1);
+			 merchantOrderInfo.setChannelId(channelId); 	//支付方式
+			 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+			 if(appId!=""){
+				 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
+			 }
+			 merchantOrderInfo.setPageSize(pageSize); //结束条数
+			 merchantOrderInfo.setStartRow(startRow); //开始条数
+			 
+			 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.getCensusAll(merchantOrderInfo);
+			 int queryCount = merchantOrderInfoService.getAllCount(merchantOrderInfo);
+			 DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); 
+			 for(int i=0;i<merchantOrderInfoList.size();i++){
+				 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
+				Date createDate = merchantOrderInfo1.getCreateDate();
+				merchantOrderInfo1.setFoundDate(df.format(createDate));//交易时间
+			 }
+			 
+			 JSONArray jsonArr = JSONArray.fromObject(merchantOrderInfoList);
+			 JSONObject jsonObjArr = new JSONObject();  
+			 jsonObjArr.put("total", queryCount);
+			 jsonObjArr.put("rows", jsonArr);
+			 System.out.println(jsonArr);
+		     WebUtils.writeJson(response,jsonObjArr);
+		     
+		     return "usercenter/merchantMessage";
+		 }	
+		
+		/**
+		  * 导出
+		  * @param request
+		  * @param response
+		  * @return
+		  */
+		 @RequestMapping("exportSubmit")
+		 public String  exportSubmit(HttpServletRequest request,HttpServletResponse response) {
+			
+			  
+			//当前第几页
+			  String page=request.getParameter("page");
+			  //每页显示的记录数
+			  String rows=request.getParameter("rows"); 
+			  //当前页  
+			        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+			        //每页显示条数  
+			        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+			        //每页的开始记录  第一页为1  第二页为number +1   
+			        int startRow = (currentPage-1)*pageSize;
+			 log.info("-----------------------login start----------------");
+			 int channelId=0;
+			 String CI=request.getParameter("channelId");//支付方式是
+			 String payClient=request.getParameter("payClient");//缴费来源
+			 String pt=request.getParameter("paymentId");//缴费银行
+			 String appId=request.getParameter("appId");//业务来源
+			 String startDate=request.getParameter("startDate"); //支付方式
+			 String endDate=request.getParameter("endDate"); //支付方式
+			 if(CI!=null&&!CI.equals("")){
+				 channelId=Integer.parseInt(CI);
+			 }
+			 int paymentId=0;
+			 if(pt!=null&&!pt.equals("")){
+				 paymentId=Integer.parseInt(pt);
+			 }
+			 String startDate1 = null;
+			 String endDate1 = null;
+			 if(!startDate.equals("")&&!endDate.equals("")){
+				 startDate1 = startDate+" 00:00:00";
+				 endDate1 = endDate+" 23:59:59";
+			 }
+			
+			 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
+			 merchantOrderInfo.setStartDate(startDate1);
+			 merchantOrderInfo.setEndDate(endDate1);
+			 merchantOrderInfo.setChannelId(channelId); 	//支付方式
+			 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+			 if(appId!=""){
+				 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
+			 }
+			 merchantOrderInfo.setPageSize(pageSize); //结束条数
+			 merchantOrderInfo.setStartRow(startRow); //开始条数
+			 
+			 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.getCensusAllExport(merchantOrderInfo);
+			 DateFormat df = new SimpleDateFormat("yyyy-MM-dd"); 
+			 for(int i=0;i<merchantOrderInfoList.size();i++){
+				 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
+				Date createDate = merchantOrderInfo1.getCreateDate();
+				merchantOrderInfo1.setFoundDate(df.format(createDate));//交易时间
+			 }
+			  
+			 
+			 OrderCountExport.exportChuBei(response, merchantOrderInfoList);
+		     return "stats/index";
+		 }
 }

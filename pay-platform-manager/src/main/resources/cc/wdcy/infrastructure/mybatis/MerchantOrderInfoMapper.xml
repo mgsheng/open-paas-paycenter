@@ -400,7 +400,8 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
-         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1
+         
 	</select>
 	<select id="getUserCount"  resultType="java.util.Map" flushCache="true">
          select count(SOURCE_UID) userCount , date_format(CREATE_DATE,'%Y-%m-%d') createDate from MERCHANT_ORDER_INFO
@@ -459,6 +460,56 @@
            and CHANNEL_ID=#{channelId} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
+	</select>
+	
+	<select id="getCensusAll"  resultMap="merchantOrderInfoMap" flushCache="true">
+         select SUM(ORDER_AMOUNT) ORDER_AMOUNT,count(MERCHANT_ORDERID) MERCHANT_ORDERID ,count(SOURCE_UID) SOURCE_UID,date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+          
+         and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
+		limit #{startRow},#{pageSize} 
+	</select>
+	
+	 <select id="getAllCount" resultType="int">
+        select count(*) from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+          
+         and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1   group by date_format(CREATE_DATE,'%Y-%m-%d')
+	
+    </select>
+	
+	
+	<select id="getCensusAllExport"  resultMap="merchantOrderInfoMap" flushCache="true">
+         select SUM(ORDER_AMOUNT) ORDER_AMOUNT,count(MERCHANT_ORDERID) MERCHANT_ORDERID ,count(SOURCE_UID) SOURCE_UID,date_format(CREATE_DATE,'%Y-%m-%d') CREATE_DATE from MERCHANT_ORDER_INFO
+         where 1=1
+          <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+          </if>
+           <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+          </if>
+           <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+          </if>
+         and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>

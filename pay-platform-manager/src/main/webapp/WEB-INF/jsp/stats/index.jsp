@@ -29,6 +29,8 @@ table {
 </style>
 </head>
 <body>
+<div class="easyui-panel" title="查询条件" style="width:100%;max-width:100%;padding:20px 30px;">
+<form id="ff" method="post">
 	<div
 		style="border:0px solid;border-radius:8px;margin-bottom:10px;height: 150px; width: 1000px">
 		<div
@@ -37,18 +39,14 @@ table {
 				<span> <select class="easyui-combobox" name="channelId"
 					id="channelId" label="支付方式" style="width:200px"
 					data-options="editable:false,prompt:'全部'">
-						<option value="" selected="selected">全部</option>
-						<option value="10001">支付宝</option>
-						<option value="10002">微信</option>
-						<option value="10005">直连银行</option>
-						<option value="10003">银联</option>
-				</select> </span> <span style="margin-left: 180px"> <select
+						
+				</select> </span> <span style="margin-left: 60px"> <select
 					class="easyui-combobox" id="payClient" name="payClient"
 					label="缴费来源" style="width:230px;" data-options="editable:false">
 						<option value="" selected="selected">全部</option>
 						<option value="pc">PC端</option>
 						<option value="mobile">移动端</option>
-				</select> </span> <span style="margin-left: 170px"> <select
+				</select> </span> <span style="margin-left: 190px"> <select
 					class="easyui-combobox" id="paymentId" name="paymentId"
 					label="缴费银行" style="width:200px" data-options="editable:false">
 						<option value="" selected="selected">全部</option>
@@ -72,29 +70,24 @@ table {
 				<span style=""> <select class="easyui-combobox" name="appId"
 					id="appId" label="业务类型" style="width:200px"
 					data-options="editable:false,prompt:'全部'">
-						<option value="" selected="selected">全部</option>
-						<option value="1">OES学历</option>
-						<option value="10026">mooc2u</option>
+						
 				</select> </span>
-				<div style="margin-left: 180px; display: inline-block;">
-					<a href="#" class="easyui-linkbutton" data-options="plain:true"
-						onclick="getDayType('seven')">7天</a> <a href="#"
-						class="easyui-linkbutton" data-options="plain:true"
-						onclick="getDayType('thirty')">30天</a>
+				<div style="margin-left: 60px; display: inline-block;">
+					<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('seven')">7天</a> 
+					<a href="#"	class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('thirty')">30天</a>
 
 					<div style="display:inline-block;margin-left: 10px">
-						&nbsp;累计 &nbsp; <input class="easyui-datebox"
-							data-options="onSelect:onStartSelect" style="width:150px; "
-							id="aa">
+						&nbsp;累计 &nbsp; <input class="easyui-datebox"	data-options="onSelect:onStartSelect" style="width:150px; "	id="aa">
 					</div>
 					&nbsp;至&nbsp;
 					<div style="display:inline-block;">
-						<input class="easyui-datebox" data-options="onSelect:onEndSelect"
-							style="width:150px; " id="bb">
+						<input class="easyui-datebox" data-options="onSelect:onEndSelect"  style="width:150px; " id="bb">
 					</div>
 					<div style="display:inline-block; margin-left: 65px">
 						<a href="#" class="easyui-linkbutton" onclick="queryData()"
 							style="width: 60px">查询</a>
+						<a href="#" class="easyui-linkbutton" onclick="exportSubmit()"
+							style="width: 60px">导出</a>
 					</div>
 				</div>
 			</div>
@@ -123,23 +116,42 @@ table {
 			</table>
 		</div>
 	</div>
-
-	<div
-		style="border:1px solid;margin-top: 25px;border-radius:8px;margin-bottom: 10px; border-color:grey;background-color:#DDDDDD;height: 30px; width: 988px;padding-top: 10px;padding-left: 10px ;">趋势</div>
-	<div class="easyui-tabs" style="width:1000px;height:445px">
-		<div title="成交金额" style="padding:10px">
-			<div id="orderAmount" style=""></div>
-		</div>
-		<div title="成交笔数" style="width:1000px;">
-			<div id="payCount" style=""></div>
-		</div>
-		<div title="缴费人数" style="width:1000px;">
-			<div id="userCount" style=""></div>
-		</div>
-		<div title="手续费" style="">
-			<div id="payCharge" style=""></div>
-		</div>
+	</form>
+</div>
+	<div class="easyui-datagrid" title="趋势" >
 	</div>
+		<div class="easyui-tabs" style="height:445px">
+			<div title="成交金额" style="padding:10px">
+				<div id="orderAmount" style=""></div>
+			</div>
+			<div title="成交笔数" style="width:1000px;">
+				<div id="payCount" style=""></div>
+			</div>
+			<div title="缴费人数" style="width:1000px;">
+				<div id="userCount" style=""></div>
+			</div>
+			<div title="手续费" style="">
+				<div id="payCharge" style=""></div>
+			</div>
+		</div>
+		
+		
+		<div class="botton" style="width: 100%;height: 300px">
+			<table  id="dg"  class="easyui-datagrid" title="查询结果"    style="width:100%;max-width:100%;padding:20px 30px;"
+				data-options="singleSelect:true,method:'get'">
+			<thead>
+				<tr>
+					<th data-options="field:'orderAmount',width:150">成交金额</th>
+					<th data-options="field:'merchantOrderId',width:150">成交笔数</th>
+					<th data-options="field:'sourceUid',width:150">缴费人数</th>
+					<th data-options="field:'payCharge',width:150">手续费</th>
+					<th data-options="field:'foundDate',width:150">日期</th>
+				</tr>
+			</thead>
+			
+			</table>
+		</div>
+	
 
 </body>
 <script>
@@ -205,6 +217,7 @@ table {
 		return obj.toString().replace(/^[0-9]{1}$/, "0" + obj);
 	}
 	function queryData() {
+		submitForm();
 		//去除Y轴的单位k、m
 		Highcharts.setOptions({
 			lang : {
@@ -486,6 +499,8 @@ table {
 	
 	//页面加载  
 	$(document).ready(function(){ 
+				var hy="seven";
+				getDayType(hy);
 				initialise();
 				payIrrigation();
 	            
@@ -508,5 +523,56 @@ table {
 		});
 	}
 	
+	
+	function submitForm(){
+		var channelId = $("input[name='channelId']").val();//支付方式
+		var payClient = $("input[name='payClient']").val();//缴费来源
+		var paymentId = $("input[name='paymentId']").val();//缴费银行
+		var appId = $("input[name='appId']").val();//业务类型
+		var startDate = $("#_easyui_textbox_input5").val();
+		var endDate = $("#_easyui_textbox_input6").val();
+		$('#dg').datagrid({
+			collapsible:true,
+			rownumbers:true,
+			pagination:true,
+	        url: "${pageContext.request.contextPath}/user/queryMerchant?channelId="+channelId+"&payClient="+payClient+"&paymentId="+paymentId+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate,  
+            onLoadSuccess:function(data){
+                if (data.total<1){
+                   $.messager.alert("提示","没有符合查询条件的数据!");
+              }
+               
+            }
+	     
+	    }); 
+		 //设置分页控件 
+	    var p = $('#dg').datagrid('getPager'); 
+	    $(p).pagination({ 
+	        pageSize: 15,//每页显示的记录条数，默认为10 
+	        pageList: [5,10,15,20],//可以设置每页记录条数的列表 
+	        beforePageText: '第',//页数文本框前显示的汉字 
+	        afterPageText: '页    共 {pages} 页', 
+	        displayMsg: '当前显示 {from} - {to} 条记录   共 {total} 条记录', 
+	        onBeforeRefresh:function(){
+	            $(this).pagination('loading');
+	            $(this).pagination('loaded');
+	        } 
+	    }); 
+
+	    
+	}
+	
+	
+	function exportSubmit(){
+		
+		var channelId = $("input[name='channelId']").val();//支付方式
+		var payClient = $("input[name='payClient']").val();//缴费来源
+		var paymentId = $("input[name='paymentId']").val();//缴费银行
+		var appId = $("input[name='appId']").val();//业务类型
+		var startDate = $("#_easyui_textbox_input5").val();
+		var endDate = $("#_easyui_textbox_input6").val();
+		
+		document.getElementById("ff").action="${pageContext.request.contextPath}/user/exportSubmit?channelId="+channelId+"&payClient="+payClient+"&paymentId="+paymentId+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate,
+	    document.getElementById("ff").submit();
+	}
 </script>
 </html>

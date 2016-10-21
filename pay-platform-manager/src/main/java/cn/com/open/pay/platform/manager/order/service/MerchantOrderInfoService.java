@@ -53,5 +53,9 @@ public interface MerchantOrderInfoService {
 	int findQueryCount(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findDownloadMerchant(
 			MerchantOrderInfo merchantOrderInfo);
+	List<MerchantOrderInfo> getCensusAll(MerchantOrderInfo merchantOrderInfo);
+	int getAllCount(MerchantOrderInfo merchantOrderInfo);
+	List<MerchantOrderInfo> getCensusAllExport(
+			MerchantOrderInfo merchantOrderInfo);
 	
 }

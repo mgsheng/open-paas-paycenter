@@ -187,5 +187,25 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 	
 	}
 
+	@Override
+	public List<MerchantOrderInfo> getCensusAll(
+			MerchantOrderInfo merchantOrderInfo) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getCensusAll(merchantOrderInfo);
+	}
+
+	@Override
+	public int getAllCount(MerchantOrderInfo merchantOrderInfo) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getAllCount(merchantOrderInfo);
+	}
+
+	@Override
+	public List<MerchantOrderInfo> getCensusAllExport(
+			MerchantOrderInfo merchantOrderInfo) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.getCensusAllExport(merchantOrderInfo);
+	}
+
 
 }
