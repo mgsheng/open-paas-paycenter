@@ -17,34 +17,25 @@
 	</style>
 </head>
 <body style="height:100%">
-	<!-- <div class="easyui-panel" title="查询条件" style="width:100%; border-bottom:none;padding:1%;">
+	<div class="easyui-panel" title="查询条件" style="width:100%; border-bottom:none;padding:1%;">
 		<form id="ff" method="post">
 			<table style="width:100%;">
 				<tr>
-					<td style="text-align: right;">订&nbsp;&nbsp;&nbsp;单&nbsp;&nbsp;&nbsp;号：</td>
-					<td>
-						<input class="easyui-textbox" name="queryOrderId" id="queryOrderId" style="width:180px;">
-					</td>
-					<td style="text-align: right;">线下订单号：</td>
+					<td style="text-align: right;">商户订单号：</td>
 					<td>
 						<input class="easyui-textbox" name="queryMerchantOrderId" id="queryMerchantOrderId" style="width:180px;">
 					</td>
-					<td style="text-align: right;">收&nbsp;费&nbsp;商&nbsp;户：</td>
+					<td style="text-align: right;">退&nbsp;费&nbsp;商&nbsp;户：</td>
 					<td>
 						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="queryMerchantName" 
 								name="queryMerchantName"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
-					
 				</tr>
 				<tr>
 					<td style="text-align: right;">用&nbsp;&nbsp;&nbsp;户&nbsp;&nbsp;&nbsp;名：</td>
 					<td>
 						<input id="querySourceUserName" name="querySourceUserName" class="easyui-textbox" style="width:180px;">
-					</td>
-					<td style="text-align: right;">操&nbsp;&nbsp;&nbsp;作&nbsp;&nbsp;&nbsp;人：</td>
-					<td>
-						<input id="queryOperator" name="queryOperator" class="easyui-textbox" style="width:180px;">
 					</td>
 					<td style="text-align: right;">业&nbsp;务&nbsp;来&nbsp;源：</td>
 					<td>
@@ -57,14 +48,8 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: right;">支&nbsp;付&nbsp;方&nbsp;式：</td>
-					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付方式'" id="queryChannelId" 
-								name="queryChannelId"  style="width:180px;height:25px;padding:5px;">
-						</select>
-					</td>
-					<td style="text-align: right;">缴&nbsp;费&nbsp;日&nbsp;期：</td>
-					<td style="text-align: left;" colspan="4">
+					<td style="text-align: right;">处&nbsp;理&nbsp;时&nbsp;间：</td>
+					<td style="text-align: left;" colspan="3">
 						<input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">~
 						<input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">
 					</td>
@@ -80,7 +65,7 @@
 				</tr>
 			</table>
 		</form>
-	</div> -->
+	</div>
 	
 	<table id="dg" class="easyui-datagrid" title="退费单据记录" style="height:400px;width:100%;max-width:100%;" 
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
@@ -201,13 +186,13 @@
 		</div>
 	</div>
 	
-	<!-- <div id="cc" class="easyui-calendar"></div> -->
+	<div id="cc" class="easyui-calendar"></div>
 </body>
 <script>
 		//页面预加载
 		$(function(){
 			findOrderRefund();
-			//loadSelect();
+			loadSelect();
 		});
 		
 		//设置添加退费单据窗口
@@ -243,26 +228,12 @@
         
         //加载select
         function loadSelect(){
-        	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
-            /* $('#addChannelId,#queryChannelId').combobox({
-				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
-				valueField:'id',
-				textField:'text'
-			}); */
-			
 			//加载所有商户名
 			 $('#addMerchantName,#queryMerchantName').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames',
 				valueField:'id',
 				textField:'text'
 			});
-			
-			//加载所有BankCode
-			/* $('#addBankCode').combobox({
-				url:'${pageContext.request.contextPath}/manage/findBankCode',
-				valueField:'id',
-				textField:'text'
-			}); */
         } 
         
 		//提交添加
@@ -406,29 +377,25 @@
 			}
 		}
 		
-		/* function clearForm(){
+		function clearForm(){
 			$('#ff').form('clear');
-		} */
+		}
 		
-		/* function submitForm(){
-			var queryOrderId = $('#queryOrderId').textbox('getValue');
+		function submitForm(){
 			var queryMerchantOrderId = $('#queryMerchantOrderId').textbox('getValue');
 			var querySourceUserName = $('#querySourceUserName').textbox('getValue');
 			var queryMerchantName = $('#queryMerchantName').combobox('getValue');
 			var queryAppId = $('#queryAppId').combobox('getValue');
-			var queryChannelId = $('#queryChannelId').combobox('getValue');
-			var queryOperator = $('#queryOperator').val();
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 			
-			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""&&startDate==""&&endDate==""){
-				//$.messager.alert("提示","请输入查询条件!");
-				findOrderOffline();
+			if(queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&startDate==""&&endDate==""){
+				findOrderRefund();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
-					var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+					var url="${pageContext.request.contextPath}/manage/getMerchantOrderRefund?merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&startDate="+startDate+"&endDate="+endDate;
 		        	$('#dg').datagrid({
 						collapsible:true,
 						rownumbers:true,
@@ -442,7 +409,7 @@
 				    }); 
 				}
 			}else{
-				var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+				var url="${pageContext.request.contextPath}/manage/getMerchantOrderRefund?merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&startDate="+startDate+"&endDate="+endDate;
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,
@@ -455,7 +422,7 @@
 	                }
 			    }); 
 			}
-		} */
+		}
 		
 		/* function downloadSubmit(){			
 			var queryOrderId = $('#queryOrderId').textbox('getValue');

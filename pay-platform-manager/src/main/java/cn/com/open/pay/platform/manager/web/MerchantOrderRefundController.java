@@ -93,22 +93,17 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 	public void getMerchantOrderOffline(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderRefund----------------");
 		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		/*String merchantOrderId = request.getParameter("merchantOrderId");
+		String merchantOrderId = request.getParameter("merchantOrderId");
 		String sourceUserName = request.getParameter("sourceUserName");
 		String merchantName = request.getParameter("merchantName");
 		String appId = request.getParameter("appId");
-		String channelId = request.getParameter("channelId");
-		String operator = request.getParameter("operator");
-		String orderId = request.getParameter("orderId");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator+" startDate:"+startDate+" endDate:"+endDate);*/
+		System.out.println("merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+" startDate:"+startDate+" endDate:"+endDate);
 		//当前第几页
 		String page=request.getParameter("page");
-//				System.out.println("page  :" +page);
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-//			    System.out.println("rows : "+ rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  
@@ -117,7 +112,31 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 	    int startRow = (currentPage-1)*pageSize;
 	    MerchantOrderRefund refund = new MerchantOrderRefund();
 	    refund.setPageSize(pageSize);
-	    refund.setStartRow(startRow);	    
+	    refund.setStartRow(startRow);
+	    
+	    refund.setMerchantOrderId(merchantOrderId);
+	    refund.setSourceUserName(sourceUserName);
+	    if(merchantName!=null && merchantName!=""){
+	    	refund.setMerchantId(Integer.parseInt(merchantName));
+	    }
+	    refund.setAppId(appId);
+	    if(startDate!=null && startDate!=""){
+	    	try {
+				refund.setStartDate(sdf1.parse(startDate+" 00:00:00"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    if(endDate!=null && endDate!=""){
+	    	try {
+				refund.setEndDate(sdf1.parse(endDate+" 23:59:59"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }
+	    	    
 	    List<MerchantOrderRefund> refunds = merchantOrderRefundService.findRefundAll(refund);
 	    int total = merchantOrderRefundService.findRefundAllCount(refund);
 	    JSONObject json =  new JSONObject();
@@ -152,32 +171,6 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 		return;
 	}
 	
-	/*//**
-	 * 查询所有付款银行
-	 * @return 返回到前端json数据
-	 *//*
-	@RequestMapping(value="findBankCode")
-	public void findBankCode(HttpServletRequest request,HttpServletResponse response,Model model){
-		log.info("-------------------------findBankCode     start------------------------------------");
-		List<DictTradePayment> list = dictTradePaymentService.findPaymentNamesAll();
-		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
-		Map<String,Object> map= null;
-		String str=null;
-		if(list != null){
-			for(DictTradePayment m : list){
-				map = new HashMap<String,Object>();
-				map.put("id", m.getId());
-				map.put("text", m.getRemark());
-				maps.add(map);
-			} 
-			JSONArray jsonArr = JSONArray.fromObject(maps);
-			str = jsonArr.toString();
-			WebUtils.writeJson(response, str);
-			System.out.println(str);
-		}
-		return ;
-	}
-	
 	/**
 	 * 提交添加退费单据
 	 * @return 返回到前端json数据
@@ -189,14 +182,6 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 		request.setCharacterEncoding("utf-8");
 		String addMerchantOrderId = request.getParameter("addMerchantOrderId");
 		Double addRefundMoney = Double.parseDouble(request.getParameter("addRefundMoney"));
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
-		Date addPayTime=null;
-		try {
-			addPayTime = sdf.parse(request.getParameter("addPayTime"));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 		String addSourceUserName = request.getParameter("addSourceUserName");
 		String addRealName = request.getParameter("addRealName");
 		String addPhone = request.getParameter("addPhone");

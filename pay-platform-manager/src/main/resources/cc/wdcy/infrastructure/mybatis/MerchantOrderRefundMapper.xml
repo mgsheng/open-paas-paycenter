@@ -59,6 +59,24 @@
 
 	<select id="findAllByPage" resultMap="merchantOrderRefundMap">
          select * from MECHANT_ORDER_REFUND where 1=1
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+        </if>
+        <if test="sourceUserName != null and sourceUserName !=''" >
+           and SOURCE_USERNAME=#{sourceUserName} 
+        </if>
+        <if test="appId != null and appId !='' and appId != 0" >
+           and APPID=#{appId} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and (CREATE_TIME > #{startDate, jdbcType=DATE} or CREATE_TIME = #{startDate, jdbcType=DATE})
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and (#{endDate, jdbcType=DATE} > CREATE_TIME or CREATE_TIME = #{endDate, jdbcType=DATE})
+        </if>
         order by CREATE_TIME DESC limit #{startRow},#{pageSize} 
 	</select>
 	<select id="findByMerchantOrderId" resultMap="merchantOrderRefundMap">
@@ -66,6 +84,24 @@
 	</select>
 	<select id="findQueryCount" resultType="int">
         select count(*) from  MECHANT_ORDER_REFUND where 1=1
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+        </if>
+        <if test="sourceUserName != null and sourceUserName !=''" >
+           and SOURCE_USERNAME=#{sourceUserName} 
+        </if>
+        <if test="appId != null and appId !='' and appId != 0" >
+           and APPID=#{appId} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and (CREATE_TIME > #{startDate, jdbcType=DATE} or CREATE_TIME = #{startDate, jdbcType=DATE})
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and (#{endDate, jdbcType=DATE} > CREATE_TIME or CREATE_TIME = #{endDate, jdbcType=DATE})
+        </if>
     </select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
