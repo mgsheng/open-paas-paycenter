@@ -284,6 +284,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 			 merchantOrderInfo.setEndDate(endDate1);
 			 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 			 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+//			 merchantOrderInfo.setPayCharge(payClient);
 			 if(appId!=""){
 				 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
 			 }
