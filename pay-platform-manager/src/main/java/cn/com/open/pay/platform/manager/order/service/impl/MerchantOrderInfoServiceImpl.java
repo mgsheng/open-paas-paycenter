@@ -197,7 +197,8 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 	@Override
 	public int getAllCount(MerchantOrderInfo merchantOrderInfo) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getAllCount(merchantOrderInfo);
+		List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoRepository.getAllCount(merchantOrderInfo);
+		return merchantOrderInfoList.size();
 	}
 
 	@Override
