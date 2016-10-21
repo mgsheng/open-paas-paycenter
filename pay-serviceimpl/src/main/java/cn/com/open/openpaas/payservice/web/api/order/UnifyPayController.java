@@ -134,6 +134,7 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping("unifyPay")
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
+    	
     	long startTime = System.currentTimeMillis();
     	
     	String outTradeNo=request.getParameter("outTradeNo");
@@ -186,7 +187,10 @@ public class UnifyPayController extends BaseControllerUtil{
 	    String businessType=request.getParameter("businessType");
 	    String notifyUrl=request.getParameter("notifyUrl");
 	    String returnUrl=request.getParameter("returnUrl");
+		String newId="";
+		newId=SysUtil.careatePayOrderId();
 	    PayServiceLog payServiceLog=new PayServiceLog();
+	    payServiceLog.setOrderId(newId);
 	    payServiceLog.setAmount(totalFee);
 	    payServiceLog.setAppId(appId);
 	    payServiceLog.setChannelId(paymentChannel);
@@ -288,8 +292,7 @@ public class UnifyPayController extends BaseControllerUtil{
         	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
         }
-		String newId="";
-		newId=SysUtil.careatePayOrderId();
+	
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
 			/*//更新现有订单信息
@@ -297,7 +300,10 @@ public class UnifyPayController extends BaseControllerUtil{
 			if(merchantOrderInfo.getPayStatus()==0){
 				merchantOrderInfo.setId(newId);
 				merchantOrderInfo.setCreateDate(new Date());
-				merchantOrderInfo.setChannelOrderId(merchantOrderInfo.getId());
+				if(nullEmptyBlankJudge(merchantOrderInfo.getChannelOrderId()))
+				{
+					merchantOrderInfo.setChannelOrderId(merchantOrderInfo.getId());
+				}
 				merchantOrderInfoService.updateOrderId(merchantOrderInfo);
  			}
 		       else if(merchantOrderInfo.getPayStatus()==2){
@@ -800,7 +806,9 @@ public class UnifyPayController extends BaseControllerUtil{
 						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
 						  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
 						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
-			    	 } if(PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
+			    	 }
+			     }else if(String.valueOf(Channel.YEEPAY_EB.getValue()).equals(paymentChannel)){
+			    	 if(PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
 						  //易宝直连银行
 					    		totalFee=AmountUtil.changeF2Y(totalFee);
 					    		 String res = getYeePayUrl(totalFee,
@@ -945,7 +953,7 @@ public class UnifyPayController extends BaseControllerUtil{
      */
 	public String getYeePayUrl(String totalFee,
 			MerchantOrderInfo merchantOrderInfo,String paymentType) {
-		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.YEEPAY.getValue());
+		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.YEEPAY_EB.getValue());
 		 String other= dictTradeChannels.getOther();
 		 Map<String, String> others = new HashMap<String, String>();
 		 others=getPartner(other);
@@ -1156,8 +1164,6 @@ public class UnifyPayController extends BaseControllerUtil{
        	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY.getValue()))){
     		if(paymentType!=null&&PaymentType.YEEPAY_EHK.getValue().equals(paymentType)){
          		 returnValue=true;
-         	 }else if(paymentType!=null&&PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
-         		 returnValue=true; 
          	 }else{
          		 returnValue=false; 
          	 }
@@ -1171,7 +1177,13 @@ public class UnifyPayController extends BaseControllerUtil{
         	 }else{
          		 returnValue=false; 
          	 }
-      	}
+      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_EB.getValue()))){
+      		if(paymentType!=null&&PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
+        		 returnValue=true; 
+        	 }else{
+     		 returnValue=false; 
+     	 }
+  	}
     	return returnValue;
     }
     /**

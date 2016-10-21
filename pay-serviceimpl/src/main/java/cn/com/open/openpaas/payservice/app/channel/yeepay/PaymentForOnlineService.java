@@ -13,7 +13,7 @@ public class PaymentForOnlineService {
 	
 	private static Log log 					= LogFactory.getLog(PaymentForOnlineService.class);
 	private static String p1_MerId 			= Configuration.getInstance().getValue("p1_MerId"); 			// 商家ID
-	private static String queryRefundReqURL = Configuration.getInstance().getValue("queryRefundReqURL");	// 请求地址
+	//private static String queryRefundReqURL = Configuration.getInstance().getValue("queryRefundReqURL");	// 请求地址
 	private static String keyValue 			= Configuration.getInstance().getValue("keyValue");				// 商家密钥
 	private static String query_Cmd  		= "QueryOrdDetail";       										// 订单查询请求，固定值” QueryOrdDetail”
 	private static String buy_Cmd 	 		= "Buy";       		   											// 订单查询请求，固定值” Buy”
@@ -94,15 +94,15 @@ public class PaymentForOnlineService {
 	}
 
 	
-
-	/**
+/*
+	*//**
 	 * 订单查询请求参数
 	 * 该方法是根据《易宝支付产品通用接口（HTML版）文档 v3.0》怎样查询订单进行的封装
 	 * 具体参数含义请仔细阅读《易宝支付产品通用接口（HTML版）文档 v3.0》
 	 * 商户订单号
 	 * @param p2_Order
 	 * @return queryResult
-	 */
+	 *//*
 	public static QueryResult queryByOrder(String p2_Order) {
 		
 		QueryResult qr = null;
@@ -179,9 +179,9 @@ public class PaymentForOnlineService {
 		}
 		return (qr);
 		
-	}
-	
-	/**
+	}*/
+/*	
+	*//**
 	 * 订单退款请求参数
 	 * 方法是根据《易宝支付产品通用接口（HTML版）文档 v3.0》退款如何操作进行的封装
 	 * 具体参数含义请仔细阅读《易宝支付产品通用接口（HTML版）文档 v3.0》
@@ -194,7 +194,7 @@ public class PaymentForOnlineService {
 	 * 退款说明
 	 * @param p5_Desc
 	 * @return refundResult
-	 */
+	 *//*
 	public static RefundResult refundByTrxId(String pb_TrxId,String p3_Amt,String p4_Cur,String p5_Desc) {
 		RefundResult rr = null;
 		String hmac = DigestUtil.getHmac(new String[] {refund_Cmd,p1_MerId,pb_TrxId,p3_Amt,p4_Cur,p5_Desc},keyValue);
@@ -261,7 +261,7 @@ public class PaymentForOnlineService {
 		}
 		return (rr);
 	}
-	
+	*/
 	/**
 	 * 返回校验hmac方法
 	 * 
@@ -320,6 +320,8 @@ public class PaymentForOnlineService {
 		// 交易结果返回类型
 		sValue.append(r9_BType);
 		String sNewString = null;
+		System.out.println("sValue=========="+sValue.toString());
+		System.out.println("keyValue=========="+keyValue);
 		sNewString = DigestUtil.hmacSign(sValue.toString(), keyValue);
 
 		if (hmac.equals(sNewString)) {

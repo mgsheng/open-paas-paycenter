@@ -71,6 +71,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
+		
 		log.info("yeepay callback orderId======================="+ r6_Order);
 		String 	backMsg="";
 		if(merchantOrderInfo!=null){
@@ -101,8 +102,7 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			// 校验返回数据包
 			 
-			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, 
-					r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
+			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code,r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
 			  String returnUrl=merchantOrderInfo.getNotifyUrl();
 		 		MerchantInfo merchantInfo = null;
 		 		if(nullEmptyBlankJudge(returnUrl)){

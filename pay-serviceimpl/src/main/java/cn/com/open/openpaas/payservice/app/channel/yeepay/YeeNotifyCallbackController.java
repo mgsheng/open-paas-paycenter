@@ -72,7 +72,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		   log.info("-----------------------callBack yeepay/notify-----------------------------------------");
 		long startTime = System.currentTimeMillis();
 		String r0_Cmd 	  = formatString(request.getParameter("r0_Cmd")); // 业务类型
-		String p1_MerId   = formatString(Configuration.getInstance().getValue("p1_MerId"));   // 商户编号
+		String p1_MerId   = formatString(request.getParameter("p1_MerId"));   // 商户编号
 		String r1_Code    = formatString(request.getParameter("r1_Code"));// 支付结果
 		String r2_TrxId   = formatString(request.getParameter("r2_TrxId"));// 易宝支付交易流水号
 		String r3_Amt     = formatString(request.getParameter("r3_Amt"));// 支付金额
@@ -86,10 +86,13 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
 		log.info("yeepay notify orderId======================="+ r6_Order);
+		log.info("yeepay notify p1_MerId======================="+ p1_MerId);
+		log.info("yeepay notify hmac======================="+ hmac);
+		log.info("yeepay notify keyValue======================="+ keyValue);
 		String 	backMsg="error";
 		if(merchantOrderInfo!=null){
 			Double total_fee=0.0;
-			if(nullEmptyBlankJudge(r3_Amt)){
+			if(!nullEmptyBlankJudge(r3_Amt)){
 				total_fee=Double.parseDouble(r3_Amt);
 			}
 			
@@ -114,9 +117,8 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			 payServiceLog.setLogName(PayLogName.CALLBACK_START);
 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			// 校验返回数据包
-			 
-			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, 
-					r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
+			 log.info("===================yeepay notify verfy start======================");
+			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
 			 String returnUrl=merchantOrderInfo.getNotifyUrl();
 		 		MerchantInfo merchantInfo = null;
 		 		if(nullEmptyBlankJudge(returnUrl)){
@@ -124,6 +126,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		 			returnUrl=merchantInfo.getReturnUrl();
 		 	}
 			if(isOK) {
+				log.info("===================yeepay notify verfy success======================");
 				//在接收到支付结果通知后，判断是否进行过业务逻辑处理，不要重复进行业务逻辑处理
 				if(r1_Code.equals("1")) {
 					// 产品通用接口支付成功返回-浏览器重定向
@@ -153,7 +156,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							    sParaTemp.put("secret", mySign);
 							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
 							    model.addAttribute("res", buf);
-							    String url="/yeepay/notify/payRedirect";
+							    String url=payserviceDev.getServer_host()+"/yeepay/notify/payRedirect"+"?res="+buf;
 							    response.sendRedirect(url);
 						 }else{
 							 backMsg="success";
@@ -187,6 +190,8 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						}
 						payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
 						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+						WebUtils.writeJson(response, backMsg);
+						return;
 					}
 				}else{
 					payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
@@ -195,6 +200,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 					merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 				}
 			  } else {
+				  log.info("===================yeepay notify verfy error======================");
 				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 				payServiceLog.setStatus("error");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -204,7 +210,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		}else{
 			backMsg="error";
 		}
-		WebUtils.writeJson(response, backMsg);
+		
 	  } 
 	String formatString(String text){ 
 		if(text == null) {
