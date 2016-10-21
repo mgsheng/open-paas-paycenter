@@ -185,6 +185,7 @@
 								<option value="PAYMAX">拉卡拉-网关支付</option>
 								<option value="PAYMAX_H5">拉卡拉-移动支付</option>
 								<option value="YEEPAY_EHK">易宝-扫码支付</option>
+								<option value="YEEPAY_GW">易宝-收银台</option>
 								<option value="UPOP">银联</option>
 								<option value="CMB">招商银行</option>
 								<option value="ICBC">工商银行</option>
@@ -195,6 +196,7 @@
 								<option value="PSBC">中国邮政银行</option>
 								<option value="CGB">广发银行</option>
 								<option value="SPDB">浦发银行</option>
+								<option value="BOB">北京银行</option>
 								<option value="CEB">中国光大银行</option>
 								<option value="PAB">中国平安银行</option>
 							</select>
@@ -214,7 +216,8 @@
 								<option value="10005">直连银行</option>
 								<option value="10003">银联</option>
 								<option value="10007">拉卡拉</option>
-								<option value="10006">易宝</option>
+								<option value="10006">易宝扫码</option>
+								<option value="10008">易宝</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>
