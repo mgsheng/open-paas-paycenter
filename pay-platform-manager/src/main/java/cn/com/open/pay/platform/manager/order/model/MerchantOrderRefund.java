@@ -33,7 +33,7 @@ public class MerchantOrderRefund implements Serializable {
 	
 	private String phone;
 	
-	private String GoodsId;
+	private String goodsId;
 	
 	private Integer startRow;
 	private Integer pageSize;
@@ -137,11 +137,11 @@ public class MerchantOrderRefund implements Serializable {
 	}
 
 	public String getGoodsId() {
-		return GoodsId;
+		return goodsId;
 	}
 
-	public void setGoodsId(String goodsId) {
-		GoodsId = goodsId;
+	public void setGoodsId(String goodsId1) {
+		goodsId = goodsId1;
 	}
 
 	public Double getRefundMoney() {

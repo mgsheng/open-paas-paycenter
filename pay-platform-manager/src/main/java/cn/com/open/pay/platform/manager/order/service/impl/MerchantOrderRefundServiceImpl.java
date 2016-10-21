@@ -34,15 +34,21 @@ public class MerchantOrderRefundServiceImpl implements MerchantOrderRefundServic
 		return merchantOrderRefundList;
 	}
 
-	/*@Override
-	public boolean addOrderOffline(MerchantOrderOffline merchantOrderOffline) {
+	@Override
+	public boolean addOrderRefund(MerchantOrderRefund merchantOrderRefund) {
 		try{
-			merchantOrderOfflineRepository.addOrderOffline(merchantOrderOffline);
+			merchantOrderRefundRepository.insert(merchantOrderRefund);
 			return true;
 		}catch(Exception e){
 			return false;
 		}
-	}*/
+	}
+
+	@Override
+	public MerchantOrderRefund findByMerchantOrderId(String addMerchantOrderId) {
+		MerchantOrderRefund merchantOrderRefund=merchantOrderRefundRepository.findByMerchantOrderId(addMerchantOrderId);
+		return merchantOrderRefund;
+	}
 
 	/*@Override
 	public MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId) {

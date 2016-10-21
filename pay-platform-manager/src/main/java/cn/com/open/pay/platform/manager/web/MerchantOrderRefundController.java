@@ -62,15 +62,23 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 	private MerchantOrderRefundService merchantOrderRefundService;
 	@Autowired
 	private MerchantInfoService merchantInfoService;
-	/*@Autowired
-	private PrivilegeLogService privilegeLogService;*/
+	@Autowired
+	private MerchantOrderInfoService merchantOrderInfoService;
+	@Autowired
+	private MerchantOrderOfflineService merchantOrderOfflineService;
+	@Autowired
+	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PrivilegeModuleService privilegeModuleService;
+	@Autowired
+	private PrivilegeResourceService privilegeResourceService;
 	
 	/**
 	 * 跳转到退费单据维护页面
 	 * @return
 	 */
 	@RequestMapping(value="refundOrderPages")
-	public String channelRate(){
+	public String refundOrderPages(){
 		log.info("---------------refundOrderPages----------------");
 		return "usercenter/merchantOrderRefund";
 	}
@@ -170,70 +178,65 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 		return ;
 	}
 	
-	*//**
-	 * 提交添加线下订单单据
+	/**
+	 * 提交添加退费单据
 	 * @return 返回到前端json数据
 	 * @throws UnsupportedEncodingException 
-	 *//*
-	@RequestMapping(value="submitAddOrderOffline")
-	public void submitAddOrderOffline(HttpServletRequest request,HttpServletResponse response,Model model) throws UnsupportedEncodingException{
-		log.info("-------------------------submitAddOrderOffline         start------------------------------------");
+	 */
+	@RequestMapping(value="submitAddOrderRefund")
+	public void submitAddOrderRefund(HttpServletRequest request,HttpServletResponse response,Model model) throws UnsupportedEncodingException{
+		log.info("-------------------------submitAddOrderRefund         start------------------------------------");
 		request.setCharacterEncoding("utf-8");
 		String addMerchantOrderId = request.getParameter("addMerchantOrderId");
-		Double addMoney = Double.parseDouble(request.getParameter("addMoney"));
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
+		Double addRefundMoney = Double.parseDouble(request.getParameter("addRefundMoney"));
+		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
 		Date addPayTime=null;
 		try {
 			addPayTime = sdf.parse(request.getParameter("addPayTime"));
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		String addSourceUserName = request.getParameter("addSourceUserName");
 		String addRealName = request.getParameter("addRealName");
 		String addPhone = request.getParameter("addPhone");
 		String addMerchantName = request.getParameter("addMerchantName");
 		Integer merchantId = Integer.parseInt(addMerchantName);
 		String addAppId = request.getParameter("addAppId");
-		String addChannelId = request.getParameter("addChannelId");
-		String addBankCode = request.getParameter("addBankCode");
 		String addRemark = request.getParameter("addRemark");
-		String addOperator = request.getParameter("addOperator");
 		String addSourceUID = request.getParameter("addSourceUID");
 		
-		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addMoney : "+addMoney+"    " +
-				"addPayTime : "+addPayTime+"   addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
-				"   addMerchantName : "+addMerchantName+"   addAppId : "+addAppId+"   addChannelId : "+addChannelId+
-				"   addBankCode : "+addBankCode+"   addRemark : "+addRemark+"-----------");
+		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addRefundMoney : "+addRefundMoney+"    " +
+				"   addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
+				"   addMerchantName : "+addMerchantName+"   addAppId : "+addAppId+"   addRemark : "+addRemark+"-----------");
 		
 		JSONObject json =  new JSONObject();
 		//封装参数
-		String newId="";
-		newId=SysUtil.careatePayOrderId();
-		MerchantOrderOffline merchantOrderOffline = new MerchantOrderOffline();
-		merchantOrderOffline.setId(newId);
-		merchantOrderOffline.setMerchantOrderId(addMerchantOrderId);
-		merchantOrderOffline.setMoney(addMoney);
-		merchantOrderOffline.setPayTime(addPayTime);
-		merchantOrderOffline.setSourceUserName(addSourceUserName);
-		merchantOrderOffline.setRealName(addRealName);
-		merchantOrderOffline.setPhone(addPhone);
-		merchantOrderOffline.setMerchantId(merchantId);
-		merchantOrderOffline.setAppId(addAppId);
-		merchantOrderOffline.setChannelId(addChannelId);
-		merchantOrderOffline.setBankCode(addBankCode);
-		merchantOrderOffline.setRemark(addRemark);
-		merchantOrderOffline.setOperator(addOperator);
-		merchantOrderOffline.setSourceUid(addSourceUID);
-		//result = 1 添加成功  result = 2 该记录(线下订单号)已存在  result = 0 添加失败 
+		MerchantOrderRefund merchantOrderRefund = new MerchantOrderRefund();
+		merchantOrderRefund.setMerchantOrderId(addMerchantOrderId);
+		merchantOrderRefund.setRefundMoney(addRefundMoney);
+		merchantOrderRefund.setSourceUserName(addSourceUserName);
+		merchantOrderRefund.setRealName(addRealName);
+		merchantOrderRefund.setPhone(addPhone);
+		merchantOrderRefund.setMerchantId(merchantId);
+		merchantOrderRefund.setAppId(addAppId);
+		merchantOrderRefund.setRemark(addRemark);
+		merchantOrderRefund.setSourceUid(addSourceUID);
+		//result = 1 添加成功  result = 2 该记录(商户订单号)不存在  result = 3退费金额超过收费金额  result = 4商户订单号已退费 result = 0 添加失败 
 		int result = -1;
-		//先查询该线下订单号是否已经存在
-		MerchantOrderOffline OrderOffline = merchantOrderOfflineService.findByMerchantOrderId(addMerchantOrderId);
-		if(OrderOffline != null){
+		//先查询该商户订单号是否已经存在
+		MerchantOrderOffline orderOffline = merchantOrderOfflineService.findByMerchantOrderId(addMerchantOrderId);
+		MerchantOrderInfo orderInfo = merchantOrderInfoService.findByMerchantOrderId(addMerchantOrderId);
+		MerchantOrderRefund orderRefund = merchantOrderRefundService.findByMerchantOrderId(addMerchantOrderId);
+		if(orderRefund != null){
+			result = 4;
+		}else if(orderOffline == null && orderInfo == null){
 			result = 2;
+		}else if((orderOffline != null && orderOffline.getMoney() < addRefundMoney) || (orderInfo != null && orderInfo.getPayAmount() < addRefundMoney)){
+			result = 3;
 		}else{
-			//添加线下收费
-			boolean isSuccess = merchantOrderOfflineService.addOrderOffline(merchantOrderOffline);
+			//添加退费单据
+			boolean isSuccess = merchantOrderRefundService.addOrderRefund(merchantOrderRefund);
 			//添加日志
 			PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
 			PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
@@ -243,7 +246,7 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 			String operator = user1.getUsername(); //操作人
 			String operatorId = user1.getId()+""; //操作人Id
 			PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
-			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","线下收费维护",privilegeResource.getId()+"",operator+"添加了收费记录，订单号为"+newId,operatorId);
+			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","退费单据维护",privilegeResource.getId()+"",operator+"添加了退费单据，商户订单号为"+addMerchantOrderId,operatorId);
 			
 			if(isSuccess){
 				result = 1;
@@ -256,7 +259,7 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 		return ;
 	}
 	
-	*//**
+	/*//**
 	 * 下载为excel
 	 * @param request
 	 * @param response

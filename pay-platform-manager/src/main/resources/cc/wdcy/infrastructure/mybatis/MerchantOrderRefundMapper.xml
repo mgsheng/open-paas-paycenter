@@ -52,13 +52,17 @@
 			#{sourceUserName, jdbcType=VARCHAR},
 			#{createTime, jdbcType=TIMESTAMP},
 			#{realName, jdbcType=VARCHAR},
-			#{phone, jdbcType=VARCHAR}
+			#{phone, jdbcType=VARCHAR},
+			#{goodsId, jdbcType=VARCHAR}
 		)
 	</insert>
 
 	<select id="findAllByPage" resultMap="merchantOrderRefundMap">
          select * from MECHANT_ORDER_REFUND where 1=1
         order by CREATE_TIME DESC limit #{startRow},#{pageSize} 
+	</select>
+	<select id="findByMerchantOrderId" resultMap="merchantOrderRefundMap">
+		select * from MECHANT_ORDER_REFUND where 1=1 and MERCHANT_ORDERID=#{merchantOrderId}
 	</select>
 	<select id="findQueryCount" resultType="int">
         select count(*) from  MECHANT_ORDER_REFUND where 1=1

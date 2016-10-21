@@ -15,14 +15,12 @@ import cn.com.open.pay.platform.manager.order.model.MerchantOrderRefund;
  */
 public interface MerchantOrderRefundRepository extends Repository {
 
-	//List<MerchantOrderOffline> findAllNoPage(MerchantOrderOffline offline);
-	
 	int findQueryCount(MerchantOrderRefund merchantOrderRefund);
 
-	/*void addOrderOffline(MerchantOrderOffline merchantOrderOffline);
-
-	MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId);*/
-
 	List<MerchantOrderRefund> findAllByPage(MerchantOrderRefund refund);
+
+	void insert(MerchantOrderRefund merchantOrderRefund);
+
+	MerchantOrderRefund findByMerchantOrderId(String addMerchantOrderId);
 	
 }

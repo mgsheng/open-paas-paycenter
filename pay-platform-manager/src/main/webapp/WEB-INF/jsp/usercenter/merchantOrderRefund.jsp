@@ -86,7 +86,7 @@
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:true,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
-			    <th data-options="field:'merchantOrderd',width:180">商户订单号</th>
+			    <th data-options="field:'merchantOrderId',width:180">商户订单号</th>
 				<th data-options="field:'merchantId',width:80">退费商户</th>
 				<th data-options="field:'money',width:60,align:'center'">退费金额</th>
 				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
@@ -128,11 +128,11 @@
 					</tr>
 					<tr>
 						<td style="margin-bottom:20px">
-							收&nbsp;费&nbsp;金&nbsp;额:
+							退&nbsp;费&nbsp;金&nbsp;额:
 						</td>
 						<td style="width:40%">
-			                 <input id="addMoney" class="easyui-numberbox" style="width:98%;" data-options="precision:2"
-			                 	name="addMoney"  required="true"  missingMessage="金额可以精确到分" />
+			                 <input id="addRefundMoney" class="easyui-numberbox" style="width:98%;" data-options="precision:2"
+			                 	name="addRefundMoney"  required="true"  missingMessage="金额可以精确到分" />
 						</td>
 					
 						<td style="margin-bottom:20px">
@@ -195,11 +195,11 @@
 			</form>
 		</div>
 		<div border="false" style="text-align:center; height: 3%;margin-top:4%;">
-			<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddOffline();"> 确定</a>
+			<a class="easyui-linkbutton" icon="icon-ok" href="javascript:void(0)" onclick="submitAddRefund();"> 确定</a>
 			<a class="easyui-linkbutton" icon="icon-clear" href="javascript:void(0)" onclick="clearAddForm()" style="margin-left:30px;">清空</a> 
 			<a class="easyui-linkbutton" icon="icon-cancel" href="javascript:void(0)"  onclick="closeAddWin();" style="margin-left:30px;">取消</a>
 		</div>
-	</div> -->
+	</div>
 	
 	<!-- <div id="cc" class="easyui-calendar"></div> -->
 </body>
@@ -207,7 +207,7 @@
 		//页面预加载
 		$(function(){
 			findOrderRefund();
-			loadSelect();
+			//loadSelect();
 		});
 		
 		//设置添加退费单据窗口
@@ -266,43 +266,45 @@
         } 
         
 		//提交添加
-		/* function submitAddOffline(){
+		function submitAddRefund(){
 			$('#addForm').form('submit',{
 				onSubmit:function(){
 					return $(this).form('enableValidation').form('validate');
 				}
 			});
 			var addMerchantOrderId = $('#addMerchantOrderId').textbox('getValue');
-			var addPayTime = $('#addPayTime').datebox('getValue');
-			var addMoney = $('#addMoney').textbox('getValue');
+			var addRefundMoney = $('#addRefundMoney').textbox('getValue');
 			var addSourceUserName = $('#addSourceUserName').textbox('getValue');
 			var addRealName = $('#addRealName').textbox('getValue');
 			var addPhone = $('#addPhone').textbox('getValue');
 			var addMerchantName = $('#addMerchantName').combobox('getValue');
 			var addAppId = $('#addAppId').combobox('getValue');
-			var addChannelId = $('#addChannelId').combobox('getValue');
-			var addBankCode = $('#addBankCode').combobox('getValue');
 			var addRemark = $('#addRemark').textbox('getValue');
-			var addOperator = $('#addOperator').val();
 			var addSourceUID = $('#addSourceUID').textbox('getValue');
 			//若校验为true 提交
-			if(checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone,addPayTime)){
+			if(checkAddOrderRefund(addMerchantOrderId,addRefundMoney,addMerchantName,addAppId,addPhone)){
 				$.ajax({
 					type:"post",
-					url:"/pay-platform-manager/manage/submitAddOrderOffline",
-					data:{"addMerchantOrderId":addMerchantOrderId,"addMoney":addMoney,"addPayTime":addPayTime,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addChannelId":addChannelId,"addBankCode":addBankCode,"addRemark":addRemark,"addOperator":addOperator,"addSourceUID":addSourceUID},
+					url:"/pay-platform-manager/manage/submitAddOrderRefund",
+					data:{"addMerchantOrderId":addMerchantOrderId,"addRefundMoney":addRefundMoney,"addSourceUserName":addSourceUserName,"addRealName":addRealName,"addPhone":addPhone,"addMerchantName":addMerchantName,"addAppId":addAppId,"addRemark":addRemark,"addSourceUID":addSourceUID},
 					dataType:"json",
 					success:function (data){
+					alert(data.result);
 						if(data.result == 1){
 							$.messager.alert("系统提示","恭喜，添加成功!","info");
 							clearAddForm();
 							closeAddWin();
-							var url = "${pageContext.request.contextPath}/manage/getMerchantOrderOffline";
-							//window.location.reload();
+							var url = "${pageContext.request.contextPath}/manage/getMerchantOrderRefund";
 							reload(url);
 						}else if(data.result == 2){
 							clearAddForm();
-							$.messager.alert("系统提示","该订单号已存在，请核实后再填写!","error");	
+							$.messager.alert("系统提示","需退费商户订单号不存在，请核实后再填写!","error");	
+						}else if(data.result == 3){
+							clearAddForm();
+							$.messager.alert("系统提示","退费金额超过实收金额，请核实后再填写!","error");	
+						}else if(data.result == 4){
+							clearAddForm();
+							$.messager.alert("系统提示","商户订单号已退费，请核实后再填写!","error");	
 						}else{
 							clearAddForm();
 							$.messager.alert("系统提示","添加失败，请重新添加!","error");
@@ -313,36 +315,24 @@
 					}
 				});
 			}
-		} */
+		} 
 		
 		//提交添加前的校验
-		/* function checkAddOrderOffline(addMerchantOrderId,addMoney,addMerchantName,addAppId,addChannelId,addBankCode,addPhone,addPayTime){
+		function checkAddOrderRefund(addMerchantOrderId,addRefundMoney,addMerchantName,addAppId,addPhone){
 			if(addMerchantOrderId == "" || addMerchantOrderId == null || addMerchantOrderId == undefined){
-					$.messager.alert("系统提示","请填写线下订单号！","error");	
+					$.messager.alert("系统提示","请填写商户订单号！","error");	
 					return false;
 			}
-			if(addMoney == "" || addMoney == null || addMoney == undefined){
-					$.messager.alert("系统提示","请填写收费金额！","error");		
-					return false;
-			}
-			if(addPayTime == "" || addPayTime == null || addPayTime == undefined){
-					$.messager.alert("系统提示","请选择缴费日期！","error");		
+			if(addRefundMoney == "" || addRefundMoney == null || addRefundMoney == undefined){
+					$.messager.alert("系统提示","请填写退费费金额！","error");		
 					return false;
 			}
 			if(addMerchantName == "" || addMerchantName == null || addMerchantName == undefined){
-					$.messager.alert("系统提示","请选择商户名称！","error");		
+					$.messager.alert("系统提示","请选择退费商户名称！","error");		
 					return false;
 			}
 			if(addAppId == "" || addAppId == null || addAppId == undefined || addAppId == 0){
 					$.messager.alert("系统提示","请选择业务来源！","error");		
-					return false;
-			}
-			if(addChannelId == "" || addChannelId == null || addChannelId == undefined){
-					$.messager.alert("系统提示","请选择支付方式！","error");		
-					return false;
-			}
-			if(addBankCode == "" || addBankCode == null || addBankCode == undefined){
-					$.messager.alert("系统提示","请选择发卡行！","error");		
 					return false;
 			}
 			if(addPhone != "" && addPhone != null){
@@ -351,17 +341,17 @@
 				}
 			}
 			return true;
-		} */
+		}
 		
       	//手机号格式校验
-      	/*  function checkPhone(addPhone){
+      	function checkPhone(addPhone){
       	 	var phone1=/^([1])([1-9]{1}[0-9]{9})?$/;
 			if(addPhone.length!=11 || !addPhone.match(phone1)){
 				$.messager.alert("系统提示","请输入正确手机号！","error");	
 				return false;
 			}
       		return true;
-      	}  */
+      	}
  
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
 		function msgShow(title, msgString, msgType) {
