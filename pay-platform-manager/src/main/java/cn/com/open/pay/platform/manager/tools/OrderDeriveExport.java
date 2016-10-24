@@ -34,7 +34,7 @@ public class OrderDeriveExport {
 		// 声明一个单子并命名
 		HSSFSheet sheet = wb.createSheet("StoringTalentExcel");  
 		// 给单子名称一个长度
-		sheet.setDefaultColumnWidth((short) 50);
+		sheet.setDefaultColumnWidth((short) 20);
 		// 生成一个样式
 		HSSFCellStyle style = wb.createCellStyle();
 		// 创建第一行（也可以称为表头）
@@ -168,7 +168,7 @@ public class OrderDeriveExport {
 		// 声明一个单子并命名
 		HSSFSheet sheet = wb.createSheet("StoringTalentExcel");  
 		// 给单子名称一个长度
-		sheet.setDefaultColumnWidth((short) 50);
+		sheet.setDefaultColumnWidth((short) 20);
 		// 生成一个样式
 		HSSFCellStyle style = wb.createCellStyle();
 		// 创建第一行（也可以称为表头）
