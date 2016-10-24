@@ -196,14 +196,16 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
               else{
             	  payServiceLog.setErrorCode("2");
     	          payServiceLog.setStatus("error");
+    	      	backMsg="error";	
     	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
     				 {
     	        	  payServiceLog.setStatus("already processed");
+    	        		backMsg="success";	
     				 }
     	          payServiceLog.setLogName(PayLogName.TCL_NOTIFY_END);
     				
     	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				backMsg="error";	
+			
 			}
 			    WebUtils.writeJson(response, backMsg);
 					//如果有做过处理，不执行商户的业务程序

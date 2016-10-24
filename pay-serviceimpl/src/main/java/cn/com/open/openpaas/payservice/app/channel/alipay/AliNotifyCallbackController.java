@@ -187,14 +187,16 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		}else{
 			 payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
+	          backMsg="error";
 	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 				 {
 	        	  payServiceLog.setStatus("already processed");
+	        	  backMsg="success";
 				 }
 	          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
 				
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			 backMsg="success";
+			
 		} 
 		WebUtils.writeJson(response, backMsg);
 	}

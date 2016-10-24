@@ -200,16 +200,16 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			    }
 			    
 			 }else{
-				
 				  payServiceLog.setErrorCode("2");
 				   payServiceLog.setStatus("error");
+				   backMsg="error";
 				  if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 					 {
 					     payServiceLog.setStatus("already processed");
 					 }
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				 backMsg="error";
+				
 				 
 			 }
 			 model.addAttribute("backMsg", backMsg);

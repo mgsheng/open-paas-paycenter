@@ -219,17 +219,19 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 			    	}else{
 			    		 payServiceLog.setErrorCode("2");
 				          payServiceLog.setStatus("error");
+				          resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
+				                    + "<return_msg><![CDATA[订单查询失败]]></return_msg>" + "</xml> ";
 				          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 							 {
 				        	  payServiceLog.setStatus("already processed");
+				        	  resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
+					                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
 							 }
 				          payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_END);
-				        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			    		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
-			            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
-			                    + "<return_msg><![CDATA[订单查询失败]]></return_msg>" + "</xml> ";
+				          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			    		 log.info("支付失败,错误信息：" + packageParams.get("err_code"));
+			          
 			    	}
-			      
 				   }
 				    //------------------------------
 			        //处理业务完毕
