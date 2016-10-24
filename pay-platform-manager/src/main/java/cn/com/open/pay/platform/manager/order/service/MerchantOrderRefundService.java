@@ -17,8 +17,5 @@ public interface MerchantOrderRefundService {
 
 	MerchantOrderRefund findByMerchantOrderId(String addMerchantOrderId);
 
-	/*MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId);
-
-	List<MerchantOrderOffline> findOfflineAllNoPage(MerchantOrderOffline offline);*/
-	
+	List<MerchantOrderRefund> findRefundAllNoPage(MerchantOrderRefund refund);	
 }

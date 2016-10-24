@@ -22,5 +22,7 @@ public interface MerchantOrderRefundRepository extends Repository {
 	void insert(MerchantOrderRefund merchantOrderRefund);
 
 	MerchantOrderRefund findByMerchantOrderId(String addMerchantOrderId);
+
+	List<MerchantOrderRefund> findAllNoPage(MerchantOrderRefund refund);
 	
 }

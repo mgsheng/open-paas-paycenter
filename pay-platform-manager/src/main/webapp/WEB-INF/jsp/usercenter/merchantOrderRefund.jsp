@@ -73,7 +73,7 @@
 			<tr>
 			    <th data-options="field:'merchantOrderId',width:180">商户订单号</th>
 				<th data-options="field:'merchantId',width:80">退费商户</th>
-				<th data-options="field:'money',width:60,align:'center'">退费金额</th>
+				<th data-options="field:'refundMoney',width:60,align:'center'">退费金额</th>
 				<th data-options="field:'appId',width:60,align:'center',formatter:formatAppId">业务来源</th>
 				<th data-options="field:'sourceUID',align:'center',width:50">用户ID</th>
 				<th data-options="field:'sourceUserName',align:'center',width:60">用户名</th>
@@ -424,21 +424,18 @@
 			}
 		}
 		
-		/* function downloadSubmit(){			
-			var queryOrderId = $('#queryOrderId').textbox('getValue');
+		function downloadSubmit(){			
 			var queryMerchantOrderId = $('#queryMerchantOrderId').textbox('getValue');
 			var querySourceUserName = $('#querySourceUserName').textbox('getValue');
 			var queryMerchantName = $('#queryMerchantName').combobox('getValue');
 			var queryAppId = $('#queryAppId').combobox('getValue');
-			var queryChannelId = $('#queryChannelId').combobox('getValue');
-			var queryOperator = $('#queryOperator').val();
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 		
-		 	var url="${pageContext.request.contextPath}/manage/offlineDownloadSubmit?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+		 	var url="${pageContext.request.contextPath}/manage/refundDownloadSubmit?merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&startDate="+startDate+"&endDate="+endDate;
 			
 			document.getElementById("ff").action=url;
 		    document.getElementById("ff").submit();
-		} */
+		}
 	</script>
 </html>

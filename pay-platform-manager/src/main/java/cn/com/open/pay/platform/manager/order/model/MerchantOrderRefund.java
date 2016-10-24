@@ -38,11 +38,9 @@ public class MerchantOrderRefund implements Serializable {
 	private Integer startRow;
 	private Integer pageSize;
 	
-	/*private String foundDate; //创建时间
+	private String foundDate; //处理时间
 	private String appName;
-	private String channelName;
 	private String merchantName;
-	private String bankName;*/
 	
 	private Date startDate;//查询处理时间开始
 	private Date endDate;//查询处理时间结束
@@ -53,6 +51,30 @@ public class MerchantOrderRefund implements Serializable {
 
 	public Integer getMerchantId() {
 		return merchantId;
+	}
+
+	public String getFoundDate() {
+		return foundDate;
+	}
+
+	public void setFoundDate(String foundDate) {
+		this.foundDate = foundDate;
+	}
+
+	public String getAppName() {
+		return appName;
+	}
+
+	public void setAppName(String appName) {
+		this.appName = appName;
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
 	}
 
 	public void setMerchantId(Integer merchantId) {

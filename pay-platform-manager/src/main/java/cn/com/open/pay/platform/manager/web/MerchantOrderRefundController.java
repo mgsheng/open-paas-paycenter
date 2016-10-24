@@ -244,43 +244,36 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 		return ;
 	}
 	
-	/*//**
+	/**
 	 * 下载为excel
 	 * @param request
 	 * @param response
 	 * @return 
 	 * @throws UnsupportedEncodingException
-	 *//*
-	@RequestMapping("offlineDownloadSubmit")
-	public String offlineDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
-		log.info("---------------getMerchantOrderOfflineDownloadSubmit----------------");
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	 */
+	@RequestMapping("refundDownloadSubmit")
+	public String refundDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+		log.info("---------------getMerchantOrderRefundDownloadSubmit----------------");
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String merchantOrderId = request.getParameter("merchantOrderId");
 		String sourceUserName = request.getParameter("sourceUserName");
 		String merchantName = request.getParameter("merchantName");
 		String appId = request.getParameter("appId");
-		String channelId = request.getParameter("channelId");
-		String operator = request.getParameter("operator");
-		String orderId = request.getParameter("orderId");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator+" startDate:"+startDate+" endDate:"+endDate);
+		System.out.println("merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+" startDate:"+startDate+" endDate:"+endDate);
 		
-	    MerchantOrderOffline offline = new MerchantOrderOffline();
+	    MerchantOrderRefund refund = new MerchantOrderRefund();
 	    
-	    offline.setId(orderId);
-	    offline.setMerchantOrderId(merchantOrderId);
+	    refund.setMerchantOrderId(merchantOrderId);
+	    refund.setSourceUserName(sourceUserName);
 	    if(merchantName!=null && merchantName!=""){
-	    	offline.setMerchantId(Integer.parseInt(merchantName));
+	    	refund.setMerchantId(Integer.parseInt(merchantName));
 	    }
-	    offline.setSourceUserName(sourceUserName);
-	    offline.setAppId(appId);
-	    offline.setChannelId(channelId);
-	    offline.setOperator(operator);
-	    
+	    refund.setAppId(appId);
 	    if(startDate!=null && startDate!=""){
 	    	try {
-				offline.setStartDate(sdf.parse(startDate));
+				refund.setStartDate(sdf1.parse(startDate+" 00:00:00"));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -288,19 +281,18 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 	    }
 	    if(endDate!=null && endDate!=""){
 	    	try {
-				offline.setEndDate(sdf.parse(endDate));
+				refund.setEndDate(sdf1.parse(endDate+" 23:59:59"));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	    }
 	    
-	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAllNoPage(offline);
+	    List<MerchantOrderRefund> refunds = merchantOrderRefundService.findRefundAllNoPage(refund);
+	    
 	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
 	    MerchantInfo merchantInfo = null;
-	    PayChannelDictionary channel = null;
-	    DictTradePayment payment=null;
-	    for(MerchantOrderOffline r : offlines){
+	    for(MerchantOrderRefund r : refunds){
 			 Date createDate1 = r.getCreateTime();
 			 r.setFoundDate(df.format(createDate1));
 			 String appId1=r.getAppId();
@@ -313,15 +305,6 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 				 }
 			 }
 			 r.setAppName(appName);
-			 String channelId1=r.getChannelId();
-			 String channelName="";
-			 if(channelId1!=null && channelId1!=""){
-				channel=payChannelDictionaryService.findNameById(channelId1);
-	    		if(channel!=null){
-	    			channelName=channel.getChannelName();
-	    		}
-    			r.setChannelName(channelName);
-			 }
 			 Integer merchantId1=r.getMerchantId();
 			 String merchantName1="";
 			 if(merchantId1!=null){				 
@@ -331,17 +314,8 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 	    		}
 	    		r.setMerchantName(merchantName1);
 			 }
-			 String bankCode1=r.getBankCode();
-			 String bankName="";
-			 if(bankCode1!=null && bankCode1!=""){
-				payment=dictTradePaymentService.findNameById(bankCode1);
-	    		if(payment!=null){
-	    			bankName=payment.getRemark();
-	    		}
-	    		r.setBankName(bankName);
-			 }
 	    }
-	    OrderDeriveExport.exportOrderOffline(response, offlines);
-	    return "usercenter/merchantOrderOffline";
-	}*/
+	    OrderDeriveExport.exportOrderRefund(response, refunds);
+	    return "usercenter/merchantOrderRefund";
+	}
 }

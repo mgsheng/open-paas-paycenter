@@ -50,15 +50,9 @@ public class MerchantOrderRefundServiceImpl implements MerchantOrderRefundServic
 		return merchantOrderRefund;
 	}
 
-	/*@Override
-	public MerchantOrderOffline findByMerchantOrderId(String addMerchantOrderId) {
-		MerchantOrderOffline offline=merchantOrderOfflineRepository.findByMerchantOrderId(addMerchantOrderId);
-		return offline;
-	}*/
-
-	/*@Override
-	public List<MerchantOrderOffline> findOfflineAllNoPage(MerchantOrderOffline offline) {
-		List<MerchantOrderOffline> merchantOrderOfflines=merchantOrderOfflineRepository.findAllNoPage(offline);
-		return merchantOrderOfflines;
-	}*/
+	@Override
+	public List<MerchantOrderRefund> findRefundAllNoPage(MerchantOrderRefund refund) {
+		List<MerchantOrderRefund> merchantOrderRefunds=merchantOrderRefundRepository.findAllNoPage(refund);
+		return merchantOrderRefunds;
+	}
 }
