@@ -126,7 +126,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(order_no);
 		log.info("notify orderId======================="+ order_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
-		 if(merchantOrderInfo!=null){
+		 if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			 DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
 			 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
@@ -164,7 +164,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 		    	if(status.equals("SUCCEED")){
 		    		log.info("==========================SUCCEED======================================");
 		    		//订单处理成功
-		    		 payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
+		    		 payServiceLog.setLogName(PayLogName.PAYMAX_NOTIFY_START);
 					 if(!nullEmptyBlankJudge(returnUrl)){
 						 //Map<String, String> dataMap=new HashMap<String, String>();
 						 String buf="";
@@ -219,7 +219,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 						   log.info("==========================notify--end======================================");
 						   backMsg="success";
 					 }else{
-						  merchantOrderInfoService.updatePayStatus(4,String.valueOf(merchantOrderInfo.getId()));
+						  merchantOrderInfoService.updatePayStatus(5,String.valueOf(merchantOrderInfo.getId()));
 					 }
 		    		
 		    	}else if(status.equals("PROCESSING")){
@@ -231,7 +231,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 		    		//订单处理失败
 					  payServiceLog.setErrorCode("2");
 			          payServiceLog.setStatus("error");
-			          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
+			          payServiceLog.setLogName(PayLogName.PAYMAX_NOTIFY_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 					 backMsg="error";
@@ -241,7 +241,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 		    	log.info("==========================VERIFYERROR======================================");
 		    	  payServiceLog.setErrorCode("2");
 		          payServiceLog.setStatus("error");
-		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
+		          payServiceLog.setLogName(PayLogName.PAYMAX_NOTIFY_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		          merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 				 backMsg="error";
@@ -251,13 +251,17 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 			 log.info("==========================error  null======================================");
 			 payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
-	          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
+	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+				 {
+	        	  payServiceLog.setStatus("already processed");
+				 }
+	          payServiceLog.setLogName(PayLogName.PAYMAX_NOTIFY_END);
+				
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			 backMsg="error";
+			 backMsg="success";
 		 }	
 		 }else{
 			 backMsg="error";
-			 
 		 }
 		 WebUtils.writeJson(response, backMsg);
 	  } 

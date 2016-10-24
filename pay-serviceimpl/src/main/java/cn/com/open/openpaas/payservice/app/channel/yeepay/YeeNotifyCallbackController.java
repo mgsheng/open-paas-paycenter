@@ -90,7 +90,8 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		log.info("yeepay notify hmac======================="+ hmac);
 		log.info("yeepay notify keyValue======================="+ keyValue);
 		String 	backMsg="error";
-		if(merchantOrderInfo!=null){
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			Double total_fee=0.0;
 			if(!nullEmptyBlankJudge(r3_Amt)){
 				total_fee=Double.parseDouble(r3_Amt);
@@ -98,7 +99,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			
 			boolean isOK = false;
 			//添加日志
-			 PayServiceLog payServiceLog=new PayServiceLog();
+			
 			 payServiceLog.setAmount(r3_Amt);
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
@@ -114,7 +115,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 			 payServiceLog.setUsername(merchantOrderInfo.getUserName());
 			 payServiceLog.setStatus("ok");
-			 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+			 payServiceLog.setLogName(PayLogName.YEEPAY_CALLBACK_START);
 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			// 校验返回数据包
 			 log.info("===================yeepay notify verfy start======================");
@@ -162,9 +163,12 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							 backMsg="success";
 						 }
 						// 产品通用接口支付成功返回-服务器点对点通讯
+						 payServiceLog.setLogName(PayLogName.YEEPAY_RETURN_END);
+						 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					} else if(r9_BType.equals("2")) {
 						// 如果在发起交易请求时	设置使用应答机制时，必须应答以"success"开头的字符串，大小写不敏感
-						
+						 payServiceLog.setLogName(PayLogName.YEEPAY_NOTIFY_START);
+						 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 						backMsg="SUCCESS";
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
@@ -188,26 +192,35 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 							 thread.run();	
 						}
-						payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_START);
+						payServiceLog.setLogName(PayLogName.YEEPAY_NOTIFY_END);
 						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 						WebUtils.writeJson(response, backMsg);
 						return;
 					}
 				}else{
-					payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+					payServiceLog.setLogName(PayLogName.YEEPAY_NOTIFY_END);
 					payServiceLog.setStatus("error");
 					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 				}
 			  } else {
-				  log.info("===================yeepay notify verfy error======================");
-				payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+				log.info("===================yeepay notify verfy error======================");
+				payServiceLog.setLogName(PayLogName.YEEPAY_CALLBACK_END);
 				payServiceLog.setStatus("error");
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 				backMsg="error";
 			}	
 		}else{
+			 payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+				 {
+	        	  payServiceLog.setStatus("already processed");
+				 }
+	          payServiceLog.setLogName(PayLogName.YEEPAY_CALLBACK_END);
+				
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
 		

@@ -100,7 +100,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		log.info("ali callback out_trade_no========="+out_trade_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
-		if(merchantOrderInfo!=null){
+		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		//添加日志
 		 payServiceLog.setAmount(String.valueOf(total_fee*100));
@@ -197,10 +197,16 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			backMsg="VERIFYERROR";
 		}
 		}else{
-			  payServiceLog.setErrorCode("5");
+			 payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
+	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+				 {
+	        	  payServiceLog.setStatus("already processed");
+				 }
 	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
-			  backMsg="error";
+				
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			 backMsg="error";
 		} 
 		 model.addAttribute("backMsg", backMsg);
 		 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());

@@ -95,7 +95,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			log.info("paymax callback out_trade_no========="+order_no);
 			 String backMsg="";
 			 PayServiceLog payServiceLog=new PayServiceLog();
-			 if(merchantOrderInfo!=null){
+			 if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 				 DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
 				 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
 				 payServiceLog.setAppId(merchantOrderInfo.getAppId());
@@ -200,8 +200,13 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			    }
 			    
 			 }else{
-				 payServiceLog.setErrorCode("2");
-		          payServiceLog.setStatus("error");
+				
+				  payServiceLog.setErrorCode("2");
+				   payServiceLog.setStatus("error");
+				  if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+					 {
+					     payServiceLog.setStatus("already processed");
+					 }
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				 backMsg="error";

@@ -102,11 +102,12 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		log.info("ali notify out_trade_no========="+out_trade_no);
-		if(merchantOrderInfo!=null){
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		        String key = dictTradeChannel.getKeyValue(); // key
 		//添加日志
-		 PayServiceLog payServiceLog=new PayServiceLog();
+		
 		 payServiceLog.setAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
@@ -184,8 +185,16 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 	    	merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 	    }
 		}else{
-			
-			backMsg="error";
+			 payServiceLog.setErrorCode("2");
+	          payServiceLog.setStatus("error");
+	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+				 {
+	        	  payServiceLog.setStatus("already processed");
+				 }
+	          payServiceLog.setLogName(PayLogName.CALLBACK_NOTIFY_END);
+				
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+			 backMsg="success";
 		} 
 		WebUtils.writeJson(response, backMsg);
 	}

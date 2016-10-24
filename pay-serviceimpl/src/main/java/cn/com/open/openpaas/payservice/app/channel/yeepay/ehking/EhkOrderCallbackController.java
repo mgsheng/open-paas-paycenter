@@ -75,7 +75,7 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		log.info("ehk callback orderId======================="+ out_trade_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
-		if(merchantOrderInfo!=null){
+		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 		//添加日志
 		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getOrderAmount()*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
@@ -89,7 +89,7 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 		 payServiceLog.setRealAmount(String.valueOf(merchantOrderInfo.getOrderAmount()*100));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_START);
+		 payServiceLog.setLogName(PayLogName.EHK_RETURN_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         String returnUrl=merchantOrderInfo.getReturnUrl();
@@ -105,7 +105,7 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 			if(status.equals("SUCCESS")){
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
+				 payServiceLog.setLogName(PayLogName.EHK_RETURN_END);
 				 if(!nullEmptyBlankJudge(returnUrl)){
 					 String buf="";
 					    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
@@ -137,16 +137,22 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 				//失败或者错误
 				  payServiceLog.setErrorCode("2");
 		          payServiceLog.setStatus("error");
-		          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
+		          payServiceLog.setLogName(PayLogName.EHK_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			}
 		}else{
 			//该页面可做页面美工编辑
+			
 			  payServiceLog.setErrorCode("2");
-	          payServiceLog.setStatus("error");
-	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
+			   payServiceLog.setStatus("error");
+			  if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+				 {
+				     payServiceLog.setStatus("already processed");
+				 }
+	          payServiceLog.setLogName(PayLogName.EHK_RETURN_END);
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			backMsg="error";
+			 backMsg="error";
+			
 		}
 		 model.addAttribute("backMsg", backMsg);
 		 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());

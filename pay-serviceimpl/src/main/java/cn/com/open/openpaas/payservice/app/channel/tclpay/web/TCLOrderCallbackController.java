@@ -88,7 +88,8 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 		String backMsg="";
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		log.info("tcl callback orderId======================="+ out_trade_no);
-		if(merchantOrderInfo!=null){
+		 PayServiceLog payServiceLog=new PayServiceLog();
+		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 		Map<String, String> orderDataMap = new HashMap<String, String>();
 		orderDataMap.put("out_trade_no", out_trade_no);
 		orderDataMap.put("trade_no", trade_no);
@@ -114,7 +115,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
        
         //添加日志
        
- 		 PayServiceLog payServiceLog=new PayServiceLog();
+ 		
  		 payServiceLog.setAmount(total_fee);
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
@@ -128,7 +129,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 		 payServiceLog.setRealAmount(total_fee);
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-		 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+		 payServiceLog.setLogName(PayLogName.TCL_CALLBACK_START);
          payServiceLog.setStatus("ok");
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
           // -- 验证签名
@@ -138,7 +139,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 			    if (!flag) {
 			    	payServiceLog.setErrorCode("2");
 			          payServiceLog.setStatus("error");
-			          payServiceLog.setLogName(PayLogName.CALLBACK_END);
+			          payServiceLog.setLogName(PayLogName.TCL_CALLBACK_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			         // merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 					  backMsg="error";
@@ -147,7 +148,7 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							  backMsg="error";
 							  payServiceLog.setErrorCode("2");
 					          payServiceLog.setStatus("error");
-					          payServiceLog.setLogName(PayLogName.CALLBACK_END);
+					          payServiceLog.setLogName(PayLogName.TCL_CALLBACK_END);
 					          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 							
@@ -155,12 +156,21 @@ public class TCLOrderCallbackController extends BaseControllerUtil {
 							//判断该笔订单是否在商户网站中已经做过处理
 							//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 							backMsg="success";
-							payServiceLog.setLogName(PayLogName.CALLBACK_END);
+							payServiceLog.setLogName(PayLogName.TCL_CALLBACK_END);
 							UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);		
 							}
 						}
 				}
               else{
+            	  payServiceLog.setErrorCode("2");
+    	          payServiceLog.setStatus("error");
+    	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+    				 {
+    	        	  payServiceLog.setStatus("already processed");
+    				 }
+    	          payServiceLog.setLogName(PayLogName.TCL_CALLBACK_END);
+    				
+    	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				backMsg="error";	
 			}
 			model.addAttribute("backMsg", backMsg);

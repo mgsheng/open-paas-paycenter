@@ -131,7 +131,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 			    	log.info("wx notify orderId======================="+ out_trade_no);
 			    	 PayServiceLog payServiceLog=new PayServiceLog();
-			    	if(merchantOrderInfo!=null){
+			    	if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			    		//添加日志
 			    		  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
 					        String key = dictTradeChannel.getKeyValue(); // key
@@ -149,7 +149,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 						 payServiceLog.setRealAmount(total_fee);
 						 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 						 payServiceLog.setUsername(merchantOrderInfo.getUserName());
-						 payServiceLog.setLogName(PayLogName.CALLBACK_START);
+						 payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_START);
 				         payServiceLog.setStatus("ok");
 				         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					    //判断签名是否正确
@@ -184,12 +184,12 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 						            //通知微信.异步确认成功.必写.不然会一直通知后台.八次之后就认为交易失败了.
 						            resXml = "<xml>" + "<return_code><![CDATA[SUCCESS]]></return_code>"
 						                    + "<return_msg><![CDATA[OK]]></return_msg>" + "</xml> ";
-						            payServiceLog.setLogName(PayLogName.CALLBACK_END);
+						            payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_END);
 						            UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					        	}else{
 					        		payServiceLog.setErrorCode("2");
 							        payServiceLog.setStatus("error");
-							        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+							        payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_END);
 							        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					        		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 						            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
@@ -198,7 +198,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 					        } else {
 					        	payServiceLog.setErrorCode("4");
 						        payServiceLog.setStatus("error");
-						        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+						        payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_END);
 						        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 						        merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),"PAYFAIL");
 					        	log.info("支付失败,错误信息：" + packageParams.get("err_code"));
@@ -209,7 +209,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 					    } else{
 					    	payServiceLog.setErrorCode("3");
 					        payServiceLog.setStatus("error");
-					        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+					        payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_END);
 					        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					        merchantOrderInfoService.updatePayInfo(4,String.valueOf(merchantOrderInfo.getId()),"VERIFYERROR");
 					    	 resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
@@ -217,9 +217,13 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 					    	log.info("通知签名验证失败");
 					    }
 			    	}else{
-			    		payServiceLog.setErrorCode("4");
-				        payServiceLog.setStatus("error");
-				        payServiceLog.setLogName(PayLogName.CALLBACK_END);
+			    		 payServiceLog.setErrorCode("2");
+				          payServiceLog.setStatus("error");
+				          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+							 {
+				        	  payServiceLog.setStatus("already processed");
+							 }
+				          payServiceLog.setLogName(PayLogName.WEIXIN_NOTIFY_END);
 				        UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			    		log.info("支付失败,错误信息：" + packageParams.get("err_code"));
 			            resXml = "<xml>" + "<return_code><![CDATA[FAIL]]></return_code>"
