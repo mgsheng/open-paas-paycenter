@@ -82,7 +82,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				}else{
 					//七天内
 					startTime=DateTools.getStatetime("yyyy-MM-dd");
-					endTime=DateTools.getTmotime("yyyy-MM-dd");
+					endTime=DateTools.getCurrDate("yyyy-MM-dd");
 				}
 			}else if(nullEmptyBlankJudge(timeType)&&nullEmptyBlankJudge(startTime)&&nullEmptyBlankJudge(endTime)){
 				startTime=DateTools.getStatetime("yyyy-MM-dd");

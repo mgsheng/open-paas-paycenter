@@ -117,7 +117,13 @@ public class UserLoginController extends BaseControllerUtil {
 	    	if(user!=null&&user.getUsername().equals(username)){
 	    		model.addAttribute("userName",username);
 		    	model.addAttribute("realName",user.getRealName());
-	    		return "login/index";
+		    	HttpSession session = request.getSession();
+				//session.setAttribute("serverHost",payManagerDev.getServer_host());
+//				session.setAttribute("manager",manager);
+//				session.setAttribute("modules",modules);
+				session.setAttribute("user",user);
+		    	return "login/index";
+	    		
 	    	}
 	    	
 //	    	   String username = request.getParameter("userName");

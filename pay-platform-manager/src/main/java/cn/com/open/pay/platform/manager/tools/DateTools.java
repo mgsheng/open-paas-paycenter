@@ -143,7 +143,7 @@ public class DateTools {
     public  static String getStatetimeByMonth(String format) {
     	  SimpleDateFormat sdf = new SimpleDateFormat(format);
     	        Calendar c = Calendar.getInstance();  
-    	        c.add(Calendar.DATE, - 30);  
+    	        c.add(Calendar.DATE, - 29);  
     	        Date monday = c.getTime();
     	        String preMonday = sdf.format(monday);
     	        return preMonday;
