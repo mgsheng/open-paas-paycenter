@@ -90,9 +90,13 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  	        
  	       		 MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
  	       		log.info("ehk notify orderId======================="+ out_trade_no);
- 	       		if(merchantOrderInfo!=null){
+ 	       	   PayServiceLog payServiceLog=new PayServiceLog();
+ 	       	    payServiceLog.setOrderId(out_trade_no);
+ 	       	    payServiceLog.setPayOrderId(serialNumber);
+	       		payServiceLog.setRealAmount(orderAmount);
+ 	       		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
  	       		//添加日志
- 	       		 PayServiceLog payServiceLog=new PayServiceLog();
+ 	       		
  	       		 payServiceLog.setAmount(String.valueOf(orderAmount));
  	       		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
  	       		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
@@ -100,13 +104,11 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  	       		 payServiceLog.setLogType(payserviceDev.getLog_type());
  	       		 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
  	       		 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
- 	       		 payServiceLog.setOrderId(out_trade_no);
  	       		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
- 	       		 payServiceLog.setPayOrderId(serialNumber);
- 	       		 payServiceLog.setRealAmount(orderAmount);
+ 	       		
  	       		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
  	       		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
- 	       		 payServiceLog.setLogName(PayLogName.YEEPAY_RETURN_START);
+ 	       		 payServiceLog.setLogName(PayLogName.EHK_NOTIFY_START);
  	                payServiceLog.setStatus("ok");
  	                UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	            	log.info("-----------------------callBack  success-start-----------------------------------------");
@@ -138,8 +140,18 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  						   thread.run();
  						 log.info("-----------------------callBack  thread-end-----------------------------------------");
  					}
-			          payServiceLog.setLogName(PayLogName.YEEPAY_RETURN_END);
+			          payServiceLog.setLogName(PayLogName.EHK_NOTIFY_END);
 			          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+ 	              }else{
+ 	            	  payServiceLog.setErrorCode("2");
+ 	    	          payServiceLog.setStatus("error");
+ 	    	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+ 	    				 {
+ 	    	        	  payServiceLog.setStatus("already processed");
+ 	    				 }
+ 	    	          payServiceLog.setLogName(PayLogName.EHK_NOTIFY_END);
+ 	    				
+ 	    	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	              }
  	            }
  	            public void failure(JSONObject jsonObject) {

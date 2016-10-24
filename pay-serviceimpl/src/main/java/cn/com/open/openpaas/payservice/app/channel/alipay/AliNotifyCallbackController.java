@@ -102,24 +102,26 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 		
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		log.info("ali notify out_trade_no========="+out_trade_no);
+		
 		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setOrderId(out_trade_no);
+		 payServiceLog.setPayOrderId(trade_no);
+		 payServiceLog.setProductDesc(body);
+		 payServiceLog.setProductName(subject);
+		 payServiceLog.setAmount(String.valueOf(total_fee*100));
 		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		        String key = dictTradeChannel.getKeyValue(); // key
 		//添加日志
 		
-		 payServiceLog.setAmount(String.valueOf(total_fee*100));
+		
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
 		 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 		 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-		 payServiceLog.setOrderId(out_trade_no);
 		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-		 payServiceLog.setPayOrderId(trade_no);
-		 payServiceLog.setProductDesc(body);
-		 payServiceLog.setProductName(subject);
 		 payServiceLog.setRealAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());

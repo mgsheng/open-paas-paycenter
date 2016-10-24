@@ -91,6 +91,11 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		log.info("yeepay notify keyValue======================="+ keyValue);
 		String 	backMsg="error";
 		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setAmount(r3_Amt);
+		 payServiceLog.setOrderId(r2_TrxId);
+		 payServiceLog.setPayOrderId(r2_TrxId);
+		 payServiceLog.setProductName(r5_Pid);
+		 payServiceLog.setRealAmount(r3_Amt);
 		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			Double total_fee=0.0;
 			if(!nullEmptyBlankJudge(r3_Amt)){
@@ -100,18 +105,14 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			boolean isOK = false;
 			//添加日志
 			
-			 payServiceLog.setAmount(r3_Amt);
+			
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 			 payServiceLog.setLogType(payserviceDev.getLog_type());
 			 payServiceLog.setMerchantId(merchantOrderInfo.getMerchantId()+"");
 			 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-			 payServiceLog.setOrderId(r2_TrxId);
 			 payServiceLog.setPaymentId(merchantOrderInfo.getPaymentId()+"");
-			 payServiceLog.setPayOrderId(r2_TrxId);
-			 payServiceLog.setProductName(r5_Pid);
-			 payServiceLog.setRealAmount(r3_Amt);
 			 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 			 payServiceLog.setUsername(merchantOrderInfo.getUserName());
 			 payServiceLog.setStatus("ok");
@@ -212,6 +213,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 				backMsg="error";
 			}	
 		}else{
+			log.info("===================yeepay notify null error======================");
 			 payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
 	          backMsg="error";

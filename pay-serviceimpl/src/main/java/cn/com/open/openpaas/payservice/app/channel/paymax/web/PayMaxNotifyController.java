@@ -126,18 +126,21 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(order_no);
 		log.info("notify orderId======================="+ order_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setOrderId(order_no);
+		 payServiceLog.setPayOrderId(id);
+		 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
 		 if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			 DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
-			 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
+			 
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 			 payServiceLog.setLogType(payserviceDev.getLog_type());
 			 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 			 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-			 payServiceLog.setOrderId(order_no);
+			 
 			 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-			 payServiceLog.setPayOrderId(id);
+			 
 			 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
 			 payServiceLog.setProductName(merchantOrderInfo.getMerchantProductName());
 			 payServiceLog.setRealAmount(String.valueOf(Double.parseDouble(amount)*100));

@@ -131,21 +131,20 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 			    	MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 			    	log.info("wx notify orderId======================="+ out_trade_no);
 			    	 PayServiceLog payServiceLog=new PayServiceLog();
+			    	 payServiceLog.setAmount(total_fee);
+			    	 payServiceLog.setOrderId(out_trade_no);
+			    	 payServiceLog.setPayOrderId(transaction_id);
 			    	if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			    		//添加日志
 			    		  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.WEIXIN.getValue());
 					        String key = dictTradeChannel.getKeyValue(); // key
-						
-						 payServiceLog.setAmount(total_fee);
 						 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 						 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 						 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 						 payServiceLog.setLogType(payserviceDev.getLog_type());
 						 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 						 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-						 payServiceLog.setOrderId(out_trade_no);
 						 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-						 payServiceLog.setPayOrderId(transaction_id);
 						 payServiceLog.setRealAmount(total_fee);
 						 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 						 payServiceLog.setUsername(merchantOrderInfo.getUserName());

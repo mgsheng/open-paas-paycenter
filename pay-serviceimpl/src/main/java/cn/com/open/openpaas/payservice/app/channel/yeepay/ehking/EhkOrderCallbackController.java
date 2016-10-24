@@ -142,7 +142,6 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 			}
 		}else{
 			//该页面可做页面美工编辑
-			
 			  payServiceLog.setErrorCode("2");
 			   payServiceLog.setStatus("error");
 			  if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)

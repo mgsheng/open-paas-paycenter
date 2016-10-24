@@ -98,23 +98,26 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 			body=new String(request.getParameter("body").getBytes("ISO-8859-1"),"UTF-8");	
 		}
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		
 		log.info("ali callback out_trade_no========="+out_trade_no);
+		
 		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setOrderId(out_trade_no);
+		 payServiceLog.setPayOrderId(trade_no);
+		 payServiceLog.setProductDesc(body);
+		 payServiceLog.setProductName(subject);
+		 payServiceLog.setAmount(String.valueOf(total_fee*100));
 		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		//添加日志
-		 payServiceLog.setAmount(String.valueOf(total_fee*100));
+		 
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
 		 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 		 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-		 payServiceLog.setOrderId(out_trade_no);
 		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-		 payServiceLog.setPayOrderId(trade_no);
-		 payServiceLog.setProductDesc(body);
-		 payServiceLog.setProductName(subject);
 		 payServiceLog.setRealAmount(String.valueOf(total_fee*100));
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
@@ -199,14 +202,16 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 		}else{
 			 payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
+	          backMsg="error";
 	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 				 {
+	        	  backMsg="success";
 	        	  payServiceLog.setStatus("already processed");
 				 }
 	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 				
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			 backMsg="error";
+			
 		} 
 		 model.addAttribute("backMsg", backMsg);
 		 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());

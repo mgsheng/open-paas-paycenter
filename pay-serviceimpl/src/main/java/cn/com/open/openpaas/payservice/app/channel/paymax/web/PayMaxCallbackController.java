@@ -95,18 +95,21 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 			log.info("paymax callback out_trade_no========="+order_no);
 			 String backMsg="";
 			 PayServiceLog payServiceLog=new PayServiceLog();
+			 payServiceLog.setOrderId(order_no);
+			 payServiceLog.setPayOrderId(id);
+			 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
 			 if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 				 DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
-				 payServiceLog.setAmount(String.valueOf(Double.parseDouble(amount)*100));
+				 
 				 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 				 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 				 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 				 payServiceLog.setLogType(payserviceDev.getLog_type());
 				 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 				 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-				 payServiceLog.setOrderId(order_no);
+				
 				 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-				 payServiceLog.setPayOrderId(id);
+				 
 				 payServiceLog.setProductDesc(merchantOrderInfo.getMerchantProductDesc());
 				 payServiceLog.setProductName(merchantOrderInfo.getMerchantProductName());
 				 payServiceLog.setRealAmount(String.valueOf(Double.parseDouble(amount)*100));
@@ -206,6 +209,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 				  if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 					 {
 					     payServiceLog.setStatus("already processed");
+					     backMsg="success";
 					 }
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);

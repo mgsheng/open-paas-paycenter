@@ -96,6 +96,9 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
 		log.info("tcl notify orderId======================="+ out_trade_no);
 		 PayServiceLog payServiceLog=new PayServiceLog();
+		 payServiceLog.setAmount(total_fee);
+		 payServiceLog.setOrderId(out_trade_no);
+		 payServiceLog.setPayOrderId(trade_no);
 		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 		Map<String, String> orderDataMap = new HashMap<String, String>();
 		orderDataMap.put("out_trade_no", out_trade_no);
@@ -119,20 +122,17 @@ public class TCLNotifyCallbackController extends BaseControllerUtil {
 		orderDataMap.put("fee", fee);
 		orderDataMap.put("attach", attach);
 	    String Wsign=HytPacketUtils.map2StrRealURL(orderDataMap);
-       
         //添加日志
-       
  		
- 		 payServiceLog.setAmount(total_fee);
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
 		 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 		 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
-		 payServiceLog.setOrderId(out_trade_no);
+		
 		 payServiceLog.setPaymentId(String.valueOf(merchantOrderInfo.getPaymentId()));
-		 payServiceLog.setPayOrderId(trade_no);
+	
 		 payServiceLog.setRealAmount(total_fee);
 		 payServiceLog.setSourceUid(merchantOrderInfo.getSourceUid());
 		 payServiceLog.setUsername(merchantOrderInfo.getUserName());
