@@ -317,7 +317,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 		  * @return
 		  */
 		 @RequestMapping("exportSubmit")
-		 public String  exportSubmit(HttpServletRequest request,HttpServletResponse response) {
+		 public void  exportSubmit(HttpServletRequest request,HttpServletResponse response) {
 			
 			  
 			//当前第几页
@@ -373,6 +373,6 @@ public class UserDataStatsController extends BaseControllerUtil {
 			  
 			 
 			 OrderCountExport.exportChuBei(response, merchantOrderInfoList);
-		     return "stats/index";
+//		     return "stats/index";
 		 }
 }
