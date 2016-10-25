@@ -225,6 +225,8 @@ table {
 				loading : '数据载入中...'
 			}
 		});
+	    startTime = $("#_easyui_textbox_input5").val();
+		endTime = $("#_easyui_textbox_input6").val();
 		$
 				.post(
 						"${pageContext.request.contextPath}/user/statistics/chart",

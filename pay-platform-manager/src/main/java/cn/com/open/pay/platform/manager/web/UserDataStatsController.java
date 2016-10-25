@@ -73,7 +73,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				String appId,
 				String payClient,
 				String startTime,String endTime,String timeType) throws UnsupportedEncodingException {
-			//时间范围默认值
+			/*//时间范围默认值
 			if(!nullEmptyBlankJudge(timeType)){
 				if(timeType.equals("1")){
 					//三十天内
@@ -88,7 +88,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				startTime=DateTools.getStatetime("yyyy-MM-dd");
 				endTime=DateTools.getCurrDate("yyyy-MM-dd");
 				
-			}
+			}*/
 			//解析时间值
 			StringBuffer dateString=new StringBuffer("");//曲线图x轴线日期
 			Map<String, Integer> dateMap = new LinkedHashMap<String, Integer>();//为返回的数据数组赋值
