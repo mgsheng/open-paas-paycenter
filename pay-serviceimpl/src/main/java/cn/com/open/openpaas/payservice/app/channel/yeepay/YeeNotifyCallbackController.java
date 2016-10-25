@@ -104,8 +104,6 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			
 			boolean isOK = false;
 			//添加日志
-			
-			
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -213,18 +211,79 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 				backMsg="error";
 			}	
 		}else{
-			log.info("===================yeepay notify null error======================");
-			 payServiceLog.setErrorCode("2");
-	          payServiceLog.setStatus("error");
-	          backMsg="error";
-	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
-				 {
-	        	  payServiceLog.setStatus("already processed");
-	        	  backMsg="success";
-				 }
-	          payServiceLog.setLogName(PayLogName.YEEPAY_CALLBACK_END);
-				
-	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+		   if(!nullEmptyBlankJudge(r9_BType)&&r9_BType.equals("1")){
+			   log.info("===================yeepay notify null error======================");
+				 payServiceLog.setErrorCode("2");
+		          payServiceLog.setStatus("error");
+		          backMsg="error";
+		          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+					 {
+		        	  log.info("===================yeepay notify null error======================");
+						 payServiceLog.setErrorCode("2");
+				          payServiceLog.setStatus("error");
+				          backMsg="error";
+				          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+							 {
+				        	  payServiceLog.setStatus("already processed");
+				        	  String returnUrl=merchantOrderInfo.getNotifyUrl();
+						 		MerchantInfo merchantInfo = null;
+						 		if(nullEmptyBlankJudge(returnUrl)){
+						 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+						 			returnUrl=merchantInfo.getReturnUrl();
+						 	     }
+								 //Map<String, String> dataMap=new HashMap<String, String>();
+								    String  buf="";
+								    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+									sParaTemp.put("orderId", merchantOrderInfo.getId());
+							        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+							        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+							        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+									sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+									sParaTemp.put("feeType", "CNY");
+									sParaTemp.put("guid", merchantOrderInfo.getGuid());
+									sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+									//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+									sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+									sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
+									sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+									sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+									sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+									sParaTemp.put("parameter", merchantOrderInfo.getParameter1());
+									sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+								    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+								    sParaTemp.put("secret", mySign);
+								    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+								    model.addAttribute("res", buf);
+								    String url=payserviceDev.getServer_host()+"/yeepay/notify/payRedirect"+"?res="+buf;
+								    response.sendRedirect(url);
+								    return;
+							 }
+					 
+					 }
+		          payServiceLog.setLogName(PayLogName.YEEPAY_CALLBACK_END);
+					
+		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);   
+		          model.addAttribute("backMsg", backMsg);
+			      model.addAttribute("productName",merchantOrderInfo.getMerchantProductName() ); 
+			     String url=payserviceDev.getServer_host()+"/pay/callBack"+"?backMsg="+backMsg+"&productName="+merchantOrderInfo.getMerchantProductName();
+				  response.sendRedirect(url);
+				  return ;
+			 }else{
+				 payServiceLog.setErrorCode("2");
+		          payServiceLog.setStatus("error");
+		          backMsg="error";
+		          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
+					 {
+		        	  payServiceLog.setStatus("already processed");
+		        	  backMsg="success";
+					 }
+		          payServiceLog.setLogName(PayLogName.YEEPAY_CALLBACK_END);
+					
+		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);    
+		          WebUtils.writeJson(response, backMsg);
+				return;
+			 }
+			
 			
 		}
 		
