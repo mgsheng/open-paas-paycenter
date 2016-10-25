@@ -330,9 +330,9 @@ public class OrderDeriveExport {
 		}
 		try {
 			response.setContentType("application/vnd.ms-excel");
-			String filedisplay = "downloadOrderRefund.xls";
-			filedisplay = URLEncoder.encode(filedisplay, "UTF-8");
-			response.addHeader("Content-Disposition", "attachment;filename="+ filedisplay);
+			String filedisplay = "退费单据维护.xls";
+			String iso_filename = parseGBK(filedisplay);
+			response.addHeader("Content-Disposition", "attachment;filename="+ iso_filename);
 			ServletOutputStream out = response.getOutputStream();
 			wb.write(out);                                                      
 			out.close();
