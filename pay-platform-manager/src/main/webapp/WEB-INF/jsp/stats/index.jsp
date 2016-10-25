@@ -182,14 +182,14 @@ table {
 			//判断点击三十天
 			timeType = "1";
 			var d = new Date();
-			var n = new Date(d.getTime() - 86400000 * 30);
+			var n = new Date(d.getTime() - 86400000 * 29);
 			var input5 = n.getFullYear() + "-" + padleft0(n.getMonth() + 1)
 					+ "-" + padleft0(n.getDate());
 		} else {
 			//判断点击七天
 			timeType = "2";
 			var d = new Date();
-			var n = new Date(d.getTime() - 86400000 * 7);
+			var n = new Date(d.getTime() - 86400000 * 6);
 			var input5 = n.getFullYear() + "-" + padleft0(n.getMonth() + 1)
 					+ "-" + padleft0(n.getDate());
 		}
