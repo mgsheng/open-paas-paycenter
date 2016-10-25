@@ -251,7 +251,7 @@ public class OrderDeriveExport {
 		}
 		try {
 			response.setContentType("application/vnd.ms-excel");
-			String filedisplay = "downloadOrderOffline.xls";
+			String filedisplay = "线下收费单据维护.xls";
 			filedisplay = URLEncoder.encode(filedisplay, "UTF-8");
 			response.addHeader("Content-Disposition", "attachment;filename="+ filedisplay);
 			ServletOutputStream out = response.getOutputStream();

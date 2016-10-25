@@ -313,7 +313,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("offlineDownloadSubmit")
-	public String offlineDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+	public void offlineDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderOfflineDownloadSubmit----------------");
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		String merchantOrderId = request.getParameter("merchantOrderId");
@@ -403,6 +403,6 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 			 }
 	    }
 	    OrderDeriveExport.exportOrderOffline(response, offlines);
-	    return "usercenter/merchantOrderOffline";
+	    //return "usercenter/merchantOrderOffline";
 	}
 }

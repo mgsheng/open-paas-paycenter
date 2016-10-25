@@ -252,7 +252,7 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 	 * @throws UnsupportedEncodingException
 	 */
 	@RequestMapping("refundDownloadSubmit")
-	public String refundDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+	public void refundDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
 		log.info("---------------getMerchantOrderRefundDownloadSubmit----------------");
 		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String merchantOrderId = request.getParameter("merchantOrderId");
@@ -316,6 +316,6 @@ public class MerchantOrderRefundController extends BaseControllerUtil{
 			 }
 	    }
 	    OrderDeriveExport.exportOrderRefund(response, refunds);
-	    return "usercenter/merchantOrderRefund";
+	    //return "usercenter/merchantOrderRefund";
 	}
 }
