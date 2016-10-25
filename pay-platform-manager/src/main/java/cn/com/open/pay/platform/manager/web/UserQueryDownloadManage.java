@@ -323,7 +323,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  * @return
 	  */
 	 @RequestMapping("downloadSubmit")
-	 public String  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
+	 public void  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
 		
 		  
 		//当前第几页
@@ -420,7 +420,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }
 		 }
 		 OrderDeriveExport.exportChuBei(response, merchantOrderInfoList);
-	     return "usercenter/merchantMessage";
+//	     return "usercenter/merchantMessage";
 	 }	
 	 
 	 

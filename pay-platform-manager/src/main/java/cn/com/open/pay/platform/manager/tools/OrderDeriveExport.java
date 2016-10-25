@@ -3,6 +3,7 @@ package cn.com.open.pay.platform.manager.tools;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -147,8 +148,8 @@ public class OrderDeriveExport {
 		try {
 			response.setContentType("application/vnd.ms-excel");
 			String filedisplay = "downloadOrder.xls";
-			filedisplay = URLEncoder.encode(filedisplay, "UTF-8");
-			response.addHeader("Content-Disposition", "attachment;filename="+ filedisplay);
+			String iso_filename = parseGBK(filedisplay);
+			response.addHeader("Content-Disposition", "attachment;filename="+ iso_filename);
 			ServletOutputStream out = response.getOutputStream();
 			wb.write(out);                                                      
 			out.close();
@@ -341,6 +342,16 @@ public class OrderDeriveExport {
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "导出失败!");
 			e.printStackTrace();
+		}
+	}
+	
+	public static String parseGBK(String sIn) {
+		if (sIn == null || sIn.equals(""))
+			return sIn;
+		try {
+			return new String(sIn.getBytes("GBK"), "ISO-8859-1");
+		} catch (UnsupportedEncodingException usex) {
+			return sIn;
 		}
 	}
 }
