@@ -480,7 +480,7 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
-          <if test="sourceType != null and sourceType !=''" >
+          <if test="sourceType != null " >
            and SOURCE_TYPE=#{sourceType} 
           </if>
           
@@ -500,7 +500,7 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
-           <if test="sourceType != null and sourceType !=''" >
+           <if test="sourceType != null " >
            and SOURCE_TYPE=#{sourceType} 
           </if>
          and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
@@ -518,7 +518,7 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
-           <if test="sourceType != null and sourceType !=''" >
+           <if test="sourceType != null" >
            and SOURCE_TYPE=#{sourceType} 
           </if>
          and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
