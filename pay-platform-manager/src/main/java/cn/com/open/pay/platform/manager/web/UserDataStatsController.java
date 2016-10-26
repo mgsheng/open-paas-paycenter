@@ -263,6 +263,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 			 String payClient=request.getParameter("payClient");//缴费来源
 			 String pt=request.getParameter("paymentId");//缴费银行
 			 String appId=request.getParameter("appId");//业务来源
+			 String sourceType=request.getParameter("sourceType");//支付渠道
 			 String startDate=request.getParameter("startDate"); //支付方式
 			 String endDate=request.getParameter("endDate"); //支付方式
 			 if(CI!=null&&!CI.equals("")){
@@ -285,6 +286,10 @@ public class UserDataStatsController extends BaseControllerUtil {
 			 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 			 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
 //			 merchantOrderInfo.setPayCharge(payClient);
+			 
+			 if(sourceType!=""){
+				 merchantOrderInfo.setSourceType(Integer.parseInt(sourceType));	
+			 }
 			 if(appId!=""){
 				 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
 			 }
@@ -336,6 +341,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 			 String payClient=request.getParameter("payClient");//缴费来源
 			 String pt=request.getParameter("paymentId");//缴费银行
 			 String appId=request.getParameter("appId");//业务来源
+			 String sourceType=request.getParameter("sourceType");//支付渠道
 			 String startDate=request.getParameter("startDate"); //支付方式
 			 String endDate=request.getParameter("endDate"); //支付方式
 			 if(CI!=null&&!CI.equals("")){
@@ -357,6 +363,9 @@ public class UserDataStatsController extends BaseControllerUtil {
 			 merchantOrderInfo.setEndDate(endDate1);
 			 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 			 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+			 if(sourceType!=""){
+				 merchantOrderInfo.setSourceType(Integer.parseInt(sourceType));	
+			 }
 			 if(appId!=""){
 				 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
 			 }
