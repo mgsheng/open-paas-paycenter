@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.platform.manager.infrastructure.mybatis.PayChannelSwitchRepositoryMyBatis">
+	<resultMap type="PayChannelSwitch" id="payChannelSwitchMap">
+		<id property="id" column="id" jdbcType="INTEGER" />
+		<result property="channelName" column="channel_name" jdbcType="VARCHAR" />
+		<result property="channelValue" column="channel_value" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Column_List">
+		id,
+		channel_name,
+		channel_value
+	</sql>
+	
+	<!-- 查询所有渠道编码 -->
+	<select id="findPayChannelTypeAll" resultMap="payChannelSwitchMap" >
+		select * from PAY_CHANNEL_SWITCH 
+	</select>
+	
+	
+</mapper>
