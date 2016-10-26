@@ -72,6 +72,7 @@ table {
 					data-options="editable:false,prompt:'全部'">
 						
 				</select> </span>
+				
 				<div style="margin-left: 60px; display: inline-block;">
 					<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('seven')">7天</a> 
 					<a href="#"	class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('thirty')">30天</a>
@@ -83,6 +84,16 @@ table {
 					<div style="display:inline-block;">
 						<input class="easyui-datebox" data-options="onSelect:onEndSelect"  style="width:150px; " id="bb">
 					</div>
+				</div>
+			</div>
+			<div style="margin-top: 5px">
+				<span style=""> <select class="easyui-combobox" name="sourceType"
+					id="sourceType" label="支付渠道" style="width:200px"
+					data-options="editable:false,prompt:'全部'">
+						
+				</select> </span>
+				<div style="margin-left: 60px; display: inline-block;">
+					
 					<div style="display:inline-block; margin-left: 65px">
 						<a href="#" class="easyui-linkbutton" onclick="queryData()"
 							style="width: 60px">查询</a>
@@ -195,8 +206,8 @@ table {
 		}
 		startTime = input5;
 		endTime = input6;
-		$("#_easyui_textbox_input5").val(input5);
-		$("#_easyui_textbox_input6").val(input6);
+		$("#_easyui_textbox_input6").val(input5);
+		$("#_easyui_textbox_input7").val(input6);
 	}
 	function getnowtime() {
 		var nowtime = new Date();
@@ -225,8 +236,8 @@ table {
 				loading : '数据载入中...'
 			}
 		});
-	    startTime = $("#_easyui_textbox_input5").val();
-		endTime = $("#_easyui_textbox_input6").val();
+	    startTime = $("#_easyui_textbox_input6").val();
+		endTime = $("#_easyui_textbox_input7").val();
 		$
 				.post(
 						"${pageContext.request.contextPath}/user/statistics/chart",
@@ -504,6 +515,7 @@ table {
 				var hy="seven";
 				getDayType(hy);
 				initialise();
+				paySourceType();
 				payIrrigation();
 	            
 	});  
@@ -524,6 +536,13 @@ table {
 			textField:'text'
 		});
 	}
+	function paySourceType(){
+		$('#sourceType').combobox({
+			url:'${pageContext.request.contextPath}/manage/findSourceType',
+			valueField:'id',
+			textField:'text'
+		});
+	}
 	
 	
 	function submitForm(){
@@ -531,13 +550,14 @@ table {
 		var payClient = $("input[name='payClient']").val();//缴费来源
 		var paymentId = $("input[name='paymentId']").val();//缴费银行
 		var appId = $("input[name='appId']").val();//业务类型
-		var startDate = $("#_easyui_textbox_input5").val();
-		var endDate = $("#_easyui_textbox_input6").val();
+		var sourceType = $("input[name='sourceType']").val();//业务类型
+		var startDate = $("#_easyui_textbox_input6").val();
+		var endDate = $("#_easyui_textbox_input7").val();
 		$('#dg').datagrid({
 			collapsible:true,
 			rownumbers:true,
 			pagination:true,
-	        url: "${pageContext.request.contextPath}/user/queryMerchant?channelId="+channelId+"&payClient="+payClient+"&paymentId="+paymentId+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate,  
+	        url: "${pageContext.request.contextPath}/user/queryMerchant?channelId="+channelId+"&payClient="+payClient+"&paymentId="+paymentId+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate+"&sourceType="+sourceType,  
             onLoadSuccess:function(data){
                 if (data.total<1){
                    $.messager.alert("提示","没有符合查询条件的数据!");
@@ -570,10 +590,11 @@ table {
 		var payClient = $("input[name='payClient']").val();//缴费来源
 		var paymentId = $("input[name='paymentId']").val();//缴费银行
 		var appId = $("input[name='appId']").val();//业务类型
-		var startDate = $("#_easyui_textbox_input5").val();
-		var endDate = $("#_easyui_textbox_input6").val();
+		var sourceType = $("input[name='sourceType']").val();
+		var startDate = $("#_easyui_textbox_input6").val();
+		var endDate = $("#_easyui_textbox_input7").val();
 		
-		document.getElementById("ff").action="${pageContext.request.contextPath}/user/exportSubmit?channelId="+channelId+"&payClient="+payClient+"&paymentId="+paymentId+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate,
+		document.getElementById("ff").action="${pageContext.request.contextPath}/user/exportSubmit?channelId="+channelId+"&payClient="+payClient+"&paymentId="+paymentId+"&appId="+appId+"&startDate="+startDate+"&endDate="+endDate+"&sourceType="+sourceType,
 	    document.getElementById("ff").submit();
 	}
 </script>
