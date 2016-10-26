@@ -203,6 +203,9 @@
         <if test="userName != null and userName !=''" >
            and USERNAME=#{userName} 
         </if>
+        <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+        </if>
         <if test="startDate != null and startDate !=''" >
            and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
         </if>
@@ -267,6 +270,9 @@
         </if>
         <if test="appId != null and appId !=''" >
            and APPID=#{appId} 
+        </if>
+        <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
         </if>
         <if test="startDate != null and startDate !=''" >
            and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 

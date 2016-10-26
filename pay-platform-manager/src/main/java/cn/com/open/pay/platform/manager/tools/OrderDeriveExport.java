@@ -116,9 +116,9 @@ public class OrderDeriveExport {
 		cell = row.createCell((short) 13);
 		cell.setCellValue("手续费");
 		cell.setCellStyle(style);
-		/*cell = row.createCell((short) 11);
-		cell.setCellValue("人才使用");
-		cell.setCellStyle(style);*/
+		cell = row.createCell((short) 14);
+		cell.setCellValue("支付渠道");
+		cell.setCellStyle(style);
 		// 向单元格里填充数据
 		for (short i = 0; i < infoList.size(); i++) {
 			row = sheet.createRow(i + 1);
@@ -136,6 +136,7 @@ public class OrderDeriveExport {
 			row.createCell(11).setCellValue(infoList.get(i).getAmount());//缴费金额
 			row.createCell(12).setCellValue(infoList.get(i).getPayAmount());//实收金额
 			row.createCell(13).setCellValue(infoList.get(i).getPayCharge());//手续费
+			row.createCell(14).setCellValue(infoList.get(i).getSourceTypeName());
 			//人才使用总和
 			//String thingName="";
 			/*String orderState="4";
@@ -147,7 +148,7 @@ public class OrderDeriveExport {
 		}
 		try {
 			response.setContentType("application/vnd.ms-excel");
-			String filedisplay = "downloadOrder.xls";
+			String filedisplay = "交易明细.xls";
 			String iso_filename = parseGBK(filedisplay);
 			response.addHeader("Content-Disposition", "attachment;filename="+ iso_filename);
 			ServletOutputStream out = response.getOutputStream();

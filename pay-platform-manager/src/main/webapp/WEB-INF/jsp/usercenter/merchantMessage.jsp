@@ -84,6 +84,11 @@
 					<option value="2">移动端</option>
 				</select>
 			</td>
+			<td style="text-align: right;">支付渠道：</td>
+			<td>
+				<select class="easyui-combobox" data-options="editable:false" id="sourceType" name="sourceType" style="width:100%">
+				</select>
+			</td>
 		</tr>
 		
 		<tr>
@@ -129,6 +134,7 @@
 				<th data-options="field:'orderAmount',width:80">缴费金额</th>
 				<th data-options="field:'payAmount',width:60,align:'center'">实收金额</th>
 				<th data-options="field:'payCharge',width:60,align:'center'">手续费</th>
+				<th data-options="field:'sourceTypeName',width:60,align:'center'">支付渠道</th>
 			</tr>
 		</thead>
 		
@@ -151,9 +157,10 @@
 			var source = $("input[name='source']").val();//缴费来源
 			var payStatus = $("input[name='payStatus']").val();//缴费状态
 			var createDate =$("input[name='createDate']:checked").val(); 
-			var startDate = $("#_easyui_textbox_input9").val();
-			var endDate = $("#_easyui_textbox_input10").val();
-			if(orderId==""&&merchantOrderId==""&&payOrderId==""&&channelId==""&&appId==""&&paymentId==""&&source==""&&payStatus==""){
+			var startDate = $("#_easyui_textbox_input10").val();
+			var endDate = $("#_easyui_textbox_input11").val();
+			var sourceType = $("input[name='sourceType']").val();
+			if(orderId==""&&merchantOrderId==""&&payOrderId==""&&channelId==""&&appId==""&&paymentId==""&&source==""&&payStatus==""&&sourceType==""){
 				if(startDate==""||endDate==""){
 					alert("请选择时间段");
 					return;
@@ -191,7 +198,7 @@
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate,  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&sourceType="+sourceType,  
                 onLoadSuccess:function(data){
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
@@ -221,8 +228,8 @@
 		}
 		function downloadSubmit(){
 			
-			var startDate = $("#_easyui_textbox_input9").val();
-			var endDate = $("#_easyui_textbox_input10").val();
+			var startDate = $("#_easyui_textbox_input10").val();
+			var endDate = $("#_easyui_textbox_input11").val();
 			if(startDate>endDate){
 				alert("开始时间大于结束时间！");
 				return;
@@ -238,6 +245,7 @@
 					getDayType(hy);
 					initialise();
 					payIrrigation();
+					paySourceType();
 		            loadGrid();  
 		            
 		});  
@@ -254,6 +262,14 @@
 		function  payIrrigation(){
 			$('#channelId').combobox({
 				url:'${pageContext.request.contextPath}/manage/findAllPayChannel',
+				valueField:'id',
+				textField:'text'
+			});
+		}
+		
+		function paySourceType(){
+			$('#sourceType').combobox({
+				url:'${pageContext.request.contextPath}/manage/findSourceType',
 				valueField:'id',
 				textField:'text'
 			});
@@ -291,8 +307,8 @@
 		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
 			}
 			
-			$("#_easyui_textbox_input9").val(input5);
-			$("#_easyui_textbox_input10").val(input6);
+			$("#_easyui_textbox_input10").val(input5);
+			$("#_easyui_textbox_input11").val(input6);
 			}
 		function getnowtime() {
             var nowtime = new Date();

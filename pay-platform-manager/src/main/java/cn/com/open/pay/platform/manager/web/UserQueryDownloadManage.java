@@ -33,7 +33,9 @@ import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.order.service.UserSerialRecordService;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
+import cn.com.open.pay.platform.manager.paychannel.service.PayChannelSwitchService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
@@ -63,7 +65,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	 @Autowired
 	 private PayChannelDictionaryService payChannelDictionaryService;
 	 
-	 
+	 @Autowired
+	 private PayChannelSwitchService payChannelSwitchService;
 	
 	 /**
 	  * 页面跳转
@@ -94,7 +97,12 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  * @param response
 	  * @return
 	  */
-	 @RequestMapping("queryMerchant")
+	 /**
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping("queryMerchant")
 	 public String  queryMerchant(HttpServletRequest request,HttpServletResponse response) {
 		
 		  //当前第几页
@@ -129,6 +137,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 if(PS!=null&&!PS.equals("")){
 			 payStatus=Integer.parseInt(PS);
 		 }
+		 String sourceType=request.getParameter("sourceType"); 
+		 
 		 String startDate=request.getParameter("startDate"); //交易时间开始时间
 		 String endDate=request.getParameter("endDate"); //交易时间结束时间
 		 String startDate1 = null;
@@ -148,7 +158,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
-		 //merchantOrderInfo.setAppId(appId);				//业务类型
+		 if(sourceType!=""){
+			 merchantOrderInfo.setSourceType(Integer.parseInt(sourceType));	//支付渠道
+		 }
 		 if(appId!=""){
 			 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
 		 }
@@ -157,34 +169,54 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
+		 
+		 List<PayChannelSwitch> listPayChannelSwitch = payChannelSwitchService.findPayChannelTypeAll();
+		 Map map = new HashMap();
+//		 Map<String,Object> map= null;
+		 for(int i=0;i<listPayChannelSwitch.size();i++){
+			 PayChannelSwitch payChannelSwitch = listPayChannelSwitch.get(i);
+			 map.put(payChannelSwitch.getChannelValue(), payChannelSwitch.getChannelName());
+			} 
+		 Map map1 = new HashMap();
+		 List<PayChannelDictionary> listPayChannelDictionary = payChannelDictionaryService.findPayChannelCodeAll();
+		 for(int i=0;i<listPayChannelDictionary.size();i++){
+			 PayChannelDictionary payChannelDictionary = listPayChannelDictionary.get(i);
+			 map1.put(payChannelDictionary.getChannelID(), payChannelDictionary.getChannelName());
+		 }
+		 Map map2 = new HashMap();
+		 List<MerchantInfo> listMerchantInfo = merchantInfoService.findMerchantNamesAll();
+		 for(int i=0;i<listMerchantInfo.size();i++){
+			 MerchantInfo merchantInfo = listMerchantInfo.get(i);
+			 map2.put(merchantInfo.getId(), merchantInfo.getMerchantName());
+		 }
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
+			 String soureceType = merchantOrderInfo1.getSourceType()+"";
+			 if(!soureceType.equals("null")){
+				 String soureceTypeName = map.get(soureceType).toString();
+				 merchantOrderInfo1.setSourceTypeName(soureceTypeName); 
+			 }
+			 
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
 			 merchantOrderInfo1.setFoundDate(df.format(createDate1));//交易时间
 			 Date dealDate1 = merchantOrderInfo1.getDealDate();
 			 if(dealDate1!=null){
 				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
 			 }
-			 Integer channeId = merchantOrderInfo1.getChannelId();
-			 if(channeId!=null){
-				 PayChannelDictionary payChannelDictionary = payChannelDictionaryService.findNameById(channeId+"");
-				 if(payChannelDictionary.getChannelName()!=null){
-					 merchantOrderInfo1.setChannelName(payChannelDictionary.getChannelName()); 
-				 }
+			 String channeId = merchantOrderInfo1.getChannelId()+"";
+			 if(!channeId.equals("null")){
+				 String channelName = map1.get(channeId).toString();
+				 merchantOrderInfo1.setChannelName(channelName);
 			 }
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
 			 String paymentName = payChange(pMid);
 			 merchantOrderInfo1.setPaymentName(paymentName);
-			 int appValue = merchantOrderInfo1.getMerchantId();
-			 String appName="";
-			 if(appValue!=0){
-				 MerchantInfo merchantInfo = merchantInfoService.findNameById(appValue);
-				 if(merchantInfo!=null){
-					 appName = merchantInfo.getMerchantName();
-				 }
+			 Integer appValue = merchantOrderInfo1.getMerchantId();
+			 if(!appValue.equals("null")){
+				 String appId1 = map2.get(appValue).toString();
+				 merchantOrderInfo1.setAppId(appId1);
 			 }
-			 merchantOrderInfo1.setAppId(appName); 
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
 				 if(status==0){
@@ -317,7 +349,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	 }	
 	 
 	 /**
-	  * 查询信息
+	  * 交易明细下载
 	  * @param request
 	  * @param response
 	  * @return
@@ -380,34 +412,53 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setAppId(appId);				//业务类型
 		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findDownloadMerchant(merchantOrderInfo);
+		 List<PayChannelSwitch> listPayChannelSwitch = payChannelSwitchService.findPayChannelTypeAll();
+		 Map map = new HashMap();
+//		 Map<String,Object> map= null;
+		 for(int i=0;i<listPayChannelSwitch.size();i++){
+			 PayChannelSwitch payChannelSwitch = listPayChannelSwitch.get(i);
+			 map.put(payChannelSwitch.getChannelValue(), payChannelSwitch.getChannelName());
+			} 
+		 Map map1 = new HashMap();
+		 List<PayChannelDictionary> listPayChannelDictionary = payChannelDictionaryService.findPayChannelCodeAll();
+		 for(int i=0;i<listPayChannelDictionary.size();i++){
+			 PayChannelDictionary payChannelDictionary = listPayChannelDictionary.get(i);
+			 map1.put(payChannelDictionary.getChannelID(), payChannelDictionary.getChannelName());
+		 }
+		 Map map2 = new HashMap();
+		 List<MerchantInfo> listMerchantInfo = merchantInfoService.findMerchantNamesAll();
+		 for(int i=0;i<listMerchantInfo.size();i++){
+			 MerchantInfo merchantInfo = listMerchantInfo.get(i);
+			 map2.put(merchantInfo.getId(), merchantInfo.getMerchantName());
+		 }
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
+			 String soureceType = merchantOrderInfo1.getSourceType()+"";
+			 if(!soureceType.equals("null")){
+				 String soureceTypeName = map.get(soureceType).toString();
+				 merchantOrderInfo1.setSourceTypeName(soureceTypeName); 
+			 }
+			 
 			 Date createDate1 = merchantOrderInfo1.getCreateDate();
 			 merchantOrderInfo1.setFoundDate(df.format(createDate1));//交易时间
 			 Date dealDate1 = merchantOrderInfo1.getDealDate();
 			 if(dealDate1!=null){
 				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
 			 }
-			 Integer channeId = merchantOrderInfo1.getChannelId();
-			 if(channeId!=null){
-				 PayChannelDictionary payChannelDictionary = payChannelDictionaryService.findNameById(channeId+"");
-				 if(payChannelDictionary.getChannelName()!=null){
-					 merchantOrderInfo1.setChannelName(payChannelDictionary.getChannelName()); 
-				 }
+			 String channeId = merchantOrderInfo1.getChannelId()+"";
+			 if(!channeId.equals("null")){
+				 String channelName = map1.get(channeId).toString();
+				 merchantOrderInfo1.setChannelName(channelName);
 			 }
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
 			 String paymentName = payChange(pMid);
 			 merchantOrderInfo1.setPaymentName(paymentName);
-			 int appValue = merchantOrderInfo1.getMerchantId();
-			 String appName="";
-			 if(appValue!=0){
-				 MerchantInfo merchantInfo = merchantInfoService.findNameById(appValue);
-				 if(merchantInfo!=null){
-					 appName = merchantInfo.getMerchantName();
-				 }
+			 Integer appValue = merchantOrderInfo1.getMerchantId();
+			 if(!appValue.equals("null")){
+				 String appId1 = map2.get(appValue).toString();
+				 merchantOrderInfo1.setAppId(appId1);
 			 }
-			 merchantOrderInfo1.setAppId(appName); 
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
 				 if(status==0){
@@ -591,6 +642,36 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 				for(PayChannelDictionary d : list){
 					map = new HashMap<String,Object>();
 					map.put("id", d.getChannelID());
+					map.put("text", d.getChannelName());
+					maps.add(map);
+				} 
+				JSONArray jsonArr = JSONArray.fromObject(maps);
+				str = jsonArr.toString();
+				WebUtils.writeJson(response, str);
+//				System.out.println(str);
+			}
+			return ;
+		}
+		
+		/**
+		 * 查询所有支付渠道
+		 * @return 返回到前端json数据
+		 */
+		@RequestMapping(value="findSourceType")
+		public void findSourceType(HttpServletRequest request,HttpServletResponse response,Model model){
+			log.info("-------------------------findSourceType         start------------------------------------");
+			List<PayChannelSwitch> list = payChannelSwitchService.findPayChannelTypeAll();
+			List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+			Map<String,Object> map= null;
+			map = new HashMap<String,Object>();
+			map.put("id", "");
+			map.put("text", "全部");
+			maps.add(map);
+			String str=null;
+			if(list != null){
+				for(PayChannelSwitch d : list){
+					map = new HashMap<String,Object>();
+					map.put("id", d.getChannelValue());
 					map.put("text", d.getChannelName());
 					maps.add(map);
 				} 
