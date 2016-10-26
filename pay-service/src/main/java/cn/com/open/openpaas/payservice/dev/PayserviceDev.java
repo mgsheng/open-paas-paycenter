@@ -47,13 +47,13 @@ public class PayserviceDev {
 	}
 	public void setBanks_switch(String banks_switch) {
 		this.banks_switch = banks_switch;
+		setBank_map(banks_switch);
 	}
 	public Map<String, String> getBank_map() {
 		return bank_map;
 	}
 	public void setBank_map(String banks_switch) {
-		banks_switch=this.banks_switch;
-		String banks[]=banks_switch.split(",");
+		String banks[]=this.banks_switch.split(",");
 		bank_map=new HashMap<String,String>();
 		for(int i=0;i<banks.length;i++){
 		String bank[]=banks[i].split(":");
