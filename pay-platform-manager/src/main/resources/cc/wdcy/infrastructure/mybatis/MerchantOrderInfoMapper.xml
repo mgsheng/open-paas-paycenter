@@ -203,7 +203,7 @@
         <if test="userName != null and userName !=''" >
            and USERNAME=#{userName} 
         </if>
-        <if test="sourceType != null and sourceType !=''" >
+        <if test="sourceType != null " >
            and SOURCE_TYPE=#{sourceType} 
         </if>
         <if test="startDate != null and startDate !=''" >
@@ -271,7 +271,7 @@
         <if test="appId != null and appId !=''" >
            and APPID=#{appId} 
         </if>
-        <if test="sourceType != null and sourceType !=''" >
+        <if test="sourceType != null " >
            and SOURCE_TYPE=#{sourceType} 
         </if>
         <if test="startDate != null and startDate !=''" >
@@ -480,6 +480,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
           
          and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
 		limit #{startRow},#{pageSize} 
@@ -497,6 +500,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+           <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
          and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
 	
@@ -511,6 +517,9 @@
           </if>
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
+          </if>
+           <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
           </if>
          and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
