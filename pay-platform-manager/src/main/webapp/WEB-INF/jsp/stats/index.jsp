@@ -246,6 +246,7 @@ table {
 							appId : $("input[name='appId']").val(),
 							payClient : $("input[name='payClient']").val(),
 							channelId : $("input[name='channelId']").val(),
+							sourceType : $("input[name='sourceType']").val(),
 							startTime : startTime,
 							endTime : endTime,
 							timeType : timeType,

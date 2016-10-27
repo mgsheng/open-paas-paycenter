@@ -72,6 +72,7 @@ public class UserDataStatsController extends BaseControllerUtil {
 				String channelId,
 				String appId,
 				String payClient,
+				String sourceType,
 				String startTime,String endTime,String timeType) throws UnsupportedEncodingException {
 			/*//时间范围默认值
 			if(!nullEmptyBlankJudge(timeType)){
@@ -104,15 +105,15 @@ public class UserDataStatsController extends BaseControllerUtil {
 				}
 			//查询成交金额
 			endTime=DateTools.getTmotime("yyyy-MM-dd");
-			List<Map<String, Object>> payAmountList=merchantOrderInfoService.getPayAmount(startTime, endTime, appId, paymentId, channelId);
-			List<Map<String, Object>>getPayCountList=merchantOrderInfoService.getPayCount(startTime, endTime, appId, paymentId, channelId);
-			List<Map<String, Object>>userCountList=merchantOrderInfoService.getUserCount(startTime, endTime, appId, paymentId, channelId);
-			List<Map<String, Object>>payChargeList=merchantOrderInfoService.payCharge(startTime, endTime, appId, paymentId, channelId);
+			List<Map<String, Object>> payAmountList=merchantOrderInfoService.getPayAmount(startTime, endTime, appId, paymentId, channelId,sourceType);
+			List<Map<String, Object>>getPayCountList=merchantOrderInfoService.getPayCount(startTime, endTime, appId, paymentId, channelId,sourceType);
+			List<Map<String, Object>>userCountList=merchantOrderInfoService.getUserCount(startTime, endTime, appId, paymentId, channelId,sourceType);
+			List<Map<String, Object>>payChargeList=merchantOrderInfoService.payCharge(startTime, endTime, appId, paymentId, channelId,sourceType);
 			//查询总的金额
-			HashMap<String, Object> totalPayAmountMap=merchantOrderInfoService.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId);
-			HashMap<String, Object> totalPayCountMap=merchantOrderInfoService.getTotalPayCount(startTime, endTime, appId, paymentId, channelId);
-			HashMap<String, Object> totalUserCountMap=merchantOrderInfoService.getTotalUserCount(startTime, endTime, appId, paymentId, channelId);
-			HashMap<String, Object> totalPayChargeMap=merchantOrderInfoService.payTotalCharge(startTime, endTime, appId, paymentId, channelId);
+			HashMap<String, Object> totalPayAmountMap=merchantOrderInfoService.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId,sourceType);
+			HashMap<String, Object> totalPayCountMap=merchantOrderInfoService.getTotalPayCount(startTime, endTime, appId, paymentId, channelId,sourceType);
+			HashMap<String, Object> totalUserCountMap=merchantOrderInfoService.getTotalUserCount(startTime, endTime, appId, paymentId, channelId,sourceType);
+			HashMap<String, Object> totalPayChargeMap=merchantOrderInfoService.payTotalCharge(startTime, endTime, appId, paymentId, channelId,sourceType);
 			
 			//生成返回数据
 			List<Map<String,Object>> payAmountListMap = new ArrayList<Map<String,Object>>();

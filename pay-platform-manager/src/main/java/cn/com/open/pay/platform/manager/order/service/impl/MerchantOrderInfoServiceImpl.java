@@ -125,58 +125,58 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 
 	@Override
 	public List<Map<String, Object>> getPayCount(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getPayCount(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.getPayCount(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public List<Map<String, Object>> getPayAmount(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getPayAmount(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.getPayAmount(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public List<Map<String, Object>> getUserCount(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getUserCount(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.getUserCount(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public List<Map<String, Object>> payCharge(String startTime, String endTime,
-			String appId, String paymentId, String channelId) {
+			String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.payCharge(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.payCharge(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public HashMap<String, Object> getTotalPayCount(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getTotalPayCount(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.getTotalPayCount(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public HashMap<String, Object> getTotalPayAmount(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.getTotalPayAmount(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public HashMap<String, Object> getTotalUserCount(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.getTotalUserCount(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.getTotalUserCount(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override
 	public HashMap<String, Object> payTotalCharge(String startTime,
-			String endTime, String appId, String paymentId, String channelId) {
+			String endTime, String appId, String paymentId, String channelId,String sourceType) {
 		// TODO Auto-generated method stub
-		return merchantOrderInfoRepository.payTotalCharge(startTime, endTime, appId, paymentId, channelId);
+		return merchantOrderInfoRepository.payTotalCharge(startTime, endTime, appId, paymentId, channelId,sourceType);
 	}
 
 	@Override

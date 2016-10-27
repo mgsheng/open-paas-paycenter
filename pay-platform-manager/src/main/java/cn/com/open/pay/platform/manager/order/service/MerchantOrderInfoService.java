@@ -38,15 +38,15 @@ public interface MerchantOrderInfoService {
 	void updateOrderId(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findOrderByTime(String startTime,String endTime,String appId);
 	HashMap<String, Object> getTotalAmountByTime(String startTime,String endTime,String appId);
-	List<Map<String, Object>> getPayCount(String startTime, String endTime,String appId,String paymentId,String channelId);
-	List<Map<String, Object>> getPayAmount(String startTime, String endTime,String appId,String paymentId,String channelId);
-	List<Map<String, Object>> getUserCount(String startTime, String endTime,String appId,String paymentId,String channelId);
-	List<Map<String, Object>> payCharge(String startTime, String endTime,String appId,String paymentId,String channelId);
+	List<Map<String, Object>> getPayCount(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
+	List<Map<String, Object>> getPayAmount(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
+	List<Map<String, Object>> getUserCount(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
+	List<Map<String, Object>> payCharge(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
 	
-	HashMap<String, Object> getTotalPayCount(String startTime, String endTime,String appId,String paymentId,String channelId);
-	HashMap<String, Object> getTotalPayAmount(String startTime, String endTime,String appId,String paymentId,String channelId);
-	HashMap<String, Object> getTotalUserCount(String startTime, String endTime,String appId,String paymentId,String channelId);
-	HashMap<String, Object> payTotalCharge(String startTime, String endTime,String appId,String paymentId,String channelId);
+	HashMap<String, Object> getTotalPayCount(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
+	HashMap<String, Object> getTotalPayAmount(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
+	HashMap<String, Object> getTotalUserCount(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
+	HashMap<String, Object> payTotalCharge(String startTime, String endTime,String appId,String paymentId,String channelId,String getPayAmount);
 	List<MerchantOrderInfo> findQueryMerchant(
 			MerchantOrderInfo merchantOrderInfo);
 	

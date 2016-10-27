@@ -363,6 +363,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
 	<select id="getTotalPayCount"  resultType="java.util.Map" flushCache="true">
@@ -377,6 +380,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
 	</select>
 	<select id="getPayAmount"  resultType="java.util.Map" flushCache="true" >
@@ -390,6 +396,9 @@
           </if>
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
+          </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
@@ -406,6 +415,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1
          
 	</select>
@@ -420,6 +432,9 @@
           </if>
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
+          </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
@@ -436,6 +451,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+          <if test="sourceType != null and sourceType !=''">
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
           
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1  
 	</select>
@@ -451,6 +469,9 @@
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
           </if>
+          <if test="sourceType != null and sourceType !=''" >
+           and SOURCE_TYPE=#{sourceType} 
+          </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 group by  date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
 	<select id="payTotalCharge"  resultType="java.util.Map" flushCache="true">
@@ -464,6 +485,9 @@
           </if>
            <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
+          </if>
+          <if test="sourceType != null and sourceType !=''"  >
+           and SOURCE_TYPE=#{sourceType} 
           </if>
          and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and PAY_STATUS = 1 
 	</select>

@@ -180,7 +180,8 @@
 					var hy="seven";
 					getDayType(hy);
 					initialise();
-					payIrrigation()
+					payIrrigation();
+					paySourceType();
 		            loadGrid();  
 		            
 		});  
@@ -199,6 +200,15 @@
 				textField:'text'
 			});
 		}
+		
+		function paySourceType(){
+			$('#sourceType').combobox({
+				url:'${pageContext.request.contextPath}/manage/findSourceType',
+				valueField:'id',
+				textField:'text'
+			});
+		}
+		
 		  
 		
 		function getDayType(date) {
