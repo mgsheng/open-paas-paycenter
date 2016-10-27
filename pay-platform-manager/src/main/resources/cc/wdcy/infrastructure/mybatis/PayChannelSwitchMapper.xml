@@ -16,6 +16,8 @@
 	<select id="findPayChannelTypeAll" resultMap="payChannelSwitchMap" >
 		select * from PAY_CHANNEL_SWITCH 
 	</select>
-	
+	<select id="findNameById" resultMap="payChannelSwitchMap">
+		select * from PAY_CHANNEL_SWITCH where channel_value=#{channelValue}
+	</select>
 	
 </mapper>

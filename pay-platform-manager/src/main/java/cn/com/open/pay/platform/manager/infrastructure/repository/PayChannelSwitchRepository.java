@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch;
 
 /**
@@ -20,6 +21,8 @@ public interface PayChannelSwitchRepository  extends Repository{
 	 * @return
 	 */
 	public List<PayChannelSwitch> findPayChannelTypeAll();
+
+	public PayChannelSwitch findNameById(String channelId);
 	
 	
 }

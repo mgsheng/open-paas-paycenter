@@ -291,7 +291,8 @@
         function loadSelect(){
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
             $('#addChannelId,#queryChannelId').combobox({
-				url:'${pageContext.request.contextPath}/paychannel/findPayNames',
+				/* url:'${pageContext.request.contextPath}/paychannel/findPayNames', */
+				url:'${pageContext.request.contextPath}/manage/findSourceType?flag=offline',
 				valueField:'id',
 				textField:'text'
 			});

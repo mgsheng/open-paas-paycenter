@@ -660,13 +660,16 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		@RequestMapping(value="findSourceType")
 		public void findSourceType(HttpServletRequest request,HttpServletResponse response,Model model){
 			log.info("-------------------------findSourceType         start------------------------------------");
+			String flag=request.getParameter("flag");
 			List<PayChannelSwitch> list = payChannelSwitchService.findPayChannelTypeAll();
 			List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 			Map<String,Object> map= null;
-			map = new HashMap<String,Object>();
-			map.put("id", "");
-			map.put("text", "全部");
-			maps.add(map);
+			if(flag==null || flag==""){
+				map = new HashMap<String,Object>();
+				map.put("id", "");
+				map.put("text", "全部");
+				maps.add(map);
+			}
 			String str=null;
 			if(list != null){
 				for(PayChannelSwitch d : list){

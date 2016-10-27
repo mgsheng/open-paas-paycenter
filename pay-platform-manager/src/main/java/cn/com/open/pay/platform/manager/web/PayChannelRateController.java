@@ -161,6 +161,9 @@ public class PayChannelRateController extends BaseControllerUtil{
 		List<MerchantInfo> list = payChannelRateService.findMerchantNamesAll();
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
+		map = new HashMap<String,Object>();
+		map.put("id", "");
+		map.put("text", "全部");
 		String str=null;
 		if(list != null){
 			for(MerchantInfo m : list){

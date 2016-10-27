@@ -39,7 +39,9 @@ import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderOfflineService;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
+import cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
+import cn.com.open.pay.platform.manager.paychannel.service.PayChannelSwitchService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
@@ -70,6 +72,8 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private PayChannelSwitchService payChannelSwitchService;
 	
 	/**
 	 * 跳转到线下收费维护页面
@@ -151,7 +155,7 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	    json.put("total", total);
 	    List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 	    MerchantInfo merchantInfo=null;
-	    PayChannelDictionary channel=null;
+	    PayChannelSwitch channel=null;
 	    DictTradePayment payment=null;
 	    if(offlines != null){
 	    	Map<String,Object> map = null;
@@ -172,8 +176,9 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 		    		map.put("merchantId", merchantInfo.getMerchantName());
 	    		}
 	    		map.put("appId", r.getAppId());
-	    		channel=payChannelDictionaryService.findNameById(r.getChannelId());
-	    		if(channel!=null){
+	    		//channel=payChannelDictionaryService.findNameById(r.getChannelId());
+	    		channel=payChannelSwitchService.findNameById(r.getChannelId());
+				if(channel!=null){
 	    			map.put("channelId", channel.getChannelName());
 	    		}
 	    		map.put("remark", r.getRemark());

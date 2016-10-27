@@ -30,4 +30,10 @@ public class PayChannelSwitchServiceImpl implements PayChannelSwitchService{
 		return payChannelSwitchRepository.findPayChannelTypeAll();
 	}
 
+
+	@Override
+	public PayChannelSwitch findNameById(String channelId) {
+		return payChannelSwitchRepository.findNameById(channelId);
+	}
+
 }
