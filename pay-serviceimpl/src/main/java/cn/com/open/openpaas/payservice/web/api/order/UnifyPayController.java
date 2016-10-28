@@ -2,11 +2,9 @@ package cn.com.open.openpaas.payservice.web.api.order;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -66,15 +64,13 @@ import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandl
 import com.alipay.api.AlipayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.demo.trade.config.Configs;
-import com.alipay.demo.trade.model.GoodsDetail;
-import com.alipay.demo.trade.model.builder.AlipayTradePrecreateContentBuilder;
+import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayMonitorService;
 import com.alipay.demo.trade.service.AlipayTradeService;
 import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
-import com.alipay.demo.trade.utils.ZxingUtils;
 
 /**
  * 
@@ -359,13 +355,17 @@ public class UnifyPayController extends BaseControllerUtil{
 					merchantOrderInfo.setSourceType(Integer.parseInt(payTcl));	
 				}
 				else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
-					payEbank=getBankSwitch(paymentType, bank_map);
+					payEbank=bank_map.get(paymentType);
 					merchantOrderInfo.setSourceType(Integer.parseInt(payEbank));	
 					
 				}else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
-					merchantOrderInfo.setSourceType(3);	
+					merchantOrderInfo.setSourceType(PaySwitch.PAYMAX.getValue());	
 				}else if(String.valueOf(Channel.YEEPAY.getValue()).equals(paymentChannel)){
-					merchantOrderInfo.setSourceType(2);	
+					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
+				}else if(String.valueOf(Channel.YEEPAY_EB.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
+				}else if(String.valueOf(Channel.ALIFAF.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.ALI.getValue());	
 				}
 			}
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
@@ -473,13 +473,9 @@ public class UnifyPayController extends BaseControllerUtil{
 			        		    
 			                	return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
 			        			
-			            	}//支付宝-即时到账支付
-			        		else if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
-			            		//调用支付宝当面付方法  
-			        			test_trade_precreate(merchantOrderInfo.getId(),merchantOrderInfo.getMerchantProductName(),String.valueOf(merchantOrderInfo.getOrderAmount()),"0","",String.valueOf(merchantOrderInfo.getMerchantId()),merchantOrderInfo.getMerchantProductDesc(),"test_operator_id","120m");
 			            	}
-				    	 
-				     }else if(String.valueOf(PaySwitch.TCL.getValue()).equals(payZhifubao)){
+				     }
+		    	 else if(String.valueOf(PaySwitch.TCL.getValue()).equals(payZhifubao)){
 					    	//支付宝-即时到账支付
 				    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 				    	  if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
@@ -495,7 +491,20 @@ public class UnifyPayController extends BaseControllerUtil{
 			         			return "pay/payRedirect";
 			              }
 				        } 
-		     }else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){
+		     }else if(String.valueOf(Channel.ALIFAF.getValue()).equals(paymentChannel)){		    	 
+	    		   payServiceLog.setPaySwitch(String.valueOf(merchantOrderInfo.getSourceType()));
+	        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
+	            		//调用支付宝当面付方法  
+	        			String alifafCode=trade_precreate(merchantOrderInfo);
+	        			  //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
+	                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
+	                	 fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+alifafCode;
+	                	 payServiceLog.setLogName(PayLogName.PAY_END);
+	        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
+	                	 return "redirect:" + fullUri;
+	            	}
+             }
+		     else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payWx);
 		    	if(PaymentType.WEIXIN.getValue().equals(paymentType)){
 		    		 if(String.valueOf(PaySwitch.ALI.getValue()).equals(payWx)){
@@ -1184,7 +1193,13 @@ public class UnifyPayController extends BaseControllerUtil{
         	 }else{
      		 returnValue=false; 
      	 }
-  	}
+  	  }else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.ALIFAF.getValue()))){
+  		if(paymentType!=null&&PaymentType.ALIFAF.getValue().equals(paymentType)){
+   		 returnValue=true; 
+   	  }else{
+	 	 returnValue=false; 
+	   }
+  	  }
     	return returnValue;
     }
     /**
@@ -1754,7 +1769,7 @@ public class UnifyPayController extends BaseControllerUtil{
     }
    
  // 测试当面付2.0生成支付二维码
-    public void test_trade_precreate(String outTradeNo,String subject,String totalAmount,String undiscountableAmount,String sellerId,String storeId,String body,String operatorId,String timeExpress ) {
+    public String trade_precreate(MerchantOrderInfo merchantOrderInfo) {
         // (必填) 商户网站订单系统中唯一订单号，64个字符以内，只能包含字母、数字、下划线，
         // 需保证商户系统端不能重复，建议通过数据库sequence生成，
         //String outTradeNo = "tradeprecreate" + System.currentTimeMillis() + (long)(Math.random() * 10000000L);
@@ -1781,7 +1796,7 @@ public class UnifyPayController extends BaseControllerUtil{
         // operatorId = "test_operator_id";
 
         // (必填) 商户门店编号，通过门店号和商家后台可以配置精准到门店的折扣信息，详询支付宝技术支持
-        //String storeId = "test_store_id";
+        //String storeId = "store_id";
 
         // 业务扩展参数，目前可添加由支付宝分配的系统商编号(通过setSysServiceProviderId方法)，详情请咨询支付宝技术支持
 /*        ExtendParams extendParams = new ExtendParams();
@@ -1789,57 +1804,58 @@ public class UnifyPayController extends BaseControllerUtil{
 
         // 支付超时，定义为120分钟
         //String timeExpress = "120m";
+    	 String aliCode="";
+    	if(merchantOrderInfo!=null){
+    		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALIFAF.getValue());
+    		 	
+    		   if(dictTradeChannels!=null){
+    			   String other= dictTradeChannels.getOther();
+    			   String notifyUrl=dictTradeChannels.getNotifyUrl();
+        			Map<String, String> others = new HashMap<String, String>();
+        			others=getPartner(other); 
 
-        // 商品明细列表，需填写购买商品详细信息，
-        List<GoodsDetail> goodsDetailList = new ArrayList<GoodsDetail>();
-        // 创建一个商品信息，参数含义分别为商品id（使用国标）、名称、单价（单位为分）、数量，如果需要添加商品类别，详见GoodsDetail
-        GoodsDetail goods1 = GoodsDetail.newInstance("goods_id001", "全麦小面包", 1500, 1);
-        // 创建好一个商品后添加至商品明细列表
-        goodsDetailList.add(goods1);
+        			 AlipayTradePrecreateRequestBuilder builder = new AlipayTradePrecreateRequestBuilder()
+       	                .setSubject(merchantOrderInfo.getMerchantProductName())
+       	                .setTotalAmount(String.valueOf(merchantOrderInfo.getOrderAmount()))
+       	                .setOutTradeNo(merchantOrderInfo.getId())
+       	                .setSellerId(others.get("sellerId"))
+       	                .setBody(merchantOrderInfo.getMerchantProductDesc())
+       	                .setStoreId(others.get("store_id"))
+       	                .setNotifyUrl(notifyUrl)
+       	              //  .setExtendParams(extendParams)
+       	                .setTimeoutExpress(others.get("timeExpress"));
+       	       
+       	                //.setGoodsDetailList(goodsDetailList);
 
-        // 继续创建并添加第一条商品信息，用户购买的产品为“黑人牙刷”，单价为5.05元，购买了两件
-        GoodsDetail goods2 = GoodsDetail.newInstance("goods_id002", "黑人牙刷", 505, 2);
-        goodsDetailList.add(goods2);
+       	        AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
+       	        switch (result.getTradeStatus()) {
+       	            case SUCCESS:
+       	                log.info("支付宝预下单成功: )");
+       	                AlipayTradePrecreateResponse response = result.getResponse();
+       	                //dumpResponse(response);
+       	                aliCode=response.getQrCode();
+       	                break;
 
-        AlipayTradePrecreateContentBuilder builder = new AlipayTradePrecreateContentBuilder()
-                .setSubject(subject)
-                .setTotalAmount(totalAmount)
-                .setOutTradeNo(outTradeNo)
-                .setUndiscountableAmount(undiscountableAmount)
-                .setSellerId(sellerId)
-                .setBody(body)
-                .setOperatorId(operatorId)
-                .setStoreId(storeId)
-              //  .setExtendParams(extendParams)
-                .setTimeExpress(timeExpress)
-                .setGoodsDetailList(goodsDetailList);
+       	            case FAILED:
+       	                log.error("支付宝预下单失败!!!");
+       	                aliCode="";
+       	                break;
 
-        AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
-        switch (result.getTradeStatus()) {
-            case SUCCESS:
-                log.info("支付宝预下单成功: )");
+       	            case UNKNOWN:
+       	                log.error("系统异常，预下单状态未知!!!");
+       	                aliCode="";
+       	                break;
 
-                AlipayTradePrecreateResponse response = result.getResponse();
-                dumpResponse(response);
-
-                // 需要修改为运行机器上的路径
-                String filePath = String.format("/pay/qr-%s.png", response.getOutTradeNo());
-                log.info("filePath:" + filePath);
-                ZxingUtils.getQRCodeImge(response.getQrCode(), 256, filePath);
-                break;
-
-            case FAILED:
-                log.error("支付宝预下单失败!!!");
-                break;
-
-            case UNKNOWN:
-                log.error("系统异常，预下单状态未知!!!");
-                break;
-
-            default:
-                log.error("不支持的交易状态，交易返回异常!!!");
-                break;
-        }
+       	            default:
+       	                log.error("不支持的交易状态，交易返回异常!!!");
+       	                aliCode="";
+       	                break;
+       	        }
+    		   }
+    	}
+       
+      
+        return aliCode;
     }
     public void dumpResponse(AlipayResponse response) {
         if (response != null) {

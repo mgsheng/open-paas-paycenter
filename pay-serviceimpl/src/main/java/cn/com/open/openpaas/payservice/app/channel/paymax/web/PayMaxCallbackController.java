@@ -173,6 +173,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 							    sParaTemp.put("secret", mySign);
 							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
 							    model.addAttribute("res", buf);
+							    
 			     			    return "pay/payMaxRedirect"; 
 			     			    
 						 }else{
@@ -208,8 +209,54 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 				   backMsg="error";
 				  if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 					 {
-					     payServiceLog.setStatus("already processed");
-					     backMsg="success";
+					   String returnUrl=merchantOrderInfo.getReturnUrl();
+				  		MerchantInfo merchantInfo = null;
+				  		if(nullEmptyBlankJudge(returnUrl)){
+				  			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+				  			returnUrl=merchantInfo.getReturnUrl();
+				  		}
+				  		 if(!nullEmptyBlankJudge(returnUrl)){
+							 //Map<String, String> dataMap=new HashMap<String, String>();
+							 String buf="";
+								int payStatus=merchantOrderInfo.getPayStatus();
+								Double payCharge=0.0;
+								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+								if(payStatus!=1){
+									merchantOrderInfo.setPayStatus(1);
+									merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
+									merchantOrderInfo.setAmount(Double.parseDouble(amount));
+									merchantOrderInfo.setPayCharge(payCharge);
+									merchantOrderInfo.setDealDate(new Date());
+									merchantOrderInfo.setPayOrderId(id);
+									merchantOrderInfoService.updateOrder(merchantOrderInfo);
+									if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+										String rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(amount)*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+									}
+								}
+							    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+								sParaTemp.put("orderId", merchantOrderInfo.getId());
+						        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+						        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+						        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+								sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+								sParaTemp.put("feeType", "CNY");
+								sParaTemp.put("guid", merchantOrderInfo.getGuid());
+								sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+								//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+								sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
+								sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
+								sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+								sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+								sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+								sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf((int)(merchantOrderInfo.getPayCharge()*100))+";");
+								sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+							    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+							    sParaTemp.put("secret", mySign);
+							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+							    model.addAttribute("res", buf);
+			     			    return "pay/payMaxRedirect"; 
+				  		 }
+				  		payServiceLog.setStatus("already processed");
 					 }
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
 		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);

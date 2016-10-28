@@ -99,5 +99,23 @@ public class UnifyPayUtil {
 			}
 			return returnValue;
 		}
+		/**
+		 * 计算获取手续费(结果为元)
+		 * @param merchantOrderInfo
+		 * @return
+		 */
+		public static Double getPayCharge(MerchantOrderInfo merchantOrderInfo,ChannelRateService channelRateService,String channelId){
+			Double returnValue=0.0;
+		    Double rete=0.0;
+			ChannelRate channelRate=channelRateService.getChannelRate(channelId, merchantOrderInfo.getSourceType());
+			if(channelRate!=null){
+				//Double amount=200.00;
+				rete=merchantOrderInfo.getOrderAmount()* 100 * Double.parseDouble(channelRate.getPayRate());
+				//rete=amount* Double.parseDouble(channelRate.getPayRate());
+				BigDecimal b =new BigDecimal(rete/100);  
+				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();  
+			}
+			return returnValue;
+		}
 
 }

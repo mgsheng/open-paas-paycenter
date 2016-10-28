@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -155,9 +156,17 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 							    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 							    sParaTemp.put("secret", mySign);
 							    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
-							    model.addAttribute("res", buf);
-							    String url=payserviceDev.getServer_host()+"/yeepay/notify/payRedirect"+"?res="+buf;
-							    response.sendRedirect(url);
+							  //  model.addAttribute("res", buf);
+							   // String url=payserviceDev.getServer_host()+"yeepay/notify/payRedirect";
+							    //response.sendRedirect(url);
+							    request.setAttribute("res", buf);
+							    try {
+									request.getRequestDispatcher("payRedirect").forward(request, response);
+									return;
+								} catch (ServletException e) {
+									e.printStackTrace();
+								}
+							    
 						 }else{
 							 backMsg="success";
 						 }
@@ -194,7 +203,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						payServiceLog.setLogName(PayLogName.YEEPAY_NOTIFY_END);
 						UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 						WebUtils.writeJson(response, backMsg);
-						return;
+						return ;
 					}
 				}else{
 					payServiceLog.setLogName(PayLogName.YEEPAY_NOTIFY_END);
@@ -253,10 +262,13 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 								    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
 								    sParaTemp.put("secret", mySign);
 								    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
-								    model.addAttribute("res", buf);
-								    String url=payserviceDev.getServer_host()+"/yeepay/notify/payRedirect"+"?res="+buf;
-								    response.sendRedirect(url);
-								    return;
+								    request.setAttribute("res", buf);
+								    try {
+										request.getRequestDispatcher("payRedirect").forward(request, response);
+										return;
+									} catch (ServletException e) {
+										e.printStackTrace();
+									}
 							 }
 					 
 					 }
@@ -297,9 +309,9 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 	/**
      * 跳转第三方渠道界面
      */
-    @RequestMapping(value = "payRedirect", method = RequestMethod.GET)
+    @RequestMapping(value = "payRedirect")
     public String selectPayChannel(HttpServletRequest request, Model model){
-    	  String res = request.getParameter("res");
+    	  String res = (String) request.getAttribute("res");
     	  model.addAttribute("res", res);
     	return "pay/payRedirect";
     }	

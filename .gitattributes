@@ -1076,10 +1076,10 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/UnifyP
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderProThread.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlifafNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayConfig.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayCore.java -text
-pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayFTFController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipayNotify.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AlipaySubmit.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/BusinessType.java -text
@@ -1087,7 +1087,6 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/DemoHbRunner.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/MD5Util.java -text
-pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/Main.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayChannelRate.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PaySwitch.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/PayType.java -text
@@ -1326,6 +1325,7 @@ pay-serviceimpl/src/main/webapp/images/icon1.png -text
 pay-serviceimpl/src/main/webapp/images/icon2.png -text
 pay-serviceimpl/src/main/webapp/images/jianhang.jpg -text
 pay-serviceimpl/src/main/webapp/images/jiaohang.jpg -text
+pay-serviceimpl/src/main/webapp/images/lakala.jpg -text
 pay-serviceimpl/src/main/webapp/images/licenspic.jpg -text
 pay-serviceimpl/src/main/webapp/images/logo.png -text
 pay-serviceimpl/src/main/webapp/images/logo1.png -text
@@ -1354,6 +1354,7 @@ pay-serviceimpl/src/main/webapp/images/wechat/pic/slider/t0192ce72438bf6c5e5.jpg
 pay-serviceimpl/src/main/webapp/images/wechat/pic/slider/t01ee977e94b08987b6.jpg -text
 pay-serviceimpl/src/main/webapp/images/weixin.jpg -text
 pay-serviceimpl/src/main/webapp/images/weixinPay.jpg -text
+pay-serviceimpl/src/main/webapp/images/yibao.jpg -text
 pay-serviceimpl/src/main/webapp/images/youzheng.jpg -text
 pay-serviceimpl/src/main/webapp/images/zaixian.jpg -text
 pay-serviceimpl/src/main/webapp/images/zhaohang.jpg -text

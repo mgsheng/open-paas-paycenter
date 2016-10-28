@@ -14,6 +14,21 @@ public class ChannelRate implements Serializable {
     private String  payChannelCode;
     private String  payName;
     private String  payRate;
+    private String  channelId;
+    private Integer sourceType;
+    
+	public String getChannelId() {
+		return channelId;
+	}
+	public void setChannelId(String channelId) {
+		this.channelId = channelId;
+	}
+	public Integer getSourceType() {
+		return sourceType;
+	}
+	public void setSourceType(Integer sourceType) {
+		this.sourceType = sourceType;
+	}
 	public Integer getId() {
 		return id;
 	}

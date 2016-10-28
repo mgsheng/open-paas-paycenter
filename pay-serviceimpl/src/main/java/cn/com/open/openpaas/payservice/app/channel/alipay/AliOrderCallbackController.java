@@ -205,7 +205,41 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	          backMsg="error";
 	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 				 {
-	        	  backMsg="success";
+	        	  String returnUrl=merchantOrderInfo.getReturnUrl();
+	       		MerchantInfo merchantInfo = null;
+	       		if(nullEmptyBlankJudge(returnUrl)){
+	       			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+	       			returnUrl=merchantInfo.getReturnUrl();
+	       		}
+				//判断该笔订单是否在商户网站中已经做过处理
+				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
+				 if(!nullEmptyBlankJudge(returnUrl)){
+					 String buf="";
+					    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+						sParaTemp.put("orderId", merchantOrderInfo.getId());
+				        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+				        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+				        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+						sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+						sParaTemp.put("feeType", "CNY");
+						sParaTemp.put("guid", merchantOrderInfo.getGuid());
+						sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+						//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+						sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+						sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
+						sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+						sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+						sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+						sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf(merchantOrderInfo.getPayCharge()));
+						sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+					    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+					    sParaTemp.put("secret", mySign);
+					    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+					    model.addAttribute("res", buf);
+	     			    return "pay/payMaxRedirect"; 
+				 }
+			
 	        	  payServiceLog.setStatus("already processed");
 				 }
 	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);

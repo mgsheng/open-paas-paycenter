@@ -7,12 +7,16 @@
 		<result column="PAY_CHANNEL_CODE" property="payChannelCode" jdbcType="VARCHAR" />
 		<result column="PAY_NAME" property="payName" jdbcType="VARCHAR" />
 		<result column="PAY_RATE" property="payRate" jdbcType="VARCHAR" />
+		<result column="SOURCE_TYPE" property="sourceType" jdbcType="INTEGER" />
+		<result column="CHANNEL_ID" property="channelId" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 		MERCHANT_ID,
 		PAY_CHANNEL_CODE,
 		PAY_NAME,
-		PAY_RATE
+		PAY_RATE,
+		CHANNEL_ID,
+		SOURCE_TYPE
 	</sql>
 	<sql id="Base_Column_List">
 		ID,
@@ -31,11 +35,17 @@
 			#{merchantId, jdbcType=VARCHAR},
 			#{payChannelCode, jdbcType=VARCHAR},
 			#{payName,jdbcType=VARCHAR},
-			#{payRate,jdbcType=VARCHAR}
+			#{payRate,jdbcType=VARCHAR},
+			#{sourceType,jdbcType=INTEGER},
+			#{channelId,jdbcType=VARCHAR}
 		)
 	</insert>
 	<select id="getChannelRate" resultMap="ChannelRatelMap">
          select * from PAY_CHANNEL_RATE
          where  MERCHANT_ID = #{merchantId} and PAY_CHANNEL_CODE=#{payChannelCode} 
+	</select>
+	<select id="getRateByChannel" resultMap="ChannelRatelMap">
+         select * from PAY_CHANNEL_RATE
+         where  SOURCE_TYPE = #{sourceType} and CHANNEL_ID=#{channelId} 
 	</select>
 </mapper>

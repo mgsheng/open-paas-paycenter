@@ -1,4 +1,4 @@
-package cn.com.open.openpaas.payservice.app.thread;
+/*package cn.com.open.openpaas.payservice.app.thread;
 
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
@@ -34,4 +34,4 @@ public class PrnCurrentTime implements Runnable {
 		}
 	}
 
-}
+}*/

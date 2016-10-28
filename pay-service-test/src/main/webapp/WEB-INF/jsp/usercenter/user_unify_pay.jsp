@@ -179,7 +179,7 @@
                            <select name="paymentType" id="paymentType" class="form-control" ng-mode="paymentType">
                                 <option value=""></option>
 								<option value="ALIPAY">支付宝-即时到账</option>
-								<!-- <option value="ALIFAF">支付宝-当面付</option> -->
+								<option value="ALIFAF">支付宝-当面付</option>
 								<option value="WEIXIN">微信-扫码支付</option>
 								<option value="WECHAT_WAP">微信-公众号支付</option>
 								<option value="PAYMAX">拉卡拉-网关支付</option>
@@ -218,6 +218,7 @@
 								<option value="10007">拉卡拉</option>
 								<option value="10006">易宝扫码</option>
 								<option value="10008">易宝</option>
+								<option value="10009">支付宝-当面付</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>

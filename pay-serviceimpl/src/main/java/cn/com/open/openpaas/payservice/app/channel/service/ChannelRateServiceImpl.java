@@ -21,6 +21,12 @@ public class ChannelRateServiceImpl implements ChannelRateService {
 		return channelRateRepository.getChannelRate(merid, payChannelCode);
 	}
 
+	@Override
+	public ChannelRate getChannelRate(String channelId, Integer sourceType) {
+		// TODO Auto-generated method stub
+		return channelRateRepository.getRateByChannel(channelId, sourceType);
+	}
+
 
 
 }

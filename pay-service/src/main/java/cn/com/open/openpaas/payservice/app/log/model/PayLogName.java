@@ -21,9 +21,14 @@ public interface PayLogName {
 	public static String TCL_NOTIFY_START = "tcl_notify_start";
 	//TCL回调结束
 	public static String TCL_NOTIFY_END = "tcl_notify_end";
-	//TCL回调开始
+	
+	//支付宝当面付回调开始
+	public static String ALIFAF_NOTIFY_START = "alifaf_notify_start";
+	//支付宝当面付回调结束
+	public static String ALIFAF_NOTIFY_END = "alifaf_notify_end";
+	//微信回调开始
 	public static String WEIXIN_NOTIFY_START = "weixin_notify_start";
-	//TCL回调结束
+	//微信回调结束
 	public static String WEIXIN_NOTIFY_END = "weixin_notify_end";
 	
 	//第三方回调开始

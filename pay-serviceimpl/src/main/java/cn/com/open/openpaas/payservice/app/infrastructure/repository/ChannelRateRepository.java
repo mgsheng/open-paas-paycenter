@@ -12,5 +12,6 @@ import cn.com.open.openpaas.payservice.app.channel.model.ChannelRate;
 public interface ChannelRateRepository extends Repository {
 
 	ChannelRate getChannelRate(@Param("merchantId")String merchantId,@Param("payChannelCode")String payChannelCode);
+	ChannelRate getRateByChannel(@Param("channelId")String channelId,@Param("sourceType")Integer sourceType);
 
 }
