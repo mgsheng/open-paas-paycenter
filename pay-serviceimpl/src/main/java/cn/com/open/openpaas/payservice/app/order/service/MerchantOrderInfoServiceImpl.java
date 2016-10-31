@@ -110,5 +110,11 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		
 	}
 
+	@Override
+	public List<MerchantOrderInfo> findOrderMessage(String startTime,
+			String endTime, String appId) {
+		return merchantOrderInfoRepository.findOrderMessage(startTime, endTime, appId);
+	}
+
 
 }

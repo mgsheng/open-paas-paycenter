@@ -100,6 +100,9 @@ public class MerchantOrderInfo implements Serializable {
 	private String statusMessage;
 	private Integer businessType;
 	
+	private String createDate1;
+	private String dealDate1;
+	
 
 	public Integer getBusinessType() {
 		return businessType;
@@ -460,6 +463,22 @@ public class MerchantOrderInfo implements Serializable {
 		return merchantProductId;
 	}
 
+	public String getCreateDate1() {
+		return createDate1;
+	}
+
+	public void setCreateDate1(String createDate1) {
+		this.createDate1 = createDate1;
+	}
+
+	public String getDealDate1() {
+		return dealDate1;
+	}
+
+	public void setDealDate1(String dealDate1) {
+		this.dealDate1 = dealDate1;
+	}
+
 	public void setMerchantProductId(String merchantProductId) {
 		this.merchantProductId = merchantProductId;
 	}
@@ -471,4 +490,5 @@ public class MerchantOrderInfo implements Serializable {
 	public void setMerchantProductDesc(String merchantProductDesc) {
 		this.merchantProductDesc = merchantProductDesc;
 	}
+	
 }
