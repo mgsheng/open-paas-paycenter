@@ -78,6 +78,8 @@ public class UserInterfaceController {
     private String queryOrderInfoUri;
     @Value("#{properties['query-serial-uri']}")
     private String querySerialUri;
+    @Value("#{properties['account-downlond-uri']}")
+    private String accountDownlondUri;
     
     
     final static String  SEPARATOR = "&";
@@ -357,6 +359,47 @@ public class UserInterfaceController {
         LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
+     
+     
+     /*
+      *  Entrance:   step-1
+      * */
+ 	@RequestMapping(value = "accountDownlond", method = RequestMethod.GET)
+ 	public String accountDownlond(Model model) {
+ 		model.addAttribute("getOrderQueryUri", getOrderQueryUri);
+ 		return "usercenter/user_account_downlond";
+ 	}
+ 	
+ 	/* 
+     * Redirect to oauth-server bind page:   step-2
+     * */
+     @RequestMapping(value = "accountDownlond", method = RequestMethod.POST)
+     public String accountDownlond(String merchantId,String appId,String startTime,String endTime,String marking) throws Exception {
+//    	 String key=map.get(appId);
+    	 String key=map.get(merchantId);
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("merchantId",merchantId );
+	   		sParaTemp.put("appId",appId);
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("startTime",startTime );
+	   		sParaTemp.put("endTime",endTime );
+	   		sParaTemp.put("marking",marking );
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+	   	 }
+//    	 final String fullUri =fileDownlondUri+"?outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+	   	 final String fullUri =accountDownlondUri+"?merchantId="+merchantId+"&appId="+appId+"&startTime="+startTime+"&endTime="+endTime+"&marking="+marking+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+        LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" + fullUri;
+     }
  	
      /*
       *  Entrance:   step-1
@@ -538,6 +581,8 @@ public class UserInterfaceController {
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
+     
+    
      
      /** 
       * 发送POST请求 

@@ -20,13 +20,13 @@
     <div class="panel-body">
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
-            <form action="getOrderQuery" method="post" class="form-horizontal">
+            <form action="accountDownlond" method="post" class="form-horizontal">
             <%-- <form action="${userCenterRegUri}" method="post" class="form-horizontal"> --%>
-                <input type="hidden" name="orderQueryUri" id="orderQueryUri" value="${getOrderQueryUri}"/>
+                <input type="hidden" name="orderQueryUri" id="orderQueryUri" value="${accountDownlondUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
 
                 <div ng-show="visible">
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label class="col-sm-2 control-label">outTradeNo</label>
 
                         <div class="col-sm-10">
@@ -34,6 +34,16 @@
                                    class="form-control" ng-model="outTradeNo"/>
 
                             <p class="help-block">业务方唯一订单号（必填）</p>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">merchantId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="merchantId" id="merchantId"
+                                   class="form-control" ng-model="merchantId"/>
+
+                            <p class="help-block">商户号</p>
                         </div>
                     </div>
                     <div class="form-group">  
@@ -47,16 +57,42 @@
                         </div>
                     </div>
                     
-                     <div class="form-group">
-                        <label class="col-sm-2 control-label">merchantId</label>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">startTime</label>
 
                         <div class="col-sm-10">
-                            <input type="text" name="merchantId" id="merchantId" class="form-control"
-                                   size="50" ng-model="merchantId"/>
+                            <input type="text" name="startTime" id="startTime"
+                                   class="form-control" ng-model="startTime"/>
 
-                            <p class="help-block">商户号（必传）接入时会首先确认,10001-测试商户1</p>
+                            <p class="help-block">开始时间（必填）格式：yyyy-MM-dd HH:mm:ss</p>
                         </div>
                     </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">endTime</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="endTime" id="endTime"
+                                   class="form-control" ng-model="endTime"/>
+
+                            <p class="help-block">结束时间 yyyy-MM-dd HH:mm:ss</p>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">businessType</label>
+
+                        <div class="col-sm-10">
+                            <!-- <input type="text" name="paymentChannel" id="paymentChannel" size="50" class="form-control"
+                                   ng-model="paymentChannel"/> -->
+							<select name="marking" id="marking" class="form-control" ng-mode="businessType">
+								<option value="1">txt</option>
+								<option value="2">excel</option>
+							</select>
+                            <p class="help-block">对账单文件格式（1：txt 2:excel）</p>
+                        </div>
+                    </div>
+                    
+                    
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>
                         <br/>
@@ -76,8 +112,10 @@
 <script>
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
 		$scope.outTradeNo="test201607151059";
-		$scope.appId="10026";
 		$scope.merchantId="10001";
+		$scope.appId="10026";
+		$scope.startTime="2016-05-18 16:03:25";
+		$scope.endTime="2016-07-28 16:03:25";
         $scope.visible = false;
 
         $scope.showParams = function () {
@@ -98,10 +136,6 @@
 		    alert("请输入appId公共参数");
 			return;
 		}
-		if(merchantId==''){
-		    alert("请输入商户号");
-			return;
-		}
 		
 		$.post("${contextPath}/getSignature",
 			{
@@ -112,7 +146,7 @@
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
 				    var signatureNonce=data.signatureNonce;
-				    var regUri=orderQueryUri+"?"+"outTradeNo="+outTradeNo+"&appId="+appId+"&merchantId="+merchantId+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
+				    var regUri=orderQueryUri+"?"+"outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#userOrderQueryUri").html(regUri);
 				}else{
 				    jQuery("#userOrderQueryUri").html('无效数据，请重新申请');
