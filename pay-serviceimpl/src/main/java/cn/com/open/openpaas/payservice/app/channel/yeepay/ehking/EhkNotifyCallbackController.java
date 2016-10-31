@@ -120,7 +120,7 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  					int notifyStatus=merchantOrderInfo.getNotifyStatus();
  					int payStatus=merchantOrderInfo.getPayStatus();
  					Double payCharge=0.0;
- 					payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.YEEPAY.getValue()));
+ 					payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
  					if(payStatus!=1){
  					log.info("-----------------------callBack  update-start-----------------------------------------");
  						merchantOrderInfo.setPayStatus(1);

@@ -174,7 +174,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 						    int notifyStatus=merchantOrderInfo.getNotifyStatus();
 							int payStatus=merchantOrderInfo.getPayStatus();
 							Double payCharge=0.0;
-							payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.PAYMAX.getValue()));
+							payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
 							if(payStatus!=1){
 								merchantOrderInfo.setPayStatus(1);
 								merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
