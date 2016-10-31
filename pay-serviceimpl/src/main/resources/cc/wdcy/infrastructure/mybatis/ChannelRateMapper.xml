@@ -43,9 +43,11 @@
 	<select id="getChannelRate" resultMap="ChannelRatelMap">
          select * from PAY_CHANNEL_RATE
          where  MERCHANT_ID = #{merchantId} and PAY_CHANNEL_CODE=#{payChannelCode} 
+         limit 1
 	</select>
 	<select id="getRateByChannel" resultMap="ChannelRatelMap">
          select * from PAY_CHANNEL_RATE
          where  SOURCE_TYPE = #{sourceType} and CHANNEL_ID=#{channelId} 
+         limit 1
 	</select>
 </mapper>

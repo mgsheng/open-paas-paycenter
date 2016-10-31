@@ -152,7 +152,7 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.ALI.getValue()));
 					}
 					else if(merchantOrderInfo.getChannelId().equals(Channel.EBANK.getValue())){
-						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.ALI_EB.getValue()));
+						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.EBANK.getValue()));
 					}
 				}
 				 log.info("-----------------------callBack:alipay:notify:payCharge:"+payCharge);

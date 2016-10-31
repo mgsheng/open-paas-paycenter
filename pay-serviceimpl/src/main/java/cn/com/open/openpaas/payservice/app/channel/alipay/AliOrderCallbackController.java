@@ -132,7 +132,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
  		}
 		//计算得出通知验证结果
 		boolean verify_result = AlipayNotify.verify(params,dictTradeChannel.getKeyValue(),dictTradeChannel.getInputCharset());
-		verify_result=false;
+		//verify_result=false;
 		if(verify_result){//验证成功
 			//////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代码
