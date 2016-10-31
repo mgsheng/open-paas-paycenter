@@ -139,7 +139,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 							 String buf="";
 								int payStatus=merchantOrderInfo.getPayStatus();
 								Double payCharge=0.0;
-								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.PAYMAX.getValue()));
 								if(payStatus!=1){
 									merchantOrderInfo.setPayStatus(1);
 									merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
@@ -220,7 +220,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 							 String buf="";
 								int payStatus=merchantOrderInfo.getPayStatus();
 								Double payCharge=0.0;
-								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.PAYMAX.getValue()));
 								if(payStatus!=1){
 									merchantOrderInfo.setPayStatus(1);
 									merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);

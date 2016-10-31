@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
+import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
@@ -119,7 +120,7 @@ public class EhkNotifyCallbackController extends BaseControllerUtil {
  					int notifyStatus=merchantOrderInfo.getNotifyStatus();
  					int payStatus=merchantOrderInfo.getPayStatus();
  					Double payCharge=0.0;
- 					payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+ 					payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.YEEPAY_EB.getValue()));
  					if(payStatus!=1){
  					log.info("-----------------------callBack  update-start-----------------------------------------");
  						merchantOrderInfo.setPayStatus(1);

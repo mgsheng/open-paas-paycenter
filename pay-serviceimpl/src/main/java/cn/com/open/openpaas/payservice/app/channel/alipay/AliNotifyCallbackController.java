@@ -146,7 +146,16 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 				int notifyStatus=merchantOrderInfo.getNotifyStatus();
 				int payStatus=merchantOrderInfo.getPayStatus();
 				Double payCharge=0.0;
-				payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+				if(merchantOrderInfo.getSourceType()==0){
+					//直连支付宝
+					if(merchantOrderInfo.getChannelId().equals(Channel.ALI.getValue())){
+						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.ALI.getValue()));
+					}
+					else if(merchantOrderInfo.getChannelId().equals(Channel.EBANK.getValue())){
+						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.ALI_EB.getValue()));
+					}
+				}
+				 log.info("-----------------------callBack:alipay:notify:payCharge:"+payCharge);
 				if(payStatus!=1){
 					merchantOrderInfo.setPayStatus(1);
 					merchantOrderInfo.setPayAmount(total_fee-payCharge);

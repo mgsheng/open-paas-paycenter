@@ -24,6 +24,7 @@ import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceSer
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayConfig;
+import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PayUtil;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
@@ -181,7 +182,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 						int notifyStatus=merchantOrderInfo.getNotifyStatus();
 						int payStatus=merchantOrderInfo.getPayStatus();
 						Double payCharge=0.0;
-						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+						payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.YEEPAY.getValue()));
 						String rechargeMsg="";
 						if(payStatus!=1){
 							merchantOrderInfo.setPayStatus(1);

@@ -163,7 +163,7 @@ public class WxNotifyCallbackController extends BaseControllerUtil {
 									int payStatus=merchantOrderInfo.getPayStatus();
 									String rechargeMsg="";
 									Double payCharge=0.0;
-									payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+									payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService,String.valueOf(Channel.WEIXIN.getValue()));
 									if(payStatus!=1){
 									merchantOrderInfo.setPayStatus(1);
 									merchantOrderInfo.setPayAmount((total_fees/100)-payCharge);
