@@ -111,7 +111,7 @@
 </div>
 <script>
     var AuthorizationCodeCtrl = ['$scope', function ($scope) {
-		$scope.outTradeNo="test201607151059";
+		//$scope.outTradeNo="test201607151059";
 		$scope.merchantId="10001";
 		$scope.appId="10026";
 		$scope.startTime="2016-05-18 16:03:25";
@@ -125,18 +125,21 @@
 </script>
 <script type="text/javascript">
 	function btnSubmit(){
-		var outTradeNo=$("#outTradeNo").val();
+		//var outTradeNo=$("#outTradeNo").val();
+		var merchantId=$("#merchantId").val();
 		var appId=$("#appId").val();
 	    var orderQueryUri=$("#orderQueryUri").val();
-		if(outTradeNo==''){
-		    alert("请输入outTradeNo业务方唯一订单号");
+	    var startTime=$("#startTime").val();
+	    var endTime=$("#endTime").val();
+	    var marking=$("#marking").val();
+		if(merchantId==''){
+		    alert("请输入merchantId商户号");
 			return;
 		}
 		if(appId==''){
 		    alert("请输入appId公共参数");
 			return;
 		}
-		
 		$.post("${contextPath}/getSignature",
 			{
 				appId:appId
@@ -145,8 +148,8 @@
 				if(data.flag){
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
-				    var signatureNonce=data.signatureNonce;
-				    var regUri=orderQueryUri+"?"+"outTradeNo="+outTradeNo+"&appId="+appId+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
+				    var signatureNonce=data.signatureNonce; 				    
+					var regUri=orderQueryUri+"?"+"merchantId="+merchantId+"&appId="+appId+"&startTime="+startTime+"&endTime="+endTime+"&marking="+marking+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#userOrderQueryUri").html(regUri);
 				}else{
 				    jQuery("#userOrderQueryUri").html('无效数据，请重新申请');

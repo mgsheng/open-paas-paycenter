@@ -366,7 +366,7 @@ public class UserInterfaceController {
       * */
  	@RequestMapping(value = "accountDownlond", method = RequestMethod.GET)
  	public String accountDownlond(Model model) {
- 		model.addAttribute("getOrderQueryUri", getOrderQueryUri);
+ 		model.addAttribute("accountDownlondUri", accountDownlondUri);
  		return "usercenter/user_account_downlond";
  	}
  	
