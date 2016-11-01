@@ -27,6 +27,7 @@ import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 public class AccountDownload {
 	
 	
+	@SuppressWarnings("deprecation")
 	public static void AccountDownload(HttpServletResponse response,List<MerchantOrderInfo> infoList,String marking) {
 		
 		// 向单元格里填充数据
@@ -44,12 +45,12 @@ public class AccountDownload {
 			    ServletOutputStream outSTr = null; 
 			    outSTr = response.getOutputStream(); // 建立 
 			    buff = new BufferedOutputStream(outSTr); 
-			    write.append("平台订单号|");
-			    write.append("商户订单号|");
-			    write.append("订单金额|");
-			    write.append("订单创建时间|");
-			    write.append("交易完成时间|");
-			    write.append("手续费|");
+			    write.append("id|");
+			    write.append("merchantOrderId|");
+			    write.append("orderAmount|");
+			    write.append("createDate|");
+			    write.append("dealDate|");
+			    write.append("payCharge|");
 			  //把内容写入文件 
 			    if(infoList.size()>0){ 
 			     for (int i = 0; i < infoList.size(); i++) { 
@@ -88,28 +89,28 @@ public class AccountDownload {
 			style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
 			// 给表头第一行一次创建单元格
 			HSSFCell cell = row.createCell((short) 0);
-			cell.setCellValue("平台订单号");
+			cell.setCellValue("id");
 			cell.setCellStyle(style);
 			cell = row.createCell((short) 1);
-			cell.setCellValue("商户订单号");
+			cell.setCellValue("merchantOrderId");
 			cell.setCellStyle(style);
 			cell = row.createCell((short) 2);
-			cell.setCellValue("订单金额");
+			cell.setCellValue("orderAmount");
 			cell.setCellStyle(style);
 			cell.setCellStyle(style);
 			cell = row.createCell((short) 3);
-			cell.setCellValue("订单创建时间");
+			cell.setCellValue("createDate");
 			cell.setCellStyle(style);
 			cell.setCellStyle
 			(style);
 			cell = row.createCell((short) 4);
-			cell.setCellValue("交易完成时间");
+			cell.setCellValue("dealDate");
 			cell.setCellStyle(style);
 			cell.setCellStyle
 
 			(style);
 			cell = row.createCell((short) 5);
-			cell.setCellValue("手续费");
+			cell.setCellValue("payCharge");
 			cell.setCellStyle(style);
 			cell.setCellStyle
 
@@ -121,7 +122,7 @@ public class AccountDownload {
 				row.createCell(2).setCellValue(infoList.get(i).getOrderAmount());//订单金额
 				row.createCell(3).setCellValue(infoList.get(i).getCreateDate1());//创建日期
 				row.createCell(4).setCellValue(infoList.get(i).getDealDate1());//交易完成时间
-				row.createCell(5).setCellValue(infoList.get(i).getPayCharge());//交易完成时间
+				row.createCell(5).setCellValue(infoList.get(i).getPayCharge());
 			}
 			try {
 				response.setContentType("application/vnd.ms-excel");
