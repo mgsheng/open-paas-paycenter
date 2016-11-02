@@ -129,10 +129,10 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 		    String endTime=request.getParameter("endTime");
 		    String merchantId=request.getParameter("merchantId");
 		    String marking=request.getParameter("marking");
-		 if(!paraMandatoryCheck(Arrays.asList(startTime,endTime,appId,merchantId))){
+		    if(!paraMandatoryCheck(Arrays.asList(startTime,endTime,appId,merchantId))){
 			  	paraMandaChkAndReturn(2, response,"必传参数中有空值");
 			  	return ;
-	     }
+	        }
 	  		MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
 	  		if(merchantInfo==null){
 	         	paraMandaChkAndReturn(2, response,"认证失败");
@@ -155,26 +155,23 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 				paraMandaChkAndReturn(2, response,"认证失败");
 				return;
 			} 
-				try {
-					List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderMessage(startTime, endTime, appId);
-					DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					for(int i=0;i<merchantOrderInfoList.size();i++){
-						MerchantOrderInfo merchantOrderInfo = merchantOrderInfoList.get(i);
-						Date createDate = merchantOrderInfo.getCreateDate();
-						merchantOrderInfo.setCreateDate1(df.format(createDate));
-						if(merchantOrderInfo.getDealDate()!=null){
-							Date dealDate = merchantOrderInfo.getDealDate();
-							merchantOrderInfo.setDealDate1(df.format(dealDate));
-						}
-						
-						
+			try {
+				List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderMessage(startTime, endTime, appId);
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				for(int i=0;i<merchantOrderInfoList.size();i++){
+					MerchantOrderInfo merchantOrderInfo = merchantOrderInfoList.get(i);
+					Date createDate = merchantOrderInfo.getCreateDate();
+					merchantOrderInfo.setCreateDate1(df.format(createDate));
+					if(merchantOrderInfo.getDealDate()!=null){
+						Date dealDate = merchantOrderInfo.getDealDate();
+						merchantOrderInfo.setDealDate1(df.format(dealDate));
 					}
-					AccountDownload.AccountDownload(response, merchantOrderInfoList,marking);
-				} catch (Exception e) {
-					// TODO: handle exception
-					paraMandaChkAndReturn(2, response,"error");
 				}
-					
+				AccountDownload.AccountDownload(response, merchantOrderInfoList,marking);
+			} catch (Exception e) {
+				// TODO: handle exception
+				paraMandaChkAndReturn(2, response,"error");
+			}
 	    }
 	    
 	    

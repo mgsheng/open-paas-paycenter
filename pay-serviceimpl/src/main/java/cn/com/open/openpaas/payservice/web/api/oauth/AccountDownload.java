@@ -50,7 +50,8 @@ public class AccountDownload {
 			    write.append("orderAmount|");
 			    write.append("createDate|");
 			    write.append("dealDate|");
-			    write.append("payCharge|");
+			    write.append("payCharge");
+			    write.append(enter);
 			  //把内容写入文件 
 			    if(infoList.size()>0){ 
 			     for (int i = 0; i < infoList.size(); i++) { 
@@ -59,7 +60,7 @@ public class AccountDownload {
 			      write.append(infoList.get(i).getOrderAmount()+"|"); 
 			      write.append(infoList.get(i).getCreateDate1()+"|"); 
 			      write.append(infoList.get(i).getDealDate1()+"|");
-			      write.append(infoList.get(i).getPayCharge()+"|"); 
+			      write.append(infoList.get(i).getPayCharge()); 
 			      write.append(enter);   
 			     } 
 			    } 
