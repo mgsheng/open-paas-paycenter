@@ -187,7 +187,7 @@
         DEAL_DATE=#{dealDate},
         AMOUNT=#{amount}
         where ID = #{id}
-        or CHANNEL_ORDERID = #{id} 
+        or MERCHANT_ORDERID = #{merchantOrderId} 
     </update>
      <update id="updatePayStatus"  flushCache="true">
         update MERCHANT_ORDER_INFO set
