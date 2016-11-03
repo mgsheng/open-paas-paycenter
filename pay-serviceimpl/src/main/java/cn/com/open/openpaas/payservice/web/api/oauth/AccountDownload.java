@@ -50,7 +50,8 @@ public class AccountDownload {
 			    write.append("orderAmount|");
 			    write.append("createDate|");
 			    write.append("dealDate|");
-			    write.append("payCharge");
+			    write.append("payCharge|");
+			    write.append("parameter1");
 			    write.append(enter);
 			  //把内容写入文件 
 			    if(infoList.size()>0){ 
@@ -60,7 +61,8 @@ public class AccountDownload {
 			      write.append(infoList.get(i).getOrderAmount()+"|"); 
 			      write.append(infoList.get(i).getCreateDate1()+"|"); 
 			      write.append(infoList.get(i).getDealDate1()+"|");
-			      write.append(infoList.get(i).getPayCharge()); 
+			      write.append(infoList.get(i).getPayCharge()+"|"); 
+			      write.append(infoList.get(i).getParameter1()); 
 			      write.append(enter);   
 			     } 
 			    } 
@@ -102,20 +104,19 @@ public class AccountDownload {
 			cell = row.createCell((short) 3);
 			cell.setCellValue("createDate");
 			cell.setCellStyle(style);
-			cell.setCellStyle
-			(style);
+			cell.setCellStyle(style);
 			cell = row.createCell((short) 4);
 			cell.setCellValue("dealDate");
 			cell.setCellStyle(style);
-			cell.setCellStyle
-
-			(style);
+			cell.setCellStyle(style);
 			cell = row.createCell((short) 5);
 			cell.setCellValue("payCharge");
 			cell.setCellStyle(style);
-			cell.setCellStyle
-
-			(style);
+			cell.setCellStyle(style);
+			cell = row.createCell((short) 6);
+			cell.setCellValue("parameter1");
+			cell.setCellStyle(style);
+			cell.setCellStyle(style);
 			for (short i = 0; i < infoList.size(); i++) {
 				row = sheet.createRow(i + 1);
 				row.createCell(0).setCellValue(infoList.get(i).getId());//平台订单号
@@ -124,6 +125,7 @@ public class AccountDownload {
 				row.createCell(3).setCellValue(infoList.get(i).getCreateDate1());//创建日期
 				row.createCell(4).setCellValue(infoList.get(i).getDealDate1());//交易完成时间
 				row.createCell(5).setCellValue(infoList.get(i).getPayCharge());
+				row.createCell(6).setCellValue(infoList.get(i).getParameter1());
 			}
 			try {
 				response.setContentType("application/vnd.ms-excel");
