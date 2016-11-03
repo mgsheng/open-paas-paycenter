@@ -252,7 +252,7 @@
 	<select id="findOrderMessage" resultMap="merchantOrderInfoMap">
          select * from MERCHANT_ORDER_INFO
          where  1=1 
-         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and MERCHANT_ID=#{merchantId} and PAY_STATUS = 1
 	</select>
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>

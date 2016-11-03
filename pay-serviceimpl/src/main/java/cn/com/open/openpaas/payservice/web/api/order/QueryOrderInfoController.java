@@ -130,7 +130,7 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 		    String merchantId=request.getParameter("merchantId");
 		    String marking=request.getParameter("marking");
 		    if(!paraMandatoryCheck(Arrays.asList(startTime,endTime,appId,merchantId))){
-			  	paraMandaChkAndReturn(2, response,"必传参数中有空值");
+			  	paraMandaChkAndReturn(1, response,"必传参数中有空值");
 			  	return ;
 	        }
 	  		MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
@@ -156,7 +156,7 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 				return;
 			} 
 			try {
-				List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderMessage(startTime, endTime, appId);
+				List<MerchantOrderInfo> merchantOrderInfoList=merchantOrderInfoService.findOrderMessage(startTime, endTime, Integer.parseInt(merchantId));
 				DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				for(int i=0;i<merchantOrderInfoList.size();i++){
 					MerchantOrderInfo merchantOrderInfo = merchantOrderInfoList.get(i);
@@ -170,7 +170,7 @@ public class QueryOrderInfoController extends BaseControllerUtil{
 				AccountDownload.AccountDownload(response, merchantOrderInfoList,marking);
 			} catch (Exception e) {
 				// TODO: handle exception
-				paraMandaChkAndReturn(2, response,"error");
+				paraMandaChkAndReturn(3, response,"error");
 			}
 	    }
 	    

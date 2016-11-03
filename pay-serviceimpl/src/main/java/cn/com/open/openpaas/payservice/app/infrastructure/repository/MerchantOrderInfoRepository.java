@@ -34,6 +34,6 @@ public interface MerchantOrderInfoRepository extends Repository {
 	void updatePayWay(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findOrderByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
 	HashMap<String, Object> getTotalAmountByTime(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
-	List<MerchantOrderInfo> findOrderMessage(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("appId")String appId);
+	List<MerchantOrderInfo> findOrderMessage(@Param("startTime")String startTime, @Param("endTime")String endTime,@Param("merchantId")Integer merchantId);
 	
 }
