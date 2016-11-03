@@ -33,6 +33,10 @@
 									{"menuid":"22","menuname":"用户订单查询","icon":"icon-nav","url":"${pageContext.request.contextPath}/manage/userOrderPages"},
 									{"menuid":"23","menuname":"账户流水记录查询","icon":"icon-nav","url":"${pageContext.request.contextPath}/running/accountRunningPages"}
 								]
+						},{"menuid":"2","icon":"icon-sys","menuname":"财务报表",
+							"menus":[
+									{"menuid":"40","menuname":"渠道营收","icon":"icon-nav","url":"${pageContext.request.contextPath}/paychannel/channelRevenue"}
+								]
 						},{"menuid":"","icon":"icon-sys","menuname":"用户管理",
 							"menus":[
 										   {"menuid":"24","menuname":"用户信息列表","icon":"icon-man","url":"${pageContext.request.contextPath}/managerUser/userList"}							]
