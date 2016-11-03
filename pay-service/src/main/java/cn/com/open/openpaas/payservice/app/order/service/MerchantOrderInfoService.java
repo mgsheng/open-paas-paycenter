@@ -35,6 +35,6 @@ public interface MerchantOrderInfoService {
 	List<MerchantOrderInfo> findOrderByTime(String startTime,String endTime,String appId);
 	HashMap<String, Object> getTotalAmountByTime(String startTime,String endTime,String appId);
 	List<MerchantOrderInfo> findOrderMessage(String startTime, String endTime,
-			String appId);
+			Integer merchantId);
 	
 }
