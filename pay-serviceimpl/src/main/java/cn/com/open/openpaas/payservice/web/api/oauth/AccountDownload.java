@@ -51,7 +51,7 @@ public class AccountDownload {
 			    write.append("createDate|");
 			    write.append("dealDate|");
 			    write.append("payCharge|");
-			    write.append("parameter1");
+			    write.append("parameter");
 			    write.append(enter);
 			  //把内容写入文件 
 			    if(infoList.size()>0){ 
