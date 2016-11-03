@@ -40,15 +40,28 @@ public class PropertiesTool {
 	 * @param file
 	 * @return
 	 */
+	/**
+	 * 根据File获取Properties
+	 * @param file
+	 * @return
+	 */
 	public static Properties getProperties(File file){
 		Properties props = new Properties();
+		FileInputStream fis=null;
 		try {
-			FileInputStream fis = new FileInputStream(file);
+			 fis = new FileInputStream(file);
 			props.load(fis);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		finally{
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return props;
 	}
