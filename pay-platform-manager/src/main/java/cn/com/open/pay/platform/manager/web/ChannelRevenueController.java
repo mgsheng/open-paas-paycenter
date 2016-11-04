@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -74,6 +75,8 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	private PrivilegeLogService privilegeLogService;
 	@Autowired
 	private PayChannelSwitchService payChannelSwitchService;
+	@Autowired
+	private MerchantOrderInfoService merchantOrderInfoService;
 	
 	/**
 	 * 跳转到渠道营收管理页面
@@ -91,110 +94,110 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	 * @param response
 	 * @throws UnsupportedEncodingException
 	 */
-	@RequestMapping("getMerchantOrderOffline")
-	public void getMerchantOrderOffline(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
-		log.info("---------------getMerchantOrderOffline----------------");
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String merchantOrderId = request.getParameter("merchantOrderId");
-		String sourceUserName = request.getParameter("sourceUserName");
-		String merchantName = request.getParameter("merchantName");
-		String appId = request.getParameter("appId");
+	@RequestMapping("getChannelRevenue")
+	public void getChannelRevenue(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+		log.info("---------------getChannelRevenue----------------");
 		String channelId = request.getParameter("channelId");
-		String operator = request.getParameter("operator");
-		String orderId = request.getParameter("orderId");
+		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		//merchantID = ((merchantID == null || merchantID == "") ? null : (new String(merchantID.getBytes("iso8859-1"),"utf-8")));
-		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator+" startDate:"+startDate+" endDate:"+endDate);
+		System.out.println("channelId:"+channelId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
 		//当前第几页
 		String page=request.getParameter("page");
-//				System.out.println("page  :" +page);
 		//每页显示的记录数
 	    String rows=request.getParameter("rows"); 
-//			    System.out.println("rows : "+ rows);
 		//当前页  
 		int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
 		//每页显示条数  
 		int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
 		//每页的开始记录  第一页为1  第二页为number +1   
 	    int startRow = (currentPage-1)*pageSize;
-	    MerchantOrderOffline offline = new MerchantOrderOffline();
-	    offline.setPageSize(pageSize);
-	    offline.setStartRow(startRow);
-	    
-	    offline.setId(orderId);
-	    offline.setMerchantOrderId(merchantOrderId);
-	    if(merchantName!=null && merchantName!=""){
-	    	offline.setMerchantId(Integer.parseInt(merchantName));
-	    }
-	    offline.setSourceUserName(sourceUserName);
-	    offline.setAppId(appId);
-	    offline.setChannelId(channelId);
-	    offline.setOperator(operator);
-	    if(startDate!=null && startDate!=""){
-	    	try {
-				offline.setStartDate(sdf.parse(startDate));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Calendar cal = Calendar.getInstance();
+		if(dimension==null || dimension==""){
+			dimension="day";
+			cal.add(Calendar.DATE,-1);
+			startDate = new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime());
+		}else if(dimension=="day"){//天
+			if(startDate==null){
+				cal.add(Calendar.DATE,-1);
+				startDate = new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime());
 			}
-	    }
-	    if(endDate!=null && endDate!=""){
-	    	try {
-				offline.setEndDate(sdf.parse(endDate));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		}else if(dimension=="week"){//自然周
+			if(startDate==null){ 
+			     cal.setTime(new Date());  
+			     // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了  
+			     int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
+			     if (1 == dayWeek) {  
+			        cal.add(Calendar.DAY_OF_MONTH, -1);  
+			     }  
+			      System.out.println("要计算日期为:" + cal.getTime()); // 输出要计算日期  
+			     // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一  
+			     cal.setFirstDayOfWeek(Calendar.MONDAY);  
+			     // 获得当前日期是一个星期的第几天  
+			     int day = cal.get(Calendar.DAY_OF_WEEK);  
+			     // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值  
+			     cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);  
+			     //String imptimeBegin = sdf.format(cal.getTime());  
+			      System.out.println("所在周星期一的日期：" + cal.getTime());  
+			     cal.add(Calendar.DATE, 6);  
+			     //String imptimeEnd = sdf.format(cal.getTime());  
+			      System.out.println("所在周星期日的日期：" + cal.getTime());  
+			      //System.out.println(imptimeBegin + "," + imptimeEnd);  
 			}
-	    }
-	    
-	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAll(offline);
-	    int total = merchantOrderOfflineService.findOfflineAllCount(offline);
+		}else if(dimension=="month"){//月
+			
+		}else if(dimension=="year"){//年
+			
+		}else{
+			
+		}
+		
+		MerchantOrderInfo orderInfo=new MerchantOrderInfo();
+	    orderInfo.setPageSize(pageSize);
+	    orderInfo.setStartRow(startRow);
+		
+		if(channelId!=null){
+			orderInfo.setChannelId(Integer.parseInt(channelId));
+		}
+	    orderInfo.setDimension(dimension);
+	    orderInfo.setStartDate(startDate);
+	    orderInfo.setEndDate(endDate);
+	    List<MerchantOrderInfo> channelRevenues = merchantOrderInfoService.findChannelRevenue(orderInfo);
 	    JSONObject json =  new JSONObject();
+    	int total = merchantOrderInfoService.findChannelRevenueCount(orderInfo);
 	    json.put("total", total);
 	    List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
-	    MerchantInfo merchantInfo=null;
 	    PayChannelSwitch channel=null;
-	    DictTradePayment payment=null;
-	    if(offlines != null){
+	    if(channelRevenues != null){
 	    	Map<String,Object> map = null;
-	    	for(MerchantOrderOffline r : offlines){
-	    		map = new LinkedHashMap<String,Object>();
-	    		map.put("id", r.getId());
-	    		map.put("merchantOrderId", r.getMerchantOrderId());  
-	    		if(r.getPayTime()!=null){
-	    			map.put("payTime", sdf.format(r.getPayTime()));
+	    	for(MerchantOrderInfo r : channelRevenues){
+	    		map = new LinkedHashMap<String,Object>(); 
+	    		if(r.getSourceType()!=null){
+		    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
+					if(channel!=null){
+		    			map.put("channelName", channel.getChannelName());
+		    		}
 	    		}
-	    		map.put("money", r.getMoney());
-	    		map.put("sourceUID", r.getSourceUid());
-	    		map.put("sourceUserName", r.getSourceUserName());
-	    		map.put("realName", r.getRealName());
-	    		map.put("phone", r.getPhone());
-	    		merchantInfo=merchantInfoService.findNameById(r.getMerchantId());
-	    		if(merchantInfo!=null){
-		    		map.put("merchantId", merchantInfo.getMerchantName());
+	    		map.put("countOrderAmount", r.getCountOrderAmount()); 
+	    		map.put("foundDate", startDate);
+	    		map.put("payCharge", r.getPayCharge());
+	    		if(r.getDimension()==null || r.getDimension()=="day"){
+	    			map.put("dismension", "天");
+	    		}else if(r.getDimension()=="week"){
+	    			map.put("dismension", "自然周");
+	    		}else if(r.getDimension()=="month"){
+	    			map.put("dismension", "月");
+	    		}else if(r.getDimension()=="year"){
+	    			map.put("dismension", "年");
+	    		}else{
+	    			map.put("dismension", "自定义");
 	    		}
-	    		map.put("appId", r.getAppId());
-	    		//channel=payChannelDictionaryService.findNameById(r.getChannelId());
-	    		channel=payChannelSwitchService.findNameById(r.getChannelId());
-				if(channel!=null){
-	    			map.put("channelId", channel.getChannelName());
-	    		}
-	    		map.put("remark", r.getRemark());
-	    		map.put("operator", r.getOperator());
-	    		payment=dictTradePaymentService.findNameById(r.getBankCode());
-	    		if(payment!=null){
-	    			map.put("bankCode", payment.getRemark());
-	    		}
-	    		map.put("createTime", sdf1.format(r.getCreateTime()));
 	    		maps.add(map);
 	    	}
 	    	JSONArray jsonArr = JSONArray.fromObject(maps);
 	    	json.put("rows", jsonArr);
 	    	WebUtils.writeJson(response, json);
 	    }
-//	    System.out.println(json);
 		return;
 	}
 	

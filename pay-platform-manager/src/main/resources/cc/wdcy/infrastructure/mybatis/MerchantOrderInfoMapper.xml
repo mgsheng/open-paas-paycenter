@@ -547,6 +547,37 @@
           </if>
          and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP}  AND #{endDate, jdbcType=TIMESTAMP} and PAY_STATUS = 1  group by date_format(CREATE_DATE,'%Y-%m-%d') 
 	</select>
+	
+	<select id="findChannelRevenue" resultMap="merchantOrderInfoMap" flushCache="true">
+		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		 <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+         </if>
+         <if test="dimension == 'day'" >
+		 	and date_format(CREATE_DATE,'%Y-%m-%d')=#{startDate, jdbcType=TIMESTAMP} 
+		 </if>
+         <if test="dimension != 'day'" >
+         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} >(date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         </if>
+		GROUP BY CHANNEL_ID,date_format(CREATE_DATE,'%Y-%m-%d') limit #{startRow},#{pageSize}
+	</select>
+	
+	<select id="findChannelRevenueQueryCount" resultMap="merchantOrderInfoMap">
+		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		 <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+         </if>
+         <if test="dimension == 'day'" >
+		 	and date_format(CREATE_DATE,'%Y-%m-%d')=#{startDate, jdbcType=TIMESTAMP} 
+		 </if>
+         <if test="dimension != 'day'" >
+         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} >(date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         </if>
+		GROUP BY CHANNEL_ID,date_format(CREATE_DATE,'%Y-%m-%d')
+	</select>
+	
     <resultMap id="allInfo" type="java.util.Map">
         <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
     </resultMap>

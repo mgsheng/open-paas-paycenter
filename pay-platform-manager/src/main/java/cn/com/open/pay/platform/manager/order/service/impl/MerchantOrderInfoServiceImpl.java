@@ -208,5 +208,21 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		return merchantOrderInfoRepository.getCensusAllExport(merchantOrderInfo);
 	}
 
+	@Override
+	public List<MerchantOrderInfo> findChannelRevenue(MerchantOrderInfo orderInfo) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.findChannelRevenue(orderInfo);
+	}
+
+	@Override
+	public int findChannelRevenueCount(MerchantOrderInfo orderInfo) {
+		List<MerchantOrderInfo> lists=merchantOrderInfoRepository.findChannelRevenueQueryCount(orderInfo);
+		if(lists==null){
+			return 0;
+		}else{
+			return lists.size();
+		}
+	}
+
 
 }

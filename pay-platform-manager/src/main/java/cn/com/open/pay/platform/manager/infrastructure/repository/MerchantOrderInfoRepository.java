@@ -56,5 +56,7 @@ public interface MerchantOrderInfoRepository extends Repository {
 	List<MerchantOrderInfo> getAllCount(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> getCensusAllExport(
 			MerchantOrderInfo merchantOrderInfo);
+	List<MerchantOrderInfo> findChannelRevenue(MerchantOrderInfo orderInfo);
+	List<MerchantOrderInfo> findChannelRevenueQueryCount(MerchantOrderInfo orderInfo);
 	
 }

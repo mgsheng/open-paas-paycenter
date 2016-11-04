@@ -111,6 +111,8 @@ public class MerchantOrderInfo implements Serializable {
 	private Integer startRow;
 	private Integer pageSize;
 	
+	private Double countOrderAmount;
+	private String dimension;
 	
 
 	public Integer getBusinessType() {
@@ -564,8 +566,20 @@ public class MerchantOrderInfo implements Serializable {
 		this.sourceTypeName = sourceTypeName;
 	}
 
-	
-	
-	
+	public Double getCountOrderAmount() {
+		return countOrderAmount;
+	}
+
+	public void setCountOrderAmount(Double countOrderAmount) {
+		this.countOrderAmount = countOrderAmount;
+	}
+
+	public String getDimension() {
+		return dimension;
+	}
+
+	public void setDimension(String dimension) {
+		this.dimension = dimension;
+	}
 	
 }

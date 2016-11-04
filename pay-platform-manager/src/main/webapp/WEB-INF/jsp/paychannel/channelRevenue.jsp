@@ -23,7 +23,7 @@
 				<tr>
 					<td style="text-align: right;">支付渠道：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付渠道'" id="queryChannelId" 
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付渠道',multiple:false" id="queryChannelId" 
 								name="queryChannelId"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
@@ -40,8 +40,8 @@
 					</td>
 					<td style="text-align: right;">统计日期：</td>
 					<td>
-						<input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">~
-						<input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">
+						<input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">
+						<div id="end" style="display:inline;">~<input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false"></div>
 					</td>
 				</tr>
 				<tr>
@@ -61,11 +61,11 @@
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:false,method:'get'">
 		<thead>
 			<tr>
-			    <th data-options="field:'channelId',width:100,align:'center'">支付渠道</th>
-				<th data-options="field:'orderAmount',width:80,align:'center'">营收金额</th>
+			    <th data-options="field:'channelName',width:100,align:'center'">支付渠道</th>
+				<th data-options="field:'countOrderAmount',width:80,align:'center'">营收金额</th>
 				<th data-options="field:'payCharge',width:80">手续费</th>
 				<th data-options="field:'dismension',width:80,align:'center'">统计维度</th>
-				<th data-options="field:'date',width:200">日期</th>
+				<th data-options="field:'foundDate',width:200">日期</th>
 			</tr>
 		</thead>
 	</table>
@@ -75,69 +75,31 @@
 <script>
 		//页面预加载
 		$(function(){
-			getDayType("day");
-			$("#queryDimension") .combobox({
-            	onChange: function (n, o) {
-            		alert(n);
-            		getDayType(n);
-	            }
-        	});
+			//设置选择维度与结束时间显示关系
+        	setQueryDimension();
+        	//加载查询条件中的支付渠道
 			loadSelect();
-			/* var operator=$("#realName",window.parent.document).text();
-			$("#addOperator").val(operator);
-			findOrderOffline();
-			 */
+			//预加载,默认维度天,日期昨天
+			findChannelRevenue();
 		});
 		
-		function getDayType(date) {
-			var input14=getnowtime();
-			var input15=getnowtime();
-			if(date=="day"){
-				var d=new Date();
-			    var n=new Date(d.getTime()-86400000*1);
-			    input14=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else if(date=="week"){
-				var d=new Date();
-			    var n=new Date(d.getTime()-86400000*7);
-			    input14=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else if(date=="month"){
-				var d=new Date();
-			    var n=new Date(d.getTime()-86400000*30);
-			    input14=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else if(date=="year"){
-				var d=new Date();
-			    var n=new Date(d.getTime()-86400000*365);
-			    input14=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}else{//custom自定义
-				input14="";
-				input15="";
-			}		
-			$("#_easyui_textbox_input3").val(input14);
-			$("#_easyui_textbox_input4").val(input15);
+		function setQueryDimension(){
+			$("#end").hide();
+			$("#queryDimension") .combobox({
+            	onChange: function (n, o) {
+            		if(n=="custom"){
+            			$("#end").show();
+            		}else{
+            			$("#end").hide();
+            		}
+	            }
+        	});
 		}
-		
-		function getnowtime() {
-            var nowtime = new Date();
-            var year = nowtime.getFullYear();
-            var month = padleft0(nowtime.getMonth() + 1);
-            var day = padleft0(nowtime.getDate());
-            var hour = padleft0(nowtime.getHours());
-            var minute = padleft0(nowtime.getMinutes());
-            var second = padleft0(nowtime.getSeconds());
-            var millisecond = nowtime.getMilliseconds(); millisecond = millisecond.toString().length == 1 ? "00" + millisecond : millisecond.toString().length == 2 ? "0" + millisecond : millisecond;
-            return year+"-"+month + "-" + day;
-        }
-		
-		//补齐两位数
-        function padleft0(obj) {
-            return obj.toString().replace(/^[0-9]{1}$/, "0" + obj);
-        }
 		
         //加载select
         function loadSelect(){
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
             $('#queryChannelId').combobox({
-				/* url:'${pageContext.request.contextPath}/paychannel/findPayNames', */
 				url:'${pageContext.request.contextPath}/manage/findSourceType?flag=offline',
 				valueField:'id',
 				textField:'text'
@@ -156,8 +118,8 @@
           }); 
 		}
 
-		function findOrderOffline(){
-		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline";
+		function findChannelRevenue(){
+		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue";
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -169,8 +131,7 @@
                   	}
                 }
 		    }); 
-			
-			 setPage();
+			setPage();
 		}
 		
 		function setPage(){
@@ -191,27 +152,22 @@
 		
 		function clearForm(){
 			$('#ff').form('clear');
+			$('select#queryDimension').combobox('setValue','day');
 		}
 		
 		function submitForm(){
-			var queryOrderId = $('#queryOrderId').textbox('getValue');
-			var queryMerchantOrderId = $('#queryMerchantOrderId').textbox('getValue');
-			var querySourceUserName = $('#querySourceUserName').textbox('getValue');
-			var queryMerchantName = $('#queryMerchantName').combobox('getValue');
-			var queryAppId = $('#queryAppId').combobox('getValue');
 			var queryChannelId = $('#queryChannelId').combobox('getValue');
-			var queryOperator = $('#queryOperator').val();
+			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 			
-			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""&&startDate==""&&endDate==""){
-				//$.messager.alert("提示","请输入查询条件!");
-				findOrderOffline();
+			if(queryChannelId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
+				findChannelRevenue();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
-					var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+					var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 		        	$('#dg').datagrid({
 						collapsible:true,
 						rownumbers:true,
@@ -225,7 +181,7 @@
 				    }); 
 				}
 			}else{
-				var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+				var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,

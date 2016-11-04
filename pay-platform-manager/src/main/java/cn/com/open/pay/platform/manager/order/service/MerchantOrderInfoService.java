@@ -57,5 +57,7 @@ public interface MerchantOrderInfoService {
 	int getAllCount(MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> getCensusAllExport(
 			MerchantOrderInfo merchantOrderInfo);
+	List<MerchantOrderInfo> findChannelRevenue(MerchantOrderInfo orderInfo);
+	int findChannelRevenueCount(MerchantOrderInfo orderInfo);
 	
 }
