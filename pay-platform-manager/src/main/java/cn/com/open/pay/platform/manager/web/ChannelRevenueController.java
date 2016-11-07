@@ -113,51 +113,71 @@ public class ChannelRevenueController extends BaseControllerUtil{
 		//每页的开始记录  第一页为1  第二页为number +1   
 	    int startRow = (currentPage-1)*pageSize;
 		Calendar cal = Calendar.getInstance();
-		if(dimension==null || dimension==""){
-			dimension="day";
-			cal.add(Calendar.DATE,-1);
-			startDate = new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime());
-		}else if(dimension=="day"){//天
-			if(startDate==null){
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
+		if(("day").equals(dimension)){//天
+			if(startDate==null || ("").equals(startDate)){
 				cal.add(Calendar.DATE,-1);
-				startDate = new SimpleDateFormat( "yyyy-MM-dd ").format(cal.getTime());
+				startDate = sdf.format(cal.getTime());
 			}
-		}else if(dimension=="week"){//自然周
-			if(startDate==null){ 
-			     cal.setTime(new Date());  
-			     // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了  
-			     int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
-			     if (1 == dayWeek) {  
-			        cal.add(Calendar.DAY_OF_MONTH, -1);  
-			     }  
-			      System.out.println("要计算日期为:" + cal.getTime()); // 输出要计算日期  
-			     // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一  
-			     cal.setFirstDayOfWeek(Calendar.MONDAY);  
-			     // 获得当前日期是一个星期的第几天  
-			     int day = cal.get(Calendar.DAY_OF_WEEK);  
-			     // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值  
-			     cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);  
-			     //String imptimeBegin = sdf.format(cal.getTime());  
-			      System.out.println("所在周星期一的日期：" + cal.getTime());  
-			     cal.add(Calendar.DATE, 6);  
-			     //String imptimeEnd = sdf.format(cal.getTime());  
-			      System.out.println("所在周星期日的日期：" + cal.getTime());  
-			      //System.out.println(imptimeBegin + "," + imptimeEnd);  
+		}else if(("week").equals(dimension)){//自然周
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,0);
+				startDate = sdf.format(cal.getTime());
 			}
-		}else if(dimension=="month"){//月
-			
-		}else if(dimension=="year"){//年
-			
+		    try {
+				cal.setTime(sdf.parse(startDate));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+		    // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了  
+		    int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
+		    if (1 == dayWeek) {  
+		       cal.add(Calendar.DAY_OF_MONTH, -1);  
+		    }  
+		    cal.setFirstDayOfWeek(Calendar.MONDAY); // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一   
+		    int day = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天 
+		    cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值  
+	     	startDate=sdf.format(cal.getTime());
+		    cal.add(Calendar.DATE, 6);  
+		    endDate=sdf.format(cal.getTime());
+		    System.out.println("该日期所在自然周开始结束日期------StartDate:"+startDate+"  endDate:"+endDate);
+		}else if(("month").equals(dimension)){//月
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,0);
+				startDate = sdf.format(cal.getTime());
+			}
+		    try {
+				cal.setTime(sdf.parse(startDate));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+			//获取当前月第一天：    
+	        cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+	        startDate = sdf.format(cal.getTime());
+	        //获取当前月最后一天
+	        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));  
+	        endDate = sdf.format(cal.getTime());
+	        System.out.println("该日期所在月开始结束日期-------StartDate:"+startDate+"  endDate:"+endDate);
+		}else if(("year").equals(dimension)){//年
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,0);
+				startDate = sdf.format(cal.getTime());
+			}
+			String year=startDate.split("-")[0];
+	        startDate=year+"-01-01";
+	        endDate=year+"-12-31";
+	        System.out.println("该日期所在年份开始结束日期--------StartDate:"+startDate+"  endDate:"+endDate);
 		}else{
-			
+			System.out.println("自定义查询区间日期--------StartDate:"+startDate+"  endDate:"+endDate);
 		}
 		
 		MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    orderInfo.setPageSize(pageSize);
 	    orderInfo.setStartRow(startRow);
-		
-		if(channelId!=null){
-			orderInfo.setChannelId(Integer.parseInt(channelId));
+	    
+		if(channelId!=null && channelId.length()!=0){
+			//orderInfo.setChannelId(Integer.parseInt(channelId));
+			orderInfo.setSourceType(Integer.parseInt(channelId));
 		}
 	    orderInfo.setDimension(dimension);
 	    orderInfo.setStartDate(startDate);
@@ -179,18 +199,28 @@ public class ChannelRevenueController extends BaseControllerUtil{
 		    		}
 	    		}
 	    		map.put("countOrderAmount", r.getCountOrderAmount()); 
-	    		map.put("foundDate", startDate);
 	    		map.put("payCharge", r.getPayCharge());
-	    		if(r.getDimension()==null || r.getDimension()=="day"){
+	    		if(("day").equals(dimension)){
 	    			map.put("dismension", "天");
-	    		}else if(r.getDimension()=="week"){
+		    		map.put("foundDate", startDate);
+	    		}else if(("week").equals(dimension)){
 	    			map.put("dismension", "自然周");
-	    		}else if(r.getDimension()=="month"){
+		    		map.put("foundDate", startDate+"~"+endDate);
+	    		}else if(("month").equals(dimension)){
 	    			map.put("dismension", "月");
-	    		}else if(r.getDimension()=="year"){
+		    		map.put("foundDate", startDate+"~"+endDate);
+	    		}else if(("year").equals(dimension)){
 	    			map.put("dismension", "年");
+		    		map.put("foundDate", startDate+"~"+endDate);
 	    		}else{
 	    			map.put("dismension", "自定义");
+	    			if(startDate==null || ("").equals(startDate)){
+	    				map.put("foundDate", endDate+"之前");
+	    			}else if(endDate==null || ("").equals(endDate)){
+	    				map.put("foundDate", startDate+"~至今");
+	    			}else{
+	    				map.put("foundDate", startDate+"~"+endDate);
+	    			}
 	    		}
 	    		maps.add(map);
 	    	}
@@ -202,215 +232,122 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	}
 	
 	/**
-	 * 查询所有付款银行
-	 * @return 返回到前端json数据
-	 */
-	@RequestMapping(value="findBankCode")
-	public void findBankCode(HttpServletRequest request,HttpServletResponse response,Model model){
-		log.info("-------------------------findBankCode     start------------------------------------");
-		List<DictTradePayment> list = dictTradePaymentService.findPaymentNamesAll();
-		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
-		Map<String,Object> map= null;
-		String str=null;
-		if(list != null){
-			for(DictTradePayment m : list){
-				map = new HashMap<String,Object>();
-				map.put("id", m.getId());
-				map.put("text", m.getRemark());
-				maps.add(map);
-			} 
-			JSONArray jsonArr = JSONArray.fromObject(maps);
-			str = jsonArr.toString();
-			WebUtils.writeJson(response, str);
-			System.out.println(str);
-		}
-		return ;
-	}
-	
-	/**
-	 * 提交添加线下订单单据
-	 * @return 返回到前端json数据
-	 * @throws UnsupportedEncodingException 
-	 */
-	@RequestMapping(value="submitAddOrderOffline")
-	public void submitAddOrderOffline(HttpServletRequest request,HttpServletResponse response,Model model) throws UnsupportedEncodingException{
-		log.info("-------------------------submitAddOrderOffline         start------------------------------------");
-		request.setCharacterEncoding("utf-8");
-		String addMerchantOrderId = request.getParameter("addMerchantOrderId");
-		Double addMoney = Double.parseDouble(request.getParameter("addMoney"));
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); 
-		Date addPayTime=null;
-		try {
-			addPayTime = sdf.parse(request.getParameter("addPayTime"));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String addSourceUserName = request.getParameter("addSourceUserName");
-		String addRealName = request.getParameter("addRealName");
-		String addPhone = request.getParameter("addPhone");
-		String addMerchantName = request.getParameter("addMerchantName");
-		Integer merchantId = Integer.parseInt(addMerchantName);
-		String addAppId = request.getParameter("addAppId");
-		String addChannelId = request.getParameter("addChannelId");
-		String addBankCode = request.getParameter("addBankCode");
-		String addRemark = request.getParameter("addRemark");
-		String addOperator = request.getParameter("addOperator");
-		String addSourceUID = request.getParameter("addSourceUID");
-		
-		System.out.println("-----------addMerchantOrderId : "+addMerchantOrderId+"     addMoney : "+addMoney+"    " +
-				"addPayTime : "+addPayTime+"   addSourceUserName : "+addSourceUserName+"      addRealName:"+addRealName+"      addPhone : "+addPhone+
-				"   addMerchantName : "+addMerchantName+"   addAppId : "+addAppId+"   addChannelId : "+addChannelId+
-				"   addBankCode : "+addBankCode+"   addRemark : "+addRemark+"-----------");
-		
-		JSONObject json =  new JSONObject();
-		//封装参数
-		String newId="";
-		newId=SysUtil.careatePayOrderId();
-		MerchantOrderOffline merchantOrderOffline = new MerchantOrderOffline();
-		merchantOrderOffline.setId(newId);
-		merchantOrderOffline.setMerchantOrderId(addMerchantOrderId);
-		merchantOrderOffline.setMoney(addMoney);
-		merchantOrderOffline.setPayTime(addPayTime);
-		merchantOrderOffline.setSourceUserName(addSourceUserName);
-		merchantOrderOffline.setRealName(addRealName);
-		merchantOrderOffline.setPhone(addPhone);
-		merchantOrderOffline.setMerchantId(merchantId);
-		merchantOrderOffline.setAppId(addAppId);
-		merchantOrderOffline.setChannelId(addChannelId);
-		merchantOrderOffline.setBankCode(addBankCode);
-		merchantOrderOffline.setRemark(addRemark);
-		merchantOrderOffline.setOperator(addOperator);
-		merchantOrderOffline.setSourceUid(addSourceUID);
-		//result = 1 添加成功  result = 2 该记录(线下订单号)已存在  result = 0 添加失败 
-		int result = -1;
-		//先查询该线下订单号是否已经存在
-		MerchantOrderOffline OrderOffline = merchantOrderOfflineService.findByMerchantOrderId(addMerchantOrderId);
-		if(OrderOffline != null){
-			result = 2;
-		}else{
-			//添加线下收费
-			boolean isSuccess = merchantOrderOfflineService.addOrderOffline(merchantOrderOffline);
-			//添加日志
-			PrivilegeModule privilegeModule = privilegeModuleService.getModuleById(82);
-			PrivilegeModule privilegeModule1 = privilegeModuleService.getModuleById(privilegeModule.getParentId());
-			String towLevels = privilegeModule.getName();
-			String  oneLevels = privilegeModule1.getName();
-			User user1 = (User)request.getSession().getAttribute("user");
-			String operator = user1.getUsername(); //操作人
-			String operatorId = user1.getId()+""; //操作人Id
-			PrivilegeResource privilegeResource = privilegeResourceService.findByCode("add");
-			privilegeLogService.addPrivilegeLog(operator,privilegeResource.getName(),"经营分析","线下收费维护",privilegeResource.getId()+"",operator+"添加了收费记录，订单号为"+newId,operatorId);
-			
-			if(isSuccess){
-				result = 1;
-			}else{
-				result = 0;
-			}
-		}
-		json.put("result", result);
-		WebUtils.writeJson(response, json);
-		return ;
-	}
-	
-	/**
 	 * 下载为excel
 	 * @param request
 	 * @param response
 	 * @return 
 	 * @throws UnsupportedEncodingException
 	 */
-	@RequestMapping("offlineDownloadSubmit")
-	public void offlineDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
-		log.info("---------------getMerchantOrderOfflineDownloadSubmit----------------");
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		String merchantOrderId = request.getParameter("merchantOrderId");
-		String sourceUserName = request.getParameter("sourceUserName");
-		String merchantName = request.getParameter("merchantName");
-		String appId = request.getParameter("appId");
+	@RequestMapping("revenueDownloadSubmit")
+	public void revenueDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException{
+		log.info("---------------getChannelRevenueDownloadSubmit----------------");
 		String channelId = request.getParameter("channelId");
-		String operator = request.getParameter("operator");
-		String orderId = request.getParameter("orderId");
+		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("orderId:"+orderId+"  merchantOrderId:"+merchantOrderId+"  sourceUserName:"+sourceUserName+"  merchantName:"+merchantName+"  appId:"+appId+"  channelId:"+channelId+"  operator:"+operator+" startDate:"+startDate+" endDate:"+endDate);
+		System.out.println("channelId:"+channelId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
 		
-	    MerchantOrderOffline offline = new MerchantOrderOffline();
-	    
-	    offline.setId(orderId);
-	    offline.setMerchantOrderId(merchantOrderId);
-	    if(merchantName!=null && merchantName!=""){
-	    	offline.setMerchantId(Integer.parseInt(merchantName));
-	    }
-	    offline.setSourceUserName(sourceUserName);
-	    offline.setAppId(appId);
-	    offline.setChannelId(channelId);
-	    offline.setOperator(operator);
-	    
-	    if(startDate!=null && startDate!=""){
-	    	try {
-				offline.setStartDate(sdf.parse(startDate));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
+		if(("day").equals(dimension)){//天
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,-1);
+				startDate = sdf.format(cal.getTime());
 			}
-	    }
-	    if(endDate!=null && endDate!=""){
-	    	try {
-				offline.setEndDate(sdf.parse(endDate));
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		}else if(("week").equals(dimension)){//自然周
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,0);
+				startDate = sdf.format(cal.getTime());
 			}
-	    }
+		    try {
+				cal.setTime(sdf.parse(startDate));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+		    // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了  
+		    int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
+		    if (1 == dayWeek) {  
+		       cal.add(Calendar.DAY_OF_MONTH, -1);  
+		    }  
+		    cal.setFirstDayOfWeek(Calendar.MONDAY); // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一   
+		    int day = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天 
+		    cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值  
+	     	startDate=sdf.format(cal.getTime());
+		    cal.add(Calendar.DATE, 6);  
+		    endDate=sdf.format(cal.getTime());
+		    System.out.println("该日期所在自然周开始结束日期------StartDate:"+startDate+"  endDate:"+endDate);
+		}else if(("month").equals(dimension)){//月
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,0);
+				startDate = sdf.format(cal.getTime());
+			}
+		    try {
+				cal.setTime(sdf.parse(startDate));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}  
+			//获取当前月第一天：    
+	        cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+	        startDate = sdf.format(cal.getTime());
+	        //获取当前月最后一天
+	        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));  
+	        endDate = sdf.format(cal.getTime());
+	        System.out.println("该日期所在月开始结束日期-------StartDate:"+startDate+"  endDate:"+endDate);
+		}else if(("year").equals(dimension)){//年
+			if(startDate==null || ("").equals(startDate)){
+				cal.add(Calendar.DATE,0);
+				startDate = sdf.format(cal.getTime());
+			}
+			String year=startDate.split("-")[0];
+	        startDate=year+"-01-01";
+	        endDate=year+"-12-31";
+	        System.out.println("该日期所在年份开始结束日期--------StartDate:"+startDate+"  endDate:"+endDate);
+		}else{
+			System.out.println("自定义查询区间日期--------StartDate:"+startDate+"  endDate:"+endDate);
+		}
+		
+		MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    
-	    List<MerchantOrderOffline> offlines = merchantOrderOfflineService.findOfflineAllNoPage(offline);
-	    DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss"); 
-	    MerchantInfo merchantInfo = null;
-	    PayChannelDictionary channel = null;
-	    DictTradePayment payment=null;
-	    for(MerchantOrderOffline r : offlines){
-			 Date createDate1 = r.getCreateTime();
-			 r.setFoundDate(df.format(createDate1));
-			 String appId1=r.getAppId();
-			 String appName="";
-			 if(appId1!=null && appId1!="" && appId1!="0"){
-				 if(appId1.equals("1")){
-					 appName = "OES学历";
-				 }else if(appId1.equals("10026")){
-					 appName = "mooc2u";
-				 }
-			 }
-			 r.setAppName(appName);
-			 String channelId1=r.getChannelId();
-			 String channelName="";
-			 if(channelId1!=null && channelId1!=""){
-				channel=payChannelDictionaryService.findNameById(channelId1);
-	    		if(channel!=null){
-	    			channelName=channel.getChannelName();
+		if(channelId!=null && channelId.length()!=0){
+			//orderInfo.setChannelId(Integer.parseInt(channelId));
+			orderInfo.setSourceType(Integer.parseInt(channelId));
+		}
+	    orderInfo.setDimension(dimension);
+	    orderInfo.setStartDate(startDate);
+	    orderInfo.setEndDate(endDate);
+	    List<MerchantOrderInfo> channelRevenues = merchantOrderInfoService.findChannelRevenueNoPage(orderInfo);
+	    
+	    PayChannelSwitch channel=null;
+    	for(MerchantOrderInfo r : channelRevenues){
+    		if(r.getSourceType()!=null){
+	    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
+				if(channel!=null){
+	    			r.setChannelName(channel.getChannelName());
 	    		}
-    			r.setChannelName(channelName);
-			 }
-			 Integer merchantId1=r.getMerchantId();
-			 String merchantName1="";
-			 if(merchantId1!=null){				 
-				merchantInfo=merchantInfoService.findNameById(merchantId1);
-	    		if(merchantInfo!=null){
-		    		merchantName1=merchantInfo.getMerchantName();
-	    		}
-	    		r.setMerchantName(merchantName1);
-			 }
-			 String bankCode1=r.getBankCode();
-			 String bankName="";
-			 if(bankCode1!=null && bankCode1!=""){
-				payment=dictTradePaymentService.findNameById(bankCode1);
-	    		if(payment!=null){
-	    			bankName=payment.getRemark();
-	    		}
-	    		r.setBankName(bankName);
-			 }
-	    }
-	    OrderDeriveExport.exportOrderOffline(response, offlines);
-	    //return "usercenter/merchantOrderOffline";
-	}
+    		}
+    		if(("day").equals(dimension)){
+    			r.setDimension("天");
+    			r.setFoundDate(startDate);
+    		}else if(("week").equals(dimension)){
+    			r.setDimension("自然周");
+	    		r.setFoundDate(startDate+"~"+endDate);
+    		}else if(("month").equals(dimension)){
+    			r.setDimension("月");
+	    		r.setFoundDate(startDate+"~"+endDate);
+    		}else if(("year").equals(dimension)){
+    			r.setDimension("年");
+	    		r.setFoundDate(startDate+"~"+endDate);
+    		}else{
+    			r.setDimension("自定义");
+    			if(startDate==null || ("").equals(startDate)){
+    				r.setFoundDate(endDate+"之前");
+    			}else if(endDate==null || ("").equals(endDate)){
+    				r.setFoundDate(startDate+"~至今");
+    			}else{
+    				r.setFoundDate(startDate+"~"+endDate);
+    			}
+    		}
+    	}
+    	OrderDeriveExport.exportChannelRevenus(response, channelRevenues);
+	}   
 }

@@ -355,4 +355,59 @@ public class OrderDeriveExport {
 			return sIn;
 		}
 	}
+
+	public static void exportChannelRevenus(HttpServletResponse response,List<MerchantOrderInfo> channelRevenues) {
+		// 声明一个工作薄
+		HSSFWorkbook wb = new HSSFWorkbook();
+		// 声明一个单子并命名
+		HSSFSheet sheet = wb.createSheet("StoringTalentExcel");  
+		// 给单子名称一个长度
+		sheet.setDefaultColumnWidth((short) 20);
+		// 生成一个样式
+		HSSFCellStyle style = wb.createCellStyle();
+		// 创建第一行（也可以称为表头）
+		HSSFRow row = sheet.createRow(0);
+		// 样式字体居中
+		style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+		// 给表头第一行一次创建单元格
+		HSSFCell cell = row.createCell((short) 0);
+		cell.setCellValue("支付渠道");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 1);
+		cell.setCellValue("营收金额");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 2);
+		cell.setCellValue("手续费");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 3);
+		cell.setCellValue("统计维度");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 4);
+		cell.setCellValue("日期");
+		cell.setCellStyle(style);
+		// 向单元格里填充数据
+		for (short i = 0; i < channelRevenues.size(); i++) {
+			row = sheet.createRow(i + 1);
+			row.createCell(0).setCellValue(channelRevenues.get(i).getChannelName());//支付渠道名称
+			row.createCell(1).setCellValue(channelRevenues.get(i).getCountOrderAmount());//营收金额
+			row.createCell(2).setCellValue(channelRevenues.get(i).getPayCharge());//手续费
+			row.createCell(3).setCellValue(channelRevenues.get(i).getDimension());//统计维度
+			row.createCell(4).setCellValue(channelRevenues.get(i).getFoundDate());//日期
+		}
+		try {
+			response.setContentType("application/vnd.ms-excel");
+			String filedisplay = "账务营收报表.xls";
+			String iso_filename = parseGBK(filedisplay);
+			response.addHeader("Content-Disposition", "attachment;filename="+ iso_filename);
+			ServletOutputStream out = response.getOutputStream();
+			wb.write(out);                                                      
+			out.close();
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "导出失败!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "导出失败!");
+			e.printStackTrace();
+		}
+	}
 }

@@ -224,5 +224,12 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		}
 	}
 
+	@Override
+	public List<MerchantOrderInfo> findChannelRevenueNoPage(
+			MerchantOrderInfo orderInfo) {
+		List<MerchantOrderInfo> lists=merchantOrderInfoRepository.findChannelRevenueQueryCount(orderInfo);
+		return lists;
+	}
+
 
 }

@@ -59,5 +59,6 @@ public interface MerchantOrderInfoService {
 			MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findChannelRevenue(MerchantOrderInfo orderInfo);
 	int findChannelRevenueCount(MerchantOrderInfo orderInfo);
+	List<MerchantOrderInfo> findChannelRevenueNoPage(MerchantOrderInfo orderInfo);
 	
 }

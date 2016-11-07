@@ -555,33 +555,54 @@
 	</select>
 	
 	<select id="findChannelRevenue" resultMap="merchantOrderInfoMap" flushCache="true">
-		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
-		 <if test="channelId != null and channelId !=''" >
-           and CHANNEL_ID=#{channelId} 
+		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') creatDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		 <if test="sourceType != null">
+           and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
          <if test="dimension == 'day'" >
 		 	and date_format(CREATE_DATE,'%Y-%m-%d')=#{startDate, jdbcType=TIMESTAMP} 
+		 	GROUP BY SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d')
 		 </if>
-         <if test="dimension != 'day'" >
+         <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
-         	and #{endDate, jdbcType=TIMESTAMP} >(date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	GROUP BY SOURCE_TYPE
          </if>
-		GROUP BY CHANNEL_ID,date_format(CREATE_DATE,'%Y-%m-%d') limit #{startRow},#{pageSize}
+         <if test="dimension == 'custom'" >
+         	<if test="startDate != null and startDate != ''">
+         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	</if>
+         	<if test="endDate != null and endDate != ''">
+         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	</if>
+         	GROUP BY SOURCE_TYPE
+         </if>
+		 limit #{startRow},#{pageSize}
 	</select>
 	
 	<select id="findChannelRevenueQueryCount" resultMap="merchantOrderInfoMap">
-		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
-		 <if test="channelId != null and channelId !=''" >
-           and CHANNEL_ID=#{channelId} 
+		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') creatDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		 <if test="sourceType != null">
+           and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
          <if test="dimension == 'day'" >
 		 	and date_format(CREATE_DATE,'%Y-%m-%d')=#{startDate, jdbcType=TIMESTAMP} 
+		 	GROUP BY SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d')
 		 </if>
-         <if test="dimension != 'day'" >
+         <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
-         	and #{endDate, jdbcType=TIMESTAMP} >(date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	GROUP BY SOURCE_TYPE
          </if>
-		GROUP BY CHANNEL_ID,date_format(CREATE_DATE,'%Y-%m-%d')
+         <if test="dimension == 'custom'" >
+         	<if test="startDate != null and startDate != ''">
+         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	</if>
+         	<if test="endDate != null and endDate != ''">
+         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	</if>
+         	GROUP BY SOURCE_TYPE
+         </if>
 	</select>
 	
     <resultMap id="allInfo" type="java.util.Map">

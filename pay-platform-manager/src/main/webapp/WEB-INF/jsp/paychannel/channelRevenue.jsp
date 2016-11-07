@@ -119,7 +119,8 @@
 		}
 
 		function findChannelRevenue(){
-		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue";
+			var dimension="day";
+		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?dimension="+dimension;
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -160,9 +161,10 @@
 			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
-			
 			if(queryChannelId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
 				findChannelRevenue();
+			}else if(queryDimension=="custom"&&startDate==""&&endDate==""){
+				$.messager.alert("提示","请选择查询时间区间!");
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
@@ -197,17 +199,12 @@
 		}
 		
 		function downloadSubmit(){			
-			var queryOrderId = $('#queryOrderId').textbox('getValue');
-			var queryMerchantOrderId = $('#queryMerchantOrderId').textbox('getValue');
-			var querySourceUserName = $('#querySourceUserName').textbox('getValue');
-			var queryMerchantName = $('#queryMerchantName').combobox('getValue');
-			var queryAppId = $('#queryAppId').combobox('getValue');
 			var queryChannelId = $('#queryChannelId').combobox('getValue');
-			var queryOperator = $('#queryOperator').val();
+			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
-		
-		 	var url="${pageContext.request.contextPath}/manage/offlineDownloadSubmit?orderId="+queryOrderId+"&merchantOrderId="+queryMerchantOrderId+"&sourceUserName="+querySourceUserName+"&merchantName="+queryMerchantName+"&appId="+queryAppId+"&channelId="+queryChannelId+"&operator="+queryOperator+"&startDate="+startDate+"&endDate="+endDate;
+			
+		 	var url="${pageContext.request.contextPath}/paychannel/revenueDownloadSubmit?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 			
 			document.getElementById("ff").action=url;
 		    document.getElementById("ff").submit();
