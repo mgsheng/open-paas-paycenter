@@ -62,7 +62,8 @@
 		<thead>
 			<tr>
 			    <th data-options="field:'channelName',width:100,align:'center'">支付渠道</th>
-				<th data-options="field:'countOrderAmount',width:80,align:'center'">营收金额</th>
+				<th data-options="field:'countOrderAmount',width:80,align:'center'">交易金额</th>
+				<th data-options="field:'countPayAmount',width:80,align:'center'">营收金额</th>
 				<th data-options="field:'payCharge',width:80">手续费</th>
 				<th data-options="field:'dismension',width:80,align:'center'">统计维度</th>
 				<th data-options="field:'foundDate',width:200">日期</th>
@@ -100,7 +101,7 @@
         function loadSelect(){
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
             $('#queryChannelId').combobox({
-				url:'${pageContext.request.contextPath}/manage/findSourceType?flag=offline',
+				url:'${pageContext.request.contextPath}/manage/findSourceType',
 				valueField:'id',
 				textField:'text'
 			});

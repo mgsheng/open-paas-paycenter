@@ -199,6 +199,7 @@ public class ChannelRevenueController extends BaseControllerUtil{
 		    		}
 	    		}
 	    		map.put("countOrderAmount", r.getCountOrderAmount()); 
+	    		map.put("countPayAmount", r.getCountPayAmount());
 	    		map.put("payCharge", r.getPayCharge());
 	    		if(("day").equals(dimension)){
 	    			map.put("dismension", "天");

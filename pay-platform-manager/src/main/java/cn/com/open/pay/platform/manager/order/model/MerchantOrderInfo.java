@@ -112,6 +112,7 @@ public class MerchantOrderInfo implements Serializable {
 	private Integer pageSize;
 	
 	private Double countOrderAmount;
+	private Double countPayAmount;
 	private String dimension;
 	
 
@@ -580,6 +581,14 @@ public class MerchantOrderInfo implements Serializable {
 
 	public void setDimension(String dimension) {
 		this.dimension = dimension;
+	}
+
+	public Double getCountPayAmount() {
+		return countPayAmount;
+	}
+
+	public void setCountPayAmount(Double countPayAmount) {
+		this.countPayAmount = countPayAmount;
 	}
 	
 }

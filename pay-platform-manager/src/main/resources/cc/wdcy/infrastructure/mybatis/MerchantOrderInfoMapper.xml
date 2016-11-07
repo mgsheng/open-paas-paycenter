@@ -555,7 +555,7 @@
 	</select>
 	
 	<select id="findChannelRevenue" resultMap="merchantOrderInfoMap" flushCache="true">
-		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') creatDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT CHANNEL_ID channelId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,PAY_CHARGE payCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') creatDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="sourceType != null">
            and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
@@ -581,7 +581,7 @@
 	</select>
 	
 	<select id="findChannelRevenueQueryCount" resultMap="merchantOrderInfoMap">
-		SELECT CHANNEL_ID channelId,count(ORDER_AMOUNT) countOrderAmount,PAY_CHARGE payCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') creatDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT CHANNEL_ID channelId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,PAY_CHARGE payCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') creatDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="sourceType != null">
            and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
