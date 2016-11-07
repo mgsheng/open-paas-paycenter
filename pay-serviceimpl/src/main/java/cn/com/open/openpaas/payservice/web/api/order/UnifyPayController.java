@@ -292,8 +292,8 @@ public class UnifyPayController extends BaseControllerUtil{
 	
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
-			/*//更新现有订单信息
-				*/	
+		/*	//更新现有订单信息
+					
 			if(merchantOrderInfo.getPayStatus()==0){
 				if(nullEmptyBlankJudge(merchantOrderInfo.getChannelOrderId()))
 				{
@@ -321,7 +321,14 @@ public class UnifyPayController extends BaseControllerUtil{
  				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"7";
  			}
-			payEbank=getBankSwitch(paymentType, bank_map);
+			payEbank=getBankSwitch(paymentType, bank_map);*/
+				//订单处理中或者订单处理失败
+				//paraMandaChkAndReturn(3, response,"认证失败");
+				payServiceLog.setErrorCode("10");
+				payServiceLog.setStatus("error");
+				payServiceLog.setLogName(PayLogName.PAY_END);
+				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
 		}else{ 
 			//创建订单
 			merchantOrderInfo=new MerchantOrderInfo();
@@ -1252,6 +1259,8 @@ public class UnifyPayController extends BaseControllerUtil{
     		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
     	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
     		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
+    		errorMsg="您好：订单号重复,请检查后重新下单！";
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);

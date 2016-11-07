@@ -199,6 +199,8 @@
 								<option value="BOB">北京银行</option>
 								<option value="CEB">中国光大银行</option>
 								<option value="PAB">中国平安银行</option>
+								<option value="CMBC">中国民生银行</option>
+								<option value="CIB">兴业银行</option>
 							</select>
                             <p class="help-block">支付方式</p>
                         </div>

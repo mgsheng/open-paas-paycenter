@@ -33,7 +33,7 @@
 			</dl>
 		</div>
 
-	<footer class="footer" style="padding-top: 50px;margin-top: 30px;height: 10px">Copyright &copy; 2016</footer>
+	<footer class="footer" style="padding-top: 50px;margin-top: 30px;height: 10px">版权所有：奥鹏教育 Copyright ©2003-2015 open.com.cn ALL rights reserved</footer>
 </div>
 </form>
 
