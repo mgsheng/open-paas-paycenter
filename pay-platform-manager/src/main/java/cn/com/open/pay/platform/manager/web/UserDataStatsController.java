@@ -104,7 +104,9 @@ public class UserDataStatsController extends BaseControllerUtil {
 					dateMap.put(DateTools.dateSub(DateTools.SUB_DAY, DateTools.stringtoDate(startTime, "yyyy-MM-dd"), i, "yyyy-MM-dd"), i);
 				}
 			//查询成交金额
-			endTime=DateTools.getTmotime("yyyy-MM-dd");
+			//endTime=DateTools.getTmotime("yyyy-MM-dd");
+			startTime = startTime+" 00:00:00";
+			endTime = endTime+" 23:59:59";
 			List<Map<String, Object>> payAmountList=merchantOrderInfoService.getPayAmount(startTime, endTime, appId, paymentId, channelId,sourceType);
 			List<Map<String, Object>>getPayCountList=merchantOrderInfoService.getPayCount(startTime, endTime, appId, paymentId, channelId,sourceType);
 			List<Map<String, Object>>userCountList=merchantOrderInfoService.getUserCount(startTime, endTime, appId, paymentId, channelId,sourceType);
