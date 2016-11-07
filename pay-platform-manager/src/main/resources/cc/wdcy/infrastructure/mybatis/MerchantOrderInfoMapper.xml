@@ -217,7 +217,7 @@
     </select>
     <select id="findDownloadMerchant" resultMap="merchantOrderInfoMap" >
         select * from  MERCHANT_ORDER_INFO where 1=1
-        <if test="id != null and id !=''" >
+            <if test="id != null and id !=''" >
            and ID=#{id} 
         </if>
         <if test="merchantId != null and merchantId !=''" >
@@ -240,6 +240,12 @@
         </if>
         <if test="appId != null and appId !=''" >
            and APPID=#{appId} 
+        </if>
+        <if test="userName != null and userName !=''" >
+           and USERNAME=#{userName} 
+        </if>
+        <if test="sourceType != null " >
+           and SOURCE_TYPE=#{sourceType} 
         </if>
         <if test="startDate != null and startDate !=''" >
            and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 

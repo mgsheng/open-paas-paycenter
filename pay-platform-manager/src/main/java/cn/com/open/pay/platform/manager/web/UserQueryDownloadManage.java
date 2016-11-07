@@ -390,6 +390,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 if(PS!=null&&!PS.equals("")){
 			 payStatus=Integer.parseInt(PS);
 		 }
+		 String sourceType=request.getParameter("sourceType"); 
+		 
 		 String startDate=request.getParameter("startDate"); //交易时间开始时间
 		 String endDate=request.getParameter("endDate"); //交易时间结束时间
 		 String startDate1 = null;
@@ -398,7 +400,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 startDate1 = startDate+" 00:00:00";
 			 endDate1 = endDate+" 23:59:59";
 		 }
-		
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
 		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
 		 merchantOrderInfo.setStartDate(startDate1);
@@ -409,8 +410,13 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
-		 merchantOrderInfo.setAppId(appId);				//业务类型
-		 
+		 if(sourceType!=""){
+			 merchantOrderInfo.setSourceType(Integer.parseInt(sourceType));	//支付渠道
+		 }
+		 if(appId!=""){
+			 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
+		 }
+		 //List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findDownloadMerchant(merchantOrderInfo);
 		 List<PayChannelSwitch> listPayChannelSwitch = payChannelSwitchService.findPayChannelTypeAll();
 		 Map map = new HashMap();
