@@ -7,6 +7,8 @@
     <settings>
         <setting name="lazyLoadingEnabled" value="false"/>
         <setting name="useGeneratedKeys" value="true"/>
+        <!-- 打印查询语句 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
     </settings>
     <typeAliases>
         <typeAlias alias="User" type="cn.com.open.pay.platform.manager.login.model.User"/>

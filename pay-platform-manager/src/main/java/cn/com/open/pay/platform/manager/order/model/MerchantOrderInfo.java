@@ -113,6 +113,7 @@ public class MerchantOrderInfo implements Serializable {
 	
 	private Double countOrderAmount;
 	private Double countPayAmount;
+	private Double countPayCharge;
 	private String dimension;
 	
 
@@ -589,6 +590,14 @@ public class MerchantOrderInfo implements Serializable {
 
 	public void setCountPayAmount(Double countPayAmount) {
 		this.countPayAmount = countPayAmount;
+	}
+
+	public Double getCountPayCharge() {
+		return countPayCharge;
+	}
+
+	public void setCountPayCharge(Double countPayCharge) {
+		this.countPayCharge = countPayCharge;
 	}
 	
 }

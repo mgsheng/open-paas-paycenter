@@ -394,7 +394,7 @@ public class OrderDeriveExport {
 			row.createCell(0).setCellValue(channelRevenues.get(i).getChannelName());//支付渠道名称
 			row.createCell(1).setCellValue(channelRevenues.get(i).getCountOrderAmount());//交易金额
 			row.createCell(2).setCellValue(channelRevenues.get(i).getCountPayAmount());//营收金额
-			row.createCell(3).setCellValue(channelRevenues.get(i).getPayCharge());//手续费
+			row.createCell(3).setCellValue(channelRevenues.get(i).getCountPayCharge());//手续费
 			row.createCell(4).setCellValue(channelRevenues.get(i).getDimension());//统计维度
 			row.createCell(5).setCellValue(channelRevenues.get(i).getFoundDate());//日期
 		}

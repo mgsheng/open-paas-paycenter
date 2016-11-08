@@ -64,7 +64,7 @@
 			    <th data-options="field:'channelName',width:100,align:'center'">支付渠道</th>
 				<th data-options="field:'countOrderAmount',width:80,align:'center'">交易金额</th>
 				<th data-options="field:'countPayAmount',width:80,align:'center'">营收金额</th>
-				<th data-options="field:'payCharge',width:80">手续费</th>
+				<th data-options="field:'countPayCharge',width:80">手续费</th>
 				<th data-options="field:'dismension',width:80,align:'center'">统计维度</th>
 				<th data-options="field:'foundDate',width:200">日期</th>
 			</tr>
@@ -76,26 +76,11 @@
 <script>
 		//页面预加载
 		$(function(){
-			//设置选择维度与结束时间显示关系
-        	setQueryDimension();
         	//加载查询条件中的支付渠道
 			loadSelect();
 			//预加载,默认维度天,日期昨天
 			findChannelRevenue();
 		});
-		
-		function setQueryDimension(){
-			$("#end").hide();
-			$("#queryDimension") .combobox({
-            	onChange: function (n, o) {
-            		if(n=="custom"){
-            			$("#end").show();
-            		}else{
-            			$("#end").hide();
-            		}
-	            }
-        	});
-		}
 		
         //加载select
         function loadSelect(){
@@ -133,7 +118,7 @@
                   	}
                 }
 		    }); 
-			setPage();
+		    setPage();
 		}
 		
 		function setPage(){
@@ -164,12 +149,11 @@
 			var endDate = $('#endDate').datebox('getValue');
 			if(queryChannelId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
 				findChannelRevenue();
-			}else if(queryDimension=="custom"&&startDate==""&&endDate==""){
-				$.messager.alert("提示","请选择查询时间区间!");
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
+				alert(3);
 					var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 		        	$('#dg').datagrid({
 						collapsible:true,
@@ -179,6 +163,11 @@
 				        onLoadSuccess:function(data){
 		                    if (data.total<1){
 		                       $.messager.alert("提示","没有符合查询条件的数据!");
+		                  	}
+		                  	if(queryDimension=="week" || queryDimension=="month" || queryDimension=="year"){
+		                  		$(".datagrid-pager").hide();
+		                  	}else{
+		                  		$(".datagrid-pager").show();
 		                  	}
 		                }
 				    }); 
@@ -193,6 +182,11 @@
 			        onLoadSuccess:function(data){
 	                    if (data.total<1){
 	                       $.messager.alert("提示","没有符合查询条件的数据!");
+	                  	}
+	                  	if(queryDimension=="week" || queryDimension=="month" || queryDimension=="year"){
+	                  		$(".datagrid-pager").hide();
+	                  	}else{
+	                  		$(".datagrid-pager").show();
 	                  	}
 	                }
 			    }); 
