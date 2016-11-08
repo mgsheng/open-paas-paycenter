@@ -21,10 +21,10 @@
 		<form id="ff" method="post">
 			<table style="width:100%;">
 				<tr>
-					<td style="text-align: right;">支付渠道：</td>
+					<td style="text-align: right;">支付银行：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付渠道',multiple:false" id="queryChannelId" 
-								name="queryChannelId"  style="width:180px;height:25px;padding:5px;">
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付银行',multiple:false" id="queryPaymentId" 
+								name="queryPaymentId"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
 					<td style="text-align: right;">统计维度：</td>
@@ -57,11 +57,11 @@
 		</form>
 	</div>
 	
-	<table id="dg" class="easyui-datagrid" title="渠道营收报表" style="height:400px;width:100%;max-width:100%;" 
+	<table id="dg" class="easyui-datagrid" title="银行缴费报表" style="height:400px;width:100%;max-width:100%;" 
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:false,method:'get'">
 		<thead>
 			<tr>
-			    <th data-options="field:'channelName',width:100,align:'center'">支付渠道</th>
+			    <th data-options="field:'paymentName',width:100,align:'center'">支付银行</th>
 				<th data-options="field:'countOrderAmount',width:80,align:'center'">交易金额</th>
 				<th data-options="field:'countPayAmount',width:80,align:'center'">营收金额</th>
 				<th data-options="field:'countPayCharge',width:80">手续费</th>
@@ -79,14 +79,14 @@
         	//加载查询条件中的支付渠道
 			loadSelect();
 			//预加载,默认维度天,日期昨天
-			findChannelRevenue();
+			findPayment();
 		});
 		
         //加载select
         function loadSelect(){
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
-            $('#queryChannelId').combobox({
-				url:'${pageContext.request.contextPath}/manage/findSourceType',
+            $('#queryPaymentId').combobox({
+				url:'${pageContext.request.contextPath}/payment/findPayment',
 				valueField:'id',
 				textField:'text'
 			});
@@ -104,9 +104,9 @@
           }); 
 		}
 
-		function findChannelRevenue(){
+		function findPayment(){
 			var dimension="day";
-		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?dimension="+dimension;
+		 	var url="${pageContext.request.contextPath}/payment/getPayment?dimension="+dimension;
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -143,17 +143,17 @@
 		}
 		
 		function submitForm(){
-			var queryChannelId = $('#queryChannelId').combobox('getValue');
+			var queryPaymentId = $('#queryPaymentId').combobox('getValue');
 			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
-			if(queryChannelId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
-				findChannelRevenue();
+			if(queryPaymentId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
+				findPayment();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
-					var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
+					var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 		        	$('#dg').datagrid({
 						collapsible:true,
 						rownumbers:true,
@@ -172,7 +172,7 @@
 				    }); 
 				}
 			}else{
-				var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
+				var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,
@@ -193,12 +193,12 @@
 		}
 		
 		function downloadSubmit(){			
-			var queryChannelId = $('#queryChannelId').combobox('getValue');
+			var queryPaymentId = $('#queryPaymentId').combobox('getValue');
 			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 			
-		 	var url="${pageContext.request.contextPath}/paychannel/revenueDownloadSubmit?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
+		 	var url="${pageContext.request.contextPath}/payment/paymentDownloadSubmit?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 			
 			document.getElementById("ff").action=url;
 		    document.getElementById("ff").submit();

@@ -58,5 +58,8 @@ public interface MerchantOrderInfoRepository extends Repository {
 			MerchantOrderInfo merchantOrderInfo);
 	List<MerchantOrderInfo> findChannelRevenue(MerchantOrderInfo orderInfo);
 	List<MerchantOrderInfo> findChannelRevenueQueryCount(MerchantOrderInfo orderInfo);
+	List<MerchantOrderInfo> findBankPaymentQueryCount(
+			MerchantOrderInfo orderInfo);
+	List<MerchantOrderInfo> findBankPayment(MerchantOrderInfo orderInfo);
 	
 }

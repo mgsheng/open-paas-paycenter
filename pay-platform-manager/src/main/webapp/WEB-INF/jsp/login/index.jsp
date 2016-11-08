@@ -35,7 +35,8 @@
 								]
 						},{"menuid":"2","icon":"icon-sys","menuname":"财务报表",
 							"menus":[
-									{"menuid":"40","menuname":"渠道营收","icon":"icon-nav","url":"${pageContext.request.contextPath}/paychannel/channelRevenue"}
+									{"menuid":"40","menuname":"渠道营收","icon":"icon-nav","url":"${pageContext.request.contextPath}/paychannel/channelRevenue"},
+									{"menuid":"41","menuname":"银行缴费","icon":"icon-nav","url":"${pageContext.request.contextPath}/payment/bankPayment"}
 								]
 						},{"menuid":"","icon":"icon-sys","menuname":"用户管理",
 							"menus":[

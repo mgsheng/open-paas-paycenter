@@ -231,5 +231,30 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		return lists;
 	}
 
+	@Override
+	public List<MerchantOrderInfo> findBankPayment(MerchantOrderInfo orderInfo) {
+		// TODO Auto-generated method stub
+		return merchantOrderInfoRepository.findBankPayment(orderInfo);
+	}
+
+	@Override
+	public int findBankPaymentCount(MerchantOrderInfo orderInfo) {
+		// TODO Auto-generated method stub
+		List<MerchantOrderInfo> lists=merchantOrderInfoRepository.findBankPaymentQueryCount(orderInfo);
+		if(lists==null){
+			return 0;
+		}else{
+			return lists.size();
+		}
+	}
+
+	@Override
+	public List<MerchantOrderInfo> findBankPaymentNoPage(
+			MerchantOrderInfo orderInfo) {
+		// TODO Auto-generated method stub
+		List<MerchantOrderInfo> lists=merchantOrderInfoRepository.findBankPaymentQueryCount(orderInfo);
+		return lists;
+	}
+
 
 }
