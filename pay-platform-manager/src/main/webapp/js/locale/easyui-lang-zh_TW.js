@@ -32,6 +32,7 @@ if ($.fn.calendar){
 if ($.fn.datebox){
 	$.fn.datebox.defaults.currentText = '今天';
 	$.fn.datebox.defaults.closeText = '關閉';
+	$.fn.datebox.defaults.cleanText = '清空';
 	$.fn.datebox.defaults.okText = '確定';
 	$.fn.datebox.defaults.missingMessage = '該輸入項為必輸項';
 }
