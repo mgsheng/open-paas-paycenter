@@ -180,7 +180,7 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			if((startDate==null || ("").equals(startDate)) && (endDate!=null || !("").equals(endDate))){
 				startDate = endDate;
 			}else if((startDate!=null || !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
-				startDate = endDate;
+				endDate = startDate;
 			}
 			if(("week").equals(dimension)){
 				timeDuring = getWeek(startDate,endDate);
@@ -390,7 +390,7 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			if((startDate==null || ("").equals(startDate)) && (endDate!=null || !("").equals(endDate))){
 				startDate = endDate;
 			}else if((startDate!=null || !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
-				startDate = endDate;
+				endDate = startDate;
 			}
 			if(("week").equals(dimension)){
 				timeDuring = getWeek(startDate,endDate);
