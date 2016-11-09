@@ -4,14 +4,10 @@ import java.io.UnsupportedEncodingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,28 +25,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.pay.platform.manager.tools.SysUtil;
 import cn.com.open.pay.platform.manager.department.model.DictTradePayment;
-import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradePaymentService;
-import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
-import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
-import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
-import cn.com.open.pay.platform.manager.order.model.MerchantOrderOffline;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
-import cn.com.open.pay.platform.manager.order.service.MerchantOrderOfflineService;
-import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
-import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
-import cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch;
-import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
-import cn.com.open.pay.platform.manager.paychannel.service.PayChannelSwitchService;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
-import cn.com.open.pay.platform.manager.privilege.model.PrivilegeResource;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeResourceService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.OrderDeriveExport;
+import cn.com.open.pay.platform.manager.tools.ReportDateTools;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
 /**
  * 渠道营收管理
@@ -62,21 +43,7 @@ import cn.com.open.pay.platform.manager.tools.WebUtils;
 public class BankPaymentController extends BaseControllerUtil{
 	private static final Logger log = LoggerFactory.getLogger(UserLoginController.class);
 	@Autowired
-	private MerchantOrderOfflineService merchantOrderOfflineService;
-	@Autowired
 	private DictTradePaymentService dictTradePaymentService;
-	@Autowired
-	private MerchantInfoService merchantInfoService;
-	@Autowired
-	private PayChannelDictionaryService payChannelDictionaryService;
-	@Autowired
-	private PrivilegeModuleService privilegeModuleService;
-	@Autowired
-	private PrivilegeResourceService privilegeResourceService;
-	@Autowired
-	private PrivilegeLogService privilegeLogService;
-	@Autowired
-	private PayChannelSwitchService payChannelSwitchService;
 	@Autowired
 	private MerchantOrderInfoService merchantOrderInfoService;
 	
@@ -212,13 +179,13 @@ public class BankPaymentController extends BaseControllerUtil{
 				endDate = startDate;
 			}
 			if(("week").equals(dimension)){
-				timeDuring = getWeek(startDate,endDate);
+				timeDuring = ReportDateTools.getWeek(startDate,endDate);
 				dimensionName = "自然周";
 			}else if(("month").equals(dimension)){
-				timeDuring = getMonth(startDate,endDate);
+				timeDuring = ReportDateTools.getMonth(startDate,endDate);
 				dimensionName = "月";
 			}else{
-				timeDuring = getYear(startDate,endDate);
+				timeDuring = ReportDateTools.getYear(startDate,endDate);
 				dimensionName = "年";
 			}
 			for(String during : timeDuring){
@@ -255,101 +222,6 @@ public class BankPaymentController extends BaseControllerUtil{
     	WebUtils.writeJson(response, json);
 		return;
 	}
-	
-	//获取一个时间段内的自然周集合
-	public List<String> getWeek(String startDate,String endDate) throws ParseException{
-		List<String> list=new ArrayList<String>();
-		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
-	    Date d1 = sdf.parse(startDate);//定义起始日期
-	    Date d2 = sdf.parse(endDate);//定义结束日期
-	    Calendar dd = Calendar.getInstance();//定义日期实例
-	    Calendar   calendar   =   new   GregorianCalendar();
-	    calendar.setTime(d2); 
-	    calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动 
-	    d2=calendar.getTime();  
-	    dd.setTime(d1);//设置日期起始时间
-		String startend="";
-	    while(dd.getTime().before(d2)){//判断是否到结束日期
-		    Calendar cal = Calendar.getInstance();//定义日期实例
-		    cal.setTime(dd.getTime());
-		    // 判断要计算的日期是否是周日，如果是则减一天计算周六的，否则会出问题，计算到下一周去了  
-		    int dayWeek = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天  
-		    if (1 == dayWeek) {  
-		       cal.add(Calendar.DAY_OF_MONTH, -1);  
-		    }  
-		    cal.setFirstDayOfWeek(Calendar.MONDAY); // 设置一个星期的第一天，按中国的习惯一个星期的第一天是星期一   
-		    int day = cal.get(Calendar.DAY_OF_WEEK);// 获得当前日期是一个星期的第几天 
-		    cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);// 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值  
-	     	startDate=sdf.format(cal.getTime());
-		    cal.add(Calendar.DATE, 6);  
-		    endDate=sdf.format(cal.getTime());
-		    String ss=startDate+"~"+endDate;
-		    if(startend.equals(ss)){
-		    	dd.add(Calendar.DATE, 1);
-		    }else{
-		    	startend=startDate+"~"+endDate;
-		    	list.add(startend);
-		    	dd.add(Calendar.DATE, 1);
-		    }		    
-	    }
-		return list;
-	}
-
-	//获取一个时间段内的月集合
-	public List<String> getMonth(String startDate,String endDate) throws ParseException{
-		List<String> list=new ArrayList<String>();
-		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
-	    Date d1 = sdf.parse(startDate);//定义起始日期
-	    Date d2 = sdf.parse(endDate);//定义结束日期
-	    Calendar dd = Calendar.getInstance();//定义日期实例
-	    Calendar   calendar   =   new   GregorianCalendar();
-	    calendar.setTime(d2); 
-	    calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动 
-	    d2=calendar.getTime();  
-	    dd.setTime(d1);//设置日期起始时间
-		String startend="";
-	    while(dd.getTime().before(d2)){//判断是否到结束日期
-		    Calendar cal = Calendar.getInstance();//定义日期实例
-		    cal.setTime(dd.getTime());
-		    //获取当前月第一天：    
-		    cal.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
-		    startDate = sdf.format(cal.getTime());
-		    //获取当前月最后一天
-		    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));  
-		    endDate = sdf.format(cal.getTime());
-		    System.out.println("该日期所在月开始结束日期-------StartDate:"+startDate+"  endDate:"+endDate);
-		    startend=startDate+"~"+endDate;
-		    list.add(startend);
-		    dd.add(Calendar.MONTH, 1);
-	    }
-		return list;
-	}
-
-	//获取一个时间段内的年集合
-	public static List<String> getYear(String startDate,String endDate) throws ParseException{
-		List<String> list=new ArrayList<String>();
-		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
-	    Date d1 = sdf.parse(startDate);//定义起始日期
-	    Date d2 = sdf.parse(endDate);//定义结束日期
-	    Calendar dd = Calendar.getInstance();//定义日期实例
-	    Calendar calendar = new GregorianCalendar();
-	    calendar.setTime(d2); 
-	    calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动 
-	    d2=calendar.getTime();  
-	    dd.setTime(d1);//设置日期起始时间
-		String startend="";
-	    while(dd.getTime().before(d2)){//判断是否到结束日期
-		    Calendar cal = Calendar.getInstance();//定义日期实例
-		    cal.setTime(dd.getTime());
-		    startDate = cal.get(Calendar.YEAR)+"-01-01";
-		    endDate = cal.get(Calendar.YEAR)+"-12-31";
-		    System.out.println("该日期所在年开始结束日期-------StartDate:"+startDate+"  endDate:"+endDate);
-		    startend=startDate+"~"+endDate;
-		    list.add(startend);
-		    dd.add(Calendar.YEAR, 1);
-	    }
-		return list;
-	}
 
 	/**
 	 * 下载为excel
@@ -371,7 +243,6 @@ public class BankPaymentController extends BaseControllerUtil{
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
 		List<MerchantOrderInfo> bankPayments=new ArrayList<MerchantOrderInfo>();
-	    JSONObject json =  new JSONObject();
 	    DictTradePayment payment=null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    
@@ -423,13 +294,13 @@ public class BankPaymentController extends BaseControllerUtil{
 				endDate = startDate;
 			}
 			if(("week").equals(dimension)){
-				timeDuring = getWeek(startDate,endDate);
+				timeDuring = ReportDateTools.getWeek(startDate,endDate);
 				dimensionName = "自然周";
 			}else if(("month").equals(dimension)){
-				timeDuring = getMonth(startDate,endDate);
+				timeDuring = ReportDateTools.getMonth(startDate,endDate);
 				dimensionName = "月";
 			}else{
-				timeDuring = getYear(startDate,endDate);
+				timeDuring = ReportDateTools.getYear(startDate,endDate);
 				dimensionName = "年";
 			}
 			for(String during : timeDuring){

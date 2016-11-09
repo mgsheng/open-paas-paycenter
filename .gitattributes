@@ -259,6 +259,7 @@ pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/Networ
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/OrderCountExport.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/OrderDeriveExport.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/PropertiesTool.java -text
+pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/ReportDateTools.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/SerializeUtil.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/SmsTools.java -text
 pay-platform-manager/src/main/java/cn/com/open/pay/platform/manager/tools/StringTool.java -text
