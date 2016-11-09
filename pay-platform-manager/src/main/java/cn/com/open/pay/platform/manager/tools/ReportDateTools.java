@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -45,9 +47,23 @@ public class ReportDateTools {
 		    	dd.add(Calendar.DATE, 1);
 		    }		    
 	    }
+	    Collections.sort(list, new Comparator() {
+	        @Override
+	        public int compare(Object o1, Object o2) {
+	          return ((String) o2).compareTo((String)o1);
+	        }
+	    });
 		return list;
 	}
 
+	public static void main(String args[]) throws ParseException{
+		String startDate="2015-09-08";
+		String endDate="2016-01-01";
+		List<String> s = getWeek(startDate,endDate);
+		System.out.println(s);
+	}
+	
+	
 	//获取一个时间段内的月集合
 	public static List<String> getMonth(String startDate,String endDate) throws ParseException{
 		List<String> list=new ArrayList<String>();
@@ -57,8 +73,8 @@ public class ReportDateTools {
 	    Calendar dd = Calendar.getInstance();//定义日期实例
 	    Calendar   calendar   =   new   GregorianCalendar();
 	    calendar.setTime(d2); 
-	    calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动 
-	    d2=calendar.getTime();  
+	    calendar.add(Calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动 
+	    d2=calendar.getTime();
 	    dd.setTime(d1);//设置日期起始时间
 		String startend="";
 	    while(dd.getTime().before(d2)){//判断是否到结束日期
@@ -73,11 +89,18 @@ public class ReportDateTools {
 		    System.out.println("该日期所在月开始结束日期-------StartDate:"+startDate+"  endDate:"+endDate);
 		    startend=startDate+"~"+endDate;
 		    list.add(startend);
+		    dd.set(Calendar.DATE,1);
 		    dd.add(Calendar.MONTH, 1);
 	    }
+	    Collections.sort(list, new Comparator() {
+	        @Override
+	        public int compare(Object o1, Object o2) {
+	          return ((String) o2).compareTo((String)o1);
+	        }
+	    });
 		return list;
 	}
-
+	
 	//获取一个时间段内的年集合
 	public static List<String> getYear(String startDate,String endDate) throws ParseException{
 		List<String> list=new ArrayList<String>();
@@ -87,8 +110,10 @@ public class ReportDateTools {
 	    Calendar dd = Calendar.getInstance();//定义日期实例
 	    Calendar calendar = new GregorianCalendar();
 	    calendar.setTime(d2); 
-	    calendar.add(calendar.DATE,1);//把日期往后增加一天.整数往后推,负数往前移动 
+	    calendar.add(Calendar.DATE,1);
+	    calendar.add(Calendar.MONTH,1);//把日期往后增加一天.整数往后推,负数往前移动 
 	    d2=calendar.getTime();  
+	   System.out.println(d2);
 	    dd.setTime(d1);//设置日期起始时间
 		String startend="";
 	    while(dd.getTime().before(d2)){//判断是否到结束日期
@@ -99,8 +124,16 @@ public class ReportDateTools {
 		    System.out.println("该日期所在年开始结束日期-------StartDate:"+startDate+"  endDate:"+endDate);
 		    startend=startDate+"~"+endDate;
 		    list.add(startend);
+		    dd.set(Calendar.MONTH, 1);
+		    dd.set(Calendar.DATE, 1);
 		    dd.add(Calendar.YEAR, 1);
 	    }
+	    Collections.sort(list, new Comparator() {
+	        @Override
+	        public int compare(Object o1, Object o2) {
+	          return ((String) o2).compareTo((String)o1);
+	        }
+	    });
 		return list;
 	}	
 }

@@ -374,29 +374,33 @@ public class OrderDeriveExport {
 		cell.setCellValue("支付渠道");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 1);
-		cell.setCellValue("交易金额");
+		cell.setCellValue("所属应用");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 2);
-		cell.setCellValue("营收金额");
+		cell.setCellValue("交易金额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 3);
-		cell.setCellValue("手续费");
+		cell.setCellValue("营收金额");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 4);
-		cell.setCellValue("统计维度");
+		cell.setCellValue("手续费");
 		cell.setCellStyle(style);
 		cell = row.createCell((short) 5);
+		cell.setCellValue("统计维度");
+		cell.setCellStyle(style);
+		cell = row.createCell((short) 6);
 		cell.setCellValue("日期");
 		cell.setCellStyle(style);
 		// 向单元格里填充数据
 		for (short i = 0; i < channelRevenues.size(); i++) {
 			row = sheet.createRow(i + 1);
 			row.createCell(0).setCellValue(channelRevenues.get(i).getChannelName());//支付渠道名称
-			row.createCell(1).setCellValue(channelRevenues.get(i).getCountOrderAmount());//交易金额
-			row.createCell(2).setCellValue(channelRevenues.get(i).getCountPayAmount());//营收金额
-			row.createCell(3).setCellValue(channelRevenues.get(i).getCountPayCharge());//手续费
-			row.createCell(4).setCellValue(channelRevenues.get(i).getDimension());//统计维度
-			row.createCell(5).setCellValue(channelRevenues.get(i).getFoundDate());//日期
+			row.createCell(1).setCellValue(channelRevenues.get(i).getMerchantName());//merchantId名称
+			row.createCell(2).setCellValue(channelRevenues.get(i).getCountOrderAmount());//交易金额
+			row.createCell(3).setCellValue(channelRevenues.get(i).getCountPayAmount());//营收金额
+			row.createCell(4).setCellValue(channelRevenues.get(i).getCountPayCharge());//手续费
+			row.createCell(5).setCellValue(channelRevenues.get(i).getDimension());//统计维度
+			row.createCell(6).setCellValue(channelRevenues.get(i).getFoundDate());//日期
 		}
 		try {
 			response.setContentType("application/vnd.ms-excel");

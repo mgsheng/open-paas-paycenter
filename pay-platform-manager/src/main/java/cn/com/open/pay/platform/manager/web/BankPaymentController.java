@@ -26,7 +26,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.department.model.DictTradePayment;
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.DictTradePaymentService;
+import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
@@ -46,6 +48,8 @@ public class BankPaymentController extends BaseControllerUtil{
 	private DictTradePaymentService dictTradePaymentService;
 	@Autowired
 	private MerchantOrderInfoService merchantOrderInfoService;
+	@Autowired
+	private MerchantInfoService merchantInfoService;
 	
 	/**
 	 * 跳转到银行缴费管理页面
@@ -62,7 +66,7 @@ public class BankPaymentController extends BaseControllerUtil{
 	 * @return 返回到前端json数据
 	 */
 	@RequestMapping(value="findPayment")
-	public void findSourceType(HttpServletRequest request,HttpServletResponse response,Model model){
+	public void findPayment(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------findPayment         start------------------------------------");
 		List<DictTradePayment> list = dictTradePaymentService.findPaymentNamesAll();
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
@@ -97,10 +101,11 @@ public class BankPaymentController extends BaseControllerUtil{
 	public void getPayment(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException, ParseException{
 		log.info("---------------getPayment----------------");
 		String paymentId = request.getParameter("paymentId");
+		String merchantId = request.getParameter("merchantId");
 		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("paymentId:"+paymentId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
+		System.out.println("paymentId:"+paymentId+"  merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
 		//当前第几页
 		String page=request.getParameter("page");
 		//每页显示的记录数
@@ -116,12 +121,16 @@ public class BankPaymentController extends BaseControllerUtil{
 	    JSONObject json =  new JSONObject();
 	    List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 	    DictTradePayment payment=null;
+	    MerchantInfo merchant=null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    orderInfo.setPageSize(pageSize);
 	    orderInfo.setStartRow(startRow);
 	    
 		if(paymentId!=null && paymentId.length()!=0){
 			orderInfo.setPaymentId(Integer.parseInt(paymentId));
+		}
+		if(merchantId!=null && merchantId.length()!=0){
+			orderInfo.setMerchantId(Integer.parseInt(merchantId));
 		}
 	    orderInfo.setDimension(dimension);
 	    
@@ -154,6 +163,12 @@ public class BankPaymentController extends BaseControllerUtil{
 			    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 						if(payment!=null){
 			    			map.put("paymentName", payment.getRemark());
+			    		}
+		    		}
+		    		if(r.getMerchantId()!=null){
+			    		merchant=merchantInfoService.findNameById(r.getMerchantId());
+						if(merchant!=null){
+			    			map.put("merchantName", merchant.getMerchantName());
 			    		}
 		    		}
 		    		map.put("countOrderAmount", r.getCountOrderAmount()); 
@@ -194,15 +209,21 @@ public class BankPaymentController extends BaseControllerUtil{
 				orderInfo.setStartDate(startDate);
 			    orderInfo.setEndDate(endDate);
 			    bankPayments = merchantOrderInfoService.findBankPayment(orderInfo);
-			    total = merchantOrderInfoService.findBankPaymentCount(orderInfo);
+			    total = total + merchantOrderInfoService.findBankPaymentCount(orderInfo);
 			    if(bankPayments != null){
 			    	Map<String,Object> map = null;
 			    	for(MerchantOrderInfo r : bankPayments){
 			    		map = new LinkedHashMap<String,Object>(); 
-			    		if(r.getSourceType()!=null){
+			    		if(r.getPaymentId()!=null){
 				    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 							if(payment!=null){
 				    			map.put("paymentName", payment.getRemark());
+				    		}
+			    		}
+			    		if(r.getMerchantId()!=null){
+				    		merchant=merchantInfoService.findNameById(r.getMerchantId());
+							if(merchant!=null){
+				    			map.put("merchantName", merchant.getMerchantName());
 				    		}
 			    		}
 			    		map.put("countOrderAmount", r.getCountOrderAmount()); 
@@ -235,15 +256,17 @@ public class BankPaymentController extends BaseControllerUtil{
 	public void paymentDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException, ParseException{
 		log.info("---------------getBankPaymentDownloadSubmit----------------");
 		String paymentId = request.getParameter("paymentId");
+		String merchantId = request.getParameter("merchantId");
 		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("paymentId:"+paymentId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
+		System.out.println("paymentId:"+paymentId+"merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
 		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
 		List<MerchantOrderInfo> bankPayments=new ArrayList<MerchantOrderInfo>();
 	    DictTradePayment payment=null;
+	    MerchantInfo merchant = null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    
 		if(paymentId!=null && paymentId.length()!=0){
@@ -273,6 +296,12 @@ public class BankPaymentController extends BaseControllerUtil{
 			    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 						if(payment!=null){
 			    			r.setPaymentName(payment.getRemark());
+			    		}
+		    		}
+		    		if(r.getMerchantId()!=null){
+			    		merchant=merchantInfoService.findNameById(r.getMerchantId());
+						if(merchant!=null){
+			    			r.setMerchantName(merchant.getMerchantName());
 			    		}
 		    		}
 		    		r.setDimension(dimensionName);
@@ -316,7 +345,13 @@ public class BankPaymentController extends BaseControllerUtil{
 							if(payment!=null){
 				    			r.setPaymentName(payment.getRemark());
 				    		}
-			    		}		
+			    		}	
+			    		if(r.getMerchantId()!=null){
+				    		merchant=merchantInfoService.findNameById(r.getMerchantId());
+							if(merchant!=null){
+				    			r.setMerchantName(merchant.getMerchantName());
+				    		}
+			    		}
 		    			r.setDimension(dimensionName);
 			    		r.setFoundDate(during);
 			    	}

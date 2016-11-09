@@ -27,6 +27,12 @@
 								name="queryPaymentId"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
+					<td style="text-align: right;">所属应用：</td>
+					<td>
+						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择所属应用',multiple:false" id="queryMerchantId" 
+								name="queryMerchantId"  style="width:180px;height:25px;padding:5px;">
+						</select>
+					</td>
 					<td style="text-align: right;">统计维度：</td>
 					<td>
 						<select class="easyui-combobox" data-options="editable:false" id="queryDimension" 
@@ -45,7 +51,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="text-align: center;" colspan="6">
+					<td style="text-align: center;" colspan="8">
 						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">查询</a>
 						&nbsp;&nbsp;
 						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
@@ -62,6 +68,7 @@
 		<thead>
 			<tr>
 			    <th data-options="field:'paymentName',width:100,align:'center'">支付银行</th>
+			    <th data-options="field:'merchantName',width:100,align:'center'">所属应用</th>
 				<th data-options="field:'countOrderAmount',width:80,align:'center'">交易金额</th>
 				<th data-options="field:'countPayAmount',width:80,align:'center'">营收金额</th>
 				<th data-options="field:'countPayCharge',width:80">手续费</th>
@@ -87,6 +94,12 @@
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
             $('#queryPaymentId').combobox({
 				url:'${pageContext.request.contextPath}/payment/findPayment',
+				valueField:'id',
+				textField:'text'
+			});
+			//加载所有商户应用名称
+            $('#queryMerchantId').combobox({
+				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames?flag=all',
 				valueField:'id',
 				textField:'text'
 			});
@@ -144,16 +157,17 @@
 		
 		function submitForm(){
 			var queryPaymentId = $('#queryPaymentId').combobox('getValue');
+			var queryMerchantId = $('#queryMerchantId').combobox('getValue');
 			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
-			if(queryPaymentId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
+			if(queryPaymentId==""&&queryMerchantId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
 				findPayment();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
-					var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
+					var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&merchantId="+queryMerchantId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 		        	$('#dg').datagrid({
 						collapsible:true,
 						rownumbers:true,

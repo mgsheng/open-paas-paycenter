@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
+import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch;
@@ -44,6 +46,8 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	private PayChannelSwitchService payChannelSwitchService;
 	@Autowired
 	private MerchantOrderInfoService merchantOrderInfoService;
+	@Autowired
+	private MerchantInfoService merchantInfoService;
 	
 	/**
 	 * 跳转到渠道营收管理页面
@@ -66,10 +70,11 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	public void getChannelRevenue(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException, ParseException{
 		log.info("---------------getChannelRevenue----------------");
 		String channelId = request.getParameter("channelId");
+		String merchantId = request.getParameter("merchantId");
 		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("channelId:"+channelId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
+		System.out.println("channelId:"+channelId+"  merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
 		//当前第几页
 		String page=request.getParameter("page");
 		//每页显示的记录数
@@ -85,12 +90,16 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	    JSONObject json =  new JSONObject();
 	    List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 	    PayChannelSwitch channel=null;
+	    MerchantInfo merchant=null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    orderInfo.setPageSize(pageSize);
 	    orderInfo.setStartRow(startRow);
 	    
 		if(channelId!=null && channelId.length()!=0){
 			orderInfo.setSourceType(Integer.parseInt(channelId));
+		}
+		if(merchantId!=null && merchantId.length()!=0){
+			orderInfo.setMerchantId(Integer.parseInt(merchantId));
 		}
 	    orderInfo.setDimension(dimension);
 	    
@@ -123,6 +132,12 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
 						if(channel!=null){
 			    			map.put("channelName", channel.getChannelName());
+			    		}
+		    		}
+		    		if(r.getMerchantId()!=null){
+			    		merchant=merchantInfoService.findNameById(r.getMerchantId());
+						if(merchant!=null){
+			    			map.put("merchantName", merchant.getMerchantName());
 			    		}
 		    		}
 		    		map.put("countOrderAmount", r.getCountOrderAmount()); 
@@ -204,19 +219,24 @@ public class ChannelRevenueController extends BaseControllerUtil{
 	public void revenueDownloadSubmit(HttpServletRequest request,HttpServletResponse response)throws UnsupportedEncodingException, ParseException{
 		log.info("---------------getChannelRevenueDownloadSubmit----------------");
 		String channelId = request.getParameter("channelId");
+		String merchantId = request.getParameter("merchantId");
 		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("channelId:"+channelId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
+		System.out.println("channelId:"+channelId+"  merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
 		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
 		List<MerchantOrderInfo> channelRevenues=new ArrayList<MerchantOrderInfo>();
 	    PayChannelSwitch channel=null;
+	    MerchantInfo merchant=null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    
 		if(channelId!=null && channelId.length()!=0){
 			orderInfo.setSourceType(Integer.parseInt(channelId));
+		}
+		if(merchantId!=null && merchantId.length()!=0){
+			orderInfo.setMerchantId(Integer.parseInt(merchantId));
 		}
 	    orderInfo.setDimension(dimension);
 		List<String> timeDuring = new ArrayList<String>();
@@ -242,6 +262,12 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
 						if(channel!=null){
 			    			r.setChannelName(channel.getChannelName());
+			    		}
+		    		}
+		    		if(r.getMerchantId()!=null){
+		    			merchant=merchantInfoService.findNameById(r.getMerchantId());
+						if(merchant!=null){
+			    			r.setMerchantName(merchant.getMerchantName());
 			    		}
 		    		}
 		    		r.setDimension(dimensionName);

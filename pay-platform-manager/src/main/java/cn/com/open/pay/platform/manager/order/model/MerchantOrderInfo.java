@@ -108,6 +108,7 @@ public class MerchantOrderInfo implements Serializable {
 	private String payStatusName;
 	private String paymentName;
 	private String sourceTypeName;
+	private String merchantName;
 	private Integer startRow;
 	private Integer pageSize;
 	
@@ -598,6 +599,14 @@ public class MerchantOrderInfo implements Serializable {
 
 	public void setCountPayCharge(Double countPayCharge) {
 		this.countPayCharge = countPayCharge;
+	}
+
+	public String getMerchantName() {
+		return merchantName;
+	}
+
+	public void setMerchantName(String merchantName) {
+		this.merchantName = merchantName;
 	}
 	
 }

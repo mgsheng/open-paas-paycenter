@@ -555,24 +555,26 @@
 	</select>
 	
 	<select id="findChannelRevenue" resultMap="merchantOrderInfoMap" flushCache="true">
-		SELECT CHANNEL_ID channelId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT CHANNEL_ID channelId,MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="sourceType != null">
            and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
+         <if test="merchantId != null">
+           and MERCHANT_ID=#{merchantId, jdbcType=INTEGER} 
+         </if>
          <if test="dimension == 'day'" >
-		 	<!-- and date_format(CREATE_DATE,'%Y-%m-%d')=#{startDate, jdbcType=TIMESTAMP} -->
 		 	<if test="startDate != null and startDate != ''">
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
          	</if>
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if> 
-		 	GROUP BY SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d')
+		 	GROUP BY SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
-         	GROUP BY SOURCE_TYPE
+         	GROUP BY SOURCE_TYPE order by SOURCE_TYPE
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
@@ -581,15 +583,18 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if>
-         	GROUP BY SOURCE_TYPE order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d')
+         	GROUP BY SOURCE_TYPE order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
          </if>
 		 limit #{startRow},#{pageSize}
 	</select>
 	
 	<select id="findChannelRevenueQueryCount" resultMap="merchantOrderInfoMap">
-		SELECT CHANNEL_ID channelId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT CHANNEL_ID channelId,MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="sourceType != null">
            and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
+         </if>         
+         <if test="merchantId != null">
+           and MERCHANT_ID=#{merchantId, jdbcType=INTEGER} 
          </if>
          <if test="dimension == 'day'" >
 		 	<!-- and date_format(CREATE_DATE,'%Y-%m-%d')=#{startDate, jdbcType=TIMESTAMP} -->
@@ -599,12 +604,12 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if> 
-		 	GROUP BY SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d')
+		 	GROUP BY SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
-         	GROUP BY SOURCE_TYPE
+         	GROUP BY SOURCE_TYPE order by SOURCE_TYPE
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
@@ -613,14 +618,17 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if>
-         	GROUP BY SOURCE_TYPE order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d')
+         	GROUP BY SOURCE_TYPE order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
          </if>
 	</select>
 	
 	<select id="findBankPayment" resultMap="merchantOrderInfoMap" flushCache="true">
-		SELECT PAYMENT_ID paymentId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT PAYMENT_ID paymentId,MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="paymentId != null">
            and PAYMENT_ID=#{paymentId, jdbcType=INTEGER} 
+         </if>
+         <if test="merchantId != null">
+           and MERCHANT_ID=#{merchantId, jdbcType=INTEGER} 
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
@@ -629,12 +637,12 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if> 
-		 	GROUP BY PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d')
+		 	GROUP BY PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
-         	GROUP BY PAYMENT_ID
+         	GROUP BY PAYMENT_ID order by PAYMENT_ID
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
@@ -643,15 +651,18 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if>
-         	GROUP BY PAYMENT_ID order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d')
+         	GROUP BY PAYMENT_ID order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
          </if>
 		 limit #{startRow},#{pageSize}
 	</select>
 	
 	<select id="findBankPaymentQueryCount" resultMap="merchantOrderInfoMap">
-		SELECT PAYMENT_ID paymentId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT PAYMENT_ID paymentId,MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="paymentId != null">
            and PAYMENT_ID=#{paymentId, jdbcType=INTEGER} 
+         </if>
+         <if test="merchantId != null">
+           and MERCHANT_ID=#{merchantId, jdbcType=INTEGER} 
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
@@ -660,12 +671,12 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if> 
-		 	GROUP BY PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d')
+		 	GROUP BY PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
-         	GROUP BY PAYMENT_ID
+         	GROUP BY PAYMENT_ID order by PAYMENT_ID
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
@@ -674,7 +685,7 @@
          	<if test="endDate != null and endDate != ''">
          	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
          	</if>
-         	GROUP BY PAYMENT_ID order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d')
+         	GROUP BY PAYMENT_ID order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
          </if>
 	</select>
 	
