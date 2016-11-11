@@ -632,12 +632,13 @@
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} > date_format(CREATE_DATE,'%Y-%m-%d')
          	</if> 
 		 	GROUP BY PAYMENT_ID,MERCHANT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
+		 	limit #{startRow},#{pageSize}
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
@@ -646,14 +647,14 @@
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and (#{endDate, jdbcType=TIMESTAMP} > date_format(CREATE_DATE,'%Y-%m-%d')
          	</if>
          	GROUP BY PAYMENT_ID,MERCHANT_ID order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
-         </if>
-		 limit #{startRow},#{pageSize}
+         	limit #{startRow},#{pageSize}
+         </if>		 
 	</select>
 	
 	<select id="findBankPaymentQueryCount" resultMap="merchantOrderInfoMap">
@@ -666,10 +667,10 @@
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} > date_format(CREATE_DATE,'%Y-%m-%d')
          	</if> 
 		 	GROUP BY PAYMENT_ID,MERCHANT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
 		 </if>
@@ -680,13 +681,13 @@
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and (#{endDate, jdbcType=TIMESTAMP} > date_format(CREATE_DATE,'%Y-%m-%d')
          	</if>
          	GROUP BY PAYMENT_ID,MERCHANT_ID order By PAYMENT_ID,date_format(CREATE_DATE,'%Y-%m-%d') DESC
-         </if>
+         </if>	
 	</select>
 	
     <resultMap id="allInfo" type="java.util.Map">

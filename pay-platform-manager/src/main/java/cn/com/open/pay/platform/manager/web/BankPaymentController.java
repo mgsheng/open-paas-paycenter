@@ -151,6 +151,11 @@ public class BankPaymentController extends BaseControllerUtil{
 				dimensionName = "自定义";
 			}
 			orderInfo.setStartDate(startDate);
+			if(endDate!=null && endDate!=""){
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    endDate=sdf.format(cal.getTime());
+			}
 		    orderInfo.setEndDate(endDate);
 		    bankPayments = merchantOrderInfoService.findBankPayment(orderInfo);
 		    total = merchantOrderInfoService.findBankPaymentCount(orderInfo);
@@ -209,9 +214,10 @@ public class BankPaymentController extends BaseControllerUtil{
 				startDate=during.split("~")[0];
 				endDate=during.split("~")[1];
 				orderInfo.setStartDate(startDate);
-			    orderInfo.setEndDate(endDate);
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    orderInfo.setEndDate(sdf.format(cal.getTime()));
 			    bankPayments = merchantOrderInfoService.findBankPayment(orderInfo);
-			    total = total + merchantOrderInfoService.findBankPaymentCount(orderInfo);
 			    if(bankPayments != null){
 			    	Map<String,Object> map = null;
 			    	for(MerchantOrderInfo r : bankPayments){
@@ -237,7 +243,6 @@ public class BankPaymentController extends BaseControllerUtil{
 			    	}
 			    }
 			}
-		    json.put("total", total);
 		}
 		
 		JSONArray jsonArr = JSONArray.fromObject(maps);
@@ -294,6 +299,11 @@ public class BankPaymentController extends BaseControllerUtil{
 				dimensionName = "自定义";
 			}
 			orderInfo.setStartDate(startDate);
+			if(endDate!=null && endDate!=""){
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    endDate=sdf.format(cal.getTime());
+			}
 		    orderInfo.setEndDate(endDate);
 		    bankPayments = merchantOrderInfoService.findBankPaymentNoPage(orderInfo);
 		    if(bankPayments != null){
@@ -345,7 +355,9 @@ public class BankPaymentController extends BaseControllerUtil{
 				startDate=during.split("~")[0];
 				endDate=during.split("~")[1];
 				orderInfo.setStartDate(startDate);
-			    orderInfo.setEndDate(endDate);
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    orderInfo.setEndDate(sdf.format(cal.getTime()));
 			    bankPayments = merchantOrderInfoService.findBankPaymentNoPage(orderInfo);
 			    if(bankPayments != null){
 			    	for(MerchantOrderInfo r : bankPayments){

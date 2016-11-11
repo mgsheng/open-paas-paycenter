@@ -120,9 +120,12 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				dimensionName = "自定义";
 			}
 			orderInfo.setStartDate(startDate);
-			cal.setTime(sdf.parse(endDate));
-			cal.add(Calendar.DATE,1);
-		    orderInfo.setEndDate(sdf.format(cal.getTime()));
+			if(endDate!=null && endDate!=""){
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    endDate=sdf.format(cal.getTime());
+			}
+			orderInfo.setEndDate(endDate);
 		    channelRevenues = merchantOrderInfoService.findChannelRevenue(orderInfo);
 		    total = merchantOrderInfoService.findChannelRevenueCount(orderInfo);
 		    json.put("total", total);
@@ -265,7 +268,13 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				dimensionName = "自定义";
 			}
 			orderInfo.setStartDate(startDate);
-		    orderInfo.setEndDate(endDate);
+			if(endDate!=null && endDate!=""){
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    endDate=sdf.format(cal.getTime());
+			}
+			cal.add(Calendar.DATE,1);
+		    orderInfo.setEndDate(sdf.format(cal.getTime()));
 		    channelRevenues = merchantOrderInfoService.findChannelRevenueNoPage(orderInfo);
 		    if(channelRevenues != null){
 		    	for(MerchantOrderInfo r : channelRevenues){
@@ -316,7 +325,9 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				startDate=during.split("~")[0];
 				endDate=during.split("~")[1];
 				orderInfo.setStartDate(startDate);
-			    orderInfo.setEndDate(endDate);
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    orderInfo.setEndDate(sdf.format(cal.getTime()));
 			    channelRevenues = merchantOrderInfoService.findChannelRevenueNoPage(orderInfo);
 			    if(channelRevenues != null){
 			    	for(MerchantOrderInfo r : channelRevenues){
