@@ -182,6 +182,8 @@ public class BankPaymentController extends BaseControllerUtil{
 							map.put("foundDate", "之前~"+endDate);
 						}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
 							map.put("foundDate", startDate+"~至今");
+						}else{
+							map.put("foundDate", startDate+"~"+endDate);
 						}
 					}
 		    		maps.add(map);
@@ -265,12 +267,16 @@ public class BankPaymentController extends BaseControllerUtil{
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
 		List<MerchantOrderInfo> bankPayments=new ArrayList<MerchantOrderInfo>();
+		List<MerchantOrderInfo> lists=new ArrayList<MerchantOrderInfo>();
 	    DictTradePayment payment=null;
 	    MerchantInfo merchant = null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    
 		if(paymentId!=null && paymentId.length()!=0){
 			orderInfo.setPaymentId(Integer.parseInt(paymentId));
+		}
+		if(merchantId!=null && merchantId.length()!=0){
+			orderInfo.setMerchantId(Integer.parseInt(merchantId));
 		}
 	    orderInfo.setDimension(dimension);
 		List<String> timeDuring = new ArrayList<String>();
@@ -289,7 +295,7 @@ public class BankPaymentController extends BaseControllerUtil{
 			}
 			orderInfo.setStartDate(startDate);
 		    orderInfo.setEndDate(endDate);
-		    bankPayments = merchantOrderInfoService.findChannelRevenueNoPage(orderInfo);
+		    bankPayments = merchantOrderInfoService.findBankPaymentNoPage(orderInfo);
 		    if(bankPayments != null){
 		    	for(MerchantOrderInfo r : bankPayments){
 		    		if(r.getPaymentId()!=null){
@@ -312,8 +318,11 @@ public class BankPaymentController extends BaseControllerUtil{
 							r.setFoundDate("之前~"+endDate);
 						}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
 							r.setFoundDate(startDate+"~至今");
+						}else{
+							r.setFoundDate(startDate+"~"+endDate);
 						}
 					}
+		    		lists.add(r);
 		    	}
 		    }
 		}else if(("week").equals(dimension) || ("month").equals(dimension) || ("year").equals(dimension)){//自然周   月   年
@@ -354,10 +363,11 @@ public class BankPaymentController extends BaseControllerUtil{
 			    		}
 		    			r.setDimension(dimensionName);
 			    		r.setFoundDate(during);
+			    		lists.add(r);
 			    	}
 			    }
 			}
 		}
-    	OrderDeriveExport.exportBankPayment(response, bankPayments);
+    	OrderDeriveExport.exportBankPayment(response, lists);
 	}   
 }

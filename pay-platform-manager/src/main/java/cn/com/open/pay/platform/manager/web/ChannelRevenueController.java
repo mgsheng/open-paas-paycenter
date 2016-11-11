@@ -151,6 +151,8 @@ public class ChannelRevenueController extends BaseControllerUtil{
 							map.put("foundDate", "之前~"+endDate);
 						}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
 							map.put("foundDate", startDate+"~至今");
+						}else{
+							map.put("foundDate", startDate+"~"+endDate);
 						}
 					}
 		    		maps.add(map);
@@ -234,6 +236,7 @@ public class ChannelRevenueController extends BaseControllerUtil{
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
 		List<MerchantOrderInfo> channelRevenues=new ArrayList<MerchantOrderInfo>();
+		List<MerchantOrderInfo> lists=new ArrayList<MerchantOrderInfo>();
 	    PayChannelSwitch channel=null;
 	    MerchantInfo merchant=null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
@@ -284,8 +287,11 @@ public class ChannelRevenueController extends BaseControllerUtil{
 							r.setFoundDate("之前~"+endDate);
 						}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
 							r.setFoundDate(startDate+"~至今");
+						}else{
+							r.setFoundDate(startDate+"~"+endDate);
 						}
 					}
+		    		lists.add(r);
 		    	}
 		    }
 		}else if(("week").equals(dimension) || ("month").equals(dimension) || ("year").equals(dimension)){//自然周   月   年
@@ -326,10 +332,11 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    		}
 		    			r.setDimension(dimensionName);
 			    		r.setFoundDate(during);
+			    		lists.add(r);
 			    	}
 			    }
 			}
 		}
-    	OrderDeriveExport.exportChannelRevenus(response, channelRevenues);
+    	OrderDeriveExport.exportChannelRevenus(response, lists);
 	}   
 }

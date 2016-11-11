@@ -210,10 +210,11 @@
 		function downloadSubmit(){			
 			var queryChannelId = $('#queryChannelId').combobox('getValue');
 			var queryDimension = $('#queryDimension').combobox('getValue');
+			var queryMerchantId = $('#queryMerchantId').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 			
-		 	var url="${pageContext.request.contextPath}/paychannel/revenueDownloadSubmit?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
+		 	var url="${pageContext.request.contextPath}/paychannel/revenueDownloadSubmit?&channelId="+queryChannelId+"&merchantId="+queryMerchantId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
 			
 			document.getElementById("ff").action=url;
 		    document.getElementById("ff").submit();
