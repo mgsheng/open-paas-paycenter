@@ -189,6 +189,12 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				    			map.put("channelName", channel.getChannelName());
 				    		}
 			    		}
+			    		if(r.getMerchantId()!=null){
+				    		merchant=merchantInfoService.findNameById(r.getMerchantId());
+							if(merchant!=null){
+				    			map.put("merchantName", merchant.getMerchantName());
+				    		}
+			    		}
 			    		map.put("countOrderAmount", r.getCountOrderAmount()); 
 			    		map.put("countPayAmount", r.getCountPayAmount());
 			    		map.put("countPayCharge", r.getCountPayCharge());			    		
