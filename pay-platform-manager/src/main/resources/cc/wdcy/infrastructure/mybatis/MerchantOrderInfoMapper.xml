@@ -605,7 +605,6 @@
          	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	</if> 
 		 	GROUP BY SOURCE_TYPE,MERCHANT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
-		 	limit #{startRow},#{pageSize}
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
          	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
@@ -620,7 +619,6 @@
          	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	</if>
          	GROUP BY SOURCE_TYPE,MERCHANT_ID order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
-         	limit #{startRow},#{pageSize}
          </if>
 	</select>
 	
