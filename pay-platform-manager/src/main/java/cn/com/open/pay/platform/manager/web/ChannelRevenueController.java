@@ -180,7 +180,6 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				orderInfo.setStartDate(startDate);
 			    orderInfo.setEndDate(endDate);
 			    channelRevenues = merchantOrderInfoService.findChannelRevenue(orderInfo);
-			    total = total + merchantOrderInfoService.findChannelRevenueCount(orderInfo);
 			    if(channelRevenues != null){
 			    	Map<String,Object> map = null;
 			    	for(MerchantOrderInfo r : channelRevenues){
@@ -206,7 +205,6 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    	}
 			    }
 			}
-		    json.put("total", total);
 		}
 		
 		JSONArray jsonArr = JSONArray.fromObject(maps);

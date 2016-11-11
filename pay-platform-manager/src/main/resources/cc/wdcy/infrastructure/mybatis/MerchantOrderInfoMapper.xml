@@ -555,7 +555,7 @@
 	</select>
 	
 	<select id="findChannelRevenue" resultMap="merchantOrderInfoMap" flushCache="true">
-		SELECT CHANNEL_ID channelId,MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="sourceType != null">
            and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
@@ -564,32 +564,33 @@
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	</if> 
 		 	GROUP BY SOURCE_TYPE,MERCHANT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
+		 	limit #{startRow},#{pageSize}
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
+         	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	GROUP BY SOURCE_TYPE,MERCHANT_ID order by SOURCE_TYPE
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	</if>
          	GROUP BY SOURCE_TYPE,MERCHANT_ID order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
+         	limit #{startRow},#{pageSize}
          </if>
-		 limit #{startRow},#{pageSize}
 	</select>
 	
 	<select id="findChannelRevenueQueryCount" resultMap="merchantOrderInfoMap">
-		SELECT CHANNEL_ID channelId,MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
+		SELECT MERCHANT_ID merchantId,sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_AMOUNT) countPayAmount,sum(PAY_CHARGE) countPayCharge,SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') createDate FROM `MERCHANT_ORDER_INFO` where PAY_STATUS='1'
 		 <if test="sourceType != null">
            and SOURCE_TYPE=#{sourceType, jdbcType=INTEGER} 
          </if>
@@ -598,26 +599,28 @@
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	</if> 
 		 	GROUP BY SOURCE_TYPE,MERCHANT_ID,date_format(CREATE_DATE,'%Y-%m-%d') order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
+		 	limit #{startRow},#{pageSize}
 		 </if>
          <if test="dimension == 'week' or dimension == 'month' or dimension == 'year'" >
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
+         	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	GROUP BY SOURCE_TYPE,MERCHANT_ID order by SOURCE_TYPE
          </if>
          <if test="dimension == 'custom'" >
          	<if test="startDate != null and startDate != ''">
-         	and (date_format(CREATE_DATE,'%Y-%m-%d') > #{startDate, jdbcType=TIMESTAMP} or date_format(CREATE_DATE,'%Y-%m-%d') = #{startDate, jdbcType=TIMESTAMP})
+         	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
          	</if>
          	<if test="endDate != null and endDate != ''">
-         	and (#{endDate, jdbcType=TIMESTAMP} >date_format(CREATE_DATE,'%Y-%m-%d')  or date_format(CREATE_DATE,'%Y-%m-%d') = #{endDate, jdbcType=TIMESTAMP})
+         	and #{endDate, jdbcType=TIMESTAMP} >= date_format(CREATE_DATE,'%Y-%m-%d')
          	</if>
          	GROUP BY SOURCE_TYPE,MERCHANT_ID order By SOURCE_TYPE,date_format(CREATE_DATE,'%Y-%m-%d') DESC
+         	limit #{startRow},#{pageSize}
          </if>
 	</select>
 	
