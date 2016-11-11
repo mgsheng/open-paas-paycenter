@@ -120,7 +120,9 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				dimensionName = "自定义";
 			}
 			orderInfo.setStartDate(startDate);
-		    orderInfo.setEndDate(endDate);
+			cal.setTime(sdf.parse(endDate));
+			cal.add(Calendar.DATE,1);
+		    orderInfo.setEndDate(sdf.format(cal.getTime()));
 		    channelRevenues = merchantOrderInfoService.findChannelRevenue(orderInfo);
 		    total = merchantOrderInfoService.findChannelRevenueCount(orderInfo);
 		    json.put("total", total);
@@ -178,7 +180,9 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				startDate=during.split("~")[0];
 				endDate=during.split("~")[1];
 				orderInfo.setStartDate(startDate);
-			    orderInfo.setEndDate(endDate);
+				cal.setTime(sdf.parse(endDate));
+				cal.add(Calendar.DATE,1);
+			    orderInfo.setEndDate(sdf.format(cal.getTime()));
 			    channelRevenues = merchantOrderInfoService.findChannelRevenue(orderInfo);
 			    if(channelRevenues != null){
 			    	Map<String,Object> map = null;
