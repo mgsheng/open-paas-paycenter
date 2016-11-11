@@ -318,6 +318,12 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				    			r.setChannelName(channel.getChannelName());
 				    		}
 			    		}		
+			    		if(r.getMerchantId()!=null){
+			    			merchant=merchantInfoService.findNameById(r.getMerchantId());
+							if(merchant!=null){
+				    			r.setMerchantName(merchant.getMerchantName());
+				    		}
+			    		}
 		    			r.setDimension(dimensionName);
 			    		r.setFoundDate(during);
 			    	}
