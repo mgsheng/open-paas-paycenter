@@ -113,12 +113,21 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			endDate = sdf.format(cal.getTime());
 		}
 		String dimensionName="";
+		String foundDate="";
 		if(("day").equals(dimension) || ("custom").equals(dimension)){//天  自定义
 			if(("day").equals(dimension)){
 				dimensionName = "天";
 			}else if(("custom").equals(dimension)){
 				dimensionName = "自定义";
+				if((startDate==null || ("").equals(startDate)) && (endDate!=null && !("").equals(endDate))){
+					foundDate = "之前~"+endDate;
+				}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
+					foundDate = startDate+"~至今";
+				}else{
+					foundDate = startDate+"~"+endDate;
+				}
 			}
+
 			orderInfo.setStartDate(startDate);
 			if(endDate!=null && endDate!=""){
 				cal.setTime(sdf.parse(endDate));
@@ -145,21 +154,14 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    			map.put("merchantName", merchant.getMerchantName());
 			    		}
 		    		}
+		    		if(("day").equals(dimension)){
+		    			foundDate = sdf.format(r.getCreateDate());
+					}
 		    		map.put("countOrderAmount", r.getCountOrderAmount()); 
 		    		map.put("countPayAmount", r.getCountPayAmount());
 		    		map.put("countPayCharge", r.getCountPayCharge());
 		    		map.put("dismension", dimensionName);
-		    		if(("day").equals(dimension)){
-		    			map.put("foundDate", sdf.format(r.getCreateDate()));
-					}else if(("custom").equals(dimension)){
-						if((startDate==null || ("").equals(startDate)) && (endDate!=null && !("").equals(endDate))){
-							map.put("foundDate", "之前~"+endDate);
-						}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
-							map.put("foundDate", startDate+"~至今");
-						}else{
-							map.put("foundDate", startDate+"~"+endDate);
-						}
-					}
+		    		map.put("foundDate", foundDate);
 		    		maps.add(map);
 		    	}
 		    }
@@ -261,11 +263,19 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			endDate = sdf.format(cal.getTime());
 		}
 		String dimensionName="";
+		String foundDate="";
 		if(("day").equals(dimension) || ("custom").equals(dimension)){//天  自定义
 			if(("day").equals(dimension)){
 				dimensionName = "天";
 			}else if(("custom").equals(dimension)){
 				dimensionName = "自定义";
+				if((startDate==null || ("").equals(startDate)) && (endDate!=null && !("").equals(endDate))){
+					foundDate = "之前~"+endDate;
+				}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
+					foundDate = startDate+"~至今";
+				}else{
+					foundDate = startDate+"~"+endDate;
+				}
 			}
 			orderInfo.setStartDate(startDate);
 			if(endDate!=null && endDate!=""){
@@ -292,16 +302,9 @@ public class ChannelRevenueController extends BaseControllerUtil{
 		    		}
 		    		r.setDimension(dimensionName);
 		    		if(("day").equals(dimension)){
-		    			r.setFoundDate(sdf.format(r.getCreateDate()));
-					}else if(("custom").equals(dimension)){
-						if((startDate==null || ("").equals(startDate)) && (endDate!=null && !("").equals(endDate))){
-							r.setFoundDate("之前~"+endDate);
-						}else if((startDate!=null && !("").equals(startDate)) && (endDate==null || ("").equals(endDate))){
-							r.setFoundDate(startDate+"~至今");
-						}else{
-							r.setFoundDate(startDate+"~"+endDate);
-						}
+		    			foundDate = sdf.format(r.getCreateDate());
 					}
+		    		r.setFoundDate(foundDate);
 		    		lists.add(r);
 		    	}
 		    }
