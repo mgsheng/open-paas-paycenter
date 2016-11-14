@@ -283,8 +283,7 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				cal.add(Calendar.DATE,1);
 			    endDate=sdf.format(cal.getTime());
 			}
-			cal.add(Calendar.DATE,1);
-		    orderInfo.setEndDate(sdf.format(cal.getTime()));
+		    orderInfo.setEndDate(endDate);
 		    channelRevenues = merchantOrderInfoService.findChannelRevenueNoPage(orderInfo);
 		    if(channelRevenues != null){
 		    	for(MerchantOrderInfo r : channelRevenues){
