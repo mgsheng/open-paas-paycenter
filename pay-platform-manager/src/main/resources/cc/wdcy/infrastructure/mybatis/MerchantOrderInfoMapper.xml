@@ -630,6 +630,12 @@
          <if test="merchantId != null">
            and MERCHANT_ID=#{merchantId, jdbcType=INTEGER} 
          </if>
+         <if test="paymentType == 1"><!-- 银行支付方式 -->
+           and PAYMENT_ID in (select ID from DICT_TRADE_PAYMENT where PAYMENT_TYPE = 1) 
+         </if>
+         <if test="paymentType != 1"><!-- 非银行支付方式 -->
+           and PAYMENT_ID not in (select ID from DICT_TRADE_PAYMENT where PAYMENT_TYPE = 1) 
+         </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">
          	and date_format(CREATE_DATE,'%Y-%m-%d') >= #{startDate, jdbcType=TIMESTAMP}
@@ -664,6 +670,12 @@
          </if>
          <if test="merchantId != null">
            and MERCHANT_ID=#{merchantId, jdbcType=INTEGER} 
+         </if>
+         <if test="paymentType == 1"><!-- 银行支付方式 -->
+           and PAYMENT_ID in (select ID from DICT_TRADE_PAYMENT where PAYMENT_TYPE = 1) 
+         </if>
+         <if test="paymentType != 1"><!-- 非银行支付方式 -->
+           and PAYMENT_ID not in (select ID from DICT_TRADE_PAYMENT where PAYMENT_TYPE = 1) 
          </if>
          <if test="dimension == 'day'" >
 		 	<if test="startDate != null and startDate != ''">

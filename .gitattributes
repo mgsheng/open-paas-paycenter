@@ -328,6 +328,7 @@ pay-platform-manager/src/main/webapp/WEB-INF/jsp/loginOut/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/channelRate.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/paychannel/channelRevenue.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/payment/bankPayment.jsp -text
+pay-platform-manager/src/main/webapp/WEB-INF/jsp/payment/otherPayment.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/model/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/privilegePublic/index.jsp -text
 pay-platform-manager/src/main/webapp/WEB-INF/jsp/privilege/resource/index.jsp -text

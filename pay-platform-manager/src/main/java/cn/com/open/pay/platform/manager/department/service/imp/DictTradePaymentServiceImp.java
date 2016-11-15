@@ -41,5 +41,10 @@ public class DictTradePaymentServiceImp implements  DictTradePaymentService{
 		DictTradePayment payment=dictTradePaymentRepository.findNameById(bankCode);
 		return payment;
 	}
+
+	@Override
+	public List<DictTradePayment> findPaymentNamesByType(DictTradePayment payment) {
+		return dictTradePaymentRepository.findPaymentNamesByType(payment);
+	}
 	
 }

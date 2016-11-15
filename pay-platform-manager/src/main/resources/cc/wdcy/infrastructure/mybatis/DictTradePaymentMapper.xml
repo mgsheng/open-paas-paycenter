@@ -23,8 +23,17 @@
 	<select id="findNameById" resultMap="dictTradePaymentMap" >
 		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where ID=#{bankCode} 
 	</select>
-	<!-- 查询所有支付银行名称 -->
+	<!-- 查询所有支付方式名称 -->
 	<select id="findPaymentNamesAll" resultMap="dictTradePaymentMap" >
 		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where PAYMENT_STATUS=1 
+	</select>
+	<select id="findPaymentNamesByType" resultMap="dictTradePaymentMap" >
+		select ID,PAYMENT_NAME,REMARK from DICT_TRADE_PAYMENT  where PAYMENT_STATUS=1
+		<if test="paymentType == 1">
+		 and PAYMENT_TYPE=1
+		</if>
+		<if test="paymentType != 1">
+		 and PAYMENT_TYPE != 1
+		</if>
 	</select>
 </mapper>

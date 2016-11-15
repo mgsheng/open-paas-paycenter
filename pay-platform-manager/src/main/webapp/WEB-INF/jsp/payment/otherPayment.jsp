@@ -21,7 +21,7 @@
 		<form id="ff" method="post">
 			<table style="width:100%;">
 				<tr>
-					<td style="text-align: right;">支付银行：</td>
+					<td style="text-align: right;">支付方式：</td>
 					<td>
 						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择支付银行',multiple:false" id="queryPaymentId" 
 								name="queryPaymentId"  style="width:180px;height:25px;padding:5px;">
@@ -63,11 +63,11 @@
 		</form>
 	</div>
 	
-	<table id="dg" class="easyui-datagrid" title="银行缴费报表" style="height:400px;width:100%;max-width:100%;" 
+	<table id="dg" class="easyui-datagrid" title="缴费方式报表" style="height:400px;width:100%;max-width:100%;" 
 			data-options="rownumbers:true,singleSelect:true,striped:true,fitColumns:false,method:'get'">
 		<thead>
 			<tr>
-			    <th data-options="field:'paymentName',width:100,align:'center'">支付银行</th>
+			    <th data-options="field:'paymentName',width:100,align:'center'">支付方式</th>
 			    <th data-options="field:'merchantName',width:100,align:'center'">所属应用</th>
 				<th data-options="field:'countOrderAmount',width:80,align:'center'">交易金额</th>
 				<th data-options="field:'countPayAmount',width:80,align:'center'">营收金额</th>
@@ -91,9 +91,9 @@
 		
         //加载select
         function loadSelect(){
-        	//加载所有支付银行名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
+        	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
             $('#queryPaymentId').combobox({
-				url:'${pageContext.request.contextPath}/payment/findPayment?type=1',
+				url:'${pageContext.request.contextPath}/payment/findPayment?type=-1',
 				valueField:'id',
 				textField:'text'
 			});
@@ -119,7 +119,7 @@
 
 		function findPayment(){
 			var dimension="day";
-			var paymentType=1;
+			var paymentType=-1;
 		 	var url="${pageContext.request.contextPath}/payment/getPayment?dimension="+dimension+"&paymentType="+paymentType;
         	$('#dg').datagrid({
 				collapsible:true,
@@ -168,7 +168,7 @@
 				if(startDate>endDate){
 					 $.messager.alert("提示","开始时间大于结束时间!");
 				}else{
-					var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&merchantId="+queryMerchantId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=1";
+					var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&merchantId="+queryMerchantId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=-1";
 		        	$('#dg').datagrid({
 						collapsible:true,
 						rownumbers:true,
@@ -187,7 +187,7 @@
 				    }); 
 				}
 			}else{
-				var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=1";
+				var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=-1";
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,
@@ -214,7 +214,7 @@
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 			
-		 	var url="${pageContext.request.contextPath}/payment/paymentDownloadSubmit?&paymentId="+queryPaymentId+"&merchantId="+queryMerchantId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=1";
+		 	var url="${pageContext.request.contextPath}/payment/paymentDownloadSubmit?&paymentId="+queryPaymentId+"&merchantId="+queryMerchantId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=-1";
 			
 			document.getElementById("ff").action=url;
 		    document.getElementById("ff").submit();

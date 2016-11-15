@@ -56,9 +56,19 @@ public class BankPaymentController extends BaseControllerUtil{
 	 * @return
 	 */
 	@RequestMapping(value="bankPayment")
-	public String channelRate(){
+	public String bankPayment(){
 		log.info("---------------bankPaymentPages----------------");
 		return "payment/bankPayment";
+	}
+	
+	/**
+	 * 跳转到除银行外缴费方式管理页面
+	 * @return
+	 */
+	@RequestMapping(value="otherPayment")
+	public String otherPayment(){
+		log.info("---------------otherPaymentPages----------------");
+		return "payment/otherPayment";
 	}
 	
 	/**
@@ -68,7 +78,12 @@ public class BankPaymentController extends BaseControllerUtil{
 	@RequestMapping(value="findPayment")
 	public void findPayment(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------findPayment         start------------------------------------");
-		List<DictTradePayment> list = dictTradePaymentService.findPaymentNamesAll();
+		String type=request.getParameter("type");//1-银行，-1-其他
+		DictTradePayment payment=new DictTradePayment();
+		if(type!=null && type!=""){
+	    	payment.setPaymentType(Double.parseDouble(type));
+	    }
+		List<DictTradePayment> list = dictTradePaymentService.findPaymentNamesByType(payment);
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
 		map = new HashMap<String,Object>();
@@ -105,7 +120,8 @@ public class BankPaymentController extends BaseControllerUtil{
 		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("paymentId:"+paymentId+"  merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
+		String paymentType = request.getParameter("paymentType");
+		System.out.println("paymentId:"+paymentId+"  merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate+" paymentType:"+paymentType);
 		//当前第几页
 		String page=request.getParameter("page");
 		//每页显示的记录数
@@ -125,6 +141,9 @@ public class BankPaymentController extends BaseControllerUtil{
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
 	    orderInfo.setPageSize(pageSize);
 	    orderInfo.setStartRow(startRow);
+	    if(paymentType!=null && paymentType!=""){
+	    	orderInfo.setPaymentType(Integer.parseInt(paymentType));
+	    }
 	    
 		if(paymentId!=null && paymentId.length()!=0){
 			orderInfo.setPaymentId(Integer.parseInt(paymentId));
@@ -276,7 +295,8 @@ public class BankPaymentController extends BaseControllerUtil{
 		String dimension = request.getParameter("dimension");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		System.out.println("paymentId:"+paymentId+"merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate);
+		String paymentType = request.getParameter("paymentType");
+		System.out.println("paymentId:"+paymentId+"merchantId:"+merchantId+"  dimension:"+dimension+"  startDate:"+startDate+"  endDate:"+endDate+" paymentType:"+paymentType);
 		
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf =   new SimpleDateFormat( "yyyy-MM-dd" );
@@ -285,7 +305,10 @@ public class BankPaymentController extends BaseControllerUtil{
 	    DictTradePayment payment=null;
 	    MerchantInfo merchant = null;
 	    MerchantOrderInfo orderInfo=new MerchantOrderInfo();
-	    
+
+	    if(paymentType!=null && paymentType!=""){
+	    	orderInfo.setPaymentType(Integer.parseInt(paymentType));
+	    }
 		if(paymentId!=null && paymentId.length()!=0){
 			orderInfo.setPaymentId(Integer.parseInt(paymentId));
 		}
