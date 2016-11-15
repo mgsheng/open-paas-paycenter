@@ -146,7 +146,11 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
 						if(channel!=null){
 			    			map.put("channelName", channel.getChannelName());
+			    		}else{
+			    			map.put("channelName", "未定义");
 			    		}
+		    		}else{
+		    			map.put("channelName", "未定义");
 		    		}
 		    		if(r.getMerchantId()!=null){
 			    		merchant=merchantInfoService.findNameById(r.getMerchantId());
@@ -197,7 +201,11 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
 							if(channel!=null){
 				    			map.put("channelName", channel.getChannelName());
+				    		}else{
+				    			map.put("channelName", "未定义");
 				    		}
+			    		}else{
+			    			map.put("channelName", "未定义");
 			    		}
 			    		if(r.getMerchantId()!=null){
 				    		merchant=merchantInfoService.findNameById(r.getMerchantId());
@@ -291,7 +299,11 @@ public class ChannelRevenueController extends BaseControllerUtil{
 			    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
 						if(channel!=null){
 			    			r.setChannelName(channel.getChannelName());
+			    		}else{
+			    			r.setChannelName("未定义");
 			    		}
+		    		}else{
+		    			r.setChannelName("未定义");
 		    		}
 		    		if(r.getMerchantId()!=null){
 		    			merchant=merchantInfoService.findNameById(r.getMerchantId());
@@ -337,8 +349,12 @@ public class ChannelRevenueController extends BaseControllerUtil{
 				    		channel=payChannelSwitchService.findNameById(r.getSourceType()+"");
 							if(channel!=null){
 				    			r.setChannelName(channel.getChannelName());
+				    		}else{
+				    			r.setChannelName("未定义");
 				    		}
-			    		}		
+			    		}else{
+			    			r.setChannelName("未定义");
+			    		}	
 			    		if(r.getMerchantId()!=null){
 			    			merchant=merchantInfoService.findNameById(r.getMerchantId());
 							if(merchant!=null){

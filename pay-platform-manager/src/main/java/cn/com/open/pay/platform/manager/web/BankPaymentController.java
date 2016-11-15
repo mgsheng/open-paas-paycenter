@@ -176,7 +176,11 @@ public class BankPaymentController extends BaseControllerUtil{
 			    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 						if(payment!=null){
 			    			map.put("paymentName", payment.getRemark());
+			    		}else{
+			    			map.put("paymentName", "未定义");
 			    		}
+		    		}else{
+		    			map.put("paymentName", "未定义");
 		    		}
 		    		if(r.getMerchantId()!=null){
 			    		merchant=merchantInfoService.findNameById(r.getMerchantId());
@@ -227,7 +231,11 @@ public class BankPaymentController extends BaseControllerUtil{
 				    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 							if(payment!=null){
 				    			map.put("paymentName", payment.getRemark());
+				    		}else{
+				    			map.put("paymentName", "未定义");
 				    		}
+			    		}else{
+			    			map.put("paymentName", "未定义");
 			    		}
 			    		if(r.getMerchantId()!=null){
 				    		merchant=merchantInfoService.findNameById(r.getMerchantId());
@@ -321,7 +329,11 @@ public class BankPaymentController extends BaseControllerUtil{
 			    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 						if(payment!=null){
 			    			r.setPaymentName(payment.getRemark());
+			    		}else{
+			    			r.setPaymentName("未定义");
 			    		}
+		    		}else{
+		    			r.setPaymentName("未定义");
 		    		}
 		    		if(r.getMerchantId()!=null){
 			    		merchant=merchantInfoService.findNameById(r.getMerchantId());
@@ -367,8 +379,12 @@ public class BankPaymentController extends BaseControllerUtil{
 				    		payment=dictTradePaymentService.findNameById(""+r.getPaymentId());
 							if(payment!=null){
 				    			r.setPaymentName(payment.getRemark());
+				    		}else{
+				    			r.setPaymentName("未定义");
 				    		}
-			    		}	
+			    		}else{
+			    			r.setPaymentName("未定义");
+			    		}
 			    		if(r.getMerchantId()!=null){
 				    		merchant=merchantInfoService.findNameById(r.getMerchantId());
 							if(merchant!=null){
