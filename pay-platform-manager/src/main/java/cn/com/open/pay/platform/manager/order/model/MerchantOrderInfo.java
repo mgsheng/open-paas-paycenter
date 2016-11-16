@@ -118,6 +118,9 @@ public class MerchantOrderInfo implements Serializable {
 	private Double countPayCharge;
 	private String dimension;
 	
+	private String payStartDate;//缴费时间查询条件
+	private String payEndDate;
+	
 
 	public Integer getBusinessType() {
 		return businessType;
@@ -616,6 +619,22 @@ public class MerchantOrderInfo implements Serializable {
 
 	public void setPaymentType(Integer paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public String getPayStartDate() {
+		return payStartDate;
+	}
+
+	public void setPayStartDate(String payStartDate) {
+		this.payStartDate = payStartDate;
+	}
+
+	public String getPayEndDate() {
+		return payEndDate;
+	}
+
+	public void setPayEndDate(String payEndDate) {
+		this.payEndDate = payEndDate;
 	}
 	
 }

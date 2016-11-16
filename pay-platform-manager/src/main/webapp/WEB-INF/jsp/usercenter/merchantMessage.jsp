@@ -57,22 +57,22 @@
 			<td style="text-align: right;">发卡行：</td>
 			<!-- <td><input id="openingBank" name="openingBank" class="easyui-textbox" style="width:100%;height:32px"></td> -->
 			<td>
-				<select class="easyui-combobox" data-options="editable:false" name="paymentId" style="width:100%">
-					<option value="" selected="selected">全部</option>
-						<option value="10012">支付宝-即时到账</option>
-						<option value="10013">微信-扫码支付</option>
-						<option value="10014">银联</option>
-						<option value="10001">招商银行</option>
-						<option value="10002">工商银行</option>
-						<option value="10003">建设银行</option>
-						<option value="10004">农业银行</option>
-						<option value="10005">中国银行</option>
-						<option value="10006">交通银行</option>
-						<option value="10007">中国邮政银行</option>
-						<option value="10008">广发银行</option>
-						<option value="10009">浦发银行</option>
-						<option value="10010">中国光大银行</option>
-						<option value="10011">中国平安银行</option>
+				<select class="easyui-combobox" data-options="editable:false" id="paymentId" name="paymentId" style="width:100%">
+					<!-- <option value="" selected="selected">全部</option>
+					<option value="10012">支付宝-即时到账</option>
+					<option value="10013">微信-扫码支付</option>
+					<option value="10014">银联</option>
+					<option value="10001">招商银行</option>
+					<option value="10002">工商银行</option>
+					<option value="10003">建设银行</option>
+					<option value="10004">农业银行</option>
+					<option value="10005">中国银行</option>
+					<option value="10006">交通银行</option>
+					<option value="10007">中国邮政银行</option>
+					<option value="10008">广发银行</option>
+					<option value="10009">浦发银行</option>
+					<option value="10010">中国光大银行</option>
+					<option value="10011">中国平安银行</option> -->
 				</select>
 			
 			</td>
@@ -93,22 +93,26 @@
 		
 		<tr>
 			<td style="text-align: right;">下单时间：</td>
-			<td>
+			<!-- <td>
 				<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('today')">今天</a>
 				<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('both')">2天</a>
 				<a href="#" class="easyui-linkbutton" data-options="plain:true"	onclick="getDayType('seven')">7天</a>
 				<a href="#" class="easyui-linkbutton" data-options="plain:true" onclick="getDayType('thirty')">30天</a>
-			</td>
-			
+			</td> -->
 			<td style="text-align: right;"><input id="startDate" name="startDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">—到—</td>
 			<td><input id="endDate" name="endDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false"></td>
-			<td style="text-align: right;"><a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">提交</a></td>
-			<td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">缴费时间：</td>
+			<td style="text-align: right;"><input id="payStartDate" name="payStartDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false">—到—</td>
+			<td><input id="payEndDate" name="payEndDate" class="easyui-datebox" data-options="sharedCalendar:'#cc'" editable="false"></td>
+			
+			<td colspan="3" style="text-align: center;">
+				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()" style="width:80px">提交</a>
 				<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()" style="width:80px">清空</a>
 				<a href="javascript:void(0)" class="easyui-linkbutton"  onclick="downloadSubmit()" style="width:80px">下载</a>
 			</td>
 		</tr>
-		
 		</table>
 		</form>
 		
@@ -124,7 +128,7 @@
 				<th data-options="field:'merchantOrderId',width:150">商户订单号</th>
 				<th data-options="field:'payOrderId',width:150">第三方订单号</th>
 				<th data-options="field:'foundDate',width:150">下单时间</th>
-				<th data-options="field:'businessDate',width:150">交易时间</th>
+				<th data-options="field:'businessDate',width:150">缴费时间</th>
 				<th data-options="field:'channelName',width:80">支付方式</th>
 				<th data-options="field:'appId',width:60,align:'center'">业务类型</th>
 				<th data-options="field:'paymentName',width:80">发卡行</th>
@@ -160,8 +164,14 @@
 			var startDate = $("#_easyui_textbox_input10").val();
 			var endDate = $("#_easyui_textbox_input11").val();
 			var sourceType = $("input[name='sourceType']").val();
+			var payStartDate = $("#_easyui_textbox_input12").val();
+			var payEndDate = $("#_easyui_textbox_input13").val();
 			if(orderId==""&&merchantOrderId==""&&payOrderId==""&&channelId==""&&appId==""&&paymentId==""&&source==""&&payStatus==""&&sourceType==""){
-				if(startDate==""||endDate==""){
+				/* if(startDate==""||endDate==""){
+					alert("请选择时间段");
+					return;
+				} */
+				if(startDate==""&&endDate==""&&payStartDate==""&&payEndDate==""){
 					alert("请选择时间段");
 					return;
 				}
@@ -183,22 +193,50 @@
 					alert("开始时间大于结束时间！");
 					return;
 				}
+				 aDate  =  startDate.split("-");
+			     oDate1  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]);    //转换为12-18-2002格式 
+			     aDate  =  endDate.split("-"); 
+			     oDate2  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]); 
+			     iDays1  =  parseInt(Math.abs(oDate1-oDate2)/1000/60/60/24);    //把相差的毫秒数转换为天数
+				 if(iDays1>90){
+		    	   alert("请选择90天以内的日期"); 
+		    	   return;
+		         }
 			}
-		   aDate  =  startDate.split("-");
-	       oDate1  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]);    //转换为12-18-2002格式 
-	       aDate  =  endDate.split("-"); 
-	       oDate2  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]); 
-	       iDays  =  parseInt(Math.abs(oDate1-oDate2)/1000/60/60/24);    //把相差的毫秒数转换为天数 
-	       if(iDays>30){
-	    	  alert("请选择30天以内的日期"); 
-	    	  return;
-	       }
+			
+			if(!payStartDate==""){
+				if(payEndDate==""){
+					alert("请选缴费择结束时间");
+					return;
+				}
+			}
+			if(!payEndDate==""){
+				if(payStartDate==""){
+					alert("请选择缴费开始时间");
+					return;
+				}
+			}
+			if(!payStartDate==""&&!payEndDate==""){
+				if(payStartDate>payEndDate){
+					alert("开始时间大于结束时间！");
+					return;
+				}
+				aDate  =  payStartDate.split("-");
+	       		oDate1  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]);    //转换为12-18-2002格式 
+	       		aDate  =  payEndDate.split("-"); 
+	       		oDate2  =  new  Date(aDate[1]+'/'+aDate[2]+'/'+aDate[0]); 
+	       		iDays2  =  parseInt(Math.abs(oDate1-oDate2)/1000/60/60/24);    //把相差的毫秒数转换为天数 
+	       		if(iDays2>90){
+		    	  alert("请选择90天以内的日期"); 
+		    	  return;
+		       }
+			}
 			
 			$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
 				pagination:true,
-		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&sourceType="+sourceType,  
+		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&payStartDate="+payStartDate+"&payEndDate="+payEndDate+"&sourceType="+sourceType,  
                 onLoadSuccess:function(data){
                     if (data.total<1){
                        $.messager.alert("提示","没有符合查询条件的数据!");
@@ -241,17 +279,44 @@
 		//页面加载  
 		$(document).ready(function(){ 
 			
-					var hy="seven";
+					//var hy="seven";
+					var hy="ninety";
 					getDayType(hy);
-					initialise();
-					payIrrigation();
-					paySourceType();
-		            loadGrid();  
+					//initialise();
+					//payIrrigation();
+					//paySourceType();
+		            loadSelect();
+		            //loadGrid();  
 		            
 		});  
 		
+		function loadSelect(){
+			$('#paymentId').combobox({
+				url:'${pageContext.request.contextPath}/manage/findBankCode?flag=all',
+				valueField:'id',
+				textField:'text'
+			});
 		
-		function  initialise(){
+			$('#appId').combobox({
+				url:'${pageContext.request.contextPath}/manage/findAllDepts',
+				valueField:'id',
+				textField:'text'
+			});
+			
+			$('#channelId').combobox({
+				url:'${pageContext.request.contextPath}/manage/findAllPayChannel',
+				valueField:'id',
+				textField:'text'
+			});
+			
+			$('#sourceType').combobox({
+				url:'${pageContext.request.contextPath}/manage/findSourceType',
+				valueField:'id',
+				textField:'text'
+			});
+		}
+		
+		/* function  initialise(){
 			$('#appId').combobox({
 				url:'${pageContext.request.contextPath}/manage/findAllDepts',
 				valueField:'id',
@@ -273,7 +338,7 @@
 				valueField:'id',
 				textField:'text'
 			});
-		}
+		} */
 		
 		
 		  
@@ -281,7 +346,13 @@
 		
 		function getDayType(date) {
 			var input6=getnowtime();
-			if(date=="thirty"){
+			if(date=="ninety"){
+				//判断点击九十天
+				timeType="1";
+				var d=new Date();
+			    var n=new Date(d.getTime()-86400000*90);
+			    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
+			}/* else if(date=="thirty"){
 			//判断点击三十天
 			timeType="1";
 			var d=new Date();
@@ -305,10 +376,12 @@
 			var d=new Date();
 		    var n=new Date(d.getTime()-86400000*0);
 		    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}
+			} */
 			
 			$("#_easyui_textbox_input10").val(input5);
 			$("#_easyui_textbox_input11").val(input6);
+			$("#_easyui_textbox_input12").val(input5);
+			$("#_easyui_textbox_input13").val(input6);
 			}
 		function getnowtime() {
             var nowtime = new Date();

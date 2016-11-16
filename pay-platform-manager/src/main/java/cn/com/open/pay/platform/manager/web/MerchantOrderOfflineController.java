@@ -205,10 +205,17 @@ public class MerchantOrderOfflineController extends BaseControllerUtil{
 	@RequestMapping(value="findBankCode")
 	public void findBankCode(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------findBankCode     start------------------------------------");
+		String flag=request.getParameter("flag");
 		List<DictTradePayment> list = dictTradePaymentService.findPaymentNamesAll();
 		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
 		Map<String,Object> map= null;
 		String str=null;
+		if(("all").equals(flag)){
+			map = new HashMap<String,Object>();
+			map.put("id", "");
+			map.put("text", "全部");
+			maps.add(map);
+		}
 		if(list != null){
 			for(DictTradePayment m : list){
 				map = new HashMap<String,Object>();

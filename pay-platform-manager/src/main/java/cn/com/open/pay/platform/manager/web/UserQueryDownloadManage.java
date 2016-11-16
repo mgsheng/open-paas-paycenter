@@ -147,7 +147,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 startDate1 = startDate+" 00:00:00";
 			 endDate1 = endDate+" 23:59:59";
 		 }
-		
+		 String payStartDate=request.getParameter("payStartDate"); //缴费时间开始时间
+		 String payEndDate=request.getParameter("payEndDate"); //缴费时间结束时间
+		 String startDate2 = null;
+		 String endDate2 = null;
+		 if(!payStartDate.equals("")&&!payEndDate.equals("")){
+			 startDate2 = payStartDate+" 00:00:00";
+			 endDate2 = payEndDate+" 23:59:59";
+		 }
+		 
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
 		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
 		 merchantOrderInfo.setStartDate(startDate1);
@@ -158,6 +166,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+		 merchantOrderInfo.setPayStartDate(startDate2);
+		 merchantOrderInfo.setPayEndDate(endDate2);
 		 if(sourceType!=""){
 			 merchantOrderInfo.setSourceType(Integer.parseInt(sourceType));	//支付渠道
 		 }
@@ -477,7 +487,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 }
 		 }
 		 OrderDeriveExport.exportChuBei(response, merchantOrderInfoList);
-//	     return "usercenter/merchantMessage";
 	 }	
 	 
 	 
