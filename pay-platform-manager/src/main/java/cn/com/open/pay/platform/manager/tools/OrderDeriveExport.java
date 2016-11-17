@@ -61,7 +61,7 @@ public class OrderDeriveExport {
 
 		(style);
 		cell = row.createCell((short) 4);
-		cell.setCellValue("交易时间");
+		cell.setCellValue("缴费时间");
 		cell.setCellStyle(style);
 		cell.setCellStyle
 

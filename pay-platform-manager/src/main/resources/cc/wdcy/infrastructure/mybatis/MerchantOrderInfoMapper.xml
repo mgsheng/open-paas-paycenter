@@ -191,7 +191,7 @@
         <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
         </if>
-        <if test="payStatus != null and payStatus !=''" >
+        <if test="payStatus != null and payStatus >=0" >
            and PAY_STATUS=#{payStatus} 
         </if>
         <if test="paymentId != null and paymentId !=''" >
@@ -222,8 +222,8 @@
        limit #{startRow},#{pageSize} 
     </select>
     <select id="findDownloadMerchant" resultMap="merchantOrderInfoMap" >
-        select * from  MERCHANT_ORDER_INFO where 1=1
-            <if test="id != null and id !=''" >
+       select * from MERCHANT_ORDER_INFO where 1=1
+        <if test="id != null and id !=''" >
            and ID=#{id} 
         </if>
         <if test="merchantId != null and merchantId !=''" >
@@ -238,7 +238,7 @@
         <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
         </if>
-        <if test="payStatus != null and payStatus !=''" >
+        <if test="payStatus != null and payStatus >=0" >
            and PAY_STATUS=#{payStatus} 
         </if>
         <if test="paymentId != null and paymentId !=''" >
@@ -265,6 +265,7 @@
         <if test="payEndDate != null and payEndDate !=''" >
            and #{payEndDate, jdbcType=TIMESTAMP})
         </if>
+        order by CREATE_DATE desc
     </select>
     <select id="findQueryCount" resultType="int">
         select count(*) from  MERCHANT_ORDER_INFO where 1=1
@@ -280,7 +281,7 @@
         <if test="channelId != null and channelId !=''" >
            and CHANNEL_ID=#{channelId} 
         </if>
-        <if test="payStatus != null and payStatus !=''" >
+        <if test="payStatus != null and payStatus >=0" >
            and PAY_STATUS=#{payStatus} 
         </if>
         <if test="paymentId != null and paymentId !=''" >

@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.ibatis.reflection.wrapper.MapWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,12 +111,12 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		  //每页显示的记录数
 		  String rows=request.getParameter("rows"); 
 		  //当前页  
-		        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
-		        //每页显示条数  
-		        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
-		        //每页的开始记录  第一页为1  第二页为number +1   
-		        int startRow = (currentPage-1)*pageSize;
-		 log.info("-----------------------login start----------------");
+         int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+         //每页显示条数  
+         int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+         //每页的开始记录  第一页为1  第二页为number +1   
+         int startRow = (currentPage-1)*pageSize;
+		 log.info("-----------------------queryMerchant start----------------");
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
 		 String orderId=request.getParameter("orderId");//订单号
@@ -263,11 +264,11 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		  //每页显示的记录数
 		  String rows=request.getParameter("rows"); 
 		  //当前页  
-		        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
-		        //每页显示条数  
-		        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
-		        //每页的开始记录  第一页为1  第二页为number +1   
-		        int startRow = (currentPage-1)*pageSize;
+          int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
+          //每页显示条数  
+          int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
+          //每页的开始记录  第一页为1  第二页为number +1   
+          int startRow = (currentPage-1)*pageSize;
 		 log.info("-----------------------login start----------------");
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
@@ -366,19 +367,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	  */
 	 @RequestMapping("downloadSubmit")
 	 public void  downloadSubmit(HttpServletRequest request,HttpServletResponse response) {
-		
-		  
-		//当前第几页
-		  String page=request.getParameter("page");
-		  //每页显示的记录数
-		  String rows=request.getParameter("rows"); 
-		  //当前页  
-		        int currentPage = Integer.parseInt((page == null || page == "0") ? "1":page);  
-		        //每页显示条数  
-		        int pageSize = Integer.parseInt((rows == null || rows == "0") ? "10":rows);  
-		        //每页的开始记录  第一页为1  第二页为number +1   
-		        int startRow = (currentPage-1)*pageSize;
-		 log.info("-----------------------login start----------------");
+
+		 log.info("-----------------------downloadSubmit start----------------");
 		 int channelId=0;
 		 String merchantOrderDate=request.getParameter("merchantOrderDate");//下单日期
 		 String orderId=request.getParameter("orderId");//订单号
@@ -410,6 +400,15 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 startDate1 = startDate+" 00:00:00";
 			 endDate1 = endDate+" 23:59:59";
 		 }
+		 String payStartDate=request.getParameter("payStartDate"); //缴费时间开始时间
+		 String payEndDate=request.getParameter("payEndDate"); //缴费时间结束时间
+		 String startDate2 = null;
+		 String endDate2 = null;
+		 if(!payStartDate.equals("")&&!payEndDate.equals("")){
+			 startDate2 = payStartDate+" 00:00:00";
+			 endDate2 = payEndDate+" 23:59:59";
+		 }
+		 
 		 MerchantOrderInfo merchantOrderInfo =new MerchantOrderInfo();
 		 merchantOrderInfo.setMerchantOrderDate(merchantOrderDate);
 		 merchantOrderInfo.setStartDate(startDate1);
@@ -420,17 +419,19 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setChannelId(channelId); 	//支付方式
 		 merchantOrderInfo.setPayStatus(payStatus);		//交易状态
 		 merchantOrderInfo.setPaymentId(paymentId);		//发卡行
+		 merchantOrderInfo.setPayStartDate(startDate2);
+		 merchantOrderInfo.setPayEndDate(endDate2);
 		 if(sourceType!=""){
 			 merchantOrderInfo.setSourceType(Integer.parseInt(sourceType));	//支付渠道
 		 }
 		 if(appId!=""){
 			 merchantOrderInfo.setMerchantId(Integer.parseInt(appId));	//业务类型
 		 }
-		 //List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
+		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findDownloadMerchant(merchantOrderInfo);
+		 
 		 List<PayChannelSwitch> listPayChannelSwitch = payChannelSwitchService.findPayChannelTypeAll();
 		 Map map = new HashMap();
-//		 Map<String,Object> map= null;
 		 for(int i=0;i<listPayChannelSwitch.size();i++){
 			 PayChannelSwitch payChannelSwitch = listPayChannelSwitch.get(i);
 			 map.put(payChannelSwitch.getChannelValue(), payChannelSwitch.getChannelName());
@@ -451,7 +452,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 String soureceType = merchantOrderInfo1.getSourceType()+"";
-			 if(!soureceType.equals("null")){
+			 if(!("null").equals(soureceType)){
 				 String soureceTypeName = map.get(soureceType).toString();
 				 merchantOrderInfo1.setSourceTypeName(soureceTypeName); 
 			 }
@@ -463,17 +464,21 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 				 merchantOrderInfo1.setBusinessDate(df.format(dealDate1));
 			 }
 			 String channeId = merchantOrderInfo1.getChannelId()+"";
-			 if(!channeId.equals("null")){
-				 String channelName = map1.get(channeId).toString();
-				 merchantOrderInfo1.setChannelName(channelName);
+			 if(!("null").equals(channelId)){
+				 if(map1.get(channeId)!=null){
+					 String channelName = map1.get(channeId).toString();
+					 merchantOrderInfo1.setChannelName(channelName);
+				 }
 			 }
 			 Integer pMid = merchantOrderInfo1.getPaymentId();
 			 String paymentName = payChange(pMid);
 			 merchantOrderInfo1.setPaymentName(paymentName);
 			 Integer appValue = merchantOrderInfo1.getMerchantId();
-			 if(!appValue.equals("null")){
-				 String appId1 = map2.get(appValue).toString();
-				 merchantOrderInfo1.setAppId(appId1);
+			 if(!("null").equals(appValue)){
+				 if(map2.get(appValue)!=null){
+					 String appId1 = map2.get(appValue).toString();
+					 merchantOrderInfo1.setAppId(appId1);
+				 }				 
 			 }
 			 Integer status = merchantOrderInfo1.getPayStatus();
 			 if(status!=null){
