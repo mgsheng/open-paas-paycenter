@@ -99,7 +99,7 @@
 	</div>
 	  <div class="botton" style="width: 100%;height: 300px">
 		<table  id="dg"  class="easyui-datagrid" title="查询结果"    style="width:100%;max-width:100%;padding:20px 30px;"
-			data-options="singleSelect:true,method:'get'">
+			data-options="singleSelect:true,method:'get',toolbar:'#tb'">
 		<thead>
 			<tr>
 				<th data-options="field:'id',width:180">订单号</th>
@@ -119,11 +119,24 @@
 				<th data-options="field:'sourceTypeName',width:60,align:'center'">支付渠道</th>
 			</tr>
 		</thead>
-		
 	</table>
 	</div>
 	
-<div id="cc" class="easyui-calendar"></div>
+	<div id="tb" style="padding:0.4% 3%; text-align: right;">
+		交易笔数: 
+		<label id="dealCount">0</label>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		缴费总额: 
+		<label id="orderAmountCount">0.0</label>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		手续费总额: 
+		<label id="payChargeCount">0.0</label>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		实收总额: 
+		<label id="payAmountCount">0.0</label>
+	</div>
+	
+	<div id="cc" class="easyui-calendar"></div>
 
 </body>
 <script>
@@ -212,10 +225,14 @@
 				pagination:true,
 		        url: "${pageContext.request.contextPath}/manage/queryMerchant?orderId="+orderId+"&merchantOrderId="+merchantOrderId+"&payOrderId="+payOrderId+"&channelId="+channelId+"&appId="+appId+"&paymentId="+paymentId+"&source="+source+"&payStatus="+payStatus+"&createDate="+createDate+"&startDate="+startDate+"&endDate="+endDate+"&payStartDate="+payStartDate+"&payEndDate="+payEndDate+"&sourceType="+sourceType,  
                 onLoadSuccess:function(data){
-                    if (data.total<1){
-                       $.messager.alert("提示","没有符合查询条件的数据!");
+                  if (data.total<1){
+                    $.messager.alert("提示","没有符合查询条件的数据!");
+                  }else{
+                  	$("#dealCount").text(data.total);
+                  	$("#orderAmountCount").text(data.countOrderAmount);
+                  	$("#payChargeCount").text(data.countPayCharge);
+                  	$("#payAmountCount").text(data.countPayAmount);
                   }
-                   
                 }
 		     
 		    }); 

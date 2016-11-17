@@ -307,6 +307,45 @@
         </if>
     </select>
     
+    <select id="findCount" resultMap="merchantOrderInfoMap">
+        select sum(ORDER_AMOUNT) countOrderAmount,sum(PAY_CHARGE) countPayCharge,sum(PAY_AMOUNT) countPayAmount from  MERCHANT_ORDER_INFO where 1=1
+        <if test="merchantId != null and merchantId !=''" >
+           and MERCHANT_ID=#{merchantId} 
+        </if>
+        <if test="merchantOrderId != null and merchantOrderId !=''" >
+           and MERCHANT_ORDERID=#{merchantOrderId} 
+        </if>
+        <if test="payOrderId != null and payOrderId !=''" >
+           and PAY_ORDERID=#{payOrderId} 
+        </if>
+        <if test="channelId != null and channelId !=''" >
+           and CHANNEL_ID=#{channelId} 
+        </if>
+        <if test="payStatus != null and payStatus >=0" >
+           and PAY_STATUS=#{payStatus} 
+        </if>
+        <if test="paymentId != null and paymentId !=''" >
+           and PAYMENT_ID=#{paymentId} 
+        </if>
+        <if test="appId != null and appId !=''" >
+           and APPID=#{appId} 
+        </if>
+        <if test="sourceType != null " >
+           and SOURCE_TYPE=#{sourceType} 
+        </if>
+        <if test="startDate != null and startDate !=''" >
+           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="endDate != null and endDate !=''" >
+           and #{endDate, jdbcType=TIMESTAMP}
+        </if>
+        <if test="payStartDate != null and payStartDate !=''" >
+           and (DEAL_DATE BETWEEN #{payStartDate, jdbcType=TIMESTAMP} 
+        </if>
+        <if test="payEndDate != null and payEndDate !=''" >
+           and #{payEndDate, jdbcType=TIMESTAMP})
+        </if>
+    </select>
 	
 	<update id="updateNotifyTimes"  flushCache="true">
         update MERCHANT_ORDER_INFO set

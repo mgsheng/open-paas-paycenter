@@ -63,5 +63,6 @@ public interface MerchantOrderInfoService {
 	List<MerchantOrderInfo> findBankPayment(MerchantOrderInfo orderInfo);
 	int findBankPaymentCount(MerchantOrderInfo orderInfo);
 	List<MerchantOrderInfo> findBankPaymentNoPage(MerchantOrderInfo orderInfo);
+	MerchantOrderInfo findCount(MerchantOrderInfo merchantOrderInfo);
 	
 }

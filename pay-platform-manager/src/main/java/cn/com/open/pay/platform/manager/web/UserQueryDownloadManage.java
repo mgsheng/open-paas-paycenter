@@ -178,12 +178,20 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 merchantOrderInfo.setPageSize(pageSize); //结束条数
 		 merchantOrderInfo.setStartRow(startRow); //开始条数
 		 
+		 Double countOrderAmount=0.0;
+		 Double countPayCharge=0.0;
+		 Double countPayAmount=0.0;
+		 
 		 List<MerchantOrderInfo> merchantOrderInfoList = merchantOrderInfoService.findQueryMerchant(merchantOrderInfo);
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
+		 MerchantOrderInfo merchantOrderCount=merchantOrderInfoService.findCount(merchantOrderInfo);
+		 
+		 countOrderAmount=merchantOrderCount.getCountOrderAmount();
+		 countPayCharge=merchantOrderCount.getCountPayCharge();
+		 countPayAmount=merchantOrderCount.getCountPayAmount();
 		 
 		 List<PayChannelSwitch> listPayChannelSwitch = payChannelSwitchService.findPayChannelTypeAll();
 		 Map map = new HashMap();
-//		 Map<String,Object> map= null;
 		 for(int i=0;i<listPayChannelSwitch.size();i++){
 			 PayChannelSwitch payChannelSwitch = listPayChannelSwitch.get(i);
 			 map.put(payChannelSwitch.getChannelValue(), payChannelSwitch.getChannelName());
@@ -201,6 +209,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 map2.put(merchantInfo.getId(), merchantInfo.getMerchantName());
 		 }
 		 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+		 
 		 for(int i=0;i<merchantOrderInfoList.size();i++){
 			 MerchantOrderInfo merchantOrderInfo1 = merchantOrderInfoList.get(i);
 			 String soureceType = merchantOrderInfo1.getSourceType()+"";
@@ -243,6 +252,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 JSONObject jsonObjArr = new JSONObject();  
 		 jsonObjArr.put("total", queryCount);
 		 jsonObjArr.put("rows", jsonArr);
+		 jsonObjArr.put("countOrderAmount", countOrderAmount);
+		 jsonObjArr.put("countPayCharge", countPayCharge);
+		 jsonObjArr.put("countPayAmount", countPayAmount);
 		 System.out.println(jsonArr);
 	     WebUtils.writeJson(response,jsonObjArr);
 	     

@@ -256,5 +256,11 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 		return lists;
 	}
 
+	@Override
+	public MerchantOrderInfo findCount(MerchantOrderInfo merchantOrderInfo) {
+		MerchantOrderInfo orderInfo=merchantOrderInfoRepository.findCount(merchantOrderInfo);
+		return orderInfo;
+	}
+
 
 }
