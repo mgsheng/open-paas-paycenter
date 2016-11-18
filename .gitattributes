@@ -791,6 +791,7 @@ pay-service-message/.settings/org.eclipse.wst.common.project.facet.core.xml -tex
 pay-service-message/.settings/org.eclipse.wst.jsdt.ui.superType.container -text
 pay-service-message/.settings/org.eclipse.wst.jsdt.ui.superType.name -text
 pay-service-message/pom.xml -text
+pay-service-message/src/main/java/cn/com/open/user/platform/manager/constant/ConstantMessage.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/datasource/DataSourceAdvice.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/datasource/DataSourceSwitcher.java -text
 pay-service-message/src/main/java/cn/com/open/user/platform/manager/datasource/DynamicDataSource.java -text
