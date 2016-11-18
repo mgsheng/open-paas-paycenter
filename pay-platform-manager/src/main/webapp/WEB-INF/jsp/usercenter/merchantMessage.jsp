@@ -381,13 +381,13 @@
 		
 		function getDayType(date) {
 			var input6=getnowtime();
-			if(date=="ninety"){
+			//if(date=="ninety"){
 				//判断点击九十天
-				timeType="1";
+				//timeType="1";
 				var d=new Date();
-			    var n=new Date(d.getTime()-86400000*90);
+			    var n=new Date(d.getTime()-86400000*1);
 			    var input5=n.getFullYear()+"-"+padleft0(n.getMonth()+1)+"-"+padleft0(n.getDate());
-			}
+			//}
 			$("#_easyui_textbox_input10").val(input5);
 			$("#_easyui_textbox_input11").val(input6);
 			$("#_easyui_textbox_input12").val(input5);

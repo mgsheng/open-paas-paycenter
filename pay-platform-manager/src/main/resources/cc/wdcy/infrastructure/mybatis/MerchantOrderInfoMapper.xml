@@ -294,10 +294,10 @@
            and SOURCE_TYPE=#{sourceType} 
         </if>
         <if test="startDate != null and startDate !=''" >
-           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+           and (CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
         </if>
         <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
+           and #{endDate, jdbcType=TIMESTAMP})
         </if>
         <if test="payStartDate != null and payStartDate !=''" >
            and (DEAL_DATE BETWEEN #{payStartDate, jdbcType=TIMESTAMP} 
@@ -334,10 +334,10 @@
            and SOURCE_TYPE=#{sourceType} 
         </if>
         <if test="startDate != null and startDate !=''" >
-           and CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
+           and (CREATE_DATE BETWEEN #{startDate, jdbcType=TIMESTAMP} 
         </if>
         <if test="endDate != null and endDate !=''" >
-           and #{endDate, jdbcType=TIMESTAMP}
+           and #{endDate, jdbcType=TIMESTAMP})
         </if>
         <if test="payStartDate != null and payStartDate !=''" >
            and (DEAL_DATE BETWEEN #{payStartDate, jdbcType=TIMESTAMP} 

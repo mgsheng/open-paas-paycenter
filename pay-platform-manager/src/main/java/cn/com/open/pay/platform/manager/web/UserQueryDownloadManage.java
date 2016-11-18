@@ -134,7 +134,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			 paymentId=Integer.parseInt(pt);
 		 }
 		 String PS=request.getParameter("payStatus"); //交易状态
-		 int payStatus=0;
+		 Integer payStatus=null;
 		 if(PS!=null&&!PS.equals("")){
 			 payStatus=Integer.parseInt(PS);
 		 }
