@@ -6,6 +6,7 @@ public class UserManagerDev {
 	public String kafka_group;
 	public String zookeeper_connect;
 	public String metadata_broker_list;
+	public String save_userInfo_url;
 	
 	
 	
@@ -48,6 +49,13 @@ public class UserManagerDev {
 	public void setServer_host(String server_host) {
 		this.server_host = server_host;
 	}
-	
 
+	public String getSave_userInfo_url() {
+		return save_userInfo_url;
+	}
+
+	public void setSave_userInfo_url(String save_userInfo_url) {
+		this.save_userInfo_url = save_userInfo_url;
+	}
+	
 }

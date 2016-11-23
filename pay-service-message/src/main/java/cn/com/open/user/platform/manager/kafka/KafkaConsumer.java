@@ -1,12 +1,19 @@
 package cn.com.open.user.platform.manager.kafka;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -14,41 +21,19 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import net.sf.json.JSONObject;
-import cn.com.open.openpaas.userservice.app.app.model.App;
-import cn.com.open.openpaas.userservice.app.app.service.AppService;
-import cn.com.open.openpaas.userservice.app.appuser.model.AppUser;
-import cn.com.open.openpaas.userservice.app.appuser.service.AppUserService;
-import cn.com.open.openpaas.userservice.app.domain.model.UserCenterRegDto;
-import cn.com.open.openpaas.userservice.app.tools.AESUtil;
-import cn.com.open.openpaas.userservice.app.user.model.User;
-import cn.com.open.openpaas.userservice.app.user.service.UserService;
-import cn.com.open.openpaas.userservice.dev.UserserviceDev;
 import cn.com.open.user.platform.manager.constant.ConstantMessage;
 import cn.com.open.user.platform.manager.dev.UserManagerDev;
-import cn.com.open.user.platform.manager.redis.impl.RedisClientTemplate;
-import cn.com.open.user.platform.manager.redis.impl.RedisConstant;
 import cn.com.open.user.platform.manager.user.model.UserAccountBalance;
 import cn.com.open.user.platform.manager.user.service.UserAccountBalanceService;
 public class KafkaConsumer extends Thread{  
 	private static final Logger log = Logger.getLogger(KafkaConsumer.class);
     private UserAccountBalanceService userAccountBalanceService;
     private UserManagerDev userManagerDev; 
-	@Autowired
-	private UserService userService;
-	@Autowired
-	private AppUserService appUserService;
-	@Autowired
-	private AppService appService; 
-	@Autowired
-	private UserserviceDev userserviceDev;
-	@Autowired
-	private RedisClientTemplate redisClient;
 	
     public KafkaConsumer(UserAccountBalanceService userAccountBalanceService,UserManagerDev userManagerDev){  
         super();  
         this.userAccountBalanceService=userAccountBalanceService;
         this.userManagerDev=userManagerDev;
-        
     }  
       
       
@@ -72,9 +57,8 @@ public class KafkaConsumer extends Thread{
 				
 				 if(!nullEmptyBlankJudge(message)){
 			    	 JSONObject reqjson = JSONObject.fromObject(message);
-			         App app=new App();
-			         UserCenterRegDto userCenterReg=new UserCenterRegDto();
 			         String messageType = reqjson.getString("messageType");//小主题类型
+			         String saveUserInfoUrl = reqjson.getString("saveUserInfoUrl");
 			         boolean flag = false;
 			         if(messageType != null){
 			        	 if((ConstantMessage.MESSAGE_CREATE_PAYACCOUNT).equals(messageType)){//创建支付账户
@@ -86,7 +70,7 @@ public class KafkaConsumer extends Thread{
 					         String type = reqjson.getString("type");
 					         //int  status=1;
 					         createPayAccount(appId,userId,sourceId,type,userName);
-			        	 }else{
+			        	 }else if((ConstantMessage.MESSAGE_SYNC_ACCOUNT).equals(messageType)){//同步旧平台账户
 			        		 String appUid = reqjson.getString("appUid");
 					         String id = reqjson.getString("id");
 							 String guid = reqjson.getString("guid");
@@ -98,34 +82,19 @@ public class KafkaConsumer extends Thread{
 							 String cardNo = reqjson.getString("card_no");
 							 String email = reqjson.getString("email");
 							 String methodName = reqjson.getString("methordName");
-							 userCenterReg.setAppUid(appUid);
-							 userCenterReg.setId(id);
-							 userCenterReg.setGuid(guid);
-							 userCenterReg.setClient_id(clientId);
-							 userCenterReg.setSource_id(sourceId);
-							 userCenterReg.setUsername(username);
-							 userCenterReg.setPassword(password);
-							 userCenterReg.setPhone(phone);
-							 userCenterReg.setCard_no(cardNo);
-							 userCenterReg.setEmail(email);
-							 userCenterReg.setMethordName(methodName);
-							 app = (App) redisClient.getObject(RedisConstant.APP_INFO+userCenterReg.getClient_id());
-					         if(app==null)
-							 {
-								 app=appService.findIdByClientId(userCenterReg.getClient_id());
-								 redisClient.setObject(RedisConstant.APP_INFO+userCenterReg.getClient_id(), app);
-							 }
-					         if((ConstantMessage.MESSAGE_CREATE_ACCOUNT).equals(messageType)){//同步创建新用户平台账户
-				        		 flag = registerUser(app,userCenterReg);
-				        		 if(flag){
-				        			 User user = userService.findByGuid(guid);
-							         createPayAccount(user.getAppId()+"",id,sourceId,user.getUserType()+"",username);
-				        		 }
-				        	 }else if((ConstantMessage.MESSAGE_SYNC_ACCOUNT).equals(messageType)){//同步旧版用户数据
-				        		 flag = sysUserInfo(app,userCenterReg);
-				        	 }else if((ConstantMessage.MESSAGE_BIND_ACCOUNT).equals(messageType)){//绑定用户数据
-				        		 flag = bindUserInfo(app,userCenterReg);
-				        	 }
+							 SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+							 sParaTemp.put("appUid", appUid);
+							 sParaTemp.put("id", id);
+							 sParaTemp.put("guid", guid);
+							 sParaTemp.put("client_id", clientId);
+					         sParaTemp.put("source_id", sourceId);
+							 sParaTemp.put("username",username);
+							 sParaTemp.put("password", password);
+							 sParaTemp.put("phone",phone);
+							 sParaTemp.put("card_no",cardNo);
+							 sParaTemp.put("email", email);
+							 sParaTemp.put("methordName", methodName);
+							 sendPost(saveUserInfoUrl,sParaTemp);
 			        	 } 
 			         }
 				 }
@@ -140,7 +109,7 @@ public class KafkaConsumer extends Thread{
         properties.put("zookeeper.connect", userManagerDev.getZookeeper_connect());//声明zk  
         properties.put("group.id", userManagerDev.getKafka_group());// 必须要使用别的组名称， 如果生产者和消费者都在同一组，则不能访问同一组内的topic数据  
         return Consumer.createJavaConsumerConnector(new ConsumerConfig(properties));  
-     }  
+    }  
           
     public void createPayAccount(String appId,String userId,String sourceId,String type,String userName){
     	UserAccountBalance  userAccountBalance=userAccountBalanceService.findByUserId(userId);
@@ -162,101 +131,81 @@ public class KafkaConsumer extends Thread{
         }
     }
     
-    public  boolean registerUser( App app,UserCenterRegDto userCenterReg){
-		boolean flag=false;
-		User user=new User(userCenterReg.getUsername(),userCenterReg.getPassword(),userCenterReg.getPhone(),userCenterReg.getEmail(),"","","");
-		AppUser appUser=null;
-			String aesPassword="";
-			try {
-				aesPassword=AESUtil.encrypt(userCenterReg.getPassword(), userserviceDev.getAes_userCenter_key());
-			} catch (Exception e1) {
-				log.info("aes加密出错："+userCenterReg.getPassword());
-				e1.printStackTrace();
+    /** 
+     * 发送POST请求 
+     *  
+     * @param url 
+     *            目的地址 
+     * @param parameters 
+     *            请求参数，Map类型。 
+     * @return 远程响应结果 
+     */  
+    public static String sendPost(String url, SortedMap<Object,Object> sParaTemp) {  
+        String result = "";// 返回的结果  
+        BufferedReader in = null;// 读取响应输入流  
+        PrintWriter out = null;  
+        StringBuffer sb = new StringBuffer();// 处理请求参数  
+        String params="";
+        try {  
+		Set es = sParaTemp.entrySet();//所有参与传参的参数按照accsii排序（升序）
+		Iterator it = es.iterator();
+		while(it.hasNext()) {
+			Map.Entry entry = (Map.Entry)it.next();
+			String k = (String)entry.getKey();
+			Object v = entry.getValue();
+			if(null != v && !"".equals(v) 
+					&& !"sign".equals(k) && !"key".equals(k)) {
+				sb.append(k + "=" + v + "&");
 			}
-			user.setAesPassword(aesPassword);
-			user.setAppId(app.getId());
-			if(!nullEmptyBlankJudge(userCenterReg.getId())){
-			  user.setId(Integer.parseInt(userCenterReg.getId()));	
-			}if(!nullEmptyBlankJudge(userCenterReg.getGuid())){
-			  user.guid(userCenterReg.getGuid());	
-			}
-			user.cardNo(userCenterReg.getCard_no());
-			user.setEmailActivation(User.ACTIVATION_NO);
-			user.userState("0");
-			Boolean f=userService.save(user);
-			if(f){
-			if(null==userCenterReg.getSource_id()||"".equals(userCenterReg.getSource_id().trim())){
-				appUser=new AppUser(app.getId(),user.getId(),user.guid());
-			}else{
-				appUser=new AppUser(app.getId(),user.getId(),userCenterReg.getSource_id());
-			}
-			if(!nullEmptyBlankJudge(userCenterReg.getAppUid())){
-				appUser.appUid(Integer.parseInt(userCenterReg.getAppUid()));
-			}
-			flag =appUserService.saveAppUser(appUser);
-		 }
-			return flag;
-	}
-	public  boolean sysUserInfo( App app,UserCenterRegDto userCenterReg){
-		boolean flag=false;
-       if(!nullEmptyBlankJudge(userCenterReg.getId()))
-       {
-           User user = userService.findUserById(Integer.parseInt(userCenterReg.getId()));
-           if (null != user) {
-               if (!nullEmptyBlankJudge(userCenterReg.getUsername())) {
-               user.setUsername(userCenterReg.getUsername());
-               }
-               if (!nullEmptyBlankJudge(userCenterReg.getPassword())) {
-               	String aesPassword="";
-				try {
-					aesPassword=AESUtil.encrypt(userCenterReg.getPassword(), userserviceDev.getAes_userCenter_key());
-				} catch (Exception e1) {
-					log.info("aes加密出错："+userCenterReg.getPassword());
-					e1.printStackTrace();
-				}
-				user.setAesPassword(aesPassword);
-               }
-               if(!nullEmptyBlankJudge(userCenterReg.getPhone())){
-               user.setPhone(userCenterReg.getPhone());
-               }if (!nullEmptyBlankJudge(userCenterReg.getEmail())) {
-                 user.setEmail(userCenterReg.getEmail());
-               }if (!nullEmptyBlankJudge(userCenterReg.getCard_no())) {
-                 user.setCardNo(userCenterReg.getCard_no());
-               }  if(nullEmptyBlankJudge(userCenterReg.getPassword())|| ("null").equals(userCenterReg.getPassword())){
-                   user.userType(1);
-               } user.userState("1");
-               if(!nullEmptyBlankJudge(userCenterReg.getGuid())){
-                  user.guid(userCenterReg.getGuid());
-                }
-               flag=userService.updateUser(user);
-           }
-           else{
-        	   log.info("~~~~~~~~~~~~~~sysUserInfo:not found user,userId:"+userCenterReg.getId()+",appId:"+app.getId());
-           }  
-       }
-       return flag;
-	}
-	public  boolean bindUserInfo( App app,UserCenterRegDto userCenterReg){
-    	boolean flag=false;
-    	AppUser appUser=null;
-           if(!nullEmptyBlankJudge(userCenterReg.getId()))
-           {
-        	   appUser=new AppUser(app.getId(),Integer.parseInt(userCenterReg.getId()),userCenterReg.getSource_id());
-			if(!nullEmptyBlankJudge(userCenterReg.getAppUid())){
-				appUser.appUid(Integer.parseInt(userCenterReg.getAppUid()));
-			}
-			flag=appUserService.saveAppUser(appUser);
-			if(flag){
-				if(!nullEmptyBlankJudge(userCenterReg.getCard_no())){
-					userService.updateUserCardNoById(Integer.parseInt(userCenterReg.getId()),userCenterReg.getCard_no());
-				}
-				if(!nullEmptyBlankJudge(userCenterReg.getPhone())){
-					userService.updatePhoneById(Integer.parseInt(userCenterReg.getId()), userCenterReg.getPhone());
-				}
-			}
-           }
-           return flag;
-	}
+		  }
+		   String temp_params = sb.toString(); 
+		   params = temp_params.substring(0, temp_params.length() - 1);  
+            // 创建URL对象  
+            java.net.URL connURL = new java.net.URL(url);  
+            // 打开URL连接  
+            java.net.HttpURLConnection httpConn = (java.net.HttpURLConnection) connURL  
+                    .openConnection();  
+            // 设置通用属性  
+            httpConn.setRequestProperty("Accept", "*/*");  
+            httpConn.setRequestProperty("Connection", "Keep-Alive");  
+            httpConn.setRequestProperty("User-Agent",  
+                    "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");  
+            // 设置POST方式  
+            httpConn.setDoInput(true);  
+            httpConn.setDoOutput(true);  
+            // 获取HttpURLConnection对象对应的输出流  
+            out = new PrintWriter(httpConn.getOutputStream());  
+            // 发送请求参数  
+            //out.write(params); 
+            out.write(params);  
+            // flush输出流的缓冲  
+            out.flush();  
+            // 定义BufferedReader输入流来读取URL的响应，设置编码方式  
+            in = new BufferedReader(new InputStreamReader(httpConn  
+                    .getInputStream(), "utf-8"));  
+            String line;  
+            // 读取返回的内容  
+            while ((line = in.readLine()) != null) {  
+                result += line;  
+                
+            }  
+            System.out.println(result);
+        } catch (Exception e) {  
+            e.printStackTrace();  
+        } finally {  
+            try {  
+                if (out != null) {  
+                    out.close();  
+                }  
+                if (in != null) {  
+                    in.close();  
+                }  
+            } catch (IOException ex) {  
+                ex.printStackTrace();  
+            }  
+        }  
+        return result;  
+    }  
     
     /**
 	 * 检验字符串是否为空

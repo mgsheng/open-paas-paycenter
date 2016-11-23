@@ -160,6 +160,6 @@
             <property name="kafka_group" value="${kafka_group}"></property>
             <property name="zookeeper_connect" value="${zookeeper_connect}"></property>
             <property name="metadata_broker_list" value="${metadata_broker_list}"></property>
-            
+            <property name="save_userInfo_url" value="${save_userInfo_url}"></property>
         </bean>
 </beans>
