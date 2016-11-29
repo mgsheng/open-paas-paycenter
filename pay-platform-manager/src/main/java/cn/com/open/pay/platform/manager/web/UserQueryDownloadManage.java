@@ -186,9 +186,11 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		 int queryCount = merchantOrderInfoService.findQueryCount(merchantOrderInfo);
 		 MerchantOrderInfo merchantOrderCount=merchantOrderInfoService.findCount(merchantOrderInfo);
 		 
-		 countOrderAmount=merchantOrderCount.getCountOrderAmount();
-		 countPayCharge=merchantOrderCount.getCountPayCharge();
-		 countPayAmount=merchantOrderCount.getCountPayAmount();
+		 if(merchantOrderCount!=null){
+			 countOrderAmount=merchantOrderCount.getCountOrderAmount();
+			 countPayCharge=merchantOrderCount.getCountPayCharge();
+			 countPayAmount=merchantOrderCount.getCountPayAmount();
+		 }
 		 
 		 List<PayChannelSwitch> listPayChannelSwitch = payChannelSwitchService.findPayChannelTypeAll();
 		 Map map = new HashMap();
