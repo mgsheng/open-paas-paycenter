@@ -120,7 +120,7 @@ public class OrderDeriveExport {
 		cell.setCellValue("支付渠道");
 		cell.setCellStyle(style);
 		// 向单元格里填充数据
-		for (short i = 0; i < infoList.size(); i++) {
+		for (int i = 0; i < infoList.size(); i++) {
 			row = sheet.createRow(i + 1);
 			row.createCell(0).setCellValue(infoList.get(i).getId());//下单时间
 			row.createCell(1).setCellValue(infoList.get(i).getMerchantOrderId());//商户订单号
