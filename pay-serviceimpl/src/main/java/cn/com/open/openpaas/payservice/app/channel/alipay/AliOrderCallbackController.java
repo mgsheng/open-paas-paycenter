@@ -26,7 +26,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
@@ -56,6 +58,8 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	 private DictTradeChannelService dictTradeChannelService;
 	 @Autowired
 	 private MerchantInfoService merchantInfoService;
+	 @Autowired
+	 private ChannelRateService channelRateService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -142,6 +146,8 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
 				 if(!nullEmptyBlankJudge(returnUrl)){
+					 
+					
 					 //Map<String, String> dataMap=new HashMap<String, String>();
 					 /*int payStatus=merchantOrderInfo.getPayStatus();
 						Double payCharge=0.0;
@@ -211,6 +217,8 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 	       			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 	       			returnUrl=merchantInfo.getReturnUrl();
 	       		}
+	       	 Double payCharge=0.0;
+		     payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				 payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);

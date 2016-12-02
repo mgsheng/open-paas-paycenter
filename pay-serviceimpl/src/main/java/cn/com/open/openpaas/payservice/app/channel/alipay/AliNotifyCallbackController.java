@@ -113,8 +113,6 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 			  DictTradeChannel dictTradeChannel=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.ALI.getValue());
 		        String key = dictTradeChannel.getKeyValue(); // key
 		//添加日志
-		
-		
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 		 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
 		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
@@ -160,17 +158,13 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 						rechargeMsg=UnifyPayUtil.recordAndBalance(total_fee*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
 					}
 				}
+				  log.info("-----------------------callBack:alipay:notify:start-----------------------------------------");
 				if(notifyStatus!=1){
 					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 					   thread.run();	
 				}
-					//如果有做过处理，不执行商户的业务程序
-		
-			//该页面可做页面美工编辑
-			
-			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;
-			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-			//////////////////////////////////////////////////////////////////////////////////////////
+				 log.info("-----------------------callBack:alipay:notify:end-----------------------------------------");
+				 
 		}else{
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
@@ -180,7 +174,6 @@ public class AliNotifyCallbackController extends BaseControllerUtil {
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			backMsg="error";
 		}
-	
 	    }else{
 	    	  payServiceLog.setErrorCode("4");
 	          payServiceLog.setStatus("error");

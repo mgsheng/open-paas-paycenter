@@ -1,6 +1,9 @@
 package cn.com.open.openpaas.payservice.app.channel;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Date;
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
@@ -94,8 +97,10 @@ public class UnifyPayUtil {
 				//Double amount=200.00;
 				rete=merchantOrderInfo.getOrderAmount()* 100 * Double.parseDouble(channelRate.getPayRate());
 				//rete=amount* Double.parseDouble(channelRate.getPayRate());
-				BigDecimal b =new BigDecimal(rete/100);  
-				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();  
+				/*BigDecimal b =new BigDecimal(rete/100);  
+				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue(); */
+				DecimalFormat df = new DecimalFormat("#.##");    
+				returnValue = Double.parseDouble(df.format(rete/100)); 
 			}
 			return returnValue;
 		}
@@ -110,10 +115,17 @@ public class UnifyPayUtil {
 			ChannelRate channelRate=channelRateService.getChannelRate(String.valueOf(merchantOrderInfo.getChannelId()), merchantOrderInfo.getSourceType());
 			if(channelRate!=null){
 				//Double amount=200.00;
-				rete=merchantOrderInfo.getOrderAmount()* 100 * Double.parseDouble(channelRate.getPayRate());
+				rete=merchantOrderInfo.getOrderAmount() * Double.parseDouble(channelRate.getPayRate());
 				//rete=amount* Double.parseDouble(channelRate.getPayRate());
-				BigDecimal b =new BigDecimal(rete/100);  
-				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();  
+			/*	BigDecimal b =new BigDecimal(rete/100);  
+				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue(); */
+				
+				
+				/*DecimalFormat df = new DecimalFormat("#.##");    
+				returnValue = Double.parseDouble(df.format(rete)); */
+				 String reta=String.valueOf(rete);
+				 BigDecimal b =new BigDecimal(reta);  
+				 returnValue =b.setScale(2,RoundingMode.HALF_UP).doubleValue();
 			}
 			return returnValue;
 		}
@@ -128,11 +140,47 @@ public class UnifyPayUtil {
 			ChannelRate channelRate=channelRateService.getChannelRate(channelId, merchantOrderInfo.getSourceType());
 			if(channelRate!=null){
 				//Double amount=200.00;
-				rete=merchantOrderInfo.getOrderAmount()* 100 * Double.parseDouble(channelRate.getPayRate());
+				rete=merchantOrderInfo.getOrderAmount() * Double.parseDouble(channelRate.getPayRate());
 				//rete=amount* Double.parseDouble(channelRate.getPayRate());
-				BigDecimal b =new BigDecimal(rete/100);  
-				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue();  
+				//BigDecimal b =new BigDecimal(rete/100);
+				//returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue(); 
+				/*DecimalFormat df = new DecimalFormat("#.##");    
+				returnValue = Double.parseDouble(df.format(rete)); */
+				
+				 String reta=String.valueOf(rete);
+				 BigDecimal b =new BigDecimal(reta);  
+				 returnValue =b.setScale(2,RoundingMode.HALF_UP).doubleValue();
+				 
 			}
 			return returnValue;
+		}
+		public static void main(String[] args) {
+			
+			Double returnValue=0.0;
+		   // Double rete=675.00*0.003;
+			 Double rete=12.025;
+		/*		//Double amount=200.00;
+			BigDecimal b =new BigDecimal(rete);  
+			returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue(); */
+			
+		/*	DecimalFormat df = new DecimalFormat("#.##");    
+			returnValue = Double.parseDouble(df.format(rete));  */
+		/*    NumberFormat ddf1=NumberFormat.getNumberInstance() ;
+
+
+		    ddf1.setMaximumFractionDigits(2);
+		    String aa= ddf1.format(rete);
+			System.out.println(aa);*/
+			 Double rete1=675.00*0.003;
+			 String reta=String.valueOf(rete1);
+			 BigDecimal b =new BigDecimal(reta);  
+			 returnValue =b.setScale(2,RoundingMode.HALF_UP).doubleValue();
+		     System.out.println(returnValue);
+		/*	DecimalFormat df=new DecimalFormat(".##");
+		 * 
+			double d=12.025;
+			String st=df.format(d);
+			System.out.println(st);
+			*/
 		}
 }

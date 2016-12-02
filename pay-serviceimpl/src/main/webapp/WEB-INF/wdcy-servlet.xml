@@ -19,6 +19,7 @@
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.paymax.web"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.tclpay"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.yeepay"/>
+    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.channel.unionpay.web"/>
     <!--static resource-->
     <mvc:resources mapping="/index.jsp*" location="/index.jsp"/>
 

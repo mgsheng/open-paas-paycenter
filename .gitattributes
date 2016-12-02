@@ -1082,6 +1082,7 @@ pay-serviceimpl/README.md -text
 pay-serviceimpl/build.gradle -text
 pay-serviceimpl/pom.xml -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/balance/service/UserAccountBalanceServiceImpl.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/SFTPUtils.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/UnifyPayUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/alipay/AliOrderCallbackController.java -text
@@ -1123,6 +1124,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/sign/Request.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxNotifyController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxWapCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/ChannelRateServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/CommonConfig.java -text
@@ -1151,6 +1153,18 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TCLNotifyCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TCLOrderCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/web/TestScanCodeOrder.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/AcpService.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/BaseHttpSSLSocketFactory.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/CertUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/HttpClient.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/LogUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/SDKConfig.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/SDKConstants.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/SDKUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/sdk/SecureUtil.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/web/AutoLoadServlet.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/web/UnionNotifyCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/unionpay/web/UnionPayCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxConfigure.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxHttpUtil.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/wxpay/WxMatrixToImageWriter.java -text
@@ -1223,6 +1237,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/thread/PrnCurr
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/thread/SendLogToServerThread.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/zookeeper/DistributedLock.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/oauth/AccountDownload.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/oauth/FileUploadController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/oauth/OauthSignatureValidateHandler.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/ApiCommonController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderAutoSendController.java -text
@@ -1237,6 +1252,10 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/Unif
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserAccountBalanceController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserOrderQueryController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/UserPayDitchController.java -text
+pay-serviceimpl/src/main/resources/acp_sdk.properties -text
+pay-serviceimpl/src/main/resources/assets/acp_test_enc.cer -text
+pay-serviceimpl/src/main/resources/assets/acp_test_sign.pfx -text
+pay-serviceimpl/src/main/resources/assets/acp_test_verify_sign.cer -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/ChannelRateMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/DictTradePaymentDitchMapper.xml -text
@@ -1289,6 +1308,7 @@ pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payIndex.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payMaxRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/selectPayChannel.jsp -text
+pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/wechat_wap.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/weixinRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/wxCodePay.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/unity/dashboard.jsp -text
@@ -1340,6 +1360,7 @@ pay-serviceimpl/src/main/webapp/images/lakala.jpg -text
 pay-serviceimpl/src/main/webapp/images/licenspic.jpg -text
 pay-serviceimpl/src/main/webapp/images/logo.png -text
 pay-serviceimpl/src/main/webapp/images/logo1.png -text
+pay-serviceimpl/src/main/webapp/images/minsheng.jpg -text
 pay-serviceimpl/src/main/webapp/images/nonghang.jpg -text
 pay-serviceimpl/src/main/webapp/images/open-logo.png -text
 pay-serviceimpl/src/main/webapp/images/open_logo.ico -text
@@ -1365,6 +1386,7 @@ pay-serviceimpl/src/main/webapp/images/wechat/pic/slider/t0192ce72438bf6c5e5.jpg
 pay-serviceimpl/src/main/webapp/images/wechat/pic/slider/t01ee977e94b08987b6.jpg -text
 pay-serviceimpl/src/main/webapp/images/weixin.jpg -text
 pay-serviceimpl/src/main/webapp/images/weixinPay.jpg -text
+pay-serviceimpl/src/main/webapp/images/xingye.jpg -text
 pay-serviceimpl/src/main/webapp/images/yibao.jpg -text
 pay-serviceimpl/src/main/webapp/images/youzheng.jpg -text
 pay-serviceimpl/src/main/webapp/images/zaixian.jpg -text
