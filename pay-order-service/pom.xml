@@ -567,6 +567,11 @@
     <artifactId>disconf-client</artifactId>
     <version>2.6.33</version>
 </dependency>
+<dependency>
+    <groupId>com.jcraft</groupId>
+    <artifactId>jsch</artifactId>
+    <version>0.1.54</version>
+</dependency>
     </dependencies>
 
 
