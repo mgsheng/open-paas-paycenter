@@ -626,7 +626,17 @@
     <artifactId>logback-core</artifactId>
     <version>1.0.13</version>
 </dependency> -->
-
+<!--ftp  -->
+<dependency>
+    <groupId>commons-net</groupId>
+    <artifactId>commons-net</artifactId>
+    <version>3.3</version>
+</dependency>
+<dependency>
+    <groupId>com.jcraft</groupId>
+    <artifactId>jsch</artifactId>
+    <version>0.1.54</version>
+</dependency>
     </dependencies>
 
 
