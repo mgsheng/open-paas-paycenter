@@ -4,7 +4,7 @@
 	<resultMap type="MerchantInfo" id="merchantInfoMap">
 		<id column="ID" property="id" jdbcType="INTEGER" />
 		<result column="MERCHANT_NAME" property="merchantName" jdbcType="VARCHAR" />
-		<result column="STATUS" property="status" jdbcType="DECIMAL" />
+		<result column="STATUS" property="status" jdbcType="INTEGER" />
 		<result column="OPERATER" property="operater" jdbcType="VARCHAR" />
 		<result column="CREATE_DATE" property="createDate" jdbcType="TIMESTAMP" />
 		<result column="NOTIFY_URL" property="notifyUrl" jdbcType="VARCHAR" />

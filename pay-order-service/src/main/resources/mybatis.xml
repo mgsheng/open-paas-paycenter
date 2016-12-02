@@ -11,11 +11,13 @@
     <typeAliases>
         <typeAlias alias="MerchantInfo" type="cn.com.open.pay.order.service.merchant.model.MerchantInfo"/>
         <typeAlias alias="MerchantOrderInfo" type="cn.com.open.pay.order.service.order.model.MerchantOrderInfo"/>
+        <typeAlias alias="PayOrderStatement" type="cn.com.open.pay.order.service.statement.model.PayOrderStatement"/>
     </typeAliases>
 
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml"/>
         <mapper resource="cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml"/>
+         <mapper resource="cc/wdcy/infrastructure/mybatis/PayOrderStatementMapper.xml"/>
     </mappers>
 
 </configuration>

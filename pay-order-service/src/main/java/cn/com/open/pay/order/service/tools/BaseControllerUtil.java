@@ -1,5 +1,6 @@
 package cn.com.open.pay.order.service.tools;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -19,10 +20,29 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.com.open.pay.order.service.web.FileUploadController;
+
 import net.sf.json.JSONObject;
 
 public class BaseControllerUtil {
 	
+	private static String STATEMENT = "statement";
+	/***************************************************************************
+	 * 验证是否为空字符串 去空格 true:是空字符串,false：不是空字符串
+	 * 
+	 * @param str
+	 * @return boolean
+	 */
+	public static boolean isNullString(Object str) {
+		if (str != null && str.toString().trim().length() > 0) {
+			return false;
+		}
+		return true;
+	}
+	 public static String getSignCertPath() {
+			return  BaseControllerUtil.class.getClassLoader().getResource("").getPath()+ File.separator+ STATEMENT ;
+		}
+	 
 	/**
 	 * 
 	 * 检验参数是否为空

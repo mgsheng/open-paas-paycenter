@@ -21,9 +21,50 @@ public class PayserviceDev {
 	private String yeepayCommonReqURL;
 	private String payIndex_url;
 	private String oes_merchantId;
+	private String statement_privateKey_path;
+	private String statement_ip;
+	private String statement_merchant_id;
+	private String statement_port;
+	private String statement_server_path;
+	private String statement_client_path;
 	
 	
-	
+	public String getStatement_server_path() {
+		return statement_server_path;
+	}
+	public void setStatement_server_path(String statement_server_path) {
+		this.statement_server_path = statement_server_path;
+	}
+	public String getStatement_client_path() {
+		return statement_client_path;
+	}
+	public void setStatement_client_path(String statement_client_path) {
+		this.statement_client_path = statement_client_path;
+	}
+	public String getStatement_privateKey_path() {
+		return statement_privateKey_path;
+	}
+	public void setStatement_privateKey_path(String statement_privateKey_path) {
+		this.statement_privateKey_path = statement_privateKey_path;
+	}
+	public String getStatement_ip() {
+		return statement_ip;
+	}
+	public void setStatement_ip(String statement_ip) {
+		this.statement_ip = statement_ip;
+	}
+	public String getStatement_merchant_id() {
+		return statement_merchant_id;
+	}
+	public void setStatement_merchant_id(String statement_merchant_id) {
+		this.statement_merchant_id = statement_merchant_id;
+	}
+	public String getStatement_port() {
+		return statement_port;
+	}
+	public void setStatement_port(String statement_port) {
+		this.statement_port = statement_port;
+	}
 	public String getOes_merchantId() {
 		return oes_merchantId;
 	}

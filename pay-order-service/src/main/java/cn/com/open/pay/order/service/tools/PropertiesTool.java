@@ -13,7 +13,7 @@ public class PropertiesTool {
 	 * @return
 	 */
 	public static Properties getAppProperties(){
-		return getProperties(new File(PropertiesTool.class.getClassLoader().getResource("/spring-oauth-server.properties").getFile()));
+		return getProperties(new File(PropertiesTool.class.getClassLoader().getResource("/pay-order-service.properties").getFile()));
 	}
 	
 	/**

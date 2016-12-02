@@ -121,7 +121,20 @@ public class DateTools {
     	        Date monday = c.getTime();
     	        String preMonday = sdf.format(monday);
     	        return preMonday;
-    	   } 
+    	   }
+    /**
+     * 获取昨天的时间
+     * @param format
+     * @return
+     */
+    public  static String getYesterdayTime(String format) {
+    	  SimpleDateFormat sdf = new SimpleDateFormat(format);
+    	        Calendar c = Calendar.getInstance();  
+    	        c.add(Calendar.DATE, -1);  
+    	        Date monday = c.getTime();
+    	        String preMonday = sdf.format(monday);
+    	        return preMonday;
+    	   }
     /**
      * 获取钱sanshitia的时间
      * @param format

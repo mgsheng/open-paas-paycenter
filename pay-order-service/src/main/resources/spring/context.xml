@@ -18,6 +18,7 @@
     <context:component-scan base-package="cn.com.open.pay.order.service.redis"/>
     <context:component-scan base-package="cn.com.open.pay.order.service.merchant.service"/>
     <context:component-scan base-package="cn.com.open.pay.order.service.order.service"/>
+    <context:component-scan base-package="cn.com.open.pay.order.service.statement.service"/>
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
@@ -175,5 +176,10 @@
             <property name="yeepayCommonReqURL" value="${yeepayCommonReqURL}"></property>
             <property name="payIndex_url" value="${payIndex_url}"></property>
             <property name="oes_merchantId" value="${oes_merchantId}"></property>
+            <property name="statement_ip" value="${statement_ip}"></property>
+            <property name="statement_merchant_id" value="${statement_merchant_id}"></property>
+            <property name="statement_port" value="${statement_port}"></property>
+            <property name="statement_privateKey_path" value="${statement_privateKey_path}"></property>
+             <property name="statement_server_path" value="${statement_server_path}"></property>
         </bean>
 </beans>
