@@ -22,6 +22,15 @@ public interface PayLogName {
 	//TCL回调结束
 	public static String TCL_NOTIFY_END = "tcl_notify_end";
 	
+	//银联同步回调开始
+	public static String UNION_CALLBACK_START = "union_callback_start";
+	//银联同步回调结束
+	public static String UNION_CALLBACK_END = "union_callback_end";
+	//银联异步回调开始
+	public static String UNION_NOTIFY_START = "union_notify_start";
+	//银联异步回调结束
+	public static String UNION_NOTIFY_END = "union_notify_end";
+	
 	//支付宝当面付回调开始
 	public static String ALIFAF_NOTIFY_START = "alifaf_notify_start";
 	//支付宝当面付回调结束
@@ -54,6 +63,10 @@ public interface PayLogName {
 	
 	//拉卡拉页面回调开始
 	public static String PAYMAX_RETURN_START = "paymax_return_start";
+	//拉卡拉页面回调结束
+	public static String PAYMAX_WAP_RETURN_END = "paymax_wap_return_end";
+	//拉卡拉页面回调开始
+	public static String PAYMAX_WAP_RETURN_START = "paymax_wap_return_start";
 	//拉卡拉页面回调结束
 	public static String PAYMAX_RETURN_END = "paymax_return_end";
 	//易宝页面回调开始

@@ -568,7 +568,7 @@ public class HttpTools {
 		}
 	}
 	public static void main(String[] args) {
-		String data="{\"amount\":\"1\",\"appId\":\"10027\",\"channelId\":\"10001\",\"creatTime\":\"2016-07-29 13:37:51\",\"executionTime\":144,\"logName\":\"pay_start\",\"logType\":\"1\",\"merchantId\":\"10001\",\"merchantOrderId\":\"test2016071211221\",\"paymentId\":\"ALIPAY\",\"productDesc\":\"testGoodsDesc\",\"productName\":\"testGoodsName\",\"realAmount\":\"1\",\"serviceName\":\"unifyPay\",\"sourceUid\":\"36133476-3827-4188-AE4A-0B9DBFC6AC64\",\"status\":\"ok\",\"username\":\"中文\"}";
+		String data="{\"amount\":\"1\",\"appId\":\"10027\",\"channelId\":\"10001\",\"creatTime\":\"2016-07-29 13:37:51\",\"executionTime\":144,\"logName\":\"pay_start\",\"logType\":\"1\",\"merchantId\":\"10001\",\"merchantOrderId\":\"test201610311509\",\"paymentId\":\"ALIPAY\",\"productDesc\":\"testGoodsDesc\",\"productName\":\"testGoodsName\",\"realAmount\":\"1\",\"serviceName\":\"unifyPay\",\"sourceUid\":\"36133476-3827-4188-AE4A-0B9DBFC6AC64\",\"status\":\"ok\",\"username\":\"中文\"}";
 		Map<String, String> map = new HashMap<String, String>();
 		map.put("tag", "payservice");
 		map.put("logData", data);
