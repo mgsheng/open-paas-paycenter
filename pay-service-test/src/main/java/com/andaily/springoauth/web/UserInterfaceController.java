@@ -582,7 +582,16 @@ public class UserInterfaceController {
          return "redirect:" + fullUri;
      }
      
-    
+     /**
+      * 
+      * @param model
+      * @return
+      */
+ 	@RequestMapping(value = "testRetrun", method = RequestMethod.GET)
+ 	public String testRetrun(Model model) {
+ 		model.addAttribute("querySerialUri", querySerialUri);
+ 		return "usercenter/test_returnurl";
+ 	}
      
      /** 
       * 发送POST请求 

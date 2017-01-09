@@ -88,7 +88,6 @@
                         <div class="col-sm-10">
                             <input type="text" name="goodsId" id="goodsId" size="50" class="form-control"
                                    ng-model="goodsId"/>
-
                             <p class="help-block">商品Id</p>
                         </div>
                     </div>
@@ -100,7 +99,6 @@
                                    ng-model="goodsName"/>
                                     <p class="help-block">商品名称（必传）</p>
                         </div> 
-                        
                     </div>
                     
                     <div class="form-group">

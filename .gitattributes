@@ -949,6 +949,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/alipay_order_callback.js
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/dynamic_login.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/ehk_order_callback.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/order_manual_send.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/test_returnurl.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_account_downlond.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login_callback.jsp -text
