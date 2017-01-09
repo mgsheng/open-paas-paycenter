@@ -1318,6 +1318,7 @@ pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/errorPayChannel.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payIndex.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payMaxRedirect.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payRedirect.jsp -text
+pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/payReturn.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/selectPayChannel.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/wechat_wap.jsp -text
 pay-serviceimpl/src/main/webapp/WEB-INF/jsp/pay/weixinRedirect.jsp -text

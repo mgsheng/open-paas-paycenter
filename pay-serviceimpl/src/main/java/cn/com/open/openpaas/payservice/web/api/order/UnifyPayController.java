@@ -258,6 +258,8 @@ public class UnifyPayController extends BaseControllerUtil{
    		sParaTemp.put("paymentChannel",paymentChannel);
    		sParaTemp.put("feeType", feeType);
    		sParaTemp.put("clientIp", clientIp);
+   		sParaTemp.put("notifyUrl", notifyUrl);
+   		sParaTemp.put("returnUrl", returnUrl);
    		sParaTemp.put("parameter", parameter);
    		String params=createSign(sParaTemp);
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
@@ -356,7 +358,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setReturnUrl(returnUrl);
 			int paymentTypeId=PaymentType.getTypeByValue(paymentType).getType();
 			merchantOrderInfo.setPaymentId(paymentTypeId);
-			
 			if(!nullEmptyBlankJudge(paymentChannel)){
 				merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
 				if(String.valueOf(Channel.ALI.getValue()).equals(paymentChannel)){
@@ -654,7 +655,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					        	  model.addAttribute("appId", lakalaWebJson.getString("appId"));
 					        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
 					        	  model.addAttribute("nonceStr", lakalaWebJson.getString("nonceStr"));
-					        	  model.addAttribute("package", lakalaWebJson.getString("package"));
+					        	  model.addAttribute("wechatWapPackage", lakalaWebJson.getString("package"));
 					        	  model.addAttribute("signType", lakalaWebJson.getString("signType"));
 					        	  model.addAttribute("paySign", lakalaWebJson.getString("paySign"));
 					        	  return "pay/wechat_wap";
@@ -676,7 +677,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			    		 
 			    	 }
 		     }
-			     
 		     }
 		     else if(String.valueOf(Channel.UPOP.getValue()).equals(paymentChannel)){
 		    	 payServiceLog.setPaySwitch(payTcl);
@@ -992,25 +992,36 @@ public class UnifyPayController extends BaseControllerUtil{
 					        	  formValue=res.get("jsApiParams").toString();
 //					          	 // formValue="{\'appId\':\'wxbdf94d9e022e2d07\',\'timeStamp\':\'1474960493\',\'signType\':\'MD5\',\'package\':\'prepay_id=wx201609271514528c217a70c40323801340\',\'nonceStr\':\'zOa9bo3ZlNyyXmAt\',\'paySign\':\'7AF10A5BC2D82B90D59B82BFA1DD406A\'}";
 					          	    JSONObject lakalaWebJson = JSONObject.fromObject(formValue);
-					          	   /*    SortedMap<String,String> lakalasParaTemp = new TreeMap<String,String>();
+					          	/*     SortedMap<String,String> lakalasParaTemp = new TreeMap<String,String>();
 					        	    lakalasParaTemp.put("appId", lakalaWebJson.getString("appId"));
 					        	    lakalasParaTemp.put("timeStamp",lakalaWebJson.getString("timeStamp"));
 					        	    lakalasParaTemp.put("nonceStr", lakalaWebJson.getString("nonceStr"));
 					        	    lakalasParaTemp.put("package", lakalaWebJson.getString("package"));
 					        	    lakalasParaTemp.put("signType",lakalaWebJson.getString("signType"));
 					        	    lakalasParaTemp.put("paySign", lakalaWebJson.getString("paySign"));
-								    String buf =SendPostMethod.buildRequest(lakalasParaTemp, "post", "ok", returnUrl);
+								    String buf =SendPostMethod.buildRequest(lakalasParaTemp, "post", "ok", dictTradeChannels.getBackurl());
 								    model.addAttribute("res", buf);
 						    	  return "pay/payMaxRedirect";*/
+						          	  model.addAttribute("appId", lakalaWebJson.getString("appId"));
+						        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
+						        	  model.addAttribute("nonceStr", lakalaWebJson.getString("nonceStr"));
+						        	  model.addAttribute("wxpackage", lakalaWebJson.getString("package"));
+						        	  model.addAttribute("signType", lakalaWebJson.getString("signType"));
+						        	  model.addAttribute("paySign", lakalaWebJson.getString("paySign"));
+						        	  model.addAttribute("orderId", merchantOrderInfo.getId());
+						    		 String wechatWapUri=payserviceDev.getServer_host()+"alipay/wechatWap";
+				                	 payServiceLog.setLogName(PayLogName.PAY_END);
+				        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
+				                	 return "redirect:" + wechatWapUri;
 					        	  //测试微信公众号支付流程demo
-					        	  model.addAttribute("appId", lakalaWebJson.getString("appId"));
+						    	  /*    model.addAttribute("appId", lakalaWebJson.getString("appId"));
 					        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
 					        	  model.addAttribute("nonceStr", lakalaWebJson.getString("nonceStr"));
 					        	  model.addAttribute("wxpackage", lakalaWebJson.getString("package"));
 					        	  model.addAttribute("signType", lakalaWebJson.getString("signType"));
 					        	  model.addAttribute("paySign", lakalaWebJson.getString("paySign"));
 					        	  model.addAttribute("orderId", merchantOrderInfo.getId());
-					        	  return "pay/wechat_wap";
+					        	  return "pay/wechat_wap";*/
 					          }else{
 					        	 payServiceLog.setErrorCode("8");
 					 			 payServiceLog.setStatus("error");
@@ -1531,6 +1542,22 @@ public class UnifyPayController extends BaseControllerUtil{
     	   map.put("urlCode", payserviceDev.getServer_host()+"alipay/getCode?urlCode="+urlCode);
     	   writeSuccessJson(response,map);
     	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
+    /**
+     * 跳转到微信公众号页面
+     */
+    @RequestMapping(value = "wechatWap", method = RequestMethod.GET)
+    public void wechatWap(HttpServletRequest request,HttpServletResponse response, Model model){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    	   map.put("status", "ok");
+    	   map.put("appId", request.getParameter("appId"));
+    	   map.put("timeStamp", request.getParameter("timeStamp"));
+    	   map.put("nonceStr",request.getParameter("nonceStr"));
+    	   map.put("package", request.getParameter("wxpackage"));
+    	   map.put("signType", request.getParameter("signType"));
+    	   map.put("paySign", request.getParameter("paySign"));
+    	   writeSuccessJson(response,map);
     	   
     }
     public Integer getPaymentId(String areaCode){

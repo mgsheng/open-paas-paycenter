@@ -171,7 +171,7 @@ public class UnifyPayUtil {
 		    ddf1.setMaximumFractionDigits(2);
 		    String aa= ddf1.format(rete);
 			System.out.println(aa);*/
-			 Double rete1=675.00*0.003;
+			 Double rete1=1650.00*0.0043;
 			 String reta=String.valueOf(rete1);
 			 BigDecimal b =new BigDecimal(reta);  
 			 returnValue =b.setScale(2,RoundingMode.HALF_UP).doubleValue();

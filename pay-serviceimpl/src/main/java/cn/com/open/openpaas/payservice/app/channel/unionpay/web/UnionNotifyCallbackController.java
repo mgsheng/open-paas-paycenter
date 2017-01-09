@@ -148,9 +148,10 @@ public class UnionNotifyCallbackController extends BaseControllerUtil {
 						payserviceDev);
 				String returnUrl = merchantOrderInfo.getNotifyUrl();
 				MerchantInfo merchantInfo = null;
+				merchantInfo = merchantInfoService
+						.findById(merchantOrderInfo.getMerchantId());
 				if (nullEmptyBlankJudge(returnUrl)) {
-					merchantInfo = merchantInfoService
-							.findById(merchantOrderInfo.getMerchantId());
+				
 					returnUrl = merchantInfo.getReturnUrl();
 				}
 				log.info("unionPay notify returnUrl=======================" + returnUrl);

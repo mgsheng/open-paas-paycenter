@@ -151,8 +151,9 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 	         UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 	         String returnUrl=merchantOrderInfo.getReturnUrl();
 	  		MerchantInfo merchantInfo = null;
+	  		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 	  		if(nullEmptyBlankJudge(returnUrl)){
-	  			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+	  		
 	  			returnUrl=merchantInfo.getReturnUrl();
 	  		}
 	  		 String other= dictTradeChannel.getOther();

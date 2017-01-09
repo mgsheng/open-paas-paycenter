@@ -123,8 +123,9 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			isOK = PaymentForOnlineService.verifyCallback(hmac,p1_MerId,r0_Cmd,r1_Code, r2_TrxId,r3_Amt,r4_Cur,r5_Pid,r6_Order,r7_Uid,r8_MP,r9_BType,keyValue);
 			 String returnUrl=merchantOrderInfo.getNotifyUrl();
 		 		MerchantInfo merchantInfo = null;
+		 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 		 		if(nullEmptyBlankJudge(returnUrl)){
-		 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+		 		
 		 			returnUrl=merchantInfo.getReturnUrl();
 		 	}
 			if(isOK) {
@@ -237,8 +238,9 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 				        	  payServiceLog.setStatus("already processed");
 				        	  String returnUrl=merchantOrderInfo.getNotifyUrl();
 						 		MerchantInfo merchantInfo = null;
+						 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 						 		if(nullEmptyBlankJudge(returnUrl)){
-						 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+						 			
 						 			returnUrl=merchantInfo.getReturnUrl();
 						 	     }
 								 //Map<String, String> dataMap=new HashMap<String, String>();
@@ -314,7 +316,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
     public String selectPayChannel(HttpServletRequest request, Model model){
     	  String res = (String) request.getAttribute("res");
     	  model.addAttribute("res", res);
-    	return "pay/payRedirect";
+    	return "pay/payReturn";
     }	
     
 }

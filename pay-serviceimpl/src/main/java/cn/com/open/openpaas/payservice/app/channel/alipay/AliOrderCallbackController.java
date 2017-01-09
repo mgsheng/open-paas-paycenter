@@ -130,8 +130,9 @@ public class AliOrderCallbackController extends BaseControllerUtil {
          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         String returnUrl=merchantOrderInfo.getReturnUrl();
  		MerchantInfo merchantInfo = null;
- 		if(nullEmptyBlankJudge(returnUrl)){
- 			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+ 		String payKey="";
+ 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+ 		if(nullEmptyBlankJudge(returnUrl)&&merchantInfo!=null){
  			returnUrl=merchantInfo.getReturnUrl();
  		}
 		//计算得出通知验证结果
@@ -213,8 +214,8 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 				 {
 	        	  String returnUrl=merchantOrderInfo.getReturnUrl();
 	       		MerchantInfo merchantInfo = null;
+	       		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 	       		if(nullEmptyBlankJudge(returnUrl)){
-	       			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 	       			returnUrl=merchantInfo.getReturnUrl();
 	       		}
 	       	 Double payCharge=0.0;

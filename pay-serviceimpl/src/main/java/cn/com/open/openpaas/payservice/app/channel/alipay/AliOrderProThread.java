@@ -58,8 +58,8 @@ public class AliOrderProThread implements Runnable {
 		long startTime = System.currentTimeMillis();
 		String notifyUrl=merchantOrderInfo.getNotifyUrl();
 		MerchantInfo merchantInfo = null;
+		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 		if(nullEmptyBlankJudge(notifyUrl)){
-			merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 			notifyUrl=merchantInfo.getNotifyUrl();
 		}
 		//拼接发送的加密信息

@@ -62,7 +62,6 @@ public class OauthSignatureValidateHandler {
 	   */
 	  public static boolean validateSignature(String signature,String encryptText, String encryptKey){
 		  
-		  
 		 	try {
 				String result=	HMacSha1.HmacSHA1Encrypt(encryptText,encryptKey);
 		 		//String result=	HMacSha1.HmacSHA1Encrypt("appId=10026&businessType=1&goodsName=测试微专业&merchantId=10001&outTradeNo=M20160720000001&signatureNonce=874714&timestamp=2016-07-21T02:22:15Z&totalFee=1&userId=a0fa5df1-63db-4bb5-9268-118f47b3ef8c&userName=admin@mail.open.com.cn",encryptKey);

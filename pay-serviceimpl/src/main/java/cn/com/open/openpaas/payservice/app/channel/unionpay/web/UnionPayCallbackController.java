@@ -123,8 +123,9 @@ public class UnionPayCallbackController extends BaseControllerUtil {
 
 				String returnUrl = merchantOrderInfo.getNotifyUrl();
 				MerchantInfo merchantInfo = null;
+				merchantInfo = merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 				if (nullEmptyBlankJudge(returnUrl)) {
-					merchantInfo = merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+				
 					returnUrl = merchantInfo.getReturnUrl();
 				}
 				log.info("-----------------------------union---callBack------returnUrl "+returnUrl);
@@ -174,8 +175,9 @@ public class UnionPayCallbackController extends BaseControllerUtil {
 				log.info("-----------------------------union---callBack------merchantOrderInfo is alerdy pay");
 				String returnUrl = merchantOrderInfo.getReturnUrl();
 				MerchantInfo merchantInfo = null;
+				merchantInfo = merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 				if (nullEmptyBlankJudge(returnUrl)) {
-					merchantInfo = merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+				
 					returnUrl = merchantInfo.getReturnUrl();
 				}
 				// 判断该笔订单是否在商户网站中已经做过处理
