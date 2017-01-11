@@ -3,6 +3,8 @@ package cn.com.open.openpaas.payservice.app.channel.yeepay;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -26,7 +28,9 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayConfig;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PayUtil;
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
+import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -61,6 +65,8 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 	 private UserSerialRecordService userSerialRecordService;
 	 @Autowired
 	 private ChannelRateService channelRateService;
+	 @Autowired
+	 private  DictTradeChannelService dictTradeChannelService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -85,12 +91,12 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		String r8_MP      = new String(formatString(request.getParameter("r8_MP")).getBytes("iso-8859-1"),"gbk");// 商户扩展信息
 		String r9_BType   = formatString(request.getParameter("r9_BType"));// 交易结果返回类型
 		String hmac       = formatString(request.getParameter("hmac"));// 签名数据
-		String keyValue   = formatString(Configuration.getInstance().getValue("keyValue")); 
+		
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(r6_Order);
 		log.info("yeepay notify orderId======================="+ r6_Order);
 		log.info("yeepay notify p1_MerId======================="+ p1_MerId);
 		log.info("yeepay notify hmac======================="+ hmac);
-		log.info("yeepay notify keyValue======================="+ keyValue);
+		
 		String 	backMsg="error";
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(r3_Amt);
@@ -103,7 +109,15 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			if(!nullEmptyBlankJudge(r3_Amt)){
 				total_fee=Double.parseDouble(r3_Amt);
 			}
-			
+			String keyValue   ="";
+			 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.YEEPAY_EB.getValue());
+ 		   if(dictTradeChannels!=null){
+ 			    String other= dictTradeChannels.getOther();
+     			Map<String, String> others = new HashMap<String, String>();
+     			others=getPartner(other); 
+     			keyValue=others.get("keyValue"); 
+ 		    }
+     		log.info("yeepay notify keyValue======================="+ keyValue);
 			boolean isOK = false;
 			//添加日志
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
