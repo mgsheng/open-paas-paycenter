@@ -29,6 +29,8 @@ import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlifafUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
+import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayPropetyFactory;
+import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.BusinessType;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaySwitch;
@@ -514,9 +516,13 @@ public class UnifyPayController extends BaseControllerUtil{
 	    		   payServiceLog.setPaySwitch(String.valueOf(merchantOrderInfo.getSourceType()));
 	        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
 	            		//调用支付宝当面付方法  
-	        			AlifafUtil alifafUtil=AlifafUtil.getAlifafUtil();
+	        			//AlifafUtil alifafUtil=AlifafUtil.getAlifafUtil();
 	        			//alifafUtil.setName("zfbinfo.properties");
-	        			String alifafCode=alifafUtil.trade_precreate(merchantOrderInfo, dictTradeChannelService);
+	        			//String alifafCode=alifafUtil.trade_precreate(merchantOrderInfo, dictTradeChannelService);
+	        			
+	        			AlipayUtil alipayUtil=AlipayPropetyFactory.getAlifafUtil(merchantOrderInfo, dictTradeChannelService);
+	        			
+	        			String alifafCode=alipayUtil.trade_precreate(merchantOrderInfo, dictTradeChannelService);
 //	        			alifafUtil.porpertiesName(dictTradeChannelService, "zfbinfo.properties");
 //	        			String alifafCode=alifafUtil.trade_precreate(merchantOrderInfo);
 	        			//String alifafCode=trade_precreate(merchantOrderInfo);
