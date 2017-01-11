@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
+import cn.com.open.openpaas.payservice.app.channel.alipay.AlifafUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
 import cn.com.open.openpaas.payservice.app.channel.alipay.BusinessType;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
@@ -97,23 +98,23 @@ public class UnifyPayController extends BaseControllerUtil{
 	 private UserAccountBalanceService userAccountBalanceService;
 	 
 	 // 支付宝当面付2.0服务
-	    private static AlipayTradeService tradeService;
+	 private static AlipayTradeService tradeService;
 
-	    // 支付宝当面付2.0服务（集成了交易保障接口逻辑）
+	/*    // 支付宝当面付2.0服务（集成了交易保障接口逻辑）
 	    private static AlipayTradeService tradeWithHBService;
 
 	    // 支付宝交易保障接口服务
 	    private static AlipayMonitorService monitorService;
 
 	    static {
-	        /** 一定要在创建AlipayTradeService之前调用Configs.init()设置默认参数
+	        *//** 一定要在创建AlipayTradeService之前调用Configs.init()设置默认参数
 	         *  Configs会读取classpath下的alipayrisk10.properties文件配置信息，如果找不到该文件则确认该文件是否在classpath目录
-	         */
+	         *//*
 	        Configs.init("zfbinfo.properties");
 
-	        /** 使用Configs提供的默认参数
+	        *//** 使用Configs提供的默认参数
 	         *  AlipayTradeService可以使用单例或者为静态成员对象，不需要反复new
-	         */
+	         *//*
 	        tradeService = new AlipayTradeServiceImpl.ClientBuilder().build();
 
 
@@ -121,14 +122,14 @@ public class UnifyPayController extends BaseControllerUtil{
 	        tradeWithHBService = new AlipayTradeWithHBServiceImpl.ClientBuilder().build();
 
 
-	        /** 如果需要在程序中覆盖Configs提供的默认参数, 可以使用ClientBuilder类的setXXX方法修改默认参数 否则使用代码中的默认设置 */
+	        *//** 如果需要在程序中覆盖Configs提供的默认参数, 可以使用ClientBuilder类的setXXX方法修改默认参数 否则使用代码中的默认设置 *//*
 	        monitorService = new AlipayMonitorServiceImpl.ClientBuilder()
 //	                            .setGatewayUrl("http://localhost:7777/gateway.do")
 	                            .setCharset("GBK")
 	                            .setFormat("json")
 	                            .build();
 	    }
-	    
+	    */
 
 	 /**
      * 请求统一支付
@@ -513,7 +514,12 @@ public class UnifyPayController extends BaseControllerUtil{
 	    		   payServiceLog.setPaySwitch(String.valueOf(merchantOrderInfo.getSourceType()));
 	        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
 	            		//调用支付宝当面付方法  
-	        			String alifafCode=trade_precreate(merchantOrderInfo);
+	        			AlifafUtil alifafUtil=AlifafUtil.getAlifafUtil();
+	        			//alifafUtil.setName("zfbinfo.properties");
+	        			String alifafCode=alifafUtil.trade_precreate(merchantOrderInfo, dictTradeChannelService);
+//	        			alifafUtil.porpertiesName(dictTradeChannelService, "zfbinfo.properties");
+//	        			String alifafCode=alifafUtil.trade_precreate(merchantOrderInfo);
+	        			//String alifafCode=trade_precreate(merchantOrderInfo);
 	        			  //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
 	                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
 	                	 fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+alifafCode;
@@ -2034,6 +2040,7 @@ public class UnifyPayController extends BaseControllerUtil{
   	   return returnValue;
     }
    
+    
  // 测试当面付2.0生成支付二维码
     public String trade_precreate(MerchantOrderInfo merchantOrderInfo) {
         // (必填) 商户网站订单系统中唯一订单号，64个字符以内，只能包含字母、数字、下划线，
