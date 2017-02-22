@@ -155,4 +155,17 @@ public class UserLoginController extends BaseControllerUtil {
 		    		user.setUpdatePwdTime(new Date());
 		    		userService.updateUser(user);
 	     }
+	    
+	    /**
+		   * 退出且跳转
+		   * @param request
+		   * @param response
+		   * @param model
+		   * @return
+		   */
+		    @RequestMapping(value = "loginOut")
+			public String loginOut(HttpServletRequest request,HttpServletResponse response,Model model) {
+		    	request.getSession().invalidate();
+		    	return "/index";
+		    }
 }
