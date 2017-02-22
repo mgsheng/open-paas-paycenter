@@ -125,9 +125,10 @@
 
                     if (r) {
                       <%
-                      session.invalidate();
+                      //session.invalidate();
                       %>
-                        location.href = '${pageContext.request.contextPath}/index.jsp';
+                        //location.href = '${pageContext.request.contextPath}/index.jsp';
+                    	location.href = '${pageContext.request.contextPath}/user/loginOut';
                     }
                 });
             });
@@ -151,7 +152,7 @@
         line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
 		<span style="float:right; padding-right:20px;padding-top: 20px;"class="head">
 		
-		           欢迎您<span id="realName"> ${realName}</span> <a href="#" id="editpass">修改密码</a> 
+		           欢迎您<span id="realName"> ${sessionScope.user.realName} ${realName}</span> <a href="#" id="editpass">修改密码</a> 
 			<a href="#" id="loginOut">安全退出</a>
 		</span> 
 		<span style="padding-left:10px; font-size: 16px;  ">
