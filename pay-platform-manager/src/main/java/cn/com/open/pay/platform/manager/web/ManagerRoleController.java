@@ -103,7 +103,9 @@ public class ManagerRoleController  extends BaseControllerUtil {
 				privilegeRoleList.get(i).setStatusName("禁用");
 			}
 			Date createTime = privilegeRole1.getCreateTime();
-			privilegeRole1.setCreate_Time(df.format(createTime));//交易时间
+			if(createTime!=null){
+				privilegeRole1.setCreate_Time(df.format(createTime));//交易时间
+			}
 		}
 		JSONArray jsonArr = JSONArray.fromObject(privilegeRoleList);
 		 JSONObject jsonObjArr = new JSONObject();  
