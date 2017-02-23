@@ -77,6 +77,10 @@
 		)
 	</insert>
 	
+	<select id="findById" resultMap="merchantInfoMap">
+		select * from MERCHANT_INFO where ID = #{merchantId}
+	</select>
+	
 	<select id="findNameById" resultMap="merchantInfoMap">
 		select MERCHANT_NAME from MERCHANT_INFO where ID = #{merchantId}
 	</select>
