@@ -122,10 +122,16 @@
       #{item}  
      </foreach>  
     </select>  
-    
+    <select id="findModuleByRoleIds" resultMap="privilegeModuleMap">
+		SELECT DISTINCT pm.* from privilege_role pr ,privilege_role_details prd ,privilege_module pm
+		where pr.id in
+		<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">  
+      		#{item}  
+     	</foreach> 
+		 and prd.roleId=pr.id and prd.moduleId=pm.id
+    </select>
     
 	<select id="findParentId" resultType="int">
          select count(*) from privilege_module where parent_id = #{parentId}
-         
 	</select>
 </mapper>
