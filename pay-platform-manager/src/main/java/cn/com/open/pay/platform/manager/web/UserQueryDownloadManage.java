@@ -26,10 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
 import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.login.model.User;
-import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.order.model.MerchantOrderInfo;
 import cn.com.open.pay.platform.manager.order.service.MerchantOrderInfoService;
-import cn.com.open.pay.platform.manager.order.service.UserSerialRecordService;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelDictionary;
 import cn.com.open.pay.platform.manager.paychannel.model.PayChannelSwitch;
 import cn.com.open.pay.platform.manager.paychannel.service.PayChannelDictionaryService;
@@ -97,7 +95,8 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 	 */
 	@RequestMapping("queryMerchant")
 	public String queryMerchant(HttpServletRequest request, HttpServletResponse response) {
-
+		Boolean isManager = (Boolean) request.getSession().getAttribute("isManager");
+		User user = (User) request.getSession().getAttribute("user");
 		// 当前第几页
 		String page = request.getParameter("page");
 		// 每页显示的记录数
@@ -118,7 +117,13 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		if (CI != null && !CI.equals("")) {
 			channelId = Integer.parseInt(CI);
 		}
-		String appId = request.getParameter("appId");// 业务类型 字段暂时不确定
+		String appId = null;
+		//若用户为管理员，可查询所有商户的订单
+		if (isManager) {
+			appId = request.getParameter("appId");// 业务类型 字段暂时不确定
+		} else {//不为管理员，查询用户所在商户订单
+			appId = user.getMerchantId();
+		}
 		String source = request.getParameter("source"); // 缴费来源 1、pc端2、移动端
 		int paymentId = 0;
 		String pt = request.getParameter("paymentId"); // 发卡行 字段暂时不确定
@@ -164,7 +169,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		if (sourceType != "") {
 			merchantOrderInfo.setSourceType(Integer.parseInt(sourceType)); // 支付渠道
 		}
-		if (appId != "") {
+		if (appId!=null&&appId != "") {
 			merchantOrderInfo.setMerchantId(Integer.parseInt(appId)); // 业务类型
 		}
 		merchantOrderInfo.setPageSize(pageSize); // 结束条数
@@ -288,9 +293,9 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 			channelId = Integer.parseInt(CI);
 		}
 		String appId = null;
-		if (isManager) {
+		if (isManager) {//若用户为管理员，可查询所有商户的订单
 			appId = request.getParameter("appId");// 业务类型 字段暂时不确定
-		} else {
+		} else {//不为管理员，查询用户所在商户订单
 			appId = user.getMerchantId();
 		}
 
@@ -314,7 +319,7 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		// merchantOrderInfo.setPayStatus(payStatus); //交易状态
 		merchantOrderInfo.setUserName(userName); // 发卡行
 		// merchantOrderInfo.setAppId(appId); //业务类型
-		if (appId != "") {
+		if (appId!=null&&appId != "") {
 			merchantOrderInfo.setMerchantId(Integer.parseInt(appId)); // 业务类型
 		}
 		merchantOrderInfo.setPageSize(pageSize); // 结束条数
