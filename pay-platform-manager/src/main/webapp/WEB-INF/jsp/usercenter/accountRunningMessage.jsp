@@ -38,7 +38,7 @@
 			
 			<td style="text-align: right;">业务类型：</td>
 			<td>
-				<select class="easyui-combobox" data-options="editable:false" id="appId" name="appId" style="width:100%">
+				<select class="easyui-combobox" data-options="editable:false,valueField:'id',textField:'text'" id="appId" name="appId" style="width:100%">
 						
 				</select>
 			</td>
@@ -162,17 +162,16 @@
 		$(document).ready(function(){ 
 					var hy="seven";
 					getDayType(hy);
-					initialise();
-		            loadGrid();  
+		            $.post("${pageContext.request.contextPath}/manage/findAllDepts",
+				            function(data){
+								$('#appId').combobox('loadData',data);
+								if (data.length==1) {
+									$('#appId').combobox('select',data[0].id);
+								}
+			            	}
+		            );
 		});  
 		  
-		function  initialise(){
-			$('#appId').combobox({
-				url:'${pageContext.request.contextPath}/manage/findAllDepts',
-				valueField:'id',
-				textField:'text'
-			});
-		}
 		
 		function getDayType(date) {
 			var input6=getnowtime();
