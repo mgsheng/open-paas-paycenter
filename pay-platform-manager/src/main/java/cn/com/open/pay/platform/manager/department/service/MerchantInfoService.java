@@ -2,9 +2,8 @@ package cn.com.open.pay.platform.manager.department.service;
 
 import java.util.List;
 
-import cn.com.open.pay.platform.manager.department.model.Department;
+
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
-import cn.com.open.pay.platform.manager.login.model.User;
 /**
  * 商户管理
  * @author 
@@ -53,6 +52,6 @@ public interface MerchantInfoService {
 
 	public MerchantInfo findNameById(Integer merchantId);
 	
-	
+	MerchantInfo findById(Integer merchantId);
 	
 }
