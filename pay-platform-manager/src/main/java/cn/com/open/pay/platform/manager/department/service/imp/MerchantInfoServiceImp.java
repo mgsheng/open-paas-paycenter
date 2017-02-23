@@ -5,14 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import cn.com.open.pay.platform.manager.department.model.Department;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
-import cn.com.open.pay.platform.manager.department.service.ManagerDepartmentService;
 import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
-import cn.com.open.pay.platform.manager.infrastructure.repository.ManagerDepartmentRepository;
 import cn.com.open.pay.platform.manager.infrastructure.repository.MerchantInfoRepository;
-import cn.com.open.pay.platform.manager.infrastructure.repository.UserRepository;
-import cn.com.open.pay.platform.manager.login.model.User;
 /**
  * 部门管理
  * @author 
@@ -20,13 +15,10 @@ import cn.com.open.pay.platform.manager.login.model.User;
  */
 @Service("MerchantInfoService")
 public class MerchantInfoServiceImp implements  MerchantInfoService{
-//	@Autowired
-//	private ManagerDepartmentRepository managerDepartmentRepository;
 	
 	@Autowired
 	private MerchantInfoRepository merchantInfoRepository;
-	@Autowired
-	private UserRepository UserRepository;
+	
 	
 	
 	/**
@@ -103,6 +95,11 @@ public class MerchantInfoServiceImp implements  MerchantInfoService{
 	public List<MerchantInfo> findMerchantNamesAll() {
 		// TODO Auto-generated method stub
 		return merchantInfoRepository.findMerchantNamesAll();
+	}
+
+	@Override
+	public MerchantInfo findById(Integer merchantId) {
+		return merchantInfoRepository.findById(merchantId);
 	}
 	
 	
