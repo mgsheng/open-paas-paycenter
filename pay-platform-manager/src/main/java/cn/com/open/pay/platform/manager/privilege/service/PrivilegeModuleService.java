@@ -2,6 +2,8 @@ package cn.com.open.pay.platform.manager.privilege.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegePublic;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRoleDetails;
@@ -18,5 +20,6 @@ public interface PrivilegeModuleService {
 	List<PrivilegeModule> findModuleByIds(List<Integer> ids);
 	List<TreeNode> getDepartmentTree(List<PrivilegeRoleDetails> privilegeRoleDetailslist);
 	List<TreeNode> getDepartmentTree2(List<PrivilegePublic> privilegeRoleDetailslist);
-    
+	List<PrivilegeModule> findModuleByRoleIds(List<Integer> roleIds);
+	List<PrivilegeModule> findAllModules();
 }
