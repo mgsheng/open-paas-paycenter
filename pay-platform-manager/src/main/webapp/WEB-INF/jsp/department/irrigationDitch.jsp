@@ -72,9 +72,7 @@
 		</thead>
 	</table>
 	<div id="tb" style="padding:2px 5px;">
-	   <span style="margin-left: 75%;">
-		名称: 
-		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	   <span style="margin-left: 90%;">
 		<a href="#" class="easyui-linkbutton" iconCls="icon-add" plain="true" id="add"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-edit" plain="true" id="edit" onclick="editMessage();"></a>
 		<a href="#" class="easyui-linkbutton" iconCls="icon-cut" plain="true" id="delete" onclick="removeit();"></a>
