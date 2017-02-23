@@ -19,4 +19,5 @@ public interface PrivilegeModuleRepository extends Repository {
     List<PrivilegeModule> findAllModules();
     List<PrivilegeModule> findModuleByIds(@Param("ids")List<Integer> ids);
     int findParentId(int parentId);
+    List<PrivilegeModule> findModuleByRoleIds(@Param("roleIds")List<Integer> roleIds);
 }
