@@ -294,18 +294,18 @@
 	   				            	if(this.resources!=null && this.resources!=""){
 	   				            		var resId=this.resources.split(",");
 	   				            		for(var i=0;i<resId.length;i++){
-	   				            			node = zTree.getNodeByParam("searchId",("m"+this.moduleId+"r"+resId[i]));
-	   				            			if(node!=null){
-	   											if(!node.isParent){
-	   												zTree.checkNode(node,true,true);
-	   											}
-	   										}
+	   				            			node =  $('#deptree1').tree("find",resId[i]);
+		   				            		if(node!=null){
+			   				            		$('#deptree1').tree('check', node.target);
+			   				            		expand(node);//展开相应菜单
+		   				            		}	   										
 	   				            		}
 	   				            	}else{
-	   				            		node = zTree.getNodeByParam("searchId",("m"+this.moduleId));
+	   				            		node =  $('#deptree1').tree("find",this.moduleId);
 	   				            		if(node!=null){
-	   										zTree.checkNode(node,true,true);
-	   									}
+		   				            		$('#deptree1').tree('check', node.target);
+		   				            		expand(node);//展开相应菜单
+	   				            		}	   				            		
 	   				            	}
 	   							});
 	   						}
@@ -333,6 +333,13 @@
    			}
    		}
 		
+        function expand(node){
+        	$('#deptree1').tree('expandTo', node.target);
+        	if($('#deptree1').tree('getChildren', node.target)!=null){
+        		$('#deptree1').tree('expand', node.target);
+        	}
+        }
+        
 		function removeit(){
 		 var name=$("#name").val();
 		var row = $('#dg').datagrid('getSelected');
