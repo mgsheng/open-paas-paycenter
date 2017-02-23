@@ -2,7 +2,6 @@ package cn.com.open.pay.platform.manager.privilege.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 
