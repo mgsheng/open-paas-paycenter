@@ -173,6 +173,14 @@
 		}
 		function clearForm(){
 			$('#ff').form('clear');
+			 $.post("${pageContext.request.contextPath}/manage/findAllDepts",
+			            function(data){
+							$('#appId').combobox('loadData',data);
+							if (data.length==1) {
+								$('#appId').combobox('select',data[0].id);
+							}
+		            	}
+	            );
 		}
 	
 		//页面加载  
