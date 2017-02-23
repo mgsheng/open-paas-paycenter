@@ -48,6 +48,10 @@ public class PrivilegeRoleServiceImpl implements PrivilegeRoleService {
 			privilegeRoleRepository.updatePrivilegeRole(privilegeRole);
 			
 		}
+		@Override
+		public List<PrivilegeRole> findByRoleIds(List<Integer> roleIds) {
+			return privilegeRoleRepository.findByRoleIds(roleIds);
+		}
 		
 
 }
