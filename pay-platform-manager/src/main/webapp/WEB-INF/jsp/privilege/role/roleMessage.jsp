@@ -257,14 +257,22 @@
 		     $('#add').click(function() {
 		    	 document.getElementById("resourceName").value=""; 
 		    	 document.getElementById("id").value=""; 
-                $('#w').window('open');
+		    	 clearChoose();
+                 $('#w').window('open');
             });
             $('#btnEp').click(function() {
             	serverUpdate();
             });
 			$('#btnCancel').click(function(){closePwd();});
-		    });
-		  
+		  });
+	     //清空树选中节点并收起
+	   	function clearChoose(){  
+	   	    $('#deptree1').tree('collapseAll');
+	   	    var node = $('#deptree1').tree('getChecked', ['checked','checked']);
+	       	for(var i = 0;i<node.length;i++){
+	          		$('#deptree1').tree('uncheck', node[i].target);
+	       	}
+	   	}  
         function getSelected(){
 			var row = $('#dg').datagrid('getSelected');
 			if (row){
@@ -273,6 +281,7 @@
 		}
         
         function editMessage(){
+        	clearChoose();
    			var row = $('#dg').datagrid('getSelected');
 	   		if(row==null){
 	   			msgShow('系统提示', '请选中要修改的数据', 'info');
