@@ -48,7 +48,7 @@
 			</td>
 			<td style="text-align: right;">业务类型：</td>
 			<td>
-				<select class="easyui-combobox" data-options="editable:false,prompt:'全部'"  id="appId" name="appId" style="width:100%">
+				<select class="easyui-combobox"  data-options="editable:false,valueField:'id',textField:'text'"  id="appId" name="appId" style="width:100%">
 				</select>
 			</td>
 			
@@ -350,6 +350,14 @@
 					var hy="ninety";
 					getDayType(hy);
 		            loadSelect();
+		            $.post("${pageContext.request.contextPath}/manage/findAllDepts",
+				            function(data){
+								$('#appId').combobox('loadData',data);
+								if (data.length==1) {
+									$('#appId').combobox('select',data[0].id);
+								}
+			            	}
+		            );
 		            
 		});  
 		
@@ -360,11 +368,7 @@
 				textField:'text'
 			});
 		
-			$('#appId').combobox({
-				url:'${pageContext.request.contextPath}/manage/findAllDepts',
-				valueField:'id',
-				textField:'text'
-			});
+			
 			
 			$('#channelId').combobox({
 				url:'${pageContext.request.contextPath}/manage/findAllPayChannel',
