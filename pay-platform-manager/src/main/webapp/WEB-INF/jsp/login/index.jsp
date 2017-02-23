@@ -58,6 +58,47 @@
 										   {"menuid":"33","menuname":"日志管理","icon":"icon-role","url":"${pageContext.request.contextPath}/privilegeLog/privilegeLog"}			]
 						}
 				]};
+	//初始化左侧
+	 function InitLeftMenu(data) {
+	 	$("#nav").accordion({animate:false});
+
+	     $.each(data, function(i, n) {
+	 		var menulist ='';
+	 		menulist +='<ul>';
+	         $.each(n.menus, function(j, o) {
+	 			menulist += '<li><div><a ref="'+o.id+'" href="#" rel="' + o.url + '" ><span class="icon '+o.icon+'" >&nbsp;</span><span class="nav">' + o.name + '</span></a></div></li> ';
+	         })
+	 		menulist += '</ul>';
+
+	 		$('#nav').accordion('add', {
+	             title: n.name,
+	             content: menulist,
+	             iconCls: 'icon ' + n.icon
+	         });
+
+	     });
+
+	 	$('.easyui-accordion li a').click(function(){
+	 		var tabTitle = $(this).children('.nav').text();
+
+	 		var url = '${pageContext.request.contextPath}'+$(this).attr("rel");
+	 		var menuid = $(this).attr("ref");
+	 		var icon = getIcon(menuid,icon);
+
+	 		addTab(tabTitle,url,icon);
+	 		$('.easyui-accordion li div').removeClass("selected");
+	 		$(this).parent().addClass("selected");
+	 	}).hover(function(){
+	 		$(this).parent().addClass("hover");
+	 	},function(){
+	 		$(this).parent().removeClass("hover");
+	 	});
+
+	 	//选中第一个
+	 	var panels = $('#nav').accordion('panels');
+	 	var t = panels[0].panel('options').title;
+	     $('#nav').accordion('select', t);
+	 }
         //设置登录窗口
         function openPwd() {
             $('#w').window({
@@ -105,9 +146,18 @@
             });
             
         }
-
+		
         $(function() {
-
+        	var data=${menu};
+        	if (data!=null) {
+				if (data.menus.length>0) {
+					InitLeftMenu(data.menus);
+				}else {
+					alert("没有相应菜单");
+				}
+			}else {
+				alert("没有相应菜单");
+			}
             openPwd();
 
             $('#editpass').click(function() {
@@ -122,12 +172,7 @@
 
             $('#loginOut').click(function() {
                 $.messager.confirm('系统提示', '您确定要退出本次登录吗?', function(r) {
-
                     if (r) {
-                      <%
-                      //session.invalidate();
-                      %>
-                        //location.href = '${pageContext.request.contextPath}/index.jsp';
                     	location.href = '${pageContext.request.contextPath}/user/loginOut';
                     }
                 });
