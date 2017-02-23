@@ -238,5 +238,13 @@ public class PrivilegeModuleServiceImpl implements PrivilegeModuleService {
 		}
 		return node;
 	}
+	@Override
+	public List<PrivilegeModule> findModuleByRoleIds(List<Integer> roleIds) {
+		return privilegeModuleRepository.findModuleByRoleIds(roleIds);
+	}
+	@Override
+	public List<PrivilegeModule> findAllModules() {
+		return privilegeModuleRepository.findAllModules();
+	}
     
 }
