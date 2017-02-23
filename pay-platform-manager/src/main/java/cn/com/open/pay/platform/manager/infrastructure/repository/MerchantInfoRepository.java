@@ -2,6 +2,7 @@ package cn.com.open.pay.platform.manager.infrastructure.repository;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import cn.com.open.pay.platform.manager.department.model.Department;
@@ -54,6 +55,6 @@ public interface MerchantInfoRepository extends Repository {
 
 	public MerchantInfo findNameById(Integer merchantId);
 	
-	
+	MerchantInfo findById(@Param("merchantId")Integer merchantId);
 	
 }
