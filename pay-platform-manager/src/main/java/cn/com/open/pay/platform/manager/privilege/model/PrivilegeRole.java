@@ -20,7 +20,16 @@ public class PrivilegeRole implements Serializable {
 	private Integer pageSize;
 	String statusName;
 	String create_Time;
+	private int roleType;
+
 	
+	public int getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(int roleType) {
+		this.roleType = roleType;
+	}
 
 	public int getId() {
 		return id;
