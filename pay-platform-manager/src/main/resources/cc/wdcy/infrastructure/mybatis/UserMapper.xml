@@ -36,7 +36,7 @@
 		<result property="deptID" column="deptID" />
 		<result property="deptName" column="deptName" />
 		<result property="role" column="role" />
-		
+		<result property="merchantId" column="merchant_id" />
 		<!-- <collection property="privileges" column="id" select="findPrivilegesByUserId" 
 			ofType="Privilege"/> -->
 	</resultMap>
@@ -69,7 +69,8 @@
 		user_state,
 		deptID,
 		deptName,
-		role
+		role,
+		merchant_id
 	</sql>
 	
 	<!-- 授权用户角色 -->
