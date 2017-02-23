@@ -2,6 +2,8 @@ package cn.com.open.pay.platform.manager.privilege.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
 
 
@@ -20,5 +22,7 @@ public interface PrivilegeRoleService {
 	void deletePrivilegeRole(int parseInt);
 
 	void updatePrivilegeRole(PrivilegeRole privilegeRole);
+	
+	List<PrivilegeRole> findByRoleIds(List<Integer> roleIds);
     
 }
