@@ -42,7 +42,7 @@
         <init-param>
         	<!-- 项目uri-->
             <param-name>serverUri</param-name>
-            <param-value>/privilege-demo/</param-value>
+            <param-value>/pay-platform-manager/</param-value>
         </init-param>
 	</filter>
 	<filter-mapping>
