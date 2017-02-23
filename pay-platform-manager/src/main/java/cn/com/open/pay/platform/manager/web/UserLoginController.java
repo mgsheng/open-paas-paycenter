@@ -17,14 +17,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import cn.com.open.pay.platform.manager.dev.PayManagerDev;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.login.service.UserService;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeModule;
 import cn.com.open.pay.platform.manager.privilege.model.PrivilegeRole;
-import cn.com.open.pay.platform.manager.privilege.service.ManagerService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeModuleService;
-import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleDetailsService;
 import cn.com.open.pay.platform.manager.privilege.service.PrivilegeRoleService;
 import cn.com.open.pay.platform.manager.tools.BaseControllerUtil;
 import cn.com.open.pay.platform.manager.tools.WebUtils;
