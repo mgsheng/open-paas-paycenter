@@ -6,6 +6,7 @@
 		<result column="name" property="name" jdbcType="VARCHAR" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="role_type" property="roleType" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 	  name,
@@ -78,4 +79,10 @@
 		</if>
 		where id = #{id}
 	</update>
+	<select id="findByRoleIds" resultMap="privilegeRoleMap">
+		select * from privilege_role where id in
+			<foreach item="item" index="index" collection="roleIds" open="(" separator="," close=")">  
+      		#{item}  
+     	</foreach> 
+	</select>
 </mapper>
