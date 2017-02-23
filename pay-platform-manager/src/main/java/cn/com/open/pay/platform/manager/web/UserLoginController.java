@@ -141,7 +141,7 @@ public class UserLoginController extends BaseControllerUtil {
 				}
 				// 构建菜单json数据
 				JSONArray menuArray = treeMenuList(moduleList, 0);
-				Map<String, Object> map = new HashMap<>();
+				Map<String, Object> map = new HashMap<String, Object>();
 				map.put("menus", menuArray);
 				model.addAttribute("menu", JSONObject.fromObject(map));
 			}
