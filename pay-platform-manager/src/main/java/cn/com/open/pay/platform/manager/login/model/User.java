@@ -68,6 +68,7 @@ public class User extends AbstractDomain {
     private Integer deptID;//所属部门ID
     private String deptName;//所属部门名称
     private String role;//所属角色
+    private String merchantId;
     private Integer pageSize;//每页的显示条数
     private Integer startRow;//每页的开始记录
    /* private List<Privilege> privileges = new ArrayList<Privilege>();*/
@@ -134,7 +135,15 @@ public class User extends AbstractDomain {
 		}
     }
     
-    /**
+    public String getMerchantId() {
+		return merchantId;
+	}
+
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+
+	/**
      * 验证密码是否正确
      * @param password
      * @return
