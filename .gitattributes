@@ -868,6 +868,7 @@ pay-service-message/target/classes/emailtemplate/resetpassword.html -text
 pay-service-message/target/classes/log4j.properties -text
 pay-service-message/target/classes/logging.properties -text
 pay-service-message/target/classes/mybatis.xml -text
+pay-service-message/target/classes/pay-service-message.properties -text
 pay-service-message/target/classes/spring/appCtx-disconf.xml -text
 pay-service-message/target/classes/spring/context.xml -text
 pay-service-message/target/classes/spring/job.xml -text
