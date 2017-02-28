@@ -139,7 +139,6 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 		 		MerchantInfo merchantInfo = null;
 		 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 		 		if(nullEmptyBlankJudge(returnUrl)){
-		 		
 		 			returnUrl=merchantInfo.getReturnUrl();
 		 	}
 			if(isOK) {

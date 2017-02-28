@@ -81,7 +81,7 @@ import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
 import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
 
 /**
- * 
+ * BANK_CARD-B2C(易慧金)
  */
 @Controller
 @RequestMapping("/alipay/")
@@ -217,10 +217,14 @@ public class UnifyPayController extends BaseControllerUtil{
     	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         if(!paraMandatoryCheck(Arrays.asList(outTradeNo,userId,merchantId,goodsName,totalFee))){
         	//paraMandaChkAndReturn(1, response,"必传参数中有空值");
+        	if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
+        	}
         	payServiceLog.setErrorCode("1");
         	payServiceLog.setStatus("error");
         	payServiceLog.setLogName(PayLogName.PAY_END);
         	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+        	
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
         }
         //判断用户是否存在
@@ -234,6 +238,9 @@ public class UnifyPayController extends BaseControllerUtil{
     		payServiceLog.setStatus("error");
     		payServiceLog.setLogName(PayLogName.PAY_END);
     		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+    		if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
+        	}
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
         }
     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
@@ -271,6 +278,9 @@ public class UnifyPayController extends BaseControllerUtil{
    	
 		if(!hmacSHA1Verification){
 			//paraMandaChkAndReturn(3, response,"认证失败");
+			if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
+        	}
 			payServiceLog.setErrorCode("3");
 			payServiceLog.setStatus("error");
 			payServiceLog.setLogName(PayLogName.PAY_END);
@@ -279,11 +289,15 @@ public class UnifyPayController extends BaseControllerUtil{
 		} 
     	
         if(!StringTool.isNumeric(totalFee)){
+        	if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
+        	}
         	payServiceLog.setErrorCode("4");
         	payServiceLog.setStatus("error");
         	payServiceLog.setLogName(PayLogName.PAY_END);
         	//paraMandaChkAndReturn(3, response,"订单金额格式有误");
         	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+        	
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
         }
       /*  if(!("CNY").equals(feeType)){
@@ -294,6 +308,9 @@ public class UnifyPayController extends BaseControllerUtil{
        Boolean payType=validatePayType(paymentChannel,paymentType);
         if(!payType){
         	//paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
+        	if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
+        	}
         	payServiceLog.setErrorCode("5");
         	payServiceLog.setStatus("error");
         	payServiceLog.setLogName(PayLogName.PAY_END);
@@ -335,6 +352,9 @@ public class UnifyPayController extends BaseControllerUtil{
 			payEbank=getBankSwitch(paymentType, bank_map);*/
 				//订单处理中或者订单处理失败
 				//paraMandaChkAndReturn(3, response,"认证失败");
+			if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
+        	}
 				payServiceLog.setErrorCode("10");
 				payServiceLog.setStatus("error");
 				payServiceLog.setLogName(PayLogName.PAY_END);
@@ -379,8 +399,10 @@ public class UnifyPayController extends BaseControllerUtil{
 					merchantOrderInfo.setSourceType(Integer.parseInt(wechat_wap));	
 				}else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(PaySwitch.PAYMAX.getValue());	
-				}else if(String.valueOf(Channel.YEEPAY.getValue()).equals(paymentChannel)){
-					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
+				}else if(String.valueOf(Channel.EHK_BANK.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.EHKING.getValue());	
+				}else if(String.valueOf(Channel.EHK_WEIXIN_PAY.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.EHKING.getValue());	
 				}else if(String.valueOf(Channel.YEEPAY_EB.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
 				}else if(String.valueOf(Channel.ALIFAF.getValue()).equals(paymentChannel)){
@@ -580,20 +602,23 @@ public class UnifyPayController extends BaseControllerUtil{
 		    		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 		          		 return "redirect:" + fullUri;
 				    	 }
-				     	}else if(String.valueOf(PaySwitch.YEEPAY.getValue()).equals(payWx)){
+				     	}else if(String.valueOf(PaySwitch.EHKING.getValue()).equals(payWx)){
 						   //易宝微信扫码
-				     		Map <String,Object> map=new HashMap<String, Object>();
-						  	map.put("name", merchantOrderInfo.getMerchantProductName());
-						  	map.put("quantity", 1);
-						  	String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
-						  	map.put("amount",amount);
-						  	String productDetails=JSONObject.fromObject(map).toString();
-						  	model.addAttribute("productDetails","["+productDetails+"]");
-						  	model.addAttribute("id", merchantOrderInfo.getId());
-						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
-						  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
-						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
-				     	
+				     		 //易汇金扫码支付
+					    	 // merchantId:120140804#orderCurrency:CNY#paymentModeCode:BANK_CARD-B2C#clientIp:127.0.0.1#timeout:10
+								 Map <String,Object> map=new HashMap<String, Object>();
+								map.put("name", merchantOrderInfo.getMerchantProductName());
+								map.put("quantity", 1);
+								String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+								map.put("amount",amount);
+								String productDetails=JSONObject.fromObject(map).toString();
+								model.addAttribute("productDetails","["+productDetails+"]");
+								model.addAttribute("id", merchantOrderInfo.getId());
+								model.addAttribute("clientIp", merchantOrderInfo.getIp());
+								model.addAttribute("paymentType", "EHK_WEIXIN_PAY");
+								model.addAttribute("merid", merchantOrderInfo.getMerchantId());
+								model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
+								return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
 				     	}  
 		    	 }
 		     }
@@ -672,20 +697,19 @@ public class UnifyPayController extends BaseControllerUtil{
 					        	  model.addAttribute("paySign", lakalaWebJson.getString("paySign"));
 					        	  return "pay/wechat_wap";
 					          }else{
-					        	 payServiceLog.setErrorCode("8");
 					 			 payServiceLog.setStatus("error");
 					 			 String failureMsg=res.get("failureMsg").toString();
 					 			 String failureCode=res.get("failureCode").toString();
 					 			 payServiceLog.setLogName(PayLogName.PAY_END);
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 	         return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+					 			return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
 					      } 
 		    	  }else{
 			    		 payServiceLog.setErrorCode("9");
 			 			 payServiceLog.setStatus("error");
 			 			 payServiceLog.setLogName(PayLogName.PAY_END);
 			 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			 	         return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8";
+			 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"9";
 			    		 
 			    	 }
 		     }
@@ -715,7 +739,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			     }
 		    	 else if(String.valueOf(PaySwitch.UNIONPAY.getValue()).equals(payTcl)){
 			     //银联网关支付
-		    		//前台页面传过来的
+		    		//前台页面传过来的 
 		    		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.UPOP.getValue());
 		    		 if(dictTradeChannels!=null){
 		    				String other= dictTradeChannels.getOther();
@@ -892,6 +916,23 @@ public class UnifyPayController extends BaseControllerUtil{
 				    		 
 				    	 }
 				     
+				  }  else if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.EHKING.getValue()).equals(payEbank)){
+					  //易汇金直连银行
+					  	Map <String,Object> map=new HashMap<String, Object>();
+					  	map.put("name", merchantOrderInfo.getMerchantProductName());
+					  	map.put("quantity", 1);
+					  	String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+					  	map.put("amount",amount);
+					  	String productDetails=JSONObject.fromObject(map).toString();
+					  	model.addAttribute("productDetails","["+productDetails+"]");
+					  	model.addAttribute("id", merchantOrderInfo.getId());
+					  	String newpaymentType=getEhkbankCode(paymentType);
+					  	model.addAttribute("paymentType", newpaymentType);
+					  	model.addAttribute("clientIp", merchantOrderInfo.getIp());
+					  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
+					  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
+					  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
+				     
 				  }
 		      }else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
 		    	  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
@@ -1041,20 +1082,21 @@ public class UnifyPayController extends BaseControllerUtil{
 					 			 String failureCode=res.get("failureCode").toString();
 					 			 payServiceLog.setLogName(PayLogName.PAY_END);
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 	         return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
 		    	      }
 		    	  }else{
 			    		 payServiceLog.setErrorCode("9");
 			 			 payServiceLog.setStatus("error");
 			 			 payServiceLog.setLogName(PayLogName.PAY_END);
 			 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			 	         return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8";
+			 	         return "redirect:"+payserviceDev.getServer_host()+"?outTradeNo="+outTradeNo+"&errorCode="+"9";
 			    		 
 			    	 }
 			     }
-		      else if(String.valueOf(Channel.YEEPAY.getValue()).equals(paymentChannel)){
-			    	 //易宝扫码支付
-			    	 if(PaymentType.YEEPAY_EHK.getValue().equals(paymentType)){
+		      else if(String.valueOf(Channel.EHK_WEIXIN_PAY.getValue()).equals(paymentChannel)){
+			    	 //易汇金扫码支付
+		    	 // merchantId:120140804#orderCurrency:CNY#paymentModeCode:BANK_CARD-B2C#clientIp:127.0.0.1#timeout:10
+			    	 if(PaymentType.EHK_WEIXIN_PAY.getValue().equals(paymentType)){
 						  	Map <String,Object> map=new HashMap<String, Object>();
 						  	map.put("name", merchantOrderInfo.getMerchantProductName());
 						  	map.put("quantity", 1);
@@ -1063,11 +1105,32 @@ public class UnifyPayController extends BaseControllerUtil{
 						  	String productDetails=JSONObject.fromObject(map).toString();
 						  	model.addAttribute("productDetails","["+productDetails+"]");
 						  	model.addAttribute("id", merchantOrderInfo.getId());
+						  	model.addAttribute("clientIp", merchantOrderInfo.getIp());
+						  	model.addAttribute("paymentType", "EHK_WEIXIN_PAY");
 						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
 						  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
 						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
 			    	 }
-			     }else if(String.valueOf(Channel.YEEPAY_EB.getValue()).equals(paymentChannel)){
+			     }
+		      else if(String.valueOf(Channel.EHK_BANK.getValue()).equals(paymentChannel)){
+			    	 if(PaymentType.EHK_BANK.getValue().equals(paymentType)){
+			    		 //易汇金收银台
+						  	Map <String,Object> map=new HashMap<String, Object>();
+						  	map.put("name", merchantOrderInfo.getMerchantProductName());
+						  	map.put("quantity", 1);
+						  	String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+						  	map.put("amount",amount);
+						  	String productDetails=JSONObject.fromObject(map).toString();
+						  	model.addAttribute("productDetails","["+productDetails+"]");
+						  	model.addAttribute("id", merchantOrderInfo.getId());
+						  	model.addAttribute("paymentType", "EHK_BANK");
+						  	model.addAttribute("clientIp", merchantOrderInfo.getIp());						 
+						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
+						  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
+						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
+			    	 }
+			     }
+		      else if(String.valueOf(Channel.YEEPAY_EB.getValue()).equals(paymentChannel)){
 			    	 if(PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
 						  //易宝直连银行
 					    		totalFee=AmountUtil.changeF2Y(totalFee);
@@ -1078,7 +1141,7 @@ public class UnifyPayController extends BaseControllerUtil{
 							     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
 				         		 return "pay/payRedirect";
 			    	 }
-			     }
+			  }
 		}
 		  
        	  return "redirect:" + fullUri;
@@ -1389,6 +1452,59 @@ public class UnifyPayController extends BaseControllerUtil{
 	   }
 	   return returnValue;
    }
+   
+   /**
+    * 返回易汇金银行编码
+    * @param paymentType
+    * @return
+    */
+   private String getEhkbankCode(String paymentType){
+	   String returnValue="";
+	   if(!nullEmptyBlankJudge(paymentType)){
+		if(PaymentType.PSBC.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-POST-P2P";
+ 		 }else if(PaymentType.CMBC.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-CMBC-P2P";
+		 }else if(PaymentType.BOB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-BCCB-P2P";
+		 }
+		 else if(PaymentType.CMB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-CMBCHINA-P2P";
+		 }
+		 else if(PaymentType.SPDB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-SPDB-P2P";
+		 }
+		 else if(PaymentType.CIB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-CIB-P2P";
+		 }
+		 else if(PaymentType.ABC.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-ABC-P2P";
+		 }
+		 else if(PaymentType.CGB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-GDB-P2P";
+		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-ICBC-P2P";
+		 }
+		 else if(PaymentType.BOC.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-BOC-P2P";
+		 }
+		 else if(PaymentType.BCOM.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-BOCO-P2P";
+		 }
+		 else if(PaymentType.CCB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-CCB-P2P";
+		 } else if(PaymentType.PAB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-PINGANBANK-P2P";
+		 } else if(PaymentType.CEB.getValue().equals(paymentType)){
+			   returnValue="BANK_CARD-B2C-CEB-P2P";
+		 }else{
+			 returnValue=paymentType;
+		 }
+	   }else{
+		   returnValue="";  
+	   }
+	   return returnValue;
+   }
     public Boolean validatePayType(String paymentChannel,String paymentType){
     	Boolean returnValue=false;
     	if(nullEmptyBlankJudge(paymentChannel)&&nullEmptyBlankJudge(paymentType)){
@@ -1435,13 +1551,20 @@ public class UnifyPayController extends BaseControllerUtil{
           	 }else{
           		 returnValue=false; 
           	 }
-       	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY.getValue()))){
-    		if(paymentType!=null&&PaymentType.YEEPAY_EHK.getValue().equals(paymentType)){
+       	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_WEIXIN_PAY.getValue()))){
+    		if(paymentType!=null&&PaymentType.EHK_WEIXIN_PAY.getValue().equals(paymentType)){
          		 returnValue=true;
          	 }else{
          		 returnValue=false; 
          	 }
-      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX.getValue()))){
+      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_BANK.getValue()))){
+    		if((paymentType!=null&&PaymentType.EHK_BANK.getValue().equals(paymentType))){
+        		 returnValue=true;
+        	 }else{
+        		 returnValue=false; 
+        	 }
+     	}
+       	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX.getValue()))){
     		 if(paymentType!=null&&PaymentType.PAYMAX.getValue().equals(paymentType)){
          		 returnValue=true;
          	 }else{
@@ -1518,6 +1641,49 @@ public class UnifyPayController extends BaseControllerUtil{
     	model.addAttribute("errorMsg", errorMsg);
     	return "pay/errorPayChannel";
     }	
+    
+    /**
+     * 跳转到wxpay页面
+     */
+    @RequestMapping(value = "wxpay/errorPayChannel", method = RequestMethod.GET)
+    public void wxErrorPayChannel(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	String urlCode=request.getParameter("urlCode");
+    	model.addAttribute("urlCode", urlCode);
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    	
+    	//encoderQRCoder(urlCode,response);
+//    	  QRCodeEncoderHandler handler = new QRCodeEncoderHandler();   
+//    	   handler.encoderQRCode(urlCode, response);
+    	 
+    		String errorMsg="";
+        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="所选支付渠道与支付类型不匹配";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="订单金额格式有误";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="订单处理失败，请重新提交！";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="订单已处理，请勿重复提交！";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
+        		errorMsg="您好：订单号重复,请检查后重新下单！";
+        	}
+    	   map.put("status", "error");
+    	   map.put("outTradeNo", outTradeNo);
+    	   map.put("errorMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
 
     /**
      * 跳转到wxpay页面

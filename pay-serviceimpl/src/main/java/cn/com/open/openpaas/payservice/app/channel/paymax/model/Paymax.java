@@ -359,7 +359,7 @@ public abstract class Paymax extends PaymaxBase {
         byte[] data = IOUtils.toByteArray(request.getRequestBody());
         out.write(data);//body
         out.close();
-        String toSignString = out.toString();
+        String toSignString = out.toString(PaymaxConfig.CHARSET);
         return RSA.sign(toSignString, SignConfig.PRIVATE_KEY);
     }
 

@@ -42,7 +42,6 @@ public class AlipayPropetyFactory {
 				String values[] = others[i].split(":");
 				sParaTemp.put(values[0], values[1]);
 			}
-
 			return sParaTemp;
 		}
 	}

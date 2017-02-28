@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.redis.service.RedisClientTemplate;
@@ -59,7 +60,14 @@ public class EHKOrderController extends BaseControllerUtil{
 	public void pay(HttpServletRequest req, final HttpServletResponse resp,Model model) throws ServletException, IOException {
 		 String id=req.getParameter("id");
 		 String merid=req.getParameter("merid");
-		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.YEEPAY.getValue());
+		 String paymentType=req.getParameter("paymentType");
+		 
+		 DictTradeChannel dictTradeChannels=null;
+         if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())){
+        	  dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_WEIXIN_PAY.getValue());
+		 }else{
+			 dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_BANK.getValue()); 
+		 }
 		 Map<String, String> others =null;
    	     if(dictTradeChannels!=null){
    		   String other= dictTradeChannels.getOther();
@@ -82,8 +90,15 @@ public class EHKOrderController extends BaseControllerUtil{
 		String orderCurrency = others.get("orderCurrency");
 		String notifyUrl =dictTradeChannels.getNotifyUrl();
 		String callbackUrl = dictTradeChannels.getBackurl();
+		
 		String paymentModeCode = others.get("paymentModeCode");
-		String clientIp=others.get("clientIp");
+		if(!nullEmptyBlankJudge(paymentType)&&!paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())&&!paymentType.equals(PaymentType.EHK_BANK.getValue())){
+			paymentModeCode=paymentType;
+		 }
+		String clientIp=req.getParameter("clientIp");
+		if(nullEmptyBlankJudge(clientIp)){
+			clientIp=others.get("clientIp");
+		}
 		String timeout=others.get("timeout");
 		//超时时间
 		String jsonPDStr = req.getParameter("productDetails");
@@ -91,10 +106,11 @@ public class EHKOrderController extends BaseControllerUtil{
 		OrderBuilder builder = new OrderBuilder(merchantId);
 		builder.setRequestId(requestId).setOrderAmount(orderAmount).setOrderCurrency(orderCurrency)
 				.setNotifyUrl(notifyUrl).setCallbackUrl(callbackUrl)
-				.setPaymentModeCode(paymentModeCode).setNotifyUrl(notifyUrl)
-				.setClientIp(clientIp);
+				.setPaymentModeCode(paymentModeCode).setNotifyUrl(notifyUrl);
+         if(!nullEmptyBlankJudge(paymentType)&&!paymentType.equals(PaymentType.EHK_BANK.getValue())){
+        	 builder.setClientIp(clientIp);
+		 } 
 		builder.setTimeout(timeout);
-
 		ProductDetail productDetail = new ProductDetail();
 		
 		
@@ -105,7 +121,6 @@ public class EHKOrderController extends BaseControllerUtil{
 			productDetail = JSONObject.parseObject(o.toString(), ProductDetail.class);
 			builder.addProductDetail(productDetail);
 		}
-		
 		Payer payer = new Payer();
 		payer.setName(StringUtils.defaultIfEmpty(req.getParameter("payerName"), null));
 		payer.setPhoneNum(StringUtils.defaultIfEmpty(req.getParameter("payerName"), null));

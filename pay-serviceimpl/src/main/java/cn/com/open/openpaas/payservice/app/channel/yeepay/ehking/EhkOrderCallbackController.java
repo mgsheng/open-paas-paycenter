@@ -70,10 +70,10 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 		//获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
 		//商户订单号
 		String out_trade_no = new String(request.getParameter("requestId").getBytes("ISO-8859-1"),"UTF-8");
-		String status = new String(request.getParameter("status").getBytes("ISO-8859-1"),"UTF-8");
-		
-		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		//String status = new String(request.getParameter("status").getBytes("ISO-8859-1"),"UTF-8");
 		log.info("ehk callback orderId======================="+ out_trade_no);
+		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
+		
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
 		//添加日志
@@ -96,14 +96,12 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
  		MerchantInfo merchantInfo = null;
  		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
  		if(nullEmptyBlankJudge(returnUrl)){
- 		
- 			
  			returnUrl=merchantInfo.getReturnUrl();
  		}
 			//////////////////////////////////////////////////////////////////////////////////////////
 			//请在这里加上商户的业务逻辑程序代码
 			//——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
-			if(status.equals("SUCCESS")){
+			//if(status.equals("SUCCESS")){
 				//判断该笔订单是否在商户网站中已经做过处理
 				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
 				 payServiceLog.setLogName(PayLogName.EHK_RETURN_END);
@@ -134,13 +132,13 @@ public class EhkOrderCallbackController extends BaseControllerUtil {
 				 }else{
 					 backMsg="success";
 				 }
-			}else if(status.equals("FAILED")||status.equals("ERROR")){
-				//失败或者错误
-				  payServiceLog.setErrorCode("2");
-		          payServiceLog.setStatus("error");
-		          payServiceLog.setLogName(PayLogName.EHK_RETURN_END);
-		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			}
+//			}else if(status.equals("FAILED")||status.equals("ERROR")){
+//				//失败或者错误
+//				  payServiceLog.setErrorCode("2");
+//		          payServiceLog.setStatus("error");
+//		          payServiceLog.setLogName(PayLogName.EHK_RETURN_END);
+//		          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+//			}
 		}else{
 			//该页面可做页面美工编辑
 			  payServiceLog.setErrorCode("2");
