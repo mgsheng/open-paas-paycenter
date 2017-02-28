@@ -8,7 +8,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 public class AESUtil {
-	private static  String iv="";
+	private static  String iv="user-service-api";
 	
 	/**
 	 * AES加密
@@ -86,7 +86,7 @@ public class AESUtil {
 		}
 	  public static void main(String[] args) {
 	      String data = "123456";
-	      String key = "945fa18c666a4e0097809f6727bc6997";
+	      String key = "34b0771839444ec093347ddd1e178ba1";
 	     try {
 			String a= encrypt(data,key);
 			System.out.println(a);

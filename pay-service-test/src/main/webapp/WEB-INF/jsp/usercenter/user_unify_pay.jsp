@@ -182,7 +182,8 @@
 								<option value="WECHAT_WAP">微信-公众号支付</option>
 								<option value="PAYMAX">拉卡拉-网关支付</option>
 								<option value="PAYMAX_H5">拉卡拉-移动支付</option>
-								<option value="YEEPAY_EHK">易宝-扫码支付</option>
+								<option value="EHK_WEIXIN_PAY">易汇金-扫码支付</option>
+								<option value="EHK_BANK">易汇金-收银台</option>
 								<option value="YEEPAY_GW">易宝-收银台</option>
 								<option value="UPOP">银联</option>
 								<option value="CMB">招商银行</option>
@@ -216,8 +217,9 @@
 								<option value="10005">直连银行</option>
 								<option value="10003">银联</option>
 								<option value="10007">拉卡拉-网关支付</option>
-								<option value="10006">易宝扫码</option>
-								<option value="10008">易宝</option>
+								<option value="10006">易汇金-扫码支付</option>
+								<option value="10012">易汇金-收银台</option>
+								<option value="10008">易宝-直连银行</option>
 								<option value="10009">支付宝-当面付</option>
 								<option value="10010">微信公众号</option>
 								<option value="10011">拉卡拉-微信公众号支付</option>
