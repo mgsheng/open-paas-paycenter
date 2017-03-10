@@ -106,13 +106,36 @@ public class RedisClientTemplate {
 	            return obj;
 	     }
 	     
-	      /**delete a key**/
-	      public boolean del(String key)
-	     {
-	          ShardedJedis shardedJedis = redisDataSource.getRedisClient();
-	            return shardedJedis.del(key)>0;
-	     }
+	      /* 是否存在key键 */
+	  	public boolean existKey(String key) {
+	  		boolean broken = false;
+	  		ShardedJedis shardedJedis = null;
+	  		try {
+	  			shardedJedis = redisDataSource.getRedisClient();
+	  			return shardedJedis.exists(key);
+	  		} catch (Exception e) {
+	  			broken = true;
+	  		} finally {
+	  			redisDataSource.returnResource(shardedJedis, broken);
+	  		}
+	  		return false;
+	  	}
 
+	  	/** delete a key **/
+	  	public boolean del(String key) {
+	  		boolean broken = false;
+	  		ShardedJedis shardedJedis = null;
+	  		try {
+	  			shardedJedis = redisDataSource.getRedisClient();
+	  			return shardedJedis.del(key) > 0;
+	  		} catch (Exception e) {
+	  			broken = true;
+
+	  		} finally {
+	  			redisDataSource.returnResource(shardedJedis, broken);
+	  		}
+	  		return false;
+	  	}
 
 	    /**
 	     * 设置单个值
