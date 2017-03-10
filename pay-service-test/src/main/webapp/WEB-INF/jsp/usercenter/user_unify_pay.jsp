@@ -181,6 +181,7 @@
 								<option value="WEIXIN">微信-扫码支付</option>
 								<option value="WECHAT_WAP">微信-公众号支付</option>
 								<option value="PAYMAX">拉卡拉-网关支付</option>
+								<option value="PAYMAX_WECHAT_CSB">拉卡拉-微信扫码</option>
 								<option value="PAYMAX_H5">拉卡拉-移动支付</option>
 								<option value="EHK_WEIXIN_PAY">易汇金-扫码支付</option>
 								<option value="EHK_BANK">易汇金-收银台</option>
@@ -223,6 +224,7 @@
 								<option value="10009">支付宝-当面付</option>
 								<option value="10010">微信公众号</option>
 								<option value="10011">拉卡拉-微信公众号支付</option>
+								<option value="10013">拉卡拉-微信扫码支付</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>
