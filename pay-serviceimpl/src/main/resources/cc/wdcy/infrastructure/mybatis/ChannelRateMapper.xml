@@ -45,6 +45,11 @@
          where  MERCHANT_ID = #{merchantId} and PAY_CHANNEL_CODE=#{payChannelCode} 
          limit 1
 	</select>
+	<select id="findChannelRate" resultMap="ChannelRatelMap">
+         select * from PAY_CHANNEL_RATE
+         where  MERCHANT_ID = #{merchantId} and CHANNEL_ID=#{channelId} and  SOURCE_TYPE = #{sourceType}
+         limit 1
+	</select>
 	<select id="getRateByChannel" resultMap="ChannelRatelMap">
          select * from PAY_CHANNEL_RATE
          where  SOURCE_TYPE = #{sourceType} and CHANNEL_ID=#{channelId} 

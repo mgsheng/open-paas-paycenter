@@ -1,6 +1,5 @@
 package cn.com.open.openpaas.payservice.app.order.service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import cn.com.open.openpaas.payservice.app.infrastructure.repository.MerchantOrderInfoRepository;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
-import cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord;
 
 /**
  * 
@@ -43,13 +41,11 @@ public class MerchantOrderInfoServiceImpl implements MerchantOrderInfoService {
 	@Override
 	public void updateOrder(MerchantOrderInfo merchantOrderInfo) {
 		merchantOrderInfoRepository.updateOrder(merchantOrderInfo);
-		
 	}
 
 	@Override
 	public void updateNotifyTimes(Integer notifyTimes, String id) {
 		merchantOrderInfoRepository.updateNotifyTimes(notifyTimes, id);
-		
 	}
 
 	@Override

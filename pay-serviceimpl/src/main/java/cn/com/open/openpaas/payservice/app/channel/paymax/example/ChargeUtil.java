@@ -82,7 +82,11 @@ public class ChargeUtil {
         		  String lakala_web=credential.get("lakala_web").toString();
                   returnValue.put("lakala_web",lakala_web);
                   returnValue.put("status", "ok");	
-        	}
+        	}else if(charge.getChannel().equals("wechat_csb")){
+      		  String wechat_csb=credential.get("wechat_csb").toString();
+              returnValue.put("wechat_csb",wechat_csb);
+              returnValue.put("status", "ok");	
+    	      }
            // System.out.println(returnValue);
         }else {//http请求失败
 	       // System.out.println(JSON.toJSONString(charge));

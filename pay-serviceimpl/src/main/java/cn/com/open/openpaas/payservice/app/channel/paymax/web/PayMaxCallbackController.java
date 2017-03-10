@@ -82,7 +82,6 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 	@RequestMapping(value = "callBack")
 	public String payCallBack(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException {
 		    log.info("-----------------------callBack paxmax/order-----------------------------------------");
-		    
 		    long startTime = System.currentTimeMillis();
 		    //amount=0.01&amount_refunded=0&amount_settle=0&body=testGoodsDesc&client_ip=127.0.0.1&currency=CNY&description=&extra=%7B%22user_id%22%3A%2220160920155907385438%22%2C%22return_url%22%3A%22http%3A%2F%2F10.96.5.174%3A8080%2Fpay-service%2Fpaymax%2FcallBack%22%7D&id=ch_edf13224121f1f1c322b326f&livemode=false&order_no=20160920155907385438&status=PROCESSING&subject=testGoodsName&time_created=1474358348000&time_expire=1474361948402&sign=vfXIUf483Ec0n3QTX458JcmvshwkRf44UhQsYTgX%2BkkqNlhclmwrYw2I2M9aoxShF99eeY9cjnXTcUf5qVDwQGq7ZFazOAOyjUHqni7zW2OqmsaQw5hRHfcKJcXYig19vmmpfZgbVsvFGi2NHILrU1j7LKJ9nYfOj56%2FN7S0j1s%3D
 		    //商户订单号
@@ -139,7 +138,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 							 String buf="";
 								int payStatus=merchantOrderInfo.getPayStatus();
 								Double payCharge=0.0;
-								payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+								payCharge=UnifyPayUtil.getTclPayCharge(merchantOrderInfo,channelRateService);
 								if(payStatus!=1){
 									merchantOrderInfo.setPayStatus(1);
 									merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
