@@ -61,7 +61,7 @@ public class ApiCommonController   {
 			map.put("freespace", monitorInfo.getUsableSpace());
 			map.put("totalspace", monitorInfo.getTotalSpace());
 		} catch (Exception e) {
-			e.printStackTrace();
+	//		e.printStackTrace();
 		}
     	WebUtils.writeJson(response, JSONObject.fromObject(map));
     }
