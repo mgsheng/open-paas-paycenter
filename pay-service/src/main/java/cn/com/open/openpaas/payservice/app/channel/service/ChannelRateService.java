@@ -9,5 +9,6 @@ public interface ChannelRateService {
 	
 	ChannelRate  getChannelRate(String merid,String payChannelCode);
 	ChannelRate  getChannelRate(String channelId,Integer sourceType);
+	ChannelRate  getChannelRate(String merid,String channelId,Integer sourceType);
 	
 }
