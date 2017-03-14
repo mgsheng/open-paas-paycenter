@@ -450,7 +450,7 @@ public class TclPayController extends BaseControllerUtil{
 				     extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 				     extra.put("return_url",dictTradeChannels.getBackurl());
 		    	    chargeMap.put("extra",extra);
-		    	    Map<String, Object> res= ce.charge(chargeMap);
+		    	    Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 			          JSONObject reqjson = JSONObject.fromObject(res);
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){
@@ -510,7 +510,7 @@ public class TclPayController extends BaseControllerUtil{
 				     extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 				     extra.put("return_url",dictTradeChannels.getBackurl());
 		    	    chargeMap.put("extra",extra);
-		    	    Map<String, Object> res= ce.charge(chargeMap);
+		    	    Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 			          JSONObject reqjson = JSONObject.fromObject(res);
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){

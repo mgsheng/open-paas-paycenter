@@ -904,6 +904,7 @@ pay-service-test/src/main/java/com/andaily/springoauth/service/dto/AuthCallbackD
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/AuthorizationCodeDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/DirctPayDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.java -text
+pay-service-test/src/main/java/com/andaily/springoauth/service/dto/PayOrderDetailDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/RefreshAccessTokenDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/UnifyPayDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/UserSerialRecord.java -text
@@ -957,6 +958,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_center_dev_login_ca
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_dirct_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_file_downlond.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_getorder_query.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_detail.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_query.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_order_refund.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/user_pay_ditch.jsp -text
@@ -1046,7 +1048,9 @@ pay-service/src/main/java/cn/com/open/openpaas/payservice/app/log/service/LogMon
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/merchant/model/MerchantInfo.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/merchant/service/MerchantInfoService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/order/model/MerchantOrderInfo.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/order/model/PayOrderDetail.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/order/service/MerchantOrderInfoService.java -text
+pay-service/src/main/java/cn/com/open/openpaas/payservice/app/order/service/PayOrderDetailService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/payment/model/DictTradePayment.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/payment/service/DictTradePaymentService.java -text
 pay-service/src/main/java/cn/com/open/openpaas/payservice/app/record/model/UserSerialRecord.java -text
@@ -1141,6 +1145,8 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxCallbackController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxNotifyController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/PayMaxWapCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/TclPayMaxCallbackController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/paymax/web/TclPayMaxNotifyController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/ChannelRateServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/service/DictTradeChannelServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/channel/tclpay/config/CommonConfig.java -text
@@ -1217,6 +1223,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/MerchantInfoRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/MerchantOrderInfoRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/OrderRefundRepositoryMyBatis.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/PayOrderDetailRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserAccuntBalanceRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/mybatis/UserSerialRecordRepositoryMyBatis.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/AppRepository.java -text
@@ -1228,6 +1235,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/MerchantInfoRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/MerchantOrderInfoRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/OrderRefundRepository.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/PayOrderDetailRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/Repository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/UserAccountBalanceRepository.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/infrastructure/repository/UserSerialRecordRepository.java -text
@@ -1241,6 +1249,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/log/UnifyPayCo
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/log/service/LogMonitorServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/merchant/service/MerchantInfoServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/order/service/MerchantOrderInfoServiceImpl.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/order/service/PayOrderDetailServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/payment/service/DictTradePaymentTypeServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/record/service/UserSerialRecordServiceImpl.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/app/redis/service/RedisClientTemplate.java -text
@@ -1259,6 +1268,7 @@ pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/ApiC
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderAutoSendController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderManualSendController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/OrderRefundController.java -text
+pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/PayOrderManagerController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/QueryOrderInfoController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/QuerySerialRecordController.java -text
 pay-serviceimpl/src/main/java/cn/com/open/openpaas/payservice/web/api/order/TclPayController.java -text
@@ -1281,6 +1291,7 @@ pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/LogMonitorMapp
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantInfoMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/MerchantOrderInfoMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/OrderRefundMapper.xml -text
+pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/PayOrderDetailMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserAccountBalanceMapper.xml -text
 pay-serviceimpl/src/main/resources/cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml -text
 pay-serviceimpl/src/main/resources/cert/800075500030008.cer -text

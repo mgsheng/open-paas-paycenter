@@ -31,23 +31,26 @@ public class ChargeUtil {
         chargeMap.put("app", "app_52a8zBD2Erp56D8s");
         chargeMap.put("currency","CNY");
         chargeMap.put("description","abc");
+        String private_key="";
+        String secret_key="";
+        String paymax_public_key="";
 	    //请根据渠道要求确定是否需要传递extra字段
         Map<String, Object> extra = new HashMap<String, Object>();
 //        extra.put("user_id","13810613847");
 //        extra.put("return_url","http://132.123.221.22/333/kad");
         extra.put("open_id","obc-jswk25IUGp3q8RPTYu083rmk");
         chargeMap.put("extra",extra);
-        ce.charge(chargeMap);
+        ce.charge(chargeMap, private_key, secret_key,paymax_public_key);
         //ce.retrieve();
     }
 
     /**
      * 创建充值订单
      */
-    public Map<String, Object> charge(Map<String, Object> chargeMap) {
+    public Map<String, Object> charge(Map<String, Object> chargeMap,String private_key,String secret_key,String paymax_public_key) {
     	Map<String, Object> returnValue=new HashMap<String, Object>();
 	    try {
-            Charge charge = Charge.create(chargeMap);
+            Charge charge = Charge.create(chargeMap,private_key,secret_key,paymax_public_key);
             returnValue=  printResult(charge);
         } catch (AuthorizationException e) {
             e.printStackTrace();
@@ -105,9 +108,9 @@ public class ChargeUtil {
     /**
      * 查询充值订单
      */
-    public void retrieve() {
+    public void retrieve(String private_key,String secret_key,String paymax_public_key) {
         try {
-            Charge charge = Charge.retrieve("ch_bd88045a391aade151476221");
+            Charge charge = Charge.retrieve("ch_bd88045a391aade151476221",private_key,secret_key,paymax_public_key);
             printResult(charge);
         } catch (AuthorizationException e) {
             e.printStackTrace();

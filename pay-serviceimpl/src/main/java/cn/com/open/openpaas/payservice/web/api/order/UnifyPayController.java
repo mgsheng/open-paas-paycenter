@@ -642,6 +642,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			          }else{
 			        	  chargeMap.put("body", merchantOrderInfo.getMerchantProductDesc());  
 			          }
+			          //channel:lakala_web#client_ip:127.0.0.1#app:app_xx2sq4oZ9054H43x#currency:CNY#private_key:MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJD048OK0qb84WJjkNco2fTqrlvJkiIhmh79Q3XNkJvVE23UXEK9SDYXngbTjhL3W3Bcm3h9r/gmRqJErulJkdvsJ4XKiDlffKIBVcueDQix1kRGXXvXhwI/cnpo+WDYzi5lU71uIdh8hi7eO7jQ5r7iMGlWCZJTfccTGDrAY2BvAgMBAAECgYBWul6HwUh15rlG78FaKjP1yG/XtQt85lPbFLbHBd3ujpbYUIV+3NcWnhzLgsnvaRXJbW8LsU+WjfgW4DcylvTwE55800MealsgCEUkDKprkMyiiOT4cnkYMjQ8WQFxm7WTD9Ao8/iBZPeBzHO6gGA/ScsTMy0LRnYBGWo5KpKYqQJBANOE4e4cJdQ0UD8lDv1BFJFVxZB83C8qR1yAhh5sATN/DpWlSzjbvEf16ZjseNb1fgvvsjPKnCDAHMmf9ocq5usCQQCvcJ7FLG3rO4Hi2kzbTfdbdkgiB6gxxRnsi9B+CiDJH/E4J01JeI5A5aYjdf+fGJdjgdIGMK/VkRvv8EL9rFONAkAskx1Vo4LpVFjw5ath/XwLIKswxs9T9THysXcSJCqgoo79REc05UGpXI5s1rCkhDma5FmGhpUeZb3rU5WNaKIfAkBgjBez5qlvBMaL8xrMrXFs8gDsSU50ZUXI+YB5fFVimaOEBYzw29ldOYRei3drNHtLlYvhQDXj0AGR36TeOVGZAkAEbWcNlVqymY2ND2EHbqdBKtLMOxeweEUtqqkT/+33+wpWNVMqvhcKgSCJMeHiIs0XLMnL/JvwTC9IM/MauqZs#secert_key:edd52aad608d4e7a82876f664eadf1f6#paymax_public_key:MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCQ9OPDitKm/OFiY5DXKNn06q5byZIiIZoe/UN1zZCb1RNt1FxCvUg2F54G044S91twXJt4fa/4JkaiRK7pSZHb7CeFyog5X3yiAVXLng0IsdZERl1714cCP3J6aPlg2M4uZVO9biHYfIYu3ju40Oa+4jBpVgmSU33HExg6wGNgbwIDAQAB
 			          chargeMap.put("order_no", merchantOrderInfo.getId());
 			          chargeMap.put("channel", others.get("channel"));
 			          chargeMap.put("client_ip", others.get("client_ip"));
@@ -671,7 +672,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					        }
 						  extra.put("open_id",openId);	
 						  chargeMap.put("extra",extra);
-				    	  Map<String, Object> res= ce.charge(chargeMap);
+				    	  Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 					          JSONObject reqjson = JSONObject.fromObject(res);
 					          boolean backValue=analysisValue(reqjson);
 					          backValue=true;
@@ -890,7 +891,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					        	  extra.put("bank_code",newpaymentType);  
 					          }
 			    	      chargeMap.put("extra",extra);
-			    	    Map<String, Object> res= ce.charge(chargeMap);
+			    	    Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 				          JSONObject reqjson = JSONObject.fromObject(res);
 				          boolean backValue=analysisValue(reqjson);
 				          if(backValue){
@@ -969,7 +970,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				     extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 				     extra.put("return_url",dictTradeChannels.getBackurl());
 		    	    chargeMap.put("extra",extra);
-		    	    Map<String, Object> res= ce.charge(chargeMap);
+		    	    Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 			          JSONObject reqjson = JSONObject.fromObject(res);
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){
@@ -1029,7 +1030,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				     extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 				     extra.put("return_url",dictTradeChannels.getBackurl());
 		    	    chargeMap.put("extra",extra);
-		    	    Map<String, Object> res= ce.charge(chargeMap);
+		    	    Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 			          JSONObject reqjson = JSONObject.fromObject(res);
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){
@@ -1111,7 +1112,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					        }
 						  extra.put("open_id",openId);	
 						  chargeMap.put("extra",extra);
-				    	  Map<String, Object> res= ce.charge(chargeMap);
+				    	  Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 					          JSONObject reqjson = JSONObject.fromObject(res);
 					          boolean backValue=analysisValue(reqjson);
 					          if(backValue){

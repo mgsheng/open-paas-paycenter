@@ -19,6 +19,7 @@
     	<typeAlias alias="UserSerialRecord" type="cn.com.open.openpaas.payservice.app.record.model.UserSerialRecord"/>  
     	<typeAlias alias="ChannelRate" type="cn.com.open.openpaas.payservice.app.channel.model.ChannelRate"/>   
     	<typeAlias alias="DictTradePaymentDitch" type="cn.com.open.openpaas.payservice.app.ditch.model.DictTradePaymentDitch"/>
+    	<typeAlias alias="PayOrderDetail" type="cn.com.open.openpaas.payservice.app.order.model.PayOrderDetail"/>
     </typeAliases>
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml"/>
@@ -31,5 +32,6 @@
 		<mapper resource="cc/wdcy/infrastructure/mybatis/ChannelRateMapper.xml"/>
 		<mapper resource="cc/wdcy/infrastructure/mybatis/UserSerialRecordMapper.xml"/>
 		<mapper resource="cc/wdcy/infrastructure/mybatis/DictTradePaymentDitchMapper.xml"/>
+		<mapper resource="cc/wdcy/infrastructure/mybatis/PayOrderDetailMapper.xml"/>
     </mappers>
 </configuration>

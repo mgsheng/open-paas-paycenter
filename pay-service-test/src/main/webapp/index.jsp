@@ -94,6 +94,9 @@
         </li> 
         <li>
             <p><a href="accountDownlond">对账单下载</a> <br/>导出接口测试</p>
+        </li>
+         <li>
+            <p><a href="savePayOrderDetail">订单详细信息保存</a> <br/>订单详细信息保存</p>
         </li> 
         <li>
             <p><a href="testRetrun">测试</a> <br/>接口第三方同步</p>

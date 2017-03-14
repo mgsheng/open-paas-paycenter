@@ -308,8 +308,8 @@ public class Charge extends Paymax {
      * @throws IOException
      * @throws InvalidRequestException
      */
-    public static Charge create(Map<String,Object> params) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
-        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE, JSONObject.toJSONString(params),Charge.class);
+    public static Charge create(Map<String,Object> params,String private_key,String secret_key,String paymax_public_key) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
+        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE, JSONObject.toJSONString(params),Charge.class,private_key,secret_key,paymax_public_key);
     }
 
     /**
@@ -320,7 +320,7 @@ public class Charge extends Paymax {
      * @throws IOException
      * @throws InvalidRequestException
      */
-    public static Charge retrieve(String chargeId) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
-        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE+"/"+chargeId, null,Charge.class);
+    public static Charge retrieve(String chargeId ,String private_key,String secret_key,String paymax_public_key) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
+        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE+"/"+chargeId, null,Charge.class,private_key,secret_key,paymax_public_key);
     }
 }

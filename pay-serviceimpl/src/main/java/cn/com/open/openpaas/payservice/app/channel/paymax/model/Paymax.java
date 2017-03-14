@@ -107,7 +107,7 @@ public abstract class Paymax extends PaymaxBase {
      * @throws IOException
      * @throws InvalidRequestException
      */
-    protected static <T> T request(String url, String jsonReqData, Class<T> clazz) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
+    protected static <T> T request(String url, String jsonReqData, Class<T> clazz,String private_key,String secret_key,String paymax_public_key) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
         if(StringUtils.isBlank(SignConfig.SECRET_KEY)){
             throw new AuthorizationException("Secret key can not be blank.Please set your Secret key in com.Paymax.config.SignConfig");
         }
@@ -121,10 +121,10 @@ public abstract class Paymax extends PaymaxBase {
         }
         Map<String, String> result = null;
         if (StringUtils.isBlank(jsonReqData)){
-            result = buildGetRequest(url);
+            result = buildGetRequest(url,private_key,secret_key,paymax_public_key);
         }else {
         	System.out.println(jsonReqData);
-            result = buildPostRequest(url, jsonReqData);
+            result = buildPostRequest(url, jsonReqData,secret_key,private_key,paymax_public_key);
         }
 
         return dealWithResult(result,clazz);
@@ -172,7 +172,7 @@ public abstract class Paymax extends PaymaxBase {
      * @throws IOException
      * @throws InvalidResponseException
      */
-    private static  Map<String, String> buildPostRequest(String url, String jsonReqData) throws IOException, InvalidResponseException {
+    private static  Map<String, String> buildPostRequest(String url, String jsonReqData,String secret_key,String private_key,String paymax_public_key) throws IOException, InvalidResponseException {
         Map<String, String> result = null;
 
         HttpPost httpPost = new HttpPost(url);
@@ -180,15 +180,15 @@ public abstract class Paymax extends PaymaxBase {
         httpPost.setEntity(
                 new ByteArrayEntity(jsonReqData.getBytes(Charset.forName(PaymaxConfig.CHARSET)), ContentType.APPLICATION_JSON));
 
-        setCustomHeaders(httpPost);
+        setCustomHeaders(httpPost,secret_key);
 
-        String sign = signData(httpPost);
+        String sign = signData(httpPost,private_key);
 
         httpPost.addHeader(PaymaxConfig.SIGN,sign);
 
         CloseableHttpResponse response = httpsClient.execute(httpPost);
         try {
-            result = verifyData(response);
+            result = verifyData(response,paymax_public_key);
         } finally {
             response.close();
             httpPost.releaseConnection();
@@ -208,7 +208,7 @@ public abstract class Paymax extends PaymaxBase {
      * @throws IOException
      * @throws InvalidResponseException
      */
-    private static Map<String, String>  verifyData(CloseableHttpResponse response) throws IOException, InvalidResponseException {
+    private static Map<String, String>  verifyData(CloseableHttpResponse response,String paymax_public_key ) throws IOException, InvalidResponseException {
         Map<String, String> result = null;
         HttpEntity entity = response.getEntity();
         if (entity != null) {
@@ -237,7 +237,7 @@ public abstract class Paymax extends PaymaxBase {
                     //toVerifyData=URLDecoder.decode(toVerifyData);
                     System.out.println(toVerifyData);
                     String sign = response.getFirstHeader(PaymaxConfig.SIGN)!=null ? response.getFirstHeader(PaymaxConfig.SIGN).getValue() : "";
-                    boolean flag = RSA.verify(toVerifyData,sign,SignConfig.PAYMAX_PUBLIC_KEY);
+                    boolean flag = RSA.verify(toVerifyData,sign,paymax_public_key);
                     if (!flag){
                         throw new InvalidResponseException("Invalid Response.[Response Data And Sign Verify Failure.]");
                     }
@@ -274,20 +274,20 @@ public abstract class Paymax extends PaymaxBase {
      * @throws IOException
      * @throws InvalidResponseException
      */
-    public static Map<String, String> buildGetRequest(String url) throws IOException, InvalidResponseException {
+    public static Map<String, String> buildGetRequest(String url,String private_key,String secret_key,String paymax_public_key) throws IOException, InvalidResponseException {
         Map<String, String> result = null;
 
         HttpGet httpGet = new HttpGet(url);
 
-        setCustomHeaders(httpGet);
+        setCustomHeaders(httpGet,secret_key);
 
-        String sign = signData(httpGet);
+        String sign = signData(httpGet,private_key);
 
         httpGet.addHeader(PaymaxConfig.SIGN,sign);
 
         CloseableHttpResponse response = httpsClient.execute(httpGet);
         try {
-            result = verifyData(response);
+            result = verifyData(response,paymax_public_key);
         } finally {
             response.close();
             httpGet.releaseConnection();
@@ -302,9 +302,10 @@ public abstract class Paymax extends PaymaxBase {
      * Request Header
      * @param request
      */
-    private static void setCustomHeaders(HttpRequestBase request) {
+    private static void setCustomHeaders(HttpRequestBase request,String secret_key) {
         request.addHeader("Content-Type", "application/json; charset=" + PaymaxConfig.CHARSET);
-        request.addHeader(HEADER_KEY_AUTHORIZATION,SignConfig.SECRET_KEY);
+        request.addHeader(HEADER_KEY_AUTHORIZATION,secret_key);
+        //request.addHeader(HEADER_KEY_AUTHORIZATION,SignConfig.SECRET_KEY);
 
         String timestamp = String.valueOf(System.currentTimeMillis());
         request.addHeader(HEADER_KEY_TIMESTAMP, timestamp);
@@ -332,7 +333,7 @@ public abstract class Paymax extends PaymaxBase {
      * @return
      * @throws IOException
      */
-    private static String signData(HttpRequestBase httpRequest) throws IOException {
+    private static String signData(HttpRequestBase httpRequest,String private_key) throws IOException {
         Request<HttpRequest> request = new HttpRequestWrapper(
                 httpRequest);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -360,7 +361,8 @@ public abstract class Paymax extends PaymaxBase {
         out.write(data);//body
         out.close();
         String toSignString = out.toString(PaymaxConfig.CHARSET);
-        return RSA.sign(toSignString, SignConfig.PRIVATE_KEY);
+       // return RSA.sign(toSignString, SignConfig.PRIVATE_KEY);
+        return RSA.sign(toSignString, private_key);
     }
 
 }

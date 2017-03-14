@@ -172,8 +172,8 @@ public class Refund extends Paymax {
      * @throws IOException
      * @throws InvalidRequestException
      */
-    public static Refund create(String chargeId,Map<String,Object> params) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
-        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE+"/"+chargeId+"/refunds", JSONObject.toJSONString(params),Refund.class);
+    public static Refund create(String chargeId,Map<String,Object> params,String private_key,String secret_key,String paymax_public_key) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
+        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE+"/"+chargeId+"/refunds", JSONObject.toJSONString(params),Refund.class,private_key,secret_key,paymax_public_key);
     }
 
     /**
@@ -185,7 +185,7 @@ public class Refund extends Paymax {
      * @throws IOException
      * @throws InvalidRequestException
      */
-    public static Refund retrieve(String chargeId,String refundId) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
-        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE+"/"+chargeId+"/refunds/"+refundId, null,Refund.class);
+    public static Refund retrieve(String chargeId,String refundId,String private_key,String secret_key,String paymax_public_key) throws AuthorizationException, IOException, InvalidRequestException, InvalidResponseException {
+        return request(PaymaxConfig.API_BASE_URL+ PaymaxConfig.CREATE_CHARGE+"/"+chargeId+"/refunds/"+refundId, null,Refund.class,private_key,secret_key,paymax_public_key);
     }
 }

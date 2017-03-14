@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.PayOrderDetailRepositoryMyBatis">
+	<resultMap type="PayOrderDetail" id="payOrderDetailMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="REG_NUMBER" property="regNumber" jdbcType="VARCHAR" />
+		<result column="LEARNING_CENTER_CODE" property="learningCenterCode" jdbcType="VARCHAR" />
+		<result column="LEARNING_CENTER_NAME" property="learningCenteName" jdbcType="VARCHAR" />
+		<result column="PROVINCE" property="province" jdbcType="VARCHAR" />
+		<result column="LEARNING_BATCHES" property="learningBatches" jdbcType="VARCHAR" />
+		<result column="LEARNING_STATUS" property="learningStatus" jdbcType="VARCHAR" />
+		<result column="SPECIALTY" property="specialty" jdbcType="VARCHAR" />
+		<result column="LEVEL" property="level" jdbcType="VARCHAR" />
+		<result column="STUDENT_NAME" property="studentName" jdbcType="VARCHAR" />
+		<result column="CARD_NO" property="cardNo" jdbcType="VARCHAR" />
+		<result column="STUDENT_ID" property="studentId" jdbcType="VARCHAR" />
+		<result column="COST_ATTRIBUTION" property="costAttribution" jdbcType="VARCHAR" />
+		<result column="EXACCT" property="exacct" jdbcType="VARCHAR" />
+		<result column="PAY_AMOUNT" property="payAmount" jdbcType="VARCHAR" />
+		<result column="PAY_CHARGE" property="payCharge" jdbcType="VARCHAR" />
+		<result column="PAY_CHANNEL" property="payChannel" jdbcType="VARCHAR" />
+		<result column="PAY_DATE" property="payDate" jdbcType="TIMESTAMP" />
+		<result column="PROJECT_NUMBER" property="projectNumber" jdbcType="VARCHAR" />	
+		<result column="PROJECT_NAME" property="projectName" jdbcType="VARCHAR" />
+		<result column="APPID" property="appId" jdbcType="VARCHAR" />
+		<result column="MERCHANT_ORDERID" property="merchantOrderId" jdbcType="VARCHAR" />
+		<result column="MANAGER_CENTER_NAME" property="managerCenterName" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  REG_NUMBER,
+	  LEARNING_CENTER_CODE,
+	  LEARNING_CENTER_NAME,
+	  PROVINCE,
+	  LEARNING_BATCHES,
+	  LEARNING_STATUS,
+	  SPECIALTY,
+	  LEVEL,
+	  STUDENT_NAME,
+	  CARD_NO,
+	  STUDENT_ID,
+	  COST_ATTRIBUTION,
+	  EXACCT,
+	  PAY_AMOUNT,
+	  PAY_CHARGE,
+	  PAY_CHANNEL,
+	  PAY_DATE,
+	  PROJECT_NUMBER,
+	  PROJECT_NAME,
+	  APPID,
+	  MANAGER_CENTER_NAME,
+	  MERCHANT_ORDERID
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.order.model.PayOrderDetail">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into PAY_ORDER_DETAIL
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{regNumber, jdbcType=VARCHAR},
+			#{learningCenterCode, jdbcType=VARCHAR},
+			#{learningCenterName, jdbcType=VARCHAR},
+			#{province, jdbcType=VARCHAR},
+			#{learningBatches, jdbcType=VARCHAR},
+			#{learningStatus, jdbcType=VARCHAR},
+			#{specialty, jdbcType=VARCHAR},
+			#{level, jdbcType=VARCHAR},
+			#{studentName, jdbcType=VARCHAR},
+			#{cardNo, jdbcType=VARCHAR},
+			#{studentId, jdbcType=VARCHAR},
+			#{costAttribution, jdbcType=VARCHAR},
+			#{exacct, jdbcType=VARCHAR},
+			#{payAmount, jdbcType=VARCHAR},
+			#{payCharge, jdbcType=VARCHAR},
+			#{payChannel, jdbcType=VARCHAR},
+			#{payDate, jdbcType=TIMESTAMP},
+			#{projectNumber, jdbcType=VARCHAR},
+			#{projectName, jdbcType=VARCHAR},
+			#{appId, jdbcType=VARCHAR},
+			#{managerCenterName, jdbcType=VARCHAR},
+			#{merchantOrderId, jdbcType=VARCHAR}
+			
+			
+		)
+	</insert>
+	
+	<select id="findByMerchantOrderId" resultMap="payOrderDetailMap">
+         select * from PAY_ORDER_DETAIL
+         where  MERCHANT_ORDERID = #{merchantOrderId}
+         and APPID=#{appId}
+	</select>	
+	
+     <insert id="savePayOrderDetail" parameterType="PayOrderDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into PAY_ORDER_DETAIL(REG_NUMBER,LEARNING_CENTER_CODE,LEARNING_CENTER_NAME,PROVINCE,LEARNING_BATCHES,LEARNING_STATUS,SPECIALTY,LEVEL,STUDENT_NAME,CARD_NO,STUDENT_ID,COST_ATTRIBUTION,EXACCT,PAY_AMOUNT,PAY_CHARGE,PAY_CHANNEL,PAY_DATE,PROJECT_NUMBER,PROJECT_NAME,APPID,MANAGER_CENTER_NAME,MERCHANT_ORDERID)
+        values
+        (#{regNumber},#{learningCenterCode},#{learningCenterName},#{province},#{learningBatches},#{learningStatus},#{specialty},#{level},#{studentName},#{cardNo},#{studentId},#{costAttribution},#{exacct},#{payAmount},#{payCharge},#{payChannel},#{payDate},#{projectNumber},#{projectName},#{appId},#{managerCenterName},#{merchantOrderId})
+    </insert>
+	
+	
+</mapper>

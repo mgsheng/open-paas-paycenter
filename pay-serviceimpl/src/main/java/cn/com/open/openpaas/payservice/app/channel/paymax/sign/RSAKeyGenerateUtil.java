@@ -31,9 +31,9 @@ public class RSAKeyGenerateUtil {
         System.out.println(p.getName());
         pkey = kep.getPrivate();
         pubkey = kep.getPublic();
-       // System.out.println("生成的公钥:"+new String(Base64.encode(pubkey.getEncoded())));
-       // System.out.println("====================================");
-      //  System.out.println("生成的私钥:"+new String(Base64.encode(pkey.getEncoded())));
+        System.out.println("生成的公钥:"+new String(Base64.encode(pubkey.getEncoded())));
+        System.out.println("====================================");
+       System.out.println("生成的私钥:"+new String(Base64.encode(pkey.getEncoded())));
 
         Map<String,String> param=new HashMap<String,String>();
         param.put(PUBLIC_KEY, new String(Base64.encode(pubkey.getEncoded())));

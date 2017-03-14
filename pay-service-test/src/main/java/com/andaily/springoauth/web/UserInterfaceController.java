@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.andaily.springoauth.service.dto.DirctPayDto;
 import com.andaily.springoauth.service.dto.OrderRefund;
+import com.andaily.springoauth.service.dto.PayOrderDetailDto;
 import com.andaily.springoauth.service.dto.UnifyPayDto;
 import com.andaily.springoauth.service.dto.UserSerialRecord;
 
@@ -80,6 +81,8 @@ public class UserInterfaceController {
     private String querySerialUri;
     @Value("#{properties['account-downlond-uri']}")
     private String accountDownlondUri;
+    @Value("#{properties['save-payOrderDetail-uri']}")
+    private String  savePayOrderDetailUri;
     
     
     final static String  SEPARATOR = "&";
@@ -251,6 +254,7 @@ public class UserInterfaceController {
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" + fullUri;
      }
+     
      /*
       *  Entrance:   step-1
       * */
@@ -592,7 +596,41 @@ public class UserInterfaceController {
  		model.addAttribute("querySerialUri", querySerialUri);
  		return "usercenter/test_returnurl";
  	}
-     
+ 	/**
+     * 保存订单详细信息
+     * 
+     * */
+	@RequestMapping(value = "savePayOrderDetail", method = RequestMethod.GET)
+	public String savePayOrderDetail(Model model) {
+		model.addAttribute("savePayOrderDetailUri", savePayOrderDetailUri);
+		return "usercenter/user_order_detail";
+	}
+	  /**
+     * 保存订单详细信息
+     * 
+     * */
+    @RequestMapping(value = "savePayOrderDetail", method = RequestMethod.POST)
+    public String savePayOrderDetail(PayOrderDetailDto payOrderDetailDto) throws Exception {
+   	 
+   	 String key=map.get(payOrderDetailDto.getAppId());
+  	  	 String signature="";
+  	  	 String timestamp="";
+  	  	 String signatureNonce="";
+	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payOrderDetailDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+	   	 }
+   	    final String fullUri =payOrderDetailDto.getFullUri();
+        LOG.debug("Send to pay-service-server URL: {}", fullUri);
+        return "redirect:" + fullUri;
+    }     
      /** 
       * 发送POST请求 
       *  
