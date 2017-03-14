@@ -63,7 +63,7 @@ public class DateTools {
     /**
      * 把符合日期格式的字符串转换为日期类型
      */
-    public static java.util.Date stringtoDate(String dateStr, String format) {
+    public static Date stringtoDate(String dateStr, String format) {
         Date d = null;
         SimpleDateFormat formater = new SimpleDateFormat(format);
         try {
@@ -79,7 +79,7 @@ public class DateTools {
     /**
      * 把符合日期格式的字符串转换为日期类型
      */
-    public static java.util.Date stringtoDate(String dateStr, String format,
+    public static Date stringtoDate(String dateStr, String format,
             ParsePosition pos) {
         Date d = null;
         SimpleDateFormat formater = new SimpleDateFormat(format);
