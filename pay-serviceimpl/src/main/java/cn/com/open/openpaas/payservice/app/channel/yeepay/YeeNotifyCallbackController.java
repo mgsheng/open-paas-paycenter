@@ -122,7 +122,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 			//添加日志
 			 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 			 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+			 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 			 payServiceLog.setLogType(payserviceDev.getLog_type());
 			 payServiceLog.setMerchantId(merchantOrderInfo.getMerchantId()+"");
 			 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());
@@ -161,7 +161,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 								sParaTemp.put("guid", merchantOrderInfo.getGuid());
 								sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 								//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-								sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+								sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 								sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
 								sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
 								sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
@@ -268,7 +268,7 @@ public class YeeNotifyCallbackController extends BaseControllerUtil {
 									sParaTemp.put("guid", merchantOrderInfo.getGuid());
 									sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 									//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-									sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+									sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 									sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
 									sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
 									sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());

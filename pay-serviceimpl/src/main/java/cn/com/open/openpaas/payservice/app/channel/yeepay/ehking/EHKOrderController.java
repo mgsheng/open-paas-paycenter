@@ -107,7 +107,7 @@ public class EHKOrderController extends BaseControllerUtil{
 		builder.setRequestId(requestId).setOrderAmount(orderAmount).setOrderCurrency(orderCurrency)
 				.setNotifyUrl(notifyUrl).setCallbackUrl(callbackUrl)
 				.setPaymentModeCode(paymentModeCode).setNotifyUrl(notifyUrl);
-         if(!nullEmptyBlankJudge(paymentType)&&!paymentType.equals(PaymentType.EHK_BANK.getValue())){
+         if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())){
         	 builder.setClientIp(clientIp);
 		 } 
 		builder.setTimeout(timeout);

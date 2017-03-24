@@ -69,7 +69,7 @@ public class OrderManualSendController extends BaseControllerUtil{
 		log.info("~~~~~~~outTradeNo："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAppId(appId);
-		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
 		 payServiceLog.setMerchantOrderId(outTradeNo);
 		 payServiceLog.setLogName(PayLogName.ORDER_MANUAL_START);

@@ -55,7 +55,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
     	//获取payStatus第三方支付状态为成功1且notifyStatus商户接收状态为未处理状态0 订单集合
 	    List<MerchantOrderInfo> merchantOrderInfos=merchantOrderInfoService.findByPayAndNotifyStatus();
 	    PayServiceLog payServiceLog=new PayServiceLog();
-		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
 		 payServiceLog.setLogName(PayLogName.ORDER_AUTO_START);
         payServiceLog.setStatus("ok");
@@ -75,7 +75,7 @@ public class OrderAutoSendController extends BaseControllerUtil{
 				params.put("guid", orderInfo.getGuid());
 				params.put("appUid",String.valueOf(orderInfo.getSourceUid()));
 				//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-				params.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+				params.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 				params.put("totalFee", String.valueOf((int)(orderInfo.getOrderAmount()*100)));
 				params.put("goodsId", orderInfo.getMerchantProductId());
 				params.put("goodsName",orderInfo.getMerchantProductName());

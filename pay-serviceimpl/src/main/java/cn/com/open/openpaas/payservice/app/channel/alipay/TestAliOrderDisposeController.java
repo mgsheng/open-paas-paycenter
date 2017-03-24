@@ -32,6 +32,7 @@ import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 
 
@@ -72,7 +73,7 @@ public class TestAliOrderDisposeController extends BaseControllerUtil {
 		sParaTemp.put("guid", merchantOrderInfo.getGuid());
 		sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-		sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+		sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 		sParaTemp.put("totalFee", String.valueOf(merchantOrderInfo.getAmount()));
 		sParaTemp.put("goodsId", "");
 		sParaTemp.put("goodsName", "");
@@ -107,7 +108,7 @@ public class TestAliOrderDisposeController extends BaseControllerUtil {
 		sParaTemp.put("guid", merchantOrderInfo.getGuid());
 		sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 		//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-		sParaTemp.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+		sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 		sParaTemp.put("totalFee", String.valueOf(merchantOrderInfo.getAmount()));
 		sParaTemp.put("goodsId", goodsId);
 		sParaTemp.put("goodsName", goodsName);

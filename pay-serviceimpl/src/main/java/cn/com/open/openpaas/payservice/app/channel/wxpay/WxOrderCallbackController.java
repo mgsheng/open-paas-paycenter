@@ -124,7 +124,7 @@ public class WxOrderCallbackController extends BaseControllerUtil {
 						 payServiceLog.setAmount(total_fee);
 						 payServiceLog.setAppId(merchantOrderInfo.getAppId());
 						 payServiceLog.setChannelId(String.valueOf(merchantOrderInfo.getChannelId()));
-						 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+						 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 						 payServiceLog.setLogType(payserviceDev.getLog_type());
 						 payServiceLog.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
 						 payServiceLog.setMerchantOrderId(merchantOrderInfo.getMerchantOrderId());

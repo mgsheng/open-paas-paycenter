@@ -242,9 +242,9 @@ public abstract class Paymax extends PaymaxBase {
                         throw new InvalidResponseException("Invalid Response.[Response Data And Sign Verify Failure.]");
                     }
 
-                    if (!SignConfig.SECRET_KEY.equals(secretKey)){
-                        throw new InvalidResponseException("Invalid Response.[Secret Key Is Invalid.]");
-                    }
+//                    if (!SignConfig.SECRET_KEY.equals(secretKey)){
+//                        throw new InvalidResponseException("Invalid Response.[Secret Key Is Invalid.]");
+//                    }
 
                     if (Long.valueOf(timestamp) + VALID_RESPONSE_TTL < System.currentTimeMillis()){
                         throw new InvalidResponseException("Invalid Response.[Response Time Is Invalid.]");

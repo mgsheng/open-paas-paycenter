@@ -143,7 +143,7 @@ public class UnionPayCallbackController extends BaseControllerUtil {
 					sParaTemp.put("guid", merchantOrderInfo.getGuid());
 					sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
 					// sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-					sParaTemp.put("timeEnd",DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+					sParaTemp.put("timeEnd",DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 					sParaTemp.put("totalFee",String.valueOf((int) (merchantOrderInfo.getOrderAmount() * 100)));
 					sParaTemp.put("goodsId",merchantOrderInfo.getMerchantProductId());
 					sParaTemp.put("goodsName",
@@ -201,7 +201,7 @@ public class UnionPayCallbackController extends BaseControllerUtil {
 							String.valueOf(merchantOrderInfo.getSourceUid()));
 					// sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
 					sParaTemp.put("timeEnd",
-							DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+							DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 					sParaTemp.put("totalFee",
 							String.valueOf((int) (merchantOrderInfo
 									.getOrderAmount() * 100)));
