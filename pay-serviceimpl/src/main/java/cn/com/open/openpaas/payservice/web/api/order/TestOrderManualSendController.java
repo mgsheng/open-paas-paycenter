@@ -68,7 +68,7 @@ public class TestOrderManualSendController extends BaseControllerUtil{
 		log.info("~~~~~~~outTradeNo："+outTradeNo+"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAppId(appId);
-		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		 payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 		 payServiceLog.setLogType(payserviceDev.getLog_type());
 		 payServiceLog.setMerchantOrderId(outTradeNo);
 		 payServiceLog.setLogName(PayLogName.ORDER_MANUAL_START);
@@ -149,7 +149,7 @@ public class TestOrderManualSendController extends BaseControllerUtil{
 			params.put("guid", orderInfo.getGuid());
 			params.put("appUid",String.valueOf(orderInfo.getSourceUid()));
 			//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-			params.put("timeEnd", DateUtil.formatDate(new Date(), "yyyyMMddHHmmss"));
+			params.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 			params.put("totalFee", String.valueOf((int)(orderInfo.getPayAmount()*100)));
 			params.put("goodsId", orderInfo.getMerchantProductId());
 			params.put("goodsName",orderInfo.getMerchantProductName());

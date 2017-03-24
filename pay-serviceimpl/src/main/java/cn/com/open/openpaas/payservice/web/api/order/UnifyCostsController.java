@@ -73,7 +73,7 @@ public class UnifyCostsController extends BaseControllerUtil{
     	PayServiceLog payServiceLog=new PayServiceLog();
   	    payServiceLog.setAmount(amount);
   	    payServiceLog.setAppId(appId);
-  	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyy-MM-dd HH:mm:ss"));
+  	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
   	    payServiceLog.setLogType(payserviceDev.getLog_type());
   	    payServiceLog.setMerchantId(merchantId);
   	    payServiceLog.setMerchantOrderId(serialNo);
