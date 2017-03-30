@@ -69,7 +69,7 @@ table {
 			<div style="margin-top: 5px">
 				<span style=""> <select class="easyui-combobox" name="appId"
 					id="appId" label="业务类型" style="width:200px"
-					data-options="editable:false,prompt:'全部'">
+					data-options="editable:false,valueField:'id',textField:'text',">
 						
 				</select> </span>
 				
@@ -238,9 +238,7 @@ table {
 		});
 	    startTime = $("#_easyui_textbox_input6").val();
 		endTime = $("#_easyui_textbox_input7").val();
-		$
-				.post(
-						"${pageContext.request.contextPath}/user/statistics/chart",
+		$.post("${pageContext.request.contextPath}/user/statistics/chart",
 						{
 							paymentId : $("input[name='paymentId']").val(),
 							appId : $("input[name='appId']").val(),
@@ -523,11 +521,16 @@ table {
 	
 	
 	function  initialise(){
-		$('#appId').combobox({
-			url:'${pageContext.request.contextPath}/manage/findAllDepts',
-			valueField:'id',
-			textField:'text'
-		});
+		$.post("${pageContext.request.contextPath}/manage/findAllDepts",
+	            function(data){
+					$('#appId').combobox('loadData',data);
+					if (data.length == 1) {
+						$('#appId').combobox('select',data[0].id);
+					}
+				
+            	}
+        );
+		
 	}
 	
 	function  payIrrigation(){
