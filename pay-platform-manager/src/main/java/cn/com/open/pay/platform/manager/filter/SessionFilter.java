@@ -72,6 +72,7 @@ public class SessionFilter extends OncePerRequestFilter {
 					builder.append(request.getContextPath());
 					builder.append("';");
 				} else {
+					response.setContentType("text/html;charset=utf-8");
 					builder.append("<script type=\"text/javascript\">");
 					builder.append("alert('登陆超时！请重新登陆');");
 					builder.append("window.top.location.href='");
