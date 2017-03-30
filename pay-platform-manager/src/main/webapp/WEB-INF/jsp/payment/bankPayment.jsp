@@ -29,7 +29,7 @@
 					</td>
 					<td style="text-align: right;">所属应用：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择所属应用',multiple:false" id="queryMerchantId" 
+						<select class="easyui-combobox" data-options="editable:false,valueField:'id',textField:'text',multiple:false" id="queryMerchantId" 
 								name="queryMerchantId"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
@@ -85,8 +85,18 @@
 		$(function(){
         	//加载查询条件中的支付渠道
 			loadSelect();
-			//预加载,默认维度天,日期昨天
-			findPayment();
+			//加载所属商户应用名称
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+			            function(data){
+							$('#queryMerchantId').combobox('loadData',data);
+							if (data.length == 1) {
+								$('#queryMerchantId').combobox('select',data[0].id);
+							}
+							//预加载,默认维度天,日期昨天
+							findPayment();
+		            	}
+	            );
+			
 		});
 		
         //加载select
@@ -97,12 +107,12 @@
 				valueField:'id',
 				textField:'text'
 			});
-			//加载所有商户应用名称
+			/* //加载所有商户应用名称
             $('#queryMerchantId').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames?flag=all',
 				valueField:'id',
 				textField:'text'
-			});
+			}); */
         }
 
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
@@ -120,7 +130,8 @@
 		function findPayment(){
 			var dimension="day";
 			var paymentType=1;
-		 	var url="${pageContext.request.contextPath}/payment/getPayment?dimension="+dimension+"&paymentType="+paymentType;
+			var merchantId = $('#queryMerchantId').combobox('getValue');
+		 	var url="${pageContext.request.contextPath}/payment/getPayment?dimension="+dimension+"&paymentType="+paymentType+"&merchantId="+merchantId;
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -154,6 +165,14 @@
 		function clearForm(){
 			$('#ff').form('clear');
 			$('select#queryDimension').combobox('setValue','day');
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+		            function(data){
+						$('#queryMerchantId').combobox('loadData',data);
+						if (data.length==1) {
+							$('#queryMerchantId').combobox('select',data[0].id);
+						}
+	            	}
+            );
 		}
 		
 		function submitForm(){
@@ -162,7 +181,7 @@
 			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
-			if(queryPaymentId==""&&queryMerchantId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
+			if(queryPaymentId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
 				findPayment();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
@@ -185,9 +204,9 @@
 		                  	}
 		                }
 				    }); 
-				}
+ 				}
 			}else{
-				var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=1";
+				var url="${pageContext.request.contextPath}/payment/getPayment?&paymentId="+queryPaymentId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&paymentType=1"+"&merchantId="+queryMerchantId;
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,
