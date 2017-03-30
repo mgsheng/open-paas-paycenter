@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.pay.platform.manager.department.model.DictTradeChannel;
 import cn.com.open.pay.platform.manager.department.model.MerchantInfo;
+import cn.com.open.pay.platform.manager.department.service.MerchantInfoService;
 import cn.com.open.pay.platform.manager.log.service.PrivilegeLogService;
 import cn.com.open.pay.platform.manager.login.model.User;
 import cn.com.open.pay.platform.manager.paychannel.model.ChannelRate;
@@ -50,6 +51,8 @@ public class PayChannelRateController extends BaseControllerUtil{
 	private PrivilegeResourceService privilegeResourceService;
 	@Autowired
 	private PrivilegeLogService privilegeLogService;
+	@Autowired
+	private MerchantInfoService merchantInfoService;
 	/**
 	 * 跳转到渠道费率维护页面
 	 * @return
@@ -158,30 +161,38 @@ public class PayChannelRateController extends BaseControllerUtil{
 	@RequestMapping(value="findMerchantNames")
 	public void findMerchantNames(HttpServletRequest request,HttpServletResponse response,Model model){
 		log.info("-------------------------findMerchantNames         start------------------------------------");
-		String flag=request.getParameter("flag");
-		List<MerchantInfo> list = payChannelRateService.findMerchantNamesAll();
-		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
-		Map<String,Object> map= null;
-		map = new HashMap<String,Object>();
-		map.put("id", "");
-		map.put("text", "全部");
-		if(flag!=null && ("all").equals(flag)){
+		//是否是管理员,如果是,返回所有商户.否,只返回该用户所在商户
+		Boolean isManager = (Boolean) request.getSession().getAttribute("isManager");
+		User user = (User) request.getSession().getAttribute("user");
+		List<MerchantInfo> list=null;
+		Map<String, Object> map = null;
+		map = new HashMap<String, Object>();
+		List<Map<String, Object>> maps = new ArrayList<Map<String, Object>>();
+		if (isManager) {
+			list = merchantInfoService.findMerchantNamesAll();
+			map.put("id", "");
+			map.put("text", "全部");
 			maps.add(map);
+		}else {
+			list=new ArrayList<MerchantInfo>();
+			MerchantInfo merchantInfo=(MerchantInfo) merchantInfoService.findById(Integer.parseInt(user.getMerchantId()));
+			list.add(merchantInfo);
 		}
-		String str=null;
-		if(list != null){
-			for(MerchantInfo m : list){
-				map = new HashMap<String,Object>();
-				map.put("id", m.getId());
-				map.put("text", m.getMerchantName());
+		
+		
+		
+		if (list != null) {
+			for (MerchantInfo d : list) {
+				map = new HashMap<String, Object>();
+				map.put("id", d.getId());
+				map.put("text", d.getMerchantName());
 				maps.add(map);
-			} 
+			}
 			JSONArray jsonArr = JSONArray.fromObject(maps);
-			str = jsonArr.toString();
-			WebUtils.writeJson(response, str);
-			System.out.println(str);
+			WebUtils.writeJson(response, jsonArr);
 		}
-		return ;
+		return;
+		
 	}
 	
 	/**
