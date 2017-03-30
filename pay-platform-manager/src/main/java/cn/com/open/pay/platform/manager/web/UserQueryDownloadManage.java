@@ -661,7 +661,6 @@ public class UserQueryDownloadManage extends BaseControllerUtil {
 		
 		
 		
-		String str = null;
 		if (list != null) {
 			for (MerchantInfo d : list) {
 				map = new HashMap<String, Object>();
