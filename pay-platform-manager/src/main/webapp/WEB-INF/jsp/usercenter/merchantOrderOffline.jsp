@@ -31,7 +31,7 @@
 					</td>
 					<td style="text-align: right;">收&nbsp;费&nbsp;商&nbsp;户：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="queryMerchantName" 
+						<select class="easyui-combobox" data-options="editable:false,valueField:'id',textField:'text'," id="queryMerchantName" 
 								name="queryMerchantName"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
@@ -250,8 +250,17 @@
 		$(function(){
 			var operator=$("#realName",window.parent.document).text();
 			$("#addOperator").val(operator);
-			findOrderOffline();
 			loadSelect();
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+		            function(data){
+						$('#queryMerchantName').combobox('loadData',data);
+						if (data.length == 1) {
+							$('#queryMerchantName').combobox('select',data[0].id);
+						}
+					
+						findOrderOffline();
+	            	}
+	        );
 		});
 		
 		//设置添加费率窗口
@@ -298,7 +307,7 @@
 			});
 			
 			//加载所有商户名
-			 $('#addMerchantName,#queryMerchantName').combobox({
+			 $('#addMerchantName').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames',
 				valueField:'id',
 				textField:'text'
@@ -423,7 +432,8 @@
 		}
 
 		function findOrderOffline(){
-		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline";
+			var merchantId = $('#queryMerchantName').combobox('getValue');
+		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderOffline?merchantName="+merchantId;
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -465,6 +475,15 @@
 		
 		function clearForm(){
 			$('#ff').form('clear');
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+		            function(data){
+						$('#queryMerchantName').combobox('loadData',data);
+						if (data.length == 1) {
+							$('#queryMerchantName').combobox('select',data[0].id);
+						}
+					
+	            	}
+	        );
 		}
 		
 		function submitForm(){
@@ -478,7 +497,7 @@
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
 			
-			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&queryMerchantName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""&&startDate==""&&endDate==""){
+			if(queryOrderId==""&&queryMerchantOrderId==""&&querySourceUserName==""&&(queryAppId=="" || queryAppId=='0')&&queryChannelId==""&&queryOperator==""&&startDate==""&&endDate==""){
 				//$.messager.alert("提示","请输入查询条件!");
 				findOrderOffline();
 			}else if(!startDate==""&&!endDate==""){
