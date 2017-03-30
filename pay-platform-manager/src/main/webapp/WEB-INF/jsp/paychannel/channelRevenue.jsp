@@ -29,9 +29,8 @@
 					</td>
 					<td style="text-align: right;">所属应用：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择所属应用',multiple:false" id="queryMerchantId" 
+						<select class="easyui-combobox" data-options="editable:false,valueField:'id',textField:'text',multiple:false" id="queryMerchantId" 
 								name="queryMerchantId"  style="width:180px;height:25px;padding:5px;">
-							<option value="">全部</option>
 						</select>
 					</td>
 					<td style="text-align: right;">统计维度：</td>
@@ -82,14 +81,29 @@
 	<div id="cc" class="easyui-calendar"></div>
 </body>
 <script>
+		var Merchant//存放支付渠道信息
 		//页面预加载
 		$(function(){
         	//加载查询条件中的支付渠道
 			loadSelect();
-			//预加载,默认维度天,日期昨天
-			findChannelRevenue();
+			//加载所属商户应用名称
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+			            function(data){
+							$('#queryMerchantId').combobox('loadData',data);
+							if (data.length == 1) {
+								$('#queryMerchantId').combobox('select',data[0].id);
+							}
+							//预加载,默认维度天,日期昨天
+							findChannelRevenue();
+		            	}
+	            );
+			
 		});
-		
+		$('#queryMerchantId').combobox({
+			onSelect: function(record){
+				Merchant = record;
+			}
+		});
         //加载select
         function loadSelect(){
         	//加载所有支付方式名称，并且选中支付名称后触发根据该名称查询对应渠道编码的事件
@@ -98,12 +112,7 @@
 				valueField:'id',
 				textField:'text'
 			});
-			//加载所属商户应用名称
-			$('#queryMerchantId').combobox({
-				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames?flag=all',
-				valueField:'id',
-				textField:'text'
-			});
+			
         }
 
 		//弹出信息窗口 title:标题 msgString:提示信息 msgType:信息类型 [error,info,question,warning]
@@ -120,7 +129,8 @@
 
 		function findChannelRevenue(){
 			var dimension="day";
-		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?dimension="+dimension;
+			var merchantId = Merchant.id;
+		 	var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?dimension="+dimension+'&merchantId='+merchantId;
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -153,16 +163,25 @@
 		
 		function clearForm(){
 			$('#ff').form('clear');
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+		            function(data){
+						$('#queryMerchantId').combobox('loadData',data);
+						if (data.length==1) {
+							$('#queryMerchantId').combobox('select',data[0].id);
+						}
+	            	}
+            );
 			$('select#queryDimension').combobox('setValue','day');
 		}
 		
 		function submitForm(){
 			var queryChannelId = $('#queryChannelId').combobox('getValue');
-			var queryMerchantId = $('#queryMerchantId').combobox('getValue');
+			var queryMerchantId = Merchant.id;
+			//var queryMerchantId = $('#queryMerchantId').combobox('getValue');
 			var queryDimension = $('#queryDimension').combobox('getValue');
 			var startDate = $('#startDate').datebox('getValue');
 			var endDate = $('#endDate').datebox('getValue');
-			if(queryChannelId==""&&queryMerchantId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
+			if(queryChannelId==""&&queryDimension=="day"&&startDate==""&&endDate==""){
 				findChannelRevenue();
 			}else if(!startDate==""&&!endDate==""){
 				if(startDate>endDate){
@@ -187,7 +206,7 @@
 				    }); 
 				}
 			}else{
-				var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate;
+				var url="${pageContext.request.contextPath}/paychannel/getChannelRevenue?&channelId="+queryChannelId+"&dimension="+queryDimension+"&startDate="+startDate+"&endDate="+endDate+"&merchantId="+queryMerchantId;
 	        	$('#dg').datagrid({
 					collapsible:true,
 					rownumbers:true,
