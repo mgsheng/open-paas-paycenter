@@ -27,7 +27,7 @@
 					</td>
 					<td style="text-align: right;">退&nbsp;费&nbsp;商&nbsp;户：</td>
 					<td>
-						<select class="easyui-combobox" data-options="editable:false,prompt:'请选择商户名'" id="queryMerchantName" 
+						<select class="easyui-combobox" data-options="editable:false,valueField:'id',textField:'text'" id="queryMerchantName" 
 								name="queryMerchantName"  style="width:180px;height:25px;padding:5px;">
 						</select>
 					</td>
@@ -191,7 +191,15 @@
 <script>
 		//页面预加载
 		$(function(){
-			findOrderRefund();
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+		            function(data){
+						$('#queryMerchantName').combobox('loadData',data);
+						if (data.length == 1) {
+							$('#queryMerchantName').combobox('select',data[0].id);
+						}
+						findOrderRefund();
+	            	}
+	        );
 			loadSelect();
 		});
 		
@@ -229,7 +237,7 @@
         //加载select
         function loadSelect(){
 			//加载所有商户名
-			 $('#addMerchantName,#queryMerchantName').combobox({
+			 $('#addMerchantName').combobox({
 				url:'${pageContext.request.contextPath}/paychannel/findMerchantNames',
 				valueField:'id',
 				textField:'text'
@@ -337,7 +345,8 @@
 		}
 
 		function findOrderRefund(){
-		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderRefund";
+			var merchantId = $('#queryMerchantName').combobox('getValue');
+		 	var url="${pageContext.request.contextPath}/manage/getMerchantOrderRefund?merchantName="+merchantId;
         	$('#dg').datagrid({
 				collapsible:true,
 				rownumbers:true,
@@ -379,6 +388,15 @@
 		
 		function clearForm(){
 			$('#ff').form('clear');
+			$.post("${pageContext.request.contextPath}/paychannel/findMerchantNames",
+		            function(data){
+						$('#queryMerchantName').combobox('loadData',data);
+						if (data.length == 1) {
+							$('#queryMerchantName').combobox('select',data[0].id);
+						}
+					
+	            	}
+	        );
 		}
 		
 		function submitForm(){
