@@ -242,6 +242,8 @@ public class BankPaymentController extends BaseControllerUtil{
 				cal.add(Calendar.DATE,1);
 			    orderInfo.setEndDate(sdf.format(cal.getTime()));
 			    bankPayments = merchantOrderInfoService.findBankPayment(orderInfo);
+			    total = merchantOrderInfoService.findBankPaymentCount(orderInfo);
+			    json.put("total", total);
 			    if(bankPayments != null){
 			    	Map<String,Object> map = null;
 			    	for(MerchantOrderInfo r : bankPayments){
