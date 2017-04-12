@@ -221,6 +221,7 @@ public class UnionPayCallbackController extends BaseControllerUtil {
 					return "pay/payMaxRedirect";
 				}
 				payServiceLog.setStatus("already processed");
+				backMsg="success";
 			}
 			payServiceLog.setLogName(PayLogName.UNION_CALLBACK_END);
 			UnifyPayControllerLog.log(startTime, payServiceLog, payserviceDev);
