@@ -248,7 +248,7 @@ public class AliOrderCallbackController extends BaseControllerUtil {
 					    model.addAttribute("res", buf);
 	     			    return "pay/payMaxRedirect"; 
 				 }
-			
+				 backMsg="success";
 	        	  payServiceLog.setStatus("already processed");
 				 }
 	          payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);

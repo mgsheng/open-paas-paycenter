@@ -255,6 +255,7 @@ public class PayMaxCallbackController extends BaseControllerUtil {
 							    model.addAttribute("res", buf);
 			     			    return "pay/payMaxRedirect"; 
 				  		 }
+				  		backMsg="success";
 				  		payServiceLog.setStatus("already processed");
 					 }
 		          payServiceLog.setLogName(PayLogName.PAYMAX_RETURN_END);
