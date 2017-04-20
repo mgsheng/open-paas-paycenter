@@ -292,10 +292,10 @@ public class TZTService {
 	/**
 	 * 解析http请求返回
 	 */
-	public static Map<String, String> parseHttpResponseBody(int statusCode, String responseBody) throws Exception {
+	public static Map<String, String> parseHttpResponseBody(int statusCode, String responseBody,String merchantPrivateKey,String yeepayPublicKey) throws Exception {
 
-		String merchantPrivateKey	= getMerchantPrivateKey();
-		String yeepayPublicKey		= getYeepayPublicKey();
+//		String merchantPrivateKey	= getMerchantPrivateKey();
+//		String yeepayPublicKey		= getYeepayPublicKey();
 
 		Map<String, String> result	= new HashMap<String, String>();
 		String customError			= "";
@@ -381,18 +381,18 @@ public class TZTService {
 	 * bindCardRequest() : 有短验绑卡请求接口
 	 */
 
-	public static Map<String, String> bindCardRequest(Map<String, String> params) {
+	public static Map<String, String> bindCardRequest(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String bindBankcardURL) {
 
 		System.out.println("##### bindCardRequest() #####");
 
 		Map<String, String> result			= new HashMap<String, String>();
         String customError	   				= "";	//自定义，非接口返回
 		
-		String merchantno			= getMerchantAccount();
-		String merchantPrivateKey	= getMerchantPrivateKey();
-		String merchantAESKey		= getMerchantAESKey();
-		String yeepayPublicKey		= getYeepayPublicKey();
-		String bindBankcardURL		= getBindBankcardURL();
+//		String merchantno			= getMerchantAccount();
+//		String merchantPrivateKey	= getMerchantPrivateKey();
+//		String merchantAESKey		= getMerchantAESKey();
+//		String yeepayPublicKey		= getYeepayPublicKey();
+//		String bindBankcardURL		= getBindBankcardURL();
 
 		String requestno            = formatString(params.get("requestno"));
 		String identityid           = formatString(params.get("identityid"));
@@ -451,7 +451,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -516,7 +516,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -578,7 +578,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -644,7 +644,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -712,7 +712,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -818,7 +818,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result						= parseHttpResponseBody(statusCode, responseBody);
+			result						= parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -882,7 +882,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -944,7 +944,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1048,7 +1048,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result						= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1148,7 +1148,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result						= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1212,7 +1212,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1274,7 +1274,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1364,7 +1364,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result						= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1428,7 +1428,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1491,7 +1491,7 @@ public class TZTService {
 			String responseBody			= new String(responseByte, "UTF-8");
 			System.out.println("statusCode : " + statusCode);
 			
-			result = parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -1559,7 +1559,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -1627,7 +1627,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 			
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 			
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -1687,7 +1687,7 @@ public class TZTService {
 			int statusCode			= httpClient.executeMethod(getMethod);
 			String responseBody		= getMethod.getResponseBodyAsString();
 			
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -1755,7 +1755,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -1825,7 +1825,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -1889,7 +1889,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 			
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 			
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -1956,7 +1956,7 @@ public class TZTService {
 
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -2021,7 +2021,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 			
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 			
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -2111,7 +2111,7 @@ public class TZTService {
 
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -2204,7 +2204,7 @@ public class TZTService {
 			byte[] responseByte			= postMethod.getResponseBody();
 			String responseBody			= new String(responseByte, "UTF-8");
 
-			result						= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError	= "Caught Exception!" + e.toString();
@@ -2284,7 +2284,7 @@ public class TZTService {
 
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -2349,7 +2349,7 @@ public class TZTService {
 			System.out.println("url	 : " + url);
 			System.out.println("responseBody : " + responseBody);
 			
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 			
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();
@@ -2420,7 +2420,7 @@ public class TZTService {
 
 			System.out.println("responseBody : " + responseBody);
 
-			result					= parseHttpResponseBody(statusCode, responseBody);
+			result = parseHttpResponseBody(statusCode, responseBody,merchantPrivateKey,yeepayPublicKey);
 
 		} catch(Exception e) {
 			customError		= "Caught an Exception. " + e.toString();

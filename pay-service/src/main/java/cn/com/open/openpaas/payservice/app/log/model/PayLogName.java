@@ -99,4 +99,10 @@ public interface PayLogName {
 	public static String ORDER_AUTO_START = "order_auto_start";
 	//订单补发结束
 	public static String ORDER_AUTO_END = "order_auto_end";
+	//绑卡开始
+	public static String BIND_CARD_START = "bind_card_start";
+	//绑卡结束
+	public static String BIND_CARD_END = "bind_card_end";
+	
+	
 }

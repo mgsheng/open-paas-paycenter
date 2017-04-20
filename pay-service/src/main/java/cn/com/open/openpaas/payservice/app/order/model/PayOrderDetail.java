@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 
+ * 用户订单详细信息表
  */
 public class PayOrderDetail implements Serializable {
 	
@@ -194,7 +194,5 @@ public class PayOrderDetail implements Serializable {
 	public void setAppId(String appId) {
 		this.appId = appId;
 	}
-
-
 	
 }

@@ -27,9 +27,15 @@ public class PayserviceDev {
 	private String banks_switch;
 	private String oes_merchantId;
 	private String lakla_show_url;
+	private String bindCardRequestURL;
 	
 	
-	
+	public String getBindCardRequestURL() {
+		return bindCardRequestURL;
+	}
+	public void setBindCardRequestURL(String bindCardRequestURL) {
+		this.bindCardRequestURL = bindCardRequestURL;
+	}
 	public String getLakla_show_url() {
 		return lakla_show_url;
 	}

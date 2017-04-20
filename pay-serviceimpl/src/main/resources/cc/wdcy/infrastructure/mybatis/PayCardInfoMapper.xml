@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.PayCardInfoRepositoryMyBatis">
+	<resultMap type="PayCardInfo" id="payCardInfoMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="identity_type" property="identityType" jdbcType="VARCHAR" />
+		<result column="identity_id" property="identityId" jdbcType="VARCHAR" />
+		<result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="oricard_no" property="oricardNo" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+	  identity_type,
+	  identity_id,
+	  card_no,
+	  user_name,
+	  oricard_no,
+	  phone,
+	  app_id,
+	  create_time,
+	  update_time,
+	  status,
+	  user_id
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.openpaas.payservice.app.order.model.PayCardInfo">
+		<selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into PAY_CARD_INFO
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{identityType, jdbcType=VARCHAR},
+			#{identityId, jdbcType=VARCHAR},
+			#{cardNo, jdbcType=VARCHAR},
+			#{userName, jdbcType=VARCHAR},
+			#{oricardNo, jdbcType=VARCHAR},
+			#{phone, jdbcType=VARCHAR},
+			#{appId, jdbcType=VARCHAR},
+			#{createTime, jdbcType=TIMESTAMP},
+			#{updateTime, jdbcType=TIMESTAMP},
+			#{userId, jdbcType=VARCHAR},
+			#{status, jdbcType=INTEGER}
+			
+		)
+	</insert>
+	
+	<select id="findByMerchantOrderId" resultMap="payCardInfoMap">
+         select * from PAY_CARD_INFO
+         where  userId = #{userId}
+         and app_id=#{appId}
+	</select>
+	<insert id="savePayCardInfo" parameterType="PayCardInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into PAY_CARD_INFO(identity_type,identity_id,card_no,user_name,oricard_no,phone,app_id,create_time,update_time,status,user_id)
+        values
+        (#{identityType},#{identityId},#{cardNo},#{userName},#{oricardNo},#{phone},#{appId},#{createTime},#{updateTime},#{status},#{userId})
+    </insert>
+		
+	
+</mapper>
