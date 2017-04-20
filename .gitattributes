@@ -904,6 +904,7 @@ pay-service-test/src/main/java/com/andaily/springoauth/service/dto/AuthCallbackD
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/AuthorizationCodeDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/DirctPayDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/OrderRefund.java -text
+pay-service-test/src/main/java/com/andaily/springoauth/service/dto/PayCardInfoDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/PayOrderDetailDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/RefreshAccessTokenDto.java -text
 pay-service-test/src/main/java/com/andaily/springoauth/service/dto/UnifyPayDto.java -text
@@ -948,6 +949,7 @@ pay-service-test/src/main/webapp/WEB-INF/jsp/resources/user_user_info.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~](2)[!!-~]of[!!-~]user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/Copy[!!-~]of[!!-~]user_unify_pay.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/alipay_order_callback.jsp -text
+pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/bind_card_request.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/dynamic_login.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/ehk_order_callback.jsp -text
 pay-service-test/src/main/webapp/WEB-INF/jsp/usercenter/order_manual_send.jsp -text

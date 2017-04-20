@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.andaily.springoauth.service.dto.DirctPayDto;
 import com.andaily.springoauth.service.dto.OrderRefund;
+import com.andaily.springoauth.service.dto.PayCardInfoDto;
 import com.andaily.springoauth.service.dto.PayOrderDetailDto;
 import com.andaily.springoauth.service.dto.UnifyPayDto;
 import com.andaily.springoauth.service.dto.UserSerialRecord;
@@ -83,6 +84,8 @@ public class UserInterfaceController {
     private String accountDownlondUri;
     @Value("#{properties['save-payOrderDetail-uri']}")
     private String  savePayOrderDetailUri;
+    @Value("#{properties['bindCard-request-uri']}")
+    private String bindCardRequestUri;
     
     
     final static String  SEPARATOR = "&";
@@ -630,7 +633,52 @@ public class UserInterfaceController {
    	    final String fullUri =payOrderDetailDto.getFullUri();
         LOG.debug("Send to pay-service-server URL: {}", fullUri);
         return "redirect:" + fullUri;
-    }     
+    } 
+ 	/**
+     * 绑卡请求操作
+     * 
+     * */
+	@RequestMapping(value = "bingCardRequest", method = RequestMethod.GET)
+	public String bingCardRequest(Model model) {
+		model.addAttribute("bindCardRequestUri", bindCardRequestUri);
+		return "usercenter/bind_card_request";
+	}
+	/**
+     * 绑卡请求操作
+     * 
+     */
+    @RequestMapping(value = "bingCardRequest", method = RequestMethod.POST)
+    public String bingCardRequest(PayCardInfoDto payCardInfoDto) throws Exception {
+   	 
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo() );
+	   		sParaTemp.put("userId", payCardInfoDto.getUserId());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("userName", payCardInfoDto.getUserName());
+	   		sParaTemp.put("identityId", payCardInfoDto.getIdentityId());
+	   		sParaTemp.put("identityType", payCardInfoDto.getIdentityType());
+	   		sParaTemp.put("cardNo", payCardInfoDto.getCardNo());
+	   		sParaTemp.put("avaliabletime", payCardInfoDto.getAvaliabletime());
+	   		sParaTemp.put("phone", payCardInfoDto.getPhone());
+	   		sParaTemp.put("parameter", payCardInfoDto.getParameter());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getFullUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    }    
      /** 
       * 发送POST请求 
       *  
