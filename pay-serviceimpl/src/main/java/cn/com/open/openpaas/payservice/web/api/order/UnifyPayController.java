@@ -111,7 +111,6 @@ public class UnifyPayController extends BaseControllerUtil{
     public String unifyPay(HttpServletRequest request,HttpServletResponse response,Model model) throws MalformedURLException, DocumentException, IOException, Exception {
     	
     	long startTime = System.currentTimeMillis();
-    	
     	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
     	//String banks_switch=payserviceDev.getBanks_switch();
