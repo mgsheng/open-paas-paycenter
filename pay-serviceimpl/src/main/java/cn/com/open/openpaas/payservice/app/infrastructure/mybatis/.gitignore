@@ -1,0 +1,13 @@
+/ChannelRateRepositoryMyBatis.class
+/DictTradeChannelRepositoryMyBatis.class
+/DictTradePaymentDitchRepositoryMyBatis.class
+/DictTradePaymentRepositoryMyBatis.class
+/LogMonitorRepositoryMyBatis.class
+/MerchantInfoRepositoryMyBatis.class
+/MerchantOrderInfoRepositoryMyBatis.class
+/OrderRefundRepositoryMyBatis.class
+/PayCardInfoRepositoryMyBatis.class
+/PayOrderDetailRepositoryMyBatis.class
+/PayZxptInfoRepositoryMyBatis.class
+/UserAccuntBalanceRepositoryMyBatis.class
+/UserSerialRecordRepositoryMyBatis.class

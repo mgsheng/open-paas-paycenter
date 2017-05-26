@@ -6,7 +6,7 @@
         <dependent-module archiveName="pay-service.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pay-service/pay-service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <property name="java-output-path" value="/spring-oauth-server/src/main/webapp/WEB-INF/classes"/>
         <property name="context-root" value="/pay-service"/>
-        <property name="java-output-path" value="/pay-serviceimpl/target/classes"/>
     </wb-module>
 </project-modules>
