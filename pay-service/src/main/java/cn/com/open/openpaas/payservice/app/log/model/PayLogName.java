@@ -1,6 +1,7 @@
 package cn.com.open.openpaas.payservice.app.log.model;
 
 public interface PayLogName {
+	
 	//支付接口调用开始
 	public static String PAY_START = "pay_start";
 	//支付接口调用结束
