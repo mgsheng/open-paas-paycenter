@@ -17,10 +17,11 @@ public class HMacSha1 {
     		 PasswordEncoder passwordEncoder = new ShaPasswordEncoder();
     		 String a=	 passwordEncoder.encodePassword("abc123", null);
     		 String data="sdfsdfesdfsfd";
-			//String a= HmacSHA1Encrypt("abc123","9ebada02676c4ccbbbdaeae27362896b");
-			System.out.println(a);
+			String b= HmacSHA1Encrypt("appId=10023&businessType=1&clientIp=127.0.0.1&goodsName=考务报名费用&merchantId=10006&outTradeNo=10011704270000040b6d2a8903304b76ba3c3b030a6158ce&paymentChannel=10001&paymentType=ALIPAY&signatureNonce=13&timestamp=2017-05-02T11:34:59Z&totalFee=16000.0&userId=09f1b037d24243a3bab25b06d7b8480f&userName=register51016","616ab89e64338da160dfd60c0de9240");
+			System.out.println(b);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			//AfV4oUzmtns5XUgrtEsHERclREY=
 			e.printStackTrace();
 		}
 	}

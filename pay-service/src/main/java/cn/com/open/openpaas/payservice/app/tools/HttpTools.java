@@ -23,9 +23,9 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.util.HttpURLConnection;
 import org.apache.log4j.Logger;
 
-import sun.net.www.protocol.http.HttpURLConnection;
 
 public class HttpTools {
 	private static MultiThreadedHttpConnectionManager connectionManager = null;

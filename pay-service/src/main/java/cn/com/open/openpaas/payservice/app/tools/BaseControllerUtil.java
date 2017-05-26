@@ -823,6 +823,9 @@ public class BaseControllerUtil {
 			}
 			return res;
 		}
+		public static String formatString(String text){
+				return text==null ? "" : text.trim();
+	  }		
 
 	
 }

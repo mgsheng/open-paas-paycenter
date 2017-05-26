@@ -22,8 +22,59 @@ public class PayCardInfo implements Serializable {
 	private Date updateTime;
 	private Integer status;//1:
 	private String userId;
+	private String terminalId;
+	private String lastLoginTerminalId;
+	private String isSetPaypwd;
+	private String registIp;
+	private String lastloginIp;
+	private Date   lastloginTime;
+	private Date registTime;
 	
 	
+	
+	
+	public Date getRegistTime() {
+		return registTime;
+	}
+	public void setRegistTime(Date registTime) {
+		this.registTime = registTime;
+	}
+	public String getRegistIp() {
+		return registIp;
+	}
+	public void setRegistIp(String registIp) {
+		this.registIp = registIp;
+	}
+	public String getLastloginIp() {
+		return lastloginIp;
+	}
+	public void setLastloginIp(String lastloginIp) {
+		this.lastloginIp = lastloginIp;
+	}
+	public Date getLastloginTime() {
+		return lastloginTime;
+	}
+	public void setLastloginTime(Date lastloginTime) {
+		this.lastloginTime = lastloginTime;
+	}
+	public String getTerminalId() {
+		return terminalId;
+	}
+	public void setTerminalId(String terminalId) {
+		this.terminalId = terminalId;
+	}
+	public String getLastLoginTerminalId() {
+		return lastLoginTerminalId;
+	}
+	public void setLastLoginTerminalId(String lastLoginTerminalId) {
+		this.lastLoginTerminalId = lastLoginTerminalId;
+	}
+	public String getIsSetPaypwd() {
+		return isSetPaypwd;
+	}
+	public void setIsSetPaypwd(String isSetPaypwd) {
+		this.isSetPaypwd = isSetPaypwd;
+	}
 	public String getUserId() {
 		return userId;
 	}

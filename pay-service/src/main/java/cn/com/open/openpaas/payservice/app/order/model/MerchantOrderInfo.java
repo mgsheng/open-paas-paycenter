@@ -1,7 +1,5 @@
 package cn.com.open.openpaas.payservice.app.order.model;
-
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -104,6 +102,9 @@ public class MerchantOrderInfo implements Serializable {
 	private String dealDate1;
 	
 
+	
+	
+	
 	public Integer getBusinessType() {
 		return businessType;
 	}

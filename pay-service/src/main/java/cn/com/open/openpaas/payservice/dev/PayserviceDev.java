@@ -28,8 +28,154 @@ public class PayserviceDev {
 	private String oes_merchantId;
 	private String lakla_show_url;
 	private String bindCardRequestURL;
+	private String bindCardConfirmURL;
+	private String bindCardResendsmsURL;
+	private String bindPayRequestURL;
+	private String  unSendBindPayRequestURL;
+	private String changeCardRequestURL;
+	private String changeCardConfirmURL;
+	private String changeCardResendsmsmURL;
+	private String zxpt_score_method;
+	private String zxpt_cert_type;
+	private String zxpt_charset;
+	private String zxpt_public_key;
+	private String zxpt_key;
+	private String zxpt_entityAuthCode;
+	private String zxpt_sender;
+	private String zxpt_third_url;
+	private String zxpt_version;
+	private String zxpt_source;
+	private String zxpt_des;
+	private String zxpt_app;
+	private String zxpt_tranref;
+	private String unbindRequestURL;
 	
-	
+	public String getUnbindRequestURL() {
+		return unbindRequestURL;
+	}
+	public void setUnbindRequestURL(String unbindRequestURL) {
+		this.unbindRequestURL = unbindRequestURL;
+	}
+	public String getZxpt_version() {
+		return zxpt_version;
+	}
+	public void setZxpt_version(String zxpt_version) {
+		this.zxpt_version = zxpt_version;
+	}
+	public String getZxpt_source() {
+		return zxpt_source;
+	}
+	public void setZxpt_source(String zxpt_source) {
+		this.zxpt_source = zxpt_source;
+	}
+	public String getZxpt_des() {
+		return zxpt_des;
+	}
+	public void setZxpt_des(String zxpt_des) {
+		this.zxpt_des = zxpt_des;
+	}
+	public String getZxpt_app() {
+		return zxpt_app;
+	}
+	public void setZxpt_app(String zxpt_app) {
+		this.zxpt_app = zxpt_app;
+	}
+	public String getZxpt_tranref() {
+		return zxpt_tranref;
+	}
+	public void setZxpt_tranref(String zxpt_tranref) {
+		this.zxpt_tranref = zxpt_tranref;
+	}
+	public String getZxpt_third_url() {
+		return zxpt_third_url;
+	}
+	public void setZxpt_third_url(String zxpt_third_url) {
+		this.zxpt_third_url = zxpt_third_url;
+	}
+	public String getZxpt_sender() {
+		return zxpt_sender;
+	}
+	public void setZxpt_sender(String zxpt_sender) {
+		this.zxpt_sender = zxpt_sender;
+	}
+	public String getZxpt_entityAuthCode() {
+		return zxpt_entityAuthCode;
+	}
+	public void setZxpt_entityAuthCode(String zxpt_entityAuthCode) {
+		this.zxpt_entityAuthCode = zxpt_entityAuthCode;
+	}
+	public String getZxpt_score_method() {
+		return zxpt_score_method;
+	}
+	public void setZxpt_score_method(String zxpt_score_method) {
+		this.zxpt_score_method = zxpt_score_method;
+	}
+	public String getZxpt_cert_type() {
+		return zxpt_cert_type;
+	}
+	public void setZxpt_cert_type(String zxpt_cert_type) {
+		this.zxpt_cert_type = zxpt_cert_type;
+	}
+	public String getZxpt_charset() {
+		return zxpt_charset;
+	}
+	public void setZxpt_charset(String zxpt_charset) {
+		this.zxpt_charset = zxpt_charset;
+	}
+	public String getZxpt_public_key() {
+		return zxpt_public_key;
+	}
+	public void setZxpt_public_key(String zxpt_public_key) {
+		this.zxpt_public_key = zxpt_public_key;
+	}
+	public String getZxpt_key() {
+		return zxpt_key;
+	}
+	public void setZxpt_key(String zxpt_key) {
+		this.zxpt_key = zxpt_key;
+	}
+	public String getChangeCardResendsmsmURL() {
+		return changeCardResendsmsmURL;
+	}
+	public void setChangeCardResendsmsmURL(String changeCardResendsmsmURL) {
+		this.changeCardResendsmsmURL = changeCardResendsmsmURL;
+	}
+	public String getChangeCardConfirmURL() {
+		return changeCardConfirmURL;
+	}
+	public void setChangeCardConfirmURL(String changeCardConfirmURL) {
+		this.changeCardConfirmURL = changeCardConfirmURL;
+	}
+	public String getChangeCardRequestURL() {
+		return changeCardRequestURL;
+	}
+	public void setChangeCardRequestURL(String changeCardRequestURL) {
+		this.changeCardRequestURL = changeCardRequestURL;
+	}
+	public String getUnSendBindPayRequestURL() {
+		return unSendBindPayRequestURL;
+	}
+	public void setUnSendBindPayRequestURL(String unSendBindPayRequestURL) {
+		this.unSendBindPayRequestURL = unSendBindPayRequestURL;
+	}
+	public String getBindPayRequestURL() {
+		return bindPayRequestURL;
+	}
+	public void setBindPayRequestURL(String bindPayRequestURL) {
+		this.bindPayRequestURL = bindPayRequestURL;
+	}
+	public String getBindCardResendsmsURL() {
+		return bindCardResendsmsURL;
+	}
+	public void setBindCardResendsmsURL(String bindCardResendsmsURL) {
+		this.bindCardResendsmsURL = bindCardResendsmsURL;
+	}
+	public String getBindCardConfirmURL() {
+		return bindCardConfirmURL;
+	}
+	public void setBindCardConfirmURL(String bindCardConfirmURL) {
+		this.bindCardConfirmURL = bindCardConfirmURL;
+	}
 	public String getBindCardRequestURL() {
 		return bindCardRequestURL;
 	}
