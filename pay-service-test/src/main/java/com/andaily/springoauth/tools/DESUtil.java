@@ -72,10 +72,10 @@ public class DESUtil {
     public static void main(String[] args) throws Exception {
         String source = "111111";
         System.out.println("原文: " + source);
-        String key = "9ebada02676c4ccbbbdaeae27362896b";
+        String key = "67d73cec5d6b4c8a8a9883748f4066fe";
         String encryptData = encrypt(source, key);
         System.out.println("加密后: " + encryptData);
-        String decryptData = decrypt(encryptData,  key);
+        String decryptData = decrypt("",  key);
         System.out.println("解密后: " + decryptData);
     }
 }

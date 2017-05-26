@@ -225,6 +225,7 @@
 								<option value="10010">微信公众号</option>
 								<option value="10011">拉卡拉-微信公众号支付</option>
 								<option value="10013">拉卡拉-微信扫码支付</option>
+								<option value="10014">拉卡拉-H5支付</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>

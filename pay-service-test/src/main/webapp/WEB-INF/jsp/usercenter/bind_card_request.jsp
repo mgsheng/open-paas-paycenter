@@ -20,7 +20,7 @@
     <div class="panel-body">
         <div ng-controller="AuthorizationCodeCtrl" class="col-md-10">
 
-            <form action="bingCardRequest" method="post" class="form-horizontal" target="_blank">
+            <form action="bindCardRequest" method="post" class="form-horizontal" target="_blank">
             <%-- <form action="${userCenterRegUri}" method="post" class="form-horizontal"> --%>
                 <input type="hidden" name="bindCardRequestUri" id="bindCardRequestUri" value="${bindCardRequestUri}"/>
                 <a href="javascript:void(0);" ng-click="showParams()">显示请求参数</a>
@@ -138,6 +138,77 @@
                             <p class="help-block">parameter</p>
                         </div>
                     </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">terminalId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="terminalId" id="terminalId" size="50" class="form-control"
+                                   ng-model="terminalId"/>
+
+                            <p class="help-block">注册硬件终端标识码（必传）</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">lastLoginTerminalId</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="lastLoginTerminalId" id="lastLoginTerminalId" size="50" class="form-control"
+                                   ng-model="lastLoginTerminalId"/>
+
+                            <p class="help-block">上一次登录硬件终端标识码（必传）</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">registIp</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="registIp" id="registIp" size="50" class="form-control"
+                                   ng-model="registIp"/>
+
+                            <p class="help-block">注册ip</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">lastloginIp</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="lastloginIp" id="lastloginIp" size="50" class="form-control"
+                                   ng-model="lastloginIp"/>
+
+                            <p class="help-block">上一次登录IP</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">lastloginTime</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="lastloginTime" id="lastloginTime" size="50" class="form-control"
+                                   ng-model="lastloginTime"/>
+
+                            <p class="help-block">上一次登录时间格式： yyyy-MM-dd HH:mm:ss</p>
+                        </div>
+                    </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">registTime</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="registTime" id="registTime" size="50" class="form-control"
+                                   ng-model="registTime"/>
+
+                            <p class="help-block">注册时间格式： yyyy-MM-dd HH:mm:ss</p>
+                        </div>
+                    </div>
+                       <div class="form-group">
+                        <label class="col-sm-2 control-label">isSetPaypwd</label>
+
+                        <div class="col-sm-10">
+							<select name="isSetPaypwd" id="isSetPaypwd" class="form-control" ng-mode="isSetPaypwd">
+								<option value="0">否</option>
+								<option value="1">是</option>
+							</select>
+                            <p class="help-block">是否设置支付密码（0：否1:是）（必传）</p>
+                        </div>
+                    </div> 
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>
                         <br/>
@@ -207,7 +278,7 @@
 				    var signature=data.signature;
 				    var timestamp=data.timestamp;
 				    var signatureNonce=data.signatureNonce;
-				    var regUri=userUnifyPayUri+"?"+"outTradeNo="+outTradeNo+"&identityType="+identityType+"&userName="+userName+"&userId="+userId+"&appId="+appId+"&merchantId="+merchantId+"&phone="+phone+"&cardNo="+cardNo+"&avaliabletime="+avaliabletime+"&parameter="+parameter+"&identityId="+identityId+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
+				    var regUri=bindCardRequestUri+"?"+"outTradeNo="+outTradeNo+"&identityType="+identityType+"&userName="+userName+"&userId="+userId+"&appId="+appId+"&merchantId="+merchantId+"&phone="+phone+"&cardNo="+cardNo+"&avaliabletime="+avaliabletime+"&parameter="+parameter+"&identityId="+identityId+"&signature="+signature+"&amptimestamp="+timestamp+"&signatureNonce="+signatureNonce;
 					$("#userUnifyPayUri").html(regUri);
 				}else{
 				    jQuery("#userUnifyPayUri").html('无效数据，请重新申请');

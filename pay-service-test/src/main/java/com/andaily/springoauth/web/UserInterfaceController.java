@@ -33,6 +33,7 @@ import com.andaily.springoauth.service.dto.DirctPayDto;
 import com.andaily.springoauth.service.dto.OrderRefund;
 import com.andaily.springoauth.service.dto.PayCardInfoDto;
 import com.andaily.springoauth.service.dto.PayOrderDetailDto;
+import com.andaily.springoauth.service.dto.PayZxptInfo;
 import com.andaily.springoauth.service.dto.UnifyPayDto;
 import com.andaily.springoauth.service.dto.UserSerialRecord;
 
@@ -86,6 +87,27 @@ public class UserInterfaceController {
     private String  savePayOrderDetailUri;
     @Value("#{properties['bindCard-request-uri']}")
     private String bindCardRequestUri;
+    @Value("#{properties['bindCard-confirm-uri']}")
+    private String bindCardConfirmUri;
+    @Value("#{properties['bindCard-resendsms-uri']}")
+    private String bindCardResendsmsUri;
+    
+    @Value("#{properties['changeCard-request-uri']}")
+    private String changeCardRequestUri;
+    @Value("#{properties['changeCard-confirm-uri']}")
+    private String changeCardConfirmUri;
+    @Value("#{properties['changeCard-resendsms-uri']}")
+    private String changeCardResendsmsUri;
+    
+    @Value("#{properties['bindCard-direct-uri']}")
+    private String bindCardDirectUri;
+    
+    @Value("#{properties['unbindCard-request-uri']}")
+    private String unbindCardDirectUri;
+    @Value("#{properties['third-score-uri']}")
+    private String thirdScoreUri;
+    @Value("#{properties['bqs-uri']}")
+    private String bqsUri;
     
     
     final static String  SEPARATOR = "&";
@@ -638,8 +660,8 @@ public class UserInterfaceController {
      * 绑卡请求操作
      * 
      * */
-	@RequestMapping(value = "bingCardRequest", method = RequestMethod.GET)
-	public String bingCardRequest(Model model) {
+	@RequestMapping(value = "bindCardRequest", method = RequestMethod.GET)
+	public String bindCardRequest(Model model) {
 		model.addAttribute("bindCardRequestUri", bindCardRequestUri);
 		return "usercenter/bind_card_request";
 	}
@@ -647,8 +669,8 @@ public class UserInterfaceController {
      * 绑卡请求操作
      * 
      */
-    @RequestMapping(value = "bingCardRequest", method = RequestMethod.POST)
-    public String bingCardRequest(PayCardInfoDto payCardInfoDto) throws Exception {
+    @RequestMapping(value = "bindCardRequest", method = RequestMethod.POST)
+    public String bindCardRequest(PayCardInfoDto payCardInfoDto) throws Exception {
    	 
     	 String key=map.get(payCardInfoDto.getMerchantId());
    	  	 String signature="";
@@ -670,7 +692,14 @@ public class UserInterfaceController {
 	   		sParaTemp.put("cardNo", payCardInfoDto.getCardNo());
 	   		sParaTemp.put("avaliabletime", payCardInfoDto.getAvaliabletime());
 	   		sParaTemp.put("phone", payCardInfoDto.getPhone());
+	   		sParaTemp.put("terminalId", payCardInfoDto.getTerminalId());
+	   		sParaTemp.put("lastLoginTerminalId", payCardInfoDto.getLastLoginTerminalId());
+	   		sParaTemp.put("isSetPaypwd", payCardInfoDto.getIsSetPaypwd());
+	   		sParaTemp.put("registIp", payCardInfoDto.getRegistIp());
+	   		sParaTemp.put("lastloginIp", payCardInfoDto.getLastloginIp());
+	   		sParaTemp.put("lastloginTime", payCardInfoDto.getLastloginTime());
 	   		sParaTemp.put("parameter", payCardInfoDto.getParameter());
+	   		sParaTemp.put("registTime", payCardInfoDto.getRegistTime());
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);
@@ -678,7 +707,388 @@ public class UserInterfaceController {
    		 final String fullUri =payCardInfoDto.getFullUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
          LOG.debug("Send to pay-service-server URL: {}", fullUri);
          return "redirect:" +  fullUri;
-    }    
+    } 
+    
+    /**
+     * 换卡请求操作
+     * 
+     * */
+	@RequestMapping(value = "changeCardRequest", method = RequestMethod.GET)
+	public String changeCardRequest(Model model) {
+		model.addAttribute("changeCardRequestUri", changeCardRequestUri);
+		return "usercenter/change_card_request";
+	}
+	/**
+     * 换卡请求操作
+     * 
+     */
+    @RequestMapping(value = "changeCardRequest", method = RequestMethod.POST)
+    public String changeCardRequest(PayCardInfoDto payCardInfoDto) throws Exception {
+   	 
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo() );
+	   		sParaTemp.put("userId", payCardInfoDto.getUserId());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("userName", payCardInfoDto.getUserName());
+	   		sParaTemp.put("identityId", payCardInfoDto.getIdentityId());
+	   		sParaTemp.put("identityType", payCardInfoDto.getIdentityType());
+	   		sParaTemp.put("cardNo", payCardInfoDto.getCardNo());
+	   		sParaTemp.put("avaliabletime", payCardInfoDto.getAvaliabletime());
+	   		sParaTemp.put("phone", payCardInfoDto.getPhone());
+	   		sParaTemp.put("terminalId", payCardInfoDto.getTerminalId());
+	   		sParaTemp.put("lastLoginTerminalId", payCardInfoDto.getLastLoginTerminalId());
+	   		sParaTemp.put("isSetPaypwd", payCardInfoDto.getIsSetPaypwd());
+	   		sParaTemp.put("registIp", payCardInfoDto.getRegistIp());
+	   		sParaTemp.put("lastloginIp", payCardInfoDto.getLastloginIp());
+	   		sParaTemp.put("lastloginTime", payCardInfoDto.getLastloginTime());
+	   		sParaTemp.put("parameter", payCardInfoDto.getParameter());
+	   		sParaTemp.put("oricardNo", payCardInfoDto.getOricardNo());
+	   		sParaTemp.put("registTime", payCardInfoDto.getRegistTime());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getChangeCardUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    } 
+    /**
+     * 绑卡确认操作
+     * 
+     * */
+	@RequestMapping(value = "bindCardConfirm", method = RequestMethod.GET)
+	public String bindCardConfirm(Model model) {
+		model.addAttribute("bindCardConfirmUri", bindCardConfirmUri);
+		return "usercenter/bind_card_confirm";
+	}
+	/**
+     * 绑卡确认操作
+     * 
+     */
+    @RequestMapping(value = "bindCardConfirm", method = RequestMethod.POST)
+    public String bindCardConfirm(PayCardInfoDto payCardInfoDto) throws Exception {
+   	 
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo());
+	   		sParaTemp.put("validateCode", payCardInfoDto.getValidateCode());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("requestNo", payCardInfoDto.getRequestNo());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getConfirmUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    }
+    
+    /**
+     * 换卡确认操作
+     * 
+     * */
+	@RequestMapping(value = "changeCardConfirm", method = RequestMethod.GET)
+	public String changeCardConfirm(Model model) {
+		model.addAttribute("changeCardConfirmUri", changeCardConfirmUri);
+		return "usercenter/change_card_confirm";
+	}
+	/**
+     * 换卡确认操作
+     * 
+     */
+    @RequestMapping(value = "changeCardConfirm", method = RequestMethod.POST)
+    public String changeCardConfirm(PayCardInfoDto payCardInfoDto) throws Exception {
+   	 
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo());
+	   		sParaTemp.put("validateCode", payCardInfoDto.getValidateCode());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("requestNo", payCardInfoDto.getRequestNo());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getChangeConfirmUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    }
+    /**
+     * 无短充值接口
+     * 
+     * */
+	@RequestMapping(value = "bindCardDirect", method = RequestMethod.GET)
+	public String bindCardDirect(Model model) {
+		model.addAttribute("bindCardDirectUri", bindCardDirectUri);
+		return "usercenter/bind_card_direct";
+	}
+	/**
+     * 无短充值接口
+     * 
+     */
+    @RequestMapping(value = "bindCardDirect", method = RequestMethod.POST)
+    public String bindCardDirect(PayCardInfoDto payCardInfoDto) throws Exception {
+   	 
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo());
+	   		sParaTemp.put("amount", payCardInfoDto.getAmount());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("userId", payCardInfoDto.getUserId());
+	   		sParaTemp.put("avaliabletime", payCardInfoDto.getAvaliabletime());
+	   		sParaTemp.put("terminalNo", payCardInfoDto.getTerminalNo());
+	   		sParaTemp.put("productName", payCardInfoDto.getProductName());
+	   		sParaTemp.put("parameter", payCardInfoDto.getParameter());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getDirectUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    }
+    /**
+     *  绑卡重发确认操作
+     * 
+     * */
+	@RequestMapping(value = "bindCardResendsms", method = RequestMethod.GET)
+	public String bindCardResendsms(Model model) {
+		model.addAttribute("bindCardResendsmsUri", bindCardResendsmsUri);
+		return "usercenter/bind_card_resendsms";
+	}
+	/**
+     *  绑卡重发确认操作
+     * 
+     */
+    @RequestMapping(value = "bindCardResendsms", method = RequestMethod.POST)
+    public String bindCardResendsms(PayCardInfoDto payCardInfoDto) throws Exception {
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("requestNo", payCardInfoDto.getRequestNo());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getResendsmsUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    } 
+    
+    /**
+     * 换卡重发请求操作
+     * 
+     * */
+	@RequestMapping(value = "changeCardResendsms", method = RequestMethod.GET)
+	public String changeCardResendsms(Model model) {
+		model.addAttribute("changeCardResendsmsUri", changeCardResendsmsUri);
+		return "usercenter/change_card_resendsms";
+	}
+	/**
+     * 换卡重发请求操作
+     * 
+     */
+    @RequestMapping(value = "changeCardResendsms", method = RequestMethod.POST)
+    public String changeCardResendsms(PayCardInfoDto payCardInfoDto) throws Exception {
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("requestNo", payCardInfoDto.getRequestNo());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getChangeResendsmsUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    } 
+    
+    
+    /**
+     * 解绑卡请求操作
+     * 
+     * */
+	@RequestMapping(value = "unBindCardRequest", method = RequestMethod.GET)
+	public String unBindCardRequest(Model model) {
+		model.addAttribute("unbindCardDirectUri", unbindCardDirectUri);
+		return "usercenter/unbind_card_request";
+	}
+	/**
+     * 解绑卡请求操作
+     * 
+     */
+    @RequestMapping(value = "unBindCardRequest", method = RequestMethod.POST)
+    public String unBindCardRequest(PayCardInfoDto payCardInfoDto) throws Exception {
+    	 String key=map.get(payCardInfoDto.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payCardInfoDto.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payCardInfoDto.getOutTradeNo());
+	   		sParaTemp.put("merchantId", payCardInfoDto.getMerchantId());
+	   		sParaTemp.put("cardNo", payCardInfoDto.getCardNo());
+	   		sParaTemp.put("identityId", payCardInfoDto.getIdentityId());
+	   		sParaTemp.put("userId", payCardInfoDto.getUserId());
+	   		sParaTemp.put("identityType", payCardInfoDto.getIdentityType());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payCardInfoDto.getUnbindCardUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    } 
+     
+    /**
+     * 征信第三方评分请求操作
+     * 
+     * */
+	@RequestMapping(value = "thirdScore", method = RequestMethod.GET)
+	public String thirdScore(Model model) {
+		model.addAttribute("thirdScoreUri", thirdScoreUri);
+		return "usercenter/third_score_request";
+	}
+	/**
+     *  征信第三方评分请求操作
+     * 
+     */
+    @RequestMapping(value = "thirdScore", method = RequestMethod.POST)
+    public String thirdScore(PayZxptInfo payZxptInfo) throws Exception {
+   	 
+        	 String key=map.get(payZxptInfo.getMerchantId());
+       	  	 String signature="";
+       	  	 String timestamp="";
+       	  	 String signatureNonce="";
+       	   	 if(key!=null){
+    	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+    	   		timestamp=DateTools.getSolrDate(new Date());
+    	   		//appId=1&cardNo=62222744552211111112&certNo=420922198509103814&channelId=2&merchantId=10001&mobile=13535413805&outTradeNo=test201705161416&reasonNo=01&signatureNonce=26&timestamp=2017-05-16T06:18:08Z&userName=张四
+    	   		//appId=1&cardNo=62222744552211111112&certNo=420922198509103814&channel=2&merchantId=10001&mobile=13535413805&outTradeNo=test201705161416&reasonNo=01&signatureNonce=77&timestamp=2017-05-16T06:19:03Z&userName=张四
+    	   		
+    	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+    	   		sParaTemp.put("appId",payZxptInfo.getAppId());
+    	   		sParaTemp.put("timestamp", timestamp);
+    	   		sParaTemp.put("signatureNonce", signatureNonce);
+    	   		sParaTemp.put("outTradeNo",payZxptInfo.getMerchantOrderId());
+    	   		sParaTemp.put("certNo", payZxptInfo.getCertNo());
+    	   		sParaTemp.put("userName", payZxptInfo.getUserName());
+    	   		sParaTemp.put("mobile", payZxptInfo.getPhone());
+    	   		sParaTemp.put("reasonNo", payZxptInfo.getReasonNo());
+    	   		sParaTemp.put("cardNo", payZxptInfo.getCardNo());
+    	   		sParaTemp.put("merchantId", payZxptInfo.getMerchantId());
+    	   		String params=createSign(sParaTemp);
+    	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+    	   		signature=HMacSha1.getNewResult(signature);
+       	   	 }
+       		 final String fullUri =payZxptInfo.getThirdScoreRequestUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+             LOG.debug("Send to pay-service-server URL: {}", fullUri);
+             return "redirect:" +  fullUri;
+    } 
+    /**
+     * 征信白骑士请求操作
+     * 
+     * */
+	@RequestMapping(value = "bqsRequest", method = RequestMethod.GET)
+	public String bqsRequest(Model model) {
+		model.addAttribute("bqsUri", bqsUri);
+		return "usercenter/bqs_request";
+	}
+	/**
+     *  征信白骑士请求操作
+     * 
+     */
+    @RequestMapping(value = "bqsRequest", method = RequestMethod.POST)
+    public String bqsRequest(PayZxptInfo payZxptInfo) throws Exception {
+   	 
+    	 String key=map.get(payZxptInfo.getMerchantId());
+   	  	 String signature="";
+   	  	 String timestamp="";
+   	  	 String signatureNonce="";
+   	   	 if(key!=null){
+	   		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+	   		timestamp=DateTools.getSolrDate(new Date());
+	   		signatureNonce=com.andaily.springoauth.tools.StringTools.getRandom(100,1);
+	   		sParaTemp.put("appId",payZxptInfo.getAppId());
+	   		sParaTemp.put("timestamp", timestamp);
+	   		sParaTemp.put("signatureNonce", signatureNonce);
+	   		sParaTemp.put("outTradeNo",payZxptInfo.getMerchantOrderId());
+	   		sParaTemp.put("merchantId", payZxptInfo.getMerchantId());
+	   		sParaTemp.put("channelId", payZxptInfo.getScoreChannel());
+	   		sParaTemp.put("certNo", payZxptInfo.getCertNo());
+	   		sParaTemp.put("userName",payZxptInfo.getUserName());
+	   		sParaTemp.put("mobile", payZxptInfo.getPhone());
+	   		String params=createSign(sParaTemp);
+	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
+	   		signature=HMacSha1.getNewResult(signature);
+   	   	 }
+   		 final String fullUri =payZxptInfo.getBqsRequestUri()+"&signature="+signature+"&timestamp="+timestamp+"&signatureNonce="+signatureNonce;
+         LOG.debug("Send to pay-service-server URL: {}", fullUri);
+         return "redirect:" +  fullUri;
+    } 
+
      /** 
       * 发送POST请求 
       *  

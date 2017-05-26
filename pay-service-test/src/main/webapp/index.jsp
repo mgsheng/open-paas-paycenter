@@ -102,8 +102,35 @@
             <p><a href="testRetrun">测试</a> <br/>接口第三方同步</p>
         </li>
          <li>
-            <p><a href="bingCardRequest">有短绑卡请求</a> <br/>有短绑卡请求</p>
+            <p><a href="bindCardRequest">有短绑卡请求</a> <br/>有短绑卡请求</p>
         </li> 
+         <li>
+            <p><a href="bindCardConfirm">有短绑卡确认接口</a> <br/>有短绑卡确认</p>
+        </li> 
+         <li>
+            <p><a href="bindCardResendsms">有短绑卡请求重发接口</a> <br/>有短绑卡请求重发</p>
+        </li> 
+         <li>
+            <p><a href="bindCardDirect">无短充值接口</a> <br/>无短充值</p>
+        </li>
+        <li>
+            <p><a href="changeCardRequest">换卡请求接口</a> <br/>无短充值</p>
+        </li>
+        <li>
+            <p><a href="changeCardConfirm">换卡确认接口</a> <br/>无短充值</p>
+        </li>
+        <li>
+            <p><a href="changeCardResendsms">换卡重发接口</a> <br/>无短充值</p>
+        </li>
+        <li>
+            <p><a href="unBindCardRequest">解绑卡请求</a> <br/>无短充值</p>
+        </li> 
+          <li>
+            <p><a href="thirdScore">第三方评分接口</a> <br/>第三方评分接口</p>
+        </li>
+          <li>
+            <p><a href="bqsRequest">白骑士接口</a> <br/>白骑士接口</p>
+        </li>
         <!-- <li>
             <p><a href="alipayCallBack">alipayCallBack</a> <br/>支付回调接口</p>
         </li> -->

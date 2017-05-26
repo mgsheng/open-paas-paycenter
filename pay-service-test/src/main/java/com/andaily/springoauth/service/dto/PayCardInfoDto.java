@@ -24,11 +24,189 @@ public class PayCardInfoDto implements Serializable {
 	private String parameter;
 	private String bindCardRequestUri;
 	private String merchantId;
+	private String terminalId;
+	private String lastLoginTerminalId;
+	private String isSetPaypwd;
+	private String registIp;
+	private String lastloginIp;
+	private String lastloginTime;
+	private String requestNo;
+	private String validateCode;
+	private String amount;
+	private String productName;
+	private String bindCardConfirmUri;
+	private String bindCardResendsmsUri;
+	private String bindCardDirectUri;
+	private String terminalNo;
+	private String oricardNo;
+	private String changeCardRequestUri;
+	private String changeCardConfirmUri;
+	private String changeCardResendsmsUri;
+	private String unbindCardDirectUri;
+	private String registTime;
 	
-	public String getFullUri() throws UnsupportedEncodingException {
-        return String.format("%s?appId=%s&identityId=%s&identityType=%s&cardNo=%s&userName=%s&outTradeNo=%s&phone=%s&userId=%s&avaliabletime=%s&parameter=%s&merchantId=%s",
-        		bindCardRequestUri,appId,identityId,identityType, cardNo,URLEncoder.encode(userName, "UTF-8"), outTradeNo, phone,userId,avaliabletime,parameter,merchantId);  
-    }
+	
+	
+	public String getUnbindCardDirectUri() {
+		return unbindCardDirectUri;
+	}
+
+	public void setUnbindCardDirectUri(String unbindCardDirectUri) {
+		this.unbindCardDirectUri = unbindCardDirectUri;
+	}
+
+	public String getRegistTime() {
+		return registTime;
+	}
+
+	public void setRegistTime(String registTime) {
+		this.registTime = registTime;
+	}
+
+	public String getChangeCardConfirmUri() {
+		return changeCardConfirmUri;
+	}
+
+	public void setChangeCardConfirmUri(String changeCardConfirmUri) {
+		this.changeCardConfirmUri = changeCardConfirmUri;
+	}
+
+	public String getChangeCardResendsmsUri() {
+		return changeCardResendsmsUri;
+	}
+
+	public void setChangeCardResendsmsUri(String changeCardResendsmsUri) {
+		this.changeCardResendsmsUri = changeCardResendsmsUri;
+	}
+
+	public String getChangeCardRequestUri() {
+		return changeCardRequestUri;
+	}
+
+	public void setChangeCardRequestUri(String changeCardRequestUri) {
+		this.changeCardRequestUri = changeCardRequestUri;
+	}
+
+	public String getOricardNo() {
+		return oricardNo;
+	}
+
+	public void setOricardNo(String oricardNo) {
+		this.oricardNo = oricardNo;
+	}
+
+	public String getTerminalNo() {
+		return terminalNo;
+	}
+
+	public void setTerminalNo(String terminalNo) {
+		this.terminalNo = terminalNo;
+	}
+
+	public String getBindCardConfirmUri() {
+		return bindCardConfirmUri;
+	}
+
+	public void setBindCardConfirmUri(String bindCardConfirmUri) {
+		this.bindCardConfirmUri = bindCardConfirmUri;
+	}
+
+	public String getBindCardResendsmsUri() {
+		return bindCardResendsmsUri;
+	}
+
+	public void setBindCardResendsmsUri(String bindCardResendsmsUri) {
+		this.bindCardResendsmsUri = bindCardResendsmsUri;
+	}
+
+	public String getBindCardDirectUri() {
+		return bindCardDirectUri;
+	}
+
+	public void setBindCardDirectUri(String bindCardDirectUri) {
+		this.bindCardDirectUri = bindCardDirectUri;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getRequestNo() {
+		return requestNo;
+	}
+
+	public void setRequestNo(String requestNo) {
+		this.requestNo = requestNo;
+	}
+
+	public String getValidateCode() {
+		return validateCode;
+	}
+
+	public void setValidateCode(String validateCode) {
+		this.validateCode = validateCode;
+	}
+
+	public String getTerminalId() {
+		return terminalId;
+	}
+
+	public void setTerminalId(String terminalId) {
+		this.terminalId = terminalId;
+	}
+
+	public String getLastLoginTerminalId() {
+		return lastLoginTerminalId;
+	}
+
+	public void setLastLoginTerminalId(String lastLoginTerminalId) {
+		this.lastLoginTerminalId = lastLoginTerminalId;
+	}
+
+	public String getIsSetPaypwd() {
+		return isSetPaypwd;
+	}
+
+	public void setIsSetPaypwd(String isSetPaypwd) {
+		this.isSetPaypwd = isSetPaypwd;
+	}
+
+	public String getRegistIp() {
+		return registIp;
+	}
+
+	public void setRegistIp(String registIp) {
+		this.registIp = registIp;
+	}
+
+	public String getLastloginIp() {
+		return lastloginIp;
+	}
+
+	public void setLastloginIp(String lastloginIp) {
+		this.lastloginIp = lastloginIp;
+	}
+
+	public String getLastloginTime() {
+		return lastloginTime;
+	}
+
+	public void setLastloginTime(String lastloginTime) {
+		this.lastloginTime = lastloginTime;
+	}
+
 	
 	public String getOutTradeNo() {
 		return outTradeNo;
@@ -107,6 +285,38 @@ public class PayCardInfoDto implements Serializable {
 	public void setBindCardRequestUri(String bindCardRequestUri) {
 		this.bindCardRequestUri = bindCardRequestUri;
 	}
+	public String getFullUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&identityId=%s&identityType=%s&cardNo=%s&userName=%s&outTradeNo=%s&phone=%s&userId=%s&avaliabletime=%s&parameter=%s&merchantId=%s&terminalId=%s&lastLoginTerminalId=%s&isSetPaypwd=%s&registIp=%s&lastloginIp=%s&lastloginTime=%s&registTime=%s",
+        		bindCardRequestUri,appId,identityId,identityType, cardNo,URLEncoder.encode(userName, "UTF-8"), outTradeNo, phone,userId,avaliabletime,parameter,merchantId,terminalId,lastLoginTerminalId,isSetPaypwd,registIp,lastloginIp,lastloginTime,registTime);  
+    }
+	public String getConfirmUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&outTradeNo=%s&merchantId=%s&requestNo=%s&validateCode=%s",
+        		bindCardConfirmUri,appId, outTradeNo,merchantId,requestNo,validateCode);  
+    }
+	public String getChangeConfirmUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&outTradeNo=%s&merchantId=%s&requestNo=%s&validateCode=%s",
+        		changeCardConfirmUri,appId, outTradeNo,merchantId,requestNo,validateCode);  
+    }
+	public String getDirectUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&outTradeNo=%s&merchantId=%s&productName=%s&parameter=%s&avaliabletime=%s&amount=%s&userId=%s&terminalNo=%s",
+        		bindCardDirectUri,appId, outTradeNo,merchantId,URLEncoder.encode(productName, "UTF-8"),parameter,avaliabletime,amount,userId,terminalNo);  
+    }
+	public String getResendsmsUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&outTradeNo=%s&merchantId=%s&requestNo=%s",
+        		bindCardResendsmsUri,appId, outTradeNo,merchantId,requestNo);  
+    }
+	public String getChangeResendsmsUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&outTradeNo=%s&merchantId=%s&requestNo=%s",
+        		changeCardResendsmsUri,appId, outTradeNo,merchantId,requestNo);  
+    }
+	public String getChangeCardUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&identityId=%s&identityType=%s&oricardNo=%s&cardNo=%s&userName=%s&outTradeNo=%s&phone=%s&userId=%s&avaliabletime=%s&parameter=%s&merchantId=%s&terminalId=%s&lastLoginTerminalId=%s&isSetPaypwd=%s&registIp=%s&lastloginIp=%s&lastloginTime=%s&registTime=%s",
+        		changeCardRequestUri,appId,identityId,identityType,oricardNo, cardNo,URLEncoder.encode(userName, "UTF-8"), outTradeNo, phone,userId,avaliabletime,parameter,merchantId,terminalId,lastLoginTerminalId,isSetPaypwd,registIp,lastloginIp,lastloginTime,registTime);  
+    }
+	public String getUnbindCardUri() throws UnsupportedEncodingException {
+        return String.format("%s?appId=%s&outTradeNo=%s&merchantId=%s&cardNo=%s&identityId=%s&identityType=%s&userId=%s",
+        		unbindCardDirectUri,appId, outTradeNo,merchantId,cardNo,identityId,identityType,userId);  
+    }
 	
 
 
