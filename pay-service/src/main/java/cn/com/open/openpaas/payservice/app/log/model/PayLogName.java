@@ -104,5 +104,54 @@ public interface PayLogName {
 	//绑卡结束
 	public static String BIND_CARD_END = "bind_card_end";
 	
+	//有短验绑卡请求短验确认
+	public static String BIND_CARD_CONFIRM_START = "bind_card_confirm_start";
+	//有短验绑卡请求短验确认
+	public static String BIND_CARD_CONFIRM_END = "bind_card_confirm_end";
+	//投资通绑卡超时通知开始
+    public static String BIND_CARD_NOTIFY_START = "bind_card_notify_start";
+	//投资通绑卡超时通知结束
+	public static String BIND_CARD_NOTIFY_END = "bind_card_notify_end";
+	//投资通绑卡通知业务方开始
+    public static String BIND_CARD_CALLBACK_START = "bind_card_callback_start";
+	//投资通通知业务方结束
+	public static String BIND_CARD_CALLBACK_END = "bind_card_callback_end";
+	//投资通无短充值超时通知开始
+    public static String BIND_PAY_NOTIFY_START = "bind_pay_notify_start";
+	//投资通无短充值超时通知结束
+	public static String BIND_PAY_NOTIFY_END = "bind_pay_notify_end";
+	//投资通无短充值通知业务方开始
+	public static String BIND_PAY_CALLBACK_START = "bind_pay_callback_start";
+    //投资通无短充值业务方结束
+	public static String BIND_PAY_CALLBACK_END = "bind_pay_callback_end";	
+	
+	//换卡开始
+	public static String CHANGE_CARD_START = "change_card_start";
+	//换卡结束
+	public static String CHANGE_CARD_END = "change_card_end";
+	//解绑开始
+	public static String UNBIND_CARD_START = "unbind_card_start";
+	//投资通换卡超时通知开始
+    public static String CHANGE_CARD_NOTIFY_START = "change_card_notify_start";
+	//投资通换卡超时通知结束
+	public static String CHANGE_CARD_NOTIFY_END = "change_card_notify_end";
+	//解绑结束
+	public static String UNBIND_CARD_END = "unbind_card_end";
+	
+	//第三方评分请求接口开始
+	public static String THIRD_REQUEST_START = "third_request_start";
+	//第三方评分请求接口结束
+	public static String THIRD_REQUEST_END = "third_request_end";
+	//第三方评分请求接口开始
+	public static String BQS_REQUEST_START = "bqs_request_start";
+    //第三方评分请求接口结束
+	public static String BQS_REQUEST_END = "bqs_request_end";
+	//自动还款开始
+	public static String BIND_PAY_START = "bind_pay_start";
+	//自动还款结束
+	public static String BIND_PAY_END = "bind_pay_end";
+	
+	
+	
 	
 }
