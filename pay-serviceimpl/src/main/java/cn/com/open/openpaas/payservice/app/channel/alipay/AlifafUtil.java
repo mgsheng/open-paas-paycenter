@@ -9,6 +9,7 @@ import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.demo.trade.config.Configs;
+import com.alipay.demo.trade.model.ExtendParams;
 import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
 import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
 import com.alipay.demo.trade.service.AlipayTradeService;
@@ -55,7 +56,7 @@ public class AlifafUtil {
 	  }
 	  return ts1;
 	 }
-	    // 测试当面付2.0生成支付二维码
+  // 测试当面付2.0生成支付二维码
 	public String trade_precreate(MerchantOrderInfo merchantOrderInfo,DictTradeChannelService dictTradeChannelService) {
 	        // (必填) 商户网站订单系统中唯一订单号，64个字符以内，只能包含字母、数字、下划线，
 	        // 需保证商户系统端不能重复，建议通过数据库sequence生成，
@@ -86,8 +87,8 @@ public class AlifafUtil {
 	        //String storeId = "store_id";
 
 	        // 业务扩展参数，目前可添加由支付宝分配的系统商编号(通过setSysServiceProviderId方法)，详情请咨询支付宝技术支持
-	/*        ExtendParams extendParams = new ExtendParams();
-	        extendParams.setSysServiceProviderId("2088801478647757");*/
+	        ExtendParams extendParams = new ExtendParams();
+	        extendParams.setSysServiceProviderId("2088801478647757");
 
 	        // 支付超时，定义为120分钟
 	        //String timeExpress = "120m";
@@ -106,9 +107,6 @@ public class AlifafUtil {
 	        			}else{
 	        				 Configs.init("");
 	        			}
-	        	        /** 使用Configs提供的默认参数
-	        	         *  AlipayTradeService可以使用单例或者为静态成员对象，不需要反复new
-	        	         */
 	        	        tradeService = new AlipayTradeServiceImpl.ClientBuilder().build();
 	        			 AlipayTradePrecreateRequestBuilder builder = new AlipayTradePrecreateRequestBuilder()
 	       	                .setSubject(merchantOrderInfo.getMerchantProductName())
@@ -149,7 +147,7 @@ public class AlifafUtil {
 	      
 	        return aliCode;
 	    }
-	    
+	  
 	    public static Map<String, String> getPartner(String other){
 			if(other==null&&"".equals(other)){
 				return null;

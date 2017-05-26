@@ -170,10 +170,4 @@ public class YeeOrderCallbackController extends BaseControllerUtil {
     	 model.addAttribute("productName", merchantOrderInfo.getMerchantProductName());
 		 return "pay/callBack";
 	  } 
-	String formatString(String text){ 
-		if(text == null) {
-			return ""; 
-		}
-		return text;
-	}
 }

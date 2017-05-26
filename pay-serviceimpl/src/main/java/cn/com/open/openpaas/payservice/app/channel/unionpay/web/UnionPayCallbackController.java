@@ -233,10 +233,4 @@ public class UnionPayCallbackController extends BaseControllerUtil {
 		return "pay/callBack";
 	}
 
-	String formatString(String text) {
-		if (text == null) {
-			return "";
-		}
-		return text;
-	}
 }

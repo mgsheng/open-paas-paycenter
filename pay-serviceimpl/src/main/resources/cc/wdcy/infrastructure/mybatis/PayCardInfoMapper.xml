@@ -14,6 +14,14 @@
 		<result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
 		<result column="status" property="status" jdbcType="INTEGER" />
 		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="terminal_id" property="terminalId" jdbcType="VARCHAR" />
+		<result column="lastlogin_terminal_id" property="lastLoginTerminalId" jdbcType="VARCHAR" />
+		<result column="is_setpaypwd" property="isSetPaypwd" jdbcType="VARCHAR" />
+		<result column="regist_ip" property="registIp" jdbcType="VARCHAR" />
+		<result column="lastlogin_ip" property="lastloginIp" jdbcType="VARCHAR" />
+		<result column="lastlogin_time" property="lastloginTime" jdbcType="TIMESTAMP" />
+		<result column="regist_time" property="registTime" jdbcType="TIMESTAMP" />
+		
 	</resultMap>
 	<sql id="Insert_Column_List">
 	  identity_type,
@@ -26,8 +34,16 @@
 	  create_time,
 	  update_time,
 	  status,
-	  user_id
+	  user_id,
+	  terminal_id,
+	  lastlogin_terminal_id,
+	  is_setpaypwd,
+	  regist_ip,
+	  lastlogin_ip,
+	  lastlogin_time,
+	  regist_time
 	</sql>
+
 	<sql id="Base_Column_List">
 		id,
 		<include refid="Insert_Column_List" />
@@ -52,21 +68,51 @@
 			#{createTime, jdbcType=TIMESTAMP},
 			#{updateTime, jdbcType=TIMESTAMP},
 			#{userId, jdbcType=VARCHAR},
-			#{status, jdbcType=INTEGER}
-			
+			#{status, jdbcType=INTEGER},
+			#{userId, jdbcType=VARCHAR},
+			#{terminalId, jdbcType=VARCHAR},
+			#{lastLoginTerminalId, jdbcType=VARCHAR},
+			#{isSetPaypwd, jdbcType=VARCHAR},
+			#{registIp, jdbcType=VARCHAR},
+			#{lastloginIp, jdbcType=VARCHAR},
+			#{lastloginTime, jdbcType=TIMESTAMP},
+			#{registTime, jdbcType=TIMESTAMP}
 		)
 	</insert>
 	
-	<select id="findByMerchantOrderId" resultMap="payCardInfoMap">
+	<select id="getCardInfo" resultMap="payCardInfoMap">
          select * from PAY_CARD_INFO
-         where  userId = #{userId}
+         where  user_id = #{userId}
          and app_id=#{appId}
 	</select>
 	<insert id="savePayCardInfo" parameterType="PayCardInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into PAY_CARD_INFO(identity_type,identity_id,card_no,user_name,oricard_no,phone,app_id,create_time,update_time,status,user_id)
+        insert into PAY_CARD_INFO(identity_type,identity_id,card_no,user_name,oricard_no,phone,app_id,create_time,update_time,status,user_id,terminal_id,lastlogin_terminal_id,is_setpaypwd,regist_ip,lastlogin_ip,lastlogin_time,regist_time)
         values
-        (#{identityType},#{identityId},#{cardNo},#{userName},#{oricardNo},#{phone},#{appId},#{createTime},#{updateTime},#{status},#{userId})
+        (#{identityType},#{identityId},#{cardNo},#{userName},#{oricardNo},#{phone},#{appId},#{createTime},#{updateTime},#{status},#{userId},#{terminalId},#{lastLoginTerminalId},#{isSetPaypwd},#{registIp},#{lastloginIp},#{lastloginTime},#{registTime})
     </insert>
+    <update id="updateCardInfo" parameterType="PayCardInfo" flushCache="true">
+        update PAY_CARD_INFO set
+        card_no = #{cardNo},
+        oricard_no=#{oricardNo},
+        user_name=#{userName},
+        phone=#{phone},
+        update_time=#{updateTime},
+        identity_id=#{identityId},
+        identity_type=#{identityType},
+        lastlogin_terminal_id=#{identityType},
+        lastlogin_ip=#{lastloginIp},
+        lastlogin_time=#{lastloginTime},
+        regist_ip=#{registIp},
+        regist_time=#{registTime},
+        is_setpaypwd=#{isSetPaypwd}
+        where id = #{id}
+    </update>
+     <update id="updateCardStatus"  flushCache="true">
+        update PAY_CARD_INFO set
+        status=#{status}
+        where id = #{id}
+    </update>
+    
 		
 	
 </mapper>

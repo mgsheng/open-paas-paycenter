@@ -24,7 +24,10 @@
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.infrastructure.repository"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.order.service"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.refund.service"/>
-
+    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.balance.service"/>
+    <context:component-scan base-package="cn.com.open.openpaas.payservice.app.record.service"/>
+	<context:component-scan base-package="cn.com.open.openpaas.payservice.app.ditch.service"/>
+	<context:component-scan base-package="cn.com.open.openpaas.payservice.app.zxpt.service"/>
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
@@ -34,9 +37,9 @@
         </property>
     </bean>
 
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+   <!--  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="properties" ref="properties"/>
-    </bean>
+    </bean>-->
        <!--dataSource-->
  <bean id="parentDataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">  
  <!-- 初始化连接大小 -->
@@ -162,21 +165,53 @@
             </list>
         </constructor-arg>
     </bean>
-       <bean id="PayserviceDev" class="cn.com.open.openpaas.payservice.dev.PayserviceDev">
+       <bean id="payserviceDev" class="cn.com.open.openpaas.payservice.dev.PayserviceDev">
             <property name="notify_times" value="${notify_times}"></property>
             <property name="ali_key" value="${ali_key}"></property>
             <property name="ali_sign_type" value="${ali_sign_type}"></property>
             <property name="ali_service" value="${ali_service}"></property>
             <property name="ali_input_charset" value="${ali_input_charset}"></property>
-            <property name="wx_app_id" value="${wx_app_id}"></property>
-            <property name="wx_mch_id" value="${wx_mch_id}"></property>
-            <property name="wx_key" value="${wx_key}"></property>
-            <property name="wx_spbill_create_ip" value="${wx_spbill_create_ip}"></property>
-            <property name="wx_notify_url" value="${wx_notify_url}"></property>
             <property name="wx_ufdooer_url" value="${wx_ufdooer_url}"></property>
-            <property name="wx_trade_type" value="${wx_trade_type}"></property>
             <property name="server_host" value="${server_host}"></property>
             <property name="tcl_pay_version" value="${tcl_pay_version}"></property>
+            <property name="userCenter_getUserId_url" value="${userCenter_getUserId_url}"></property>
+            <property name="zookeeper_config" value="${zookeeper_config}"></property>
+            <property name="pay_switch" value="${pay_switch}"></property>
+            <property name="pay_channle" value="${pay_channle}"></property>
+            <property name="tcl_pay_url" value="${tcl_pay_url}"></property>
+            <property name="ali_pay_url" value="${ali_pay_url}"></property>
+            <property name="user_balance_url" value="${user_balance_url}"></property>
+            <property name="kong_log_url" value="${kong_log_url}"></property>
+            <property name="log_type" value="${log_type}"></property>
+            <property name="yeepayCommonReqURL" value="${yeepayCommonReqURL}"></property>
+            <property name="payIndex_url" value="${payIndex_url}"></property>
+            <property name="banks_switch" value="${banks_switch}"></property>
+            <property name="oes_merchantId" value="${oes_merchantId}"></property>
+            <property name="lakla_show_url" value="${lakla_show_url}"></property>
+            <property name="bindCardRequestURL" value="${bindCardRequestURL}"></property>
+            <property name="bindCardConfirmURL" value="${bindCardConfirmURL}"></property>
+            <property name="bindCardResendsmsURL" value="${bindCardResendsmsURL}"></property>
+            <property name="bindPayRequestURL" value="${bindPayRequestURL}"></property>
+            <property name="unSendBindPayRequestURL" value="${unSendBindPayRequestURL}"></property>
+            <property name="changeCardRequestURL" value="${changeCardRequestURL}"></property>
+            <property name="changeCardConfirmURL" value="${changeCardConfirmURL}"></property>
+            <property name="changeCardResendsmsmURL" value="${changeCardResendsmsmURL}"></property>
+            <property name="unbindRequestURL" value="${unbindRequestURL}"></property>
+            
+            <property name="zxpt_score_method" value="${zxpt_score_method}"></property>
+            <property name="zxpt_cert_type" value="${zxpt_cert_type}"></property>
+            <property name="zxpt_charset" value="${zxpt_charset}"></property>
+            <property name="zxpt_public_key" value="${zxpt_public_key}"></property>
+            <property name="zxpt_key" value="${zxpt_key}"></property>
+            <property name="zxpt_entityAuthCode" value="${zxpt_entityAuthCode}"></property>
+            <property name="zxpt_sender" value="${zxpt_sender}"></property>
+            <property name="zxpt_third_url" value="${zxpt_third_url}"></property>
+            
+            <property name="zxpt_version" value="${zxpt_version}"></property>
+            <property name="zxpt_source" value="${zxpt_source}"></property>
+            <property name="zxpt_des" value="${zxpt_des}"></property>
+            <property name="zxpt_app" value="${zxpt_app}"></property>
+            <property name="zxpt_tranref" value="${zxpt_tranref}"></property>
             
         </bean>
 </beans>

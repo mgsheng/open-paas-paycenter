@@ -1,10 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="spring-oauth-server">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp"/>
-        <property name="context-root" value="/spring-oauth-server"/>
-        <property name="java-output-path" value="/spring-oauth-server/src/main/webapp/WEB-INF/classes"/>
+        <dependent-module archiveName="pay-service.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/pay-service/pay-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="/pay-service"/>
+        <property name="java-output-path" value="/pay-serviceimpl/target/classes"/>
     </wb-module>
 </project-modules>

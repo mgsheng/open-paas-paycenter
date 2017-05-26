@@ -341,10 +341,7 @@ public class TZTService {
 	public static Map<String, String> decryptCallbackData(String data, String encryptkey) {
 		
 		System.out.println("##### decryptCallbackData() #####");
-		
-		String merchantaccount		= getMerchantAccount();
 		String merchantPrivateKey	= getMerchantPrivateKey();
-		String merchantAESKey		= getMerchantAESKey();
 		String yeepayPublicKey		= getYeepayPublicKey();
 		
 		System.out.println("data : " + data);
@@ -471,15 +468,15 @@ public class TZTService {
 	 * bindCardConfirm() : 有短验绑卡请求确认接口
 	 */
 
-	public static Map<String, String> bindCardConfirm(Map<String, String> params) {
+	public static Map<String, String> bindCardConfirm(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String confirmBindBankcardURL) {
 
 		System.out.println("##### bindCardConfirm() #####");
 				
-		String merchantno				= getMerchantAccount();
-		String merchantPrivateKey		= getMerchantPrivateKey();
-		String merchantAESKey			= getMerchantAESKey();
-		String yeepayPublicKey			= getYeepayPublicKey();
-		String confirmBindBankcardURL	= getConfirmBindBankcardURL();
+//		String merchantno				= getMerchantAccount();
+//		String merchantPrivateKey		= getMerchantPrivateKey();
+//		String merchantAESKey			= getMerchantAESKey();
+//		String yeepayPublicKey			= getYeepayPublicKey();
+//		String confirmBindBankcardURL	= getConfirmBindBankcardURL();
 
 		String requestno            	= formatString(params.get("requestno"));
 		String validatecode      		= formatString(params.get("validatecode"));
@@ -535,15 +532,15 @@ public class TZTService {
 	 * bindCardResendsms() : 有短验绑卡请求重发短验接口
 	 */
 
-	public static Map<String, String> bindCardResendsms(Map<String, String> params) {
+	public static Map<String, String> bindCardResendsms(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String bindCardResendsmsURL) {
 
 		System.out.println("##### bindCardResendsms() #####");
 				
-		String merchantno				= getMerchantAccount();
-		String merchantPrivateKey		= getMerchantPrivateKey();
-		String merchantAESKey			= getMerchantAESKey();
-		String yeepayPublicKey			= getYeepayPublicKey();
-		String bindCardResendsmsURL		= getBindCardResendsmsURL();
+//		String merchantno				= getMerchantAccount();
+//		String merchantPrivateKey		= getMerchantPrivateKey();
+//		String merchantAESKey			= getMerchantAESKey();
+//		String yeepayPublicKey			= getYeepayPublicKey();
+//		String bindCardResendsmsURL		= getBindCardResendsmsURL();
 
 		String requestno            	= formatString(params.get("requestno"));
 
@@ -731,18 +728,18 @@ public class TZTService {
 	 * bindPayRequest() : 有短验充值请求接口
 	 */
 
-	public static Map<String, String> bindPayRequest(Map<String, String> params) {
+	public static Map<String, String> bindPayRequest(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String bindPayRequestURL) {
 
 		System.out.println("##### bindPayRequest() #####");
 
 		Map<String, String> result			= new HashMap<String, String>();
         String customError	   				= "";	//自定义，非接口返回
 				
-		String merchantno					= getMerchantAccount();
-		String merchantPrivateKey			= getMerchantPrivateKey();
-		String merchantAESKey				= getMerchantAESKey();
-		String yeepayPublicKey				= getYeepayPublicKey();
-		String bindPayRequestURL			= getBindPayRequestURL();
+//		String merchantno					= getMerchantAccount();
+//		String merchantPrivateKey			= getMerchantPrivateKey();
+//		String merchantAESKey				= getMerchantAESKey();
+//		String yeepayPublicKey				= getYeepayPublicKey();
+//		String bindPayRequestURL			= getBindPayRequestURL();
 
 		String requestno 				= formatString(params.get("requestno"));
 		String identityid 				= formatString(params.get("identityid"));
@@ -756,6 +753,7 @@ public class TZTService {
 		String callbackurl 				= formatString(params.get("callbackurl"));
 		String requesttime				= formatString(params.get("requesttime"));
 		String terminalid 				= formatString(params.get("terminalid"));
+		String terminalNo 				= formatString(params.get("terminalNo"));
 		String registtime 				= formatString(params.get("registtime"));
 		String registip 				= formatString(params.get("registip"));
 		String lastloginip 				= formatString(params.get("lastloginip"));
@@ -780,6 +778,7 @@ public class TZTService {
 		dataMap.put("callbackurl", 		callbackurl);
 		dataMap.put("requesttime", 	requesttime);
 		dataMap.put("terminalid", 	terminalid);
+		dataMap.put("terminalno", 	terminalNo);
 		dataMap.put("registtime", 	registtime);
 		dataMap.put("registip", 	registip);
 		dataMap.put("lastloginip", 	lastloginip);
@@ -1293,18 +1292,18 @@ public class TZTService {
 	 * changeCardRequest() : 换卡请求接口
 	 */
 
-	public static Map<String, String> changeCardRequest(Map<String, String> params) {
+	public static Map<String, String> changeCardRequest(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String changeCardRequestURL) {
 
 		System.out.println("##### changeCardRequest() #####");
 
 		Map<String, String> result			= new HashMap<String, String>();
         String customError	   				= "";	//自定义，非接口返回
 				
-		String merchantno					= getMerchantAccount();
-		String merchantPrivateKey			= getMerchantPrivateKey();
-		String merchantAESKey				= getMerchantAESKey();
-		String yeepayPublicKey				= getYeepayPublicKey();
-		String changeCardRequestURL			= getChangeCardRequestURL();
+//		String merchantno					= getMerchantAccount();
+//		String merchantPrivateKey			= getMerchantPrivateKey();
+//		String merchantAESKey				= getMerchantAESKey();
+//		String yeepayPublicKey				= getYeepayPublicKey();
+//		String changeCardRequestURL			= getChangeCardRequestURL();
 
 		String requestno 				= formatString(params.get("requestno"));
 		String identityid 				= formatString(params.get("identityid"));
@@ -1383,15 +1382,15 @@ public class TZTService {
 	 * changeCardConfirm() : 换卡请求确认接口
 	 */
 
-	public static Map<String, String> changeCardConfirm(Map<String, String> params) {
+	public static Map<String, String> changeCardConfirm(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String changeCardConfirmURL) {
 
 		System.out.println("##### changeCardConfirm() #####");
 				
-		String merchantno				= getMerchantAccount();
-		String merchantPrivateKey		= getMerchantPrivateKey();
-		String merchantAESKey			= getMerchantAESKey();
-		String yeepayPublicKey			= getYeepayPublicKey();
-		String changeCardConfirmURL		= getChangeCardConfirmURL();
+//		String merchantno				= getMerchantAccount();
+//		String merchantPrivateKey		= getMerchantPrivateKey();
+//		String merchantAESKey			= getMerchantAESKey();
+//		String yeepayPublicKey			= getYeepayPublicKey();
+//		String changeCardConfirmURL		= getChangeCardConfirmURL();
 
 		String requestno            	= formatString(params.get("requestno"));
 		String validatecode      		= formatString(params.get("validatecode"));
@@ -1447,15 +1446,15 @@ public class TZTService {
 	 * changeCardResendsms() : 换卡请求重发短验接口
 	 */
 
-	public static Map<String, String> changeCardResendsms(Map<String, String> params) {
+	public static Map<String, String> changeCardResendsms(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String changeCardResendsmsURL) {
 
 		System.out.println("##### changeCardResendsms() #####");
 				
-		String merchantno				= getMerchantAccount();
-		String merchantPrivateKey		= getMerchantPrivateKey();
-		String merchantAESKey			= getMerchantAESKey();
-		String yeepayPublicKey			= getYeepayPublicKey();
-		String changeCardResendsmsURL	= getChangeCardResendsmsURL();
+//		String merchantno				= getMerchantAccount();
+//		String merchantPrivateKey		= getMerchantPrivateKey();
+//		String merchantAESKey			= getMerchantAESKey();
+//		String yeepayPublicKey			= getYeepayPublicKey();
+//		String changeCardResendsmsURL	= getChangeCardResendsmsURL();
 
 		String requestno            	= formatString(params.get("requestno"));
 
@@ -2369,18 +2368,18 @@ public class TZTService {
 	 *
 	 */
 	
-	public static Map<String, String> unbindRequest(Map<String, String> params) {
+	public static Map<String, String> unbindRequest(Map<String, String> params,String merchantno,String merchantPrivateKey,String merchantAESKey,String yeepayPublicKey,String unbindRequestURL) {
 		
 		System.out.println("##### unbindRequest() #####");
 		
 		Map<String, String> result		= new HashMap<String, String>();
 		String customError				= "";	//自定义，非接口返回 
 		
-		String merchantno			= getMerchantAccount();
-		String merchantPrivateKey	= getMerchantPrivateKey();
-		String merchantAESKey		= getMerchantAESKey();
-		String yeepayPublicKey		= getYeepayPublicKey();
-		String unbindRequestURL		= getUnbindRequestURL();
+//		String merchantno			= getMerchantAccount();
+//		String merchantPrivateKey	= getMerchantPrivateKey();
+//		String merchantAESKey		= getMerchantAESKey();
+//		String yeepayPublicKey		= getYeepayPublicKey();
+//		String unbindRequestURL		= getUnbindRequestURL();
 		
 		String identityid 			= formatString(params.get("identityid"));
 		String identitytype 		= formatString(params.get("identitytype"));

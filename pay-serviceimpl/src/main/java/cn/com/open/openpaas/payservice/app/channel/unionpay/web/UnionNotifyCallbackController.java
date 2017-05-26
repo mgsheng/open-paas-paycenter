@@ -208,12 +208,6 @@ public class UnionNotifyCallbackController extends BaseControllerUtil {
 
 	}
 
-	String formatString(String text) {
-		if (text == null) {
-			return "";
-		}
-		return text;
-	}
 
 	/**
 	 * 跳转第三方渠道界面

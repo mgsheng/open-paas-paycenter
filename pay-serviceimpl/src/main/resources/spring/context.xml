@@ -27,6 +27,7 @@
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.balance.service"/>
     <context:component-scan base-package="cn.com.open.openpaas.payservice.app.record.service"/>
 	<context:component-scan base-package="cn.com.open.openpaas.payservice.app.ditch.service"/>
+	<context:component-scan base-package="cn.com.open.openpaas.payservice.app.zxpt.service"/>
     <!-- property configuration -->
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
@@ -188,6 +189,29 @@
             <property name="oes_merchantId" value="${oes_merchantId}"></property>
             <property name="lakla_show_url" value="${lakla_show_url}"></property>
             <property name="bindCardRequestURL" value="${bindCardRequestURL}"></property>
+            <property name="bindCardConfirmURL" value="${bindCardConfirmURL}"></property>
+            <property name="bindCardResendsmsURL" value="${bindCardResendsmsURL}"></property>
+            <property name="bindPayRequestURL" value="${bindPayRequestURL}"></property>
+            <property name="unSendBindPayRequestURL" value="${unSendBindPayRequestURL}"></property>
+            <property name="changeCardRequestURL" value="${changeCardRequestURL}"></property>
+            <property name="changeCardConfirmURL" value="${changeCardConfirmURL}"></property>
+            <property name="changeCardResendsmsmURL" value="${changeCardResendsmsmURL}"></property>
+            <property name="unbindRequestURL" value="${unbindRequestURL}"></property>
+            
+            <property name="zxpt_score_method" value="${zxpt_score_method}"></property>
+            <property name="zxpt_cert_type" value="${zxpt_cert_type}"></property>
+            <property name="zxpt_charset" value="${zxpt_charset}"></property>
+            <property name="zxpt_public_key" value="${zxpt_public_key}"></property>
+            <property name="zxpt_key" value="${zxpt_key}"></property>
+            <property name="zxpt_entityAuthCode" value="${zxpt_entityAuthCode}"></property>
+            <property name="zxpt_sender" value="${zxpt_sender}"></property>
+            <property name="zxpt_third_url" value="${zxpt_third_url}"></property>
+            
+            <property name="zxpt_version" value="${zxpt_version}"></property>
+            <property name="zxpt_source" value="${zxpt_source}"></property>
+            <property name="zxpt_des" value="${zxpt_des}"></property>
+            <property name="zxpt_app" value="${zxpt_app}"></property>
+            <property name="zxpt_tranref" value="${zxpt_tranref}"></property>
             
         </bean>
 </beans>

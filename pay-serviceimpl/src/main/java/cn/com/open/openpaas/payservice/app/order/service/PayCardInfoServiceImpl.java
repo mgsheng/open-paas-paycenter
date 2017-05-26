@@ -19,11 +19,6 @@ public class PayCardInfoServiceImpl implements PayCardInfoService {
 
     
 	@Override
-	public PayCardInfo findByIdentityId(String identityId, String appId) {
-		// TODO Auto-generated method stub
-		return payCardInfoRepository.findByIdentityId(identityId, appId);
-	}
-	@Override
 	public Boolean savePayCardInfo(PayCardInfo payCardInfo) {
 		// TODO Auto-generated method stub
 		try {
@@ -33,6 +28,20 @@ public class PayCardInfoServiceImpl implements PayCardInfoService {
 			// TODO: handle exception
 			return false;
 		}
+		
+	}
+	@Override
+	public PayCardInfo getCardInfo(String userId, String appId) {
+		// TODO Auto-generated method stub
+		return payCardInfoRepository.getCardInfo(userId, appId);
+	}
+	@Override
+	public void updateCardInfo(PayCardInfo payCardInfo) {
+		payCardInfoRepository.updateCardInfo(payCardInfo);
+	}
+	@Override
+	public void updateCardStatus(Integer payStatus, Integer id) {
+		payCardInfoRepository.updateCardStatus(payStatus, id);
 		
 	}
 

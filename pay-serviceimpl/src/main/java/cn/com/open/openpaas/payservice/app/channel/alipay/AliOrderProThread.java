@@ -85,7 +85,6 @@ public class AliOrderProThread implements Runnable {
 		Boolean callBackSend=false;
 		int count=0;
 		String sendMsg="";
-		
 		//添加日志
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getAmount()*100));

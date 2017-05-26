@@ -57,5 +57,4 @@
             <tx:method name="count*" propagation="SUPPORTS" read-only="true"/>      
         </tx:attributes>
     </tx:advice>
-
 </beans>

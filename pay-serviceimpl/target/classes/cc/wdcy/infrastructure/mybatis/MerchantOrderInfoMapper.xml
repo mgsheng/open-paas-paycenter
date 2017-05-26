@@ -45,6 +45,7 @@
 		<result column="IMEI" property="imei" jdbcType="VARCHAR" />
 		<result column="MAC" property="mac" jdbcType="VARCHAR" />
 		<result column="APPID" property="appId" jdbcType="VARCHAR" />
+		<result column="BUSINESS_TYPE" property="businessType" jdbcType="INTEGER" />
 		<result column="STATUS_MESSAGE" property="statusMessage" jdbcType="VARCHAR" />
 	</resultMap>
 	<sql id="Insert_Column_List">
@@ -90,7 +91,8 @@
 	  IMEI,
 	  MAC,
 	  APPID,
-	  STATUS_MESSAGE
+	  STATUS_MESSAGE,
+	  BUSINESS_TYPE
 	</sql>
 	<sql id="Base_Column_List">
 		ID,
@@ -128,7 +130,7 @@
 			#{payStatus, jdbcType=INTEGER},
 			#{payStatusCode, jdbcType=VARCHAR},
 			#{notifyStatus, jdbcType=INTEGER},
-			#{nodifyUrl, jdbcType=VARCHAR},
+			#{notifyUrl, jdbcType=VARCHAR},
 			#{returnUrl, jdbcType=VARCHAR},
 			#{parameter1, jdbcType=VARCHAR},
 			#{appChannelId, jdbcType=VARCHAR},
@@ -147,7 +149,8 @@
 			#{ip, jdbcType=VARCHAR},			
 			#{imei, jdbcType=VARCHAR},			
 			#{mac, jdbcType=VARCHAR},			
-			#{appId, jdbcType=VARCHAR},			
+			#{appId, jdbcType=VARCHAR},	
+			#{businessType, jdbcType=INTEGER},			
 			#{statusMessage, jdbcType=VARCHAR}
 		)
 	</insert>
@@ -164,7 +167,7 @@
 	
 	<select id="findById" resultMap="merchantOrderInfoMap">
          select * from MERCHANT_ORDER_INFO
-         where  ID = #{id}
+         where  ID = #{id} or CHANNEL_ORDERID = #{id} limit 1
 	</select>
 	<select id="findByPayAndNotifyStatus" resultMap="merchantOrderInfoMap">
          select * from MERCHANT_ORDER_INFO
@@ -190,6 +193,17 @@
         PAY_STATUS = #{payStatus}
         where ID = #{id}
     </update>
+      <update id="updatePayInfo"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAY_STATUS = #{payStatus},
+        STATUS_MESSAGE=#{statusMsg}
+        where ID = #{id}
+    </update>
+      <update id="updateSourceType"  flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        SOURCE_TYPE = #{sourceType}
+        where ID = #{id}
+    </update>
     <update id="updateOrderInfo" parameterType="MerchantOrderInfo" flushCache="true">
         update MERCHANT_ORDER_INFO set
         CHANNEL_ID = #{channelId}
@@ -202,15 +216,46 @@
 	  	NOTIFY_DATE = #{notifyDate}
         where ID = #{id}
     </update>
+    <update id="updatePayWay" parameterType="MerchantOrderInfo" flushCache="true">
+        update MERCHANT_ORDER_INFO set
+        PAYMENT_ID = #{paymentId},
+        CHANNEL_ID = #{channelId},
+        SOURCE_TYPE = #{sourceType}
+        where ID = #{id}
+    </update>
     <update id="updateOrderId" parameterType="MerchantOrderInfo" flushCache="true">
+       <![CDATA[
         update MERCHANT_ORDER_INFO set
         ID = #{id},
+        CHANNEL_ORDERID = #{channelOrderId},
 		CREATE_DATE = #{createDate}
-        where MERCHANT_ORDERID = #{merchantOrderId}
+        where MERCHANT_ORDERID = #{merchantOrderId} and APPID=#{appId}
+    ]]>
     </update>
 	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
-        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1)
+        insert into MERCHANT_ORDER_INFO(ID,APPID,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE,PAYMENT_ID,SOURCE_TYPE,NOTIFY_URL,RETURN_URL)
         values
-        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1})
+        (#{id},#{appId},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId},#{sourceType},#{notifyUrl},#{returnUrl})
     </insert>
+     <select id="findOrderByTime" resultType="java.util.Map" flushCache="true">
+         select ID,MERCHANT_ORDERID merchantOrderId,MERCHANT_PRODUCTNAME merchantProductName,AMOUNT amount,PAYMENT_ID  paymentId,CHANNEL_ID channelId,SOURCE_UID sourceUid,SOURCE_USERNAME sourceUserName,APPID appId,PAY_STATUS payStatus,NOTIFY_STATUS notifyStatus from MERCHANT_ORDER_INFO
+         where 1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId}
+	</select>
+	<select id="getTotalAmountByTime"  resultType="java.util.Map" flushCache="true">
+         select sum(PAY_AMOUNT) totalAmount from MERCHANT_ORDER_INFO
+         where 1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and APPID=#{appId} and PAY_STATUS = 1
+	</select>
+	
+	<select id="findOrderMessage" resultMap="merchantOrderInfoMap">
+         select * from MERCHANT_ORDER_INFO
+         where  1=1 
+         and CREATE_DATE BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and MERCHANT_ID=#{merchantId} and PAY_STATUS = 1
+	</select>
+    <resultMap id="allInfo" type="java.util.Map">
+        <result column="sum(PAY_AMOUNT)" property="totalAmount" jdbcType="VARCHAR"/>
+    </resultMap>
+	
+	
 </mapper>

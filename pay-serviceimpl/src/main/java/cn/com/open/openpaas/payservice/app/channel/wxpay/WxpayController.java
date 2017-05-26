@@ -41,6 +41,7 @@ public class WxpayController extends BaseControllerUtil {
 	        //String appsecret = PayConfigUtil.APP_SECRET; // appsecret
 	        String mch_id = payInfo.getMch_id(); // 商业号
 	        String key =payInfo.getWx_key(); // key
+	        //wx_app_id:wx983ed21afeaadfdf#wx_mch_id:1456090802#wx_key:D5638C9BF4744F80B15EDD66BA1F72CA#wx_spbill_create_ip:192.168.5.242#wx_trade_type:tcl_pay_version
 
 	        String currTime = WxPayCommonUtil.getCurrTime();
 	        String strTime = currTime.substring(8, currTime.length());

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.PayZxptInfoRepositoryMyBatis">
+	<resultMap type="PayZxptInfo" id="payZxptInfoMap">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="score_channel" property="scoreChannel" jdbcType="VARCHAR" />
+		<result column="cert_no" property="certNo" jdbcType="VARCHAR" />
+		<result column="cert_type" property="certType" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="reason_no" property="reasonNo" jdbcType="VARCHAR" />
+		<result column="card_no" property="cardNo" jdbcType="VARCHAR" />
+		<result column="score_method" property="scoreMethod" jdbcType="VARCHAR" />
+		<result column="entity_auth_code" property="entityAuthCode" jdbcType="VARCHAR" />
+		<result column="auth_date" property="authDate" jdbcType="TIMESTAMP" />
+		<result column="reserve" property="reserve" jdbcType="VARCHAR" />
+		<result column="zxpt_order_no" property="zxptOrderNo" jdbcType="VARCHAR" />
+		<result column="zxpt_request_status" property="zxptRequestStatus" jdbcType="VARCHAR" />
+		<result column="app_id" property="appId" jdbcType="VARCHAR" />
+		<result column="credoo_score" property="credooScore" jdbcType="VARCHAR" />
+		<result column="decision" property="decision" jdbcType="VARCHAR" />
+		<result column="merchant_order_id" property="merchantOrderId" jdbcType="VARCHAR" />
+		
+	</resultMap>
+	<insert id="savePayZxptInfo" parameterType="PayZxptInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into PAY_ZXPT_INFO(id,score_channel,cert_no,cert_type,user_name,phone,reason_no,card_no,score_method,entity_auth_code,auth_date,reserve,zxpt_order_no,zxpt_request_status,app_id,credoo_score,decision,merchant_order_id)
+        values
+        (#{id},#{scoreChannel},#{certNo},#{certType},#{userName},#{phone},#{reasonNo},#{cardNo},#{scoreMethod},#{entityAuthCode},#{authDate},#{reserve},#{zxptOrderNo},#{zxptRequestStatus},#{appId},#{credooScore},#{decision},#{merchantOrderId})
+    </insert>
+	
+	<select id="findByMidAndAppId" resultMap="payZxptInfoMap">
+         select * from PAY_ZXPT_INFO
+         where  merchant_order_id = #{merchantOrderId}
+         and app_id=#{appId}
+	</select>	
+	
+	<select id="findById" resultMap="payZxptInfoMap">
+         select * from PAY_ZXPT_INFO
+         where  id = #{orderId}  limit 1
+	</select>
+    <update id="updateZxptInfo" parameterType="PayZxptInfo" flushCache="true">
+        update PAY_ZXPT_INFO set
+        zxpt_request_status = #{zxptRequestStatus},
+        zxpt_order_no=#{zxptOrderNo},
+        auth_date=#{authDate},
+        credoo_score=#{credooScore},
+        decision=#{decision}
+        where id = #{id}
+    </update>
+     <update id="updatePayStatus"  flushCache="true">
+        update PAY_ZXPT_INFO set
+        PAY_STATUS = #{payStatus}
+        where id = #{id}
+    </update>
+	
+	
+</mapper>

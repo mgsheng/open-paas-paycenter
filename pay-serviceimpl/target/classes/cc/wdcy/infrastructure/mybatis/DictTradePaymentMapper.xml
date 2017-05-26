@@ -6,11 +6,14 @@
 		<result column="PAYMENT_NAME" property="paymentName" jdbcType="VARCHAR" />
 		<result column="PAYMENT_TYPE" property="paymentType" jdbcType="DECIMAL" />
 		<result column="RATE" property="rate" jdbcType="VARCHAR" />
+		<result column="REMARK" property="remark" jdbcType="VARCHAR" />
+		<result column="PAYMENT_SORT" property="paymentSort" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 		PAYMENT_NAME,
 		PAYMENT_TYPE,
-		RATE
+		RATE,
+		REMARK
 	</sql>
 	<sql id="Base_Column_List">
 		ID,
@@ -28,7 +31,13 @@
 		(
 			#{paymentName, jdbcType=VARCHAR},
 			#{paymentType, jdbcType=DECIMAL},
-			#{rate,jdbcType=VARCHAR}
+			#{rate,jdbcType=VARCHAR},
+			#{remark,jdbcType=VARCHAR}
 		)
 	</insert>
+	<select id="findByPaymentName" resultMap="DictTradePaymentMap">
+         select * from DICT_TRADE_PAYMENT
+         where  PAYMENT_NAME = #{paymentName}
+	</select>
+	
 </mapper>

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PaySwitch;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
@@ -36,6 +37,7 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.order.service.PayCardInfoService;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
+import cn.com.open.openpaas.payservice.app.tools.DateUtils;
 import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
@@ -57,8 +59,6 @@ public class TztBindCardController extends BaseControllerUtil{
 	 @Autowired
 	 private PayserviceDev payserviceDev;
 	 @Autowired
-	 private UserAccountBalanceService userAccountBalanceService;
-	 @Autowired
 	 private PayCardInfoService payCardInfoService;
 	 
 
@@ -74,7 +74,7 @@ public class TztBindCardController extends BaseControllerUtil{
     @RequestMapping("request")
     public String request(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"tzt/bindCard/errorPayChannel";
     	String identityId=request.getParameter("identityId");
     	String identityType=request.getParameter("identityType");
         String cardNo = request.getParameter("cardNo");
@@ -82,6 +82,14 @@ public class TztBindCardController extends BaseControllerUtil{
     	String goodsId=request.getParameter("goodsId");
     	String phone =request.getParameter("phone");
     	String userId=request.getParameter("userId");
+    	String terminalId=request.getParameter("terminalId");
+    	String lastLoginTerminalId=request.getParameter("lastLoginTerminalId");
+    	String isSetPaypwd=request.getParameter("isSetPaypwd");
+    	String registIp=request.getParameter("registIp");
+    	String lastloginIp=request.getParameter("lastloginIp");
+    	String lastloginTime=request.getParameter("lastloginTime");
+    	String registTime=request.getParameter("registTime");
+    	
     	String userName="";
     	if (!nullEmptyBlankJudge(request.getParameter("userName"))){
     		userName=new String(request.getParameter("userName").getBytes("iso-8859-1"),"utf-8");
@@ -102,7 +110,8 @@ public class TztBindCardController extends BaseControllerUtil{
 	    PayServiceLog payServiceLog=new PayServiceLog();
 	    payServiceLog.setOrderId(newId);
 	    payServiceLog.setAppId(appId);
-	    payServiceLog.setChannelId(String.valueOf(Channel.TZT));//
+	    payServiceLog.setChannelId(String.valueOf(Channel.TZT));
+	    payServiceLog.setPaymentId(PaymentType.TZT_BIND_CARD.getValue());
 	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
 	    payServiceLog.setLogType(payserviceDev.getLog_type());
 	    payServiceLog.setMerchantId(merchantId);
@@ -112,7 +121,7 @@ public class TztBindCardController extends BaseControllerUtil{
     	payServiceLog.setStatus("ok");
     	payServiceLog.setLogName(PayLogName.BIND_CARD_START);
     	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-        if(!paraMandatoryCheck(Arrays.asList(outTradeNo,identityId,merchantId,cardNo,userName,phone,appId,avaliabletime,userId,identityType))){
+        if(!paraMandatoryCheck(Arrays.asList(outTradeNo,identityId,merchantId,cardNo,userName,phone,appId,avaliabletime,userId,identityType,terminalId,lastLoginTerminalId,isSetPaypwd))){
         	//paraMandaChkAndReturn(1, response,"必传参数中有空值");
         	payServiceLog.setErrorCode("1");
         	payServiceLog.setStatus("error");
@@ -129,7 +138,7 @@ public class TztBindCardController extends BaseControllerUtil{
     		payServiceLog.setStatus("error");
     		payServiceLog.setLogName(PayLogName.BIND_CARD_END);
     		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
+    		return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
         }
     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
     	sParaTemp.put("appId",appId);
@@ -146,28 +155,30 @@ public class TztBindCardController extends BaseControllerUtil{
    		sParaTemp.put("cardNo", cardNo);
    		sParaTemp.put("parameter", parameter);
    		sParaTemp.put("userId", userId);
+   		sParaTemp.put("terminalId", terminalId);
+   		sParaTemp.put("lastLoginTerminalId", lastLoginTerminalId);
+   		sParaTemp.put("isSetPaypwd", isSetPaypwd);
+   		sParaTemp.put("registIp", registIp);
+   		sParaTemp.put("lastloginIp", lastloginIp);
+   		sParaTemp.put("lastloginTime", lastloginTime);
+   		sParaTemp.put("registTime", registTime);
    		String params=createSign(sParaTemp);
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
-        //认证 3f1853bfc53f42129789712998c0724f
-   	    //3f1853bfc53f42129789712998c0724f
-   	 //appId=10026&avaliabletime=30&cardNo=6214680002152344&identityId=142724198902270834&merchantId=10007&outTradeNo=test201704181739&phone=15727398579&signatureNonce=67&timestamp=2017-04-18T09:40:09Z&userId=36133476-3827-4188-AE4A-0B9DBFC6AC64&username=王帅
-       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
-   	
 		if(!hmacSHA1Verification){
 			//paraMandaChkAndReturn(3, response,"认证失败");
 			payServiceLog.setErrorCode("3");
 			payServiceLog.setStatus("error");
 			payServiceLog.setLogName(PayLogName.BIND_CARD_END);
 			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
+			return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
 		} 
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
-				payServiceLog.setErrorCode("10");
+				payServiceLog.setErrorCode("4");
 				payServiceLog.setStatus("error");
 				payServiceLog.setLogName(PayLogName.BIND_CARD_END);
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
+				return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
 		}else{ 
 			//创建订单
 			merchantOrderInfo=new MerchantOrderInfo();
@@ -183,7 +194,7 @@ public class TztBindCardController extends BaseControllerUtil{
 			merchantOrderInfo.setParameter1(parameter);
 			int paymentTypeId=PaymentType.getTypeByValue("TZT_BIND_CARD").getType();
 			merchantOrderInfo.setPaymentId(paymentTypeId);
-			merchantOrderInfo.setSourceType(Channel.TZT.getValue());
+			merchantOrderInfo.setSourceType(PaySwitch.TZT.getValue());
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
 		//保存用户卡号信息
@@ -195,74 +206,312 @@ public class TztBindCardController extends BaseControllerUtil{
 		payCardInfo.setPhone(phone);
 		payCardInfo.setStatus(0);
 		payCardInfo.setCreateTime(new Date());
+		if(!nullEmptyBlankJudge(registTime)){
+			payCardInfo.setRegistTime(DateTools.stringtoDate(registTime, DateTools.FORMAT_ONE));	
+		}
 		payCardInfo.setUserName(userName);
 		payCardInfo.setUserId(userId);
+		payCardInfo.setTerminalId(terminalId);
+		payCardInfo.setLastLoginTerminalId(lastLoginTerminalId);
+		payCardInfo.setLastloginIp(lastloginIp);
+		payCardInfo.setRegistIp(registIp);
+		payCardInfo.setIsSetPaypwd(isSetPaypwd);
+		if(!nullEmptyBlankJudge(lastloginTime)){
+			payCardInfo.setLastloginTime(DateTools.stringtoDate(lastloginTime, DateTools.FORMAT_ONE));	
+		}
 		payCardInfoService.savePayCardInfo(payCardInfo);
         //绑卡操作
-	    Map<String, String> others = getOtherInfo(merchantOrderInfo);
-		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String requesttime= df.format(new Date());
-		Map<String, String> tztParams 	= new HashMap<String, String>();
-		tztParams.put("requestno",merchantOrderInfo.getId());
-		tztParams.put("identityid",identityId);
-		tztParams.put("identitytype",identityType);
-		tztParams.put("cardno",cardNo);
-		tztParams.put("idcardno",identityId);
-		tztParams.put("idcardtype",others.get("idcardtype"));
-		tztParams.put("username",userName);
-		tztParams.put("phone",phone);
-		tztParams.put("advicesmstype", 	others.get("advicesmstype"));
-		tztParams.put("customerenhancedtype", others.get("customerenhancedtype"));
-		tztParams.put("avaliabletime",avaliabletime);
-		tztParams.put("callbackurl", "http://localhost:8080/tzt-new-demo/jsp/paymentCallback.jsp");
-		tztParams.put("requesttime", requesttime);
-		String merchantno= others.get("merchantAccount");
-		String merchantPrivateKey=others.get("merchantPrivateKey");
-		String merchantAESKey= TZTService.getMerchantAESKey();
-		String yeepayPublicKey= others.get("yeepayPublicKey");
-		String bindBankcardURL= payserviceDev.getBindCardRequestURL();
-		Map<String, String> result = TZTService.bindCardRequest(tztParams,merchantno,merchantPrivateKey,merchantAESKey,yeepayPublicKey,bindBankcardURL);
-		
-	    String status= formatString(result.get("status"));
-	    if(!nullEmptyBlankJudge(status)&&status.equals("TO_VALIDATE")){
-	    	//String merchantno 	= formatString(result.get("merchantno")); 
-		      String requestnoback = formatString(result.get("requestno")); 
-		       String yborderid=formatString(result.get("yborderid")); 
-		      String smscode =formatString(result.get("smscode")); 
-		    //String codesender= formatString(result.get("codesender")); 
-		    //String enhancedtype	= formatString(result.get("enhancedtype")); 
-		    //String smstype= formatString(result.get("smstype")); 
-				merchantOrderInfo.setPayStatus(1);
-				merchantOrderInfo.setDealDate(new Date());
-				merchantOrderInfo.setPayOrderId(yborderid);
-				merchantOrderInfoService.updateOrder(merchantOrderInfo);
-		     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
-       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
-		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
-       	     return "redirect:" + fullUri;
-	    }else{
-	    	   String errorcode= formatString(result.get("errorcode")); 
-			   String errormsg	= formatString(result.get("errormsg")); 
-			   //String customError	= formatString(result.get("customError"));
-			    payServiceLog.setErrorCode("10");
+		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TZT.getValue());
+		if(dictTradeChannels!=null){
+			String other= dictTradeChannels.getOther();
+	    	Map<String, String> others = new HashMap<String, String>();
+	    	others=getPartner(other);
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String requesttime= df.format(new Date());
+			Map<String, String> tztParams 	= new HashMap<String, String>();
+			tztParams.put("requestno",merchantOrderInfo.getId());
+			tztParams.put("identityid",identityId);
+			tztParams.put("identitytype",identityType);
+			tztParams.put("cardno",cardNo);
+			tztParams.put("idcardno",identityId);
+			tztParams.put("idcardtype",others.get("idcardtype"));
+			tztParams.put("username",userName);
+			tztParams.put("phone",phone);
+			tztParams.put("advicesmstype", 	others.get("advicesmstype"));
+			tztParams.put("customerenhancedtype", others.get("customerenhancedtype"));
+			tztParams.put("avaliabletime",avaliabletime);
+			tztParams.put("callbackurl", dictTradeChannels.getNotifyUrl());
+			tztParams.put("requesttime", requesttime);
+			String merchantno= others.get("merchantAccount");
+			String merchantPrivateKey=others.get("merchantPrivateKey");
+			String merchantAESKey= TZTService.getMerchantAESKey();
+			String yeepayPublicKey= others.get("yeepayPublicKey");
+			String bindBankcardURL= payserviceDev.getBindCardRequestURL();
+			Map<String, String> result = TZTService.bindCardRequest(tztParams,merchantno,merchantPrivateKey,merchantAESKey,yeepayPublicKey,bindBankcardURL);
+		    String status= formatString(result.get("status"));
+		    if(!nullEmptyBlankJudge(status)&&status.equals("TO_VALIDATE")){
+			      String requestnoback = formatString(result.get("requestno")); 
+			       String yborderid=formatString(result.get("yborderid")); 
+					merchantOrderInfo.setPayStatus(3);
+					merchantOrderInfo.setDealDate(new Date());
+					merchantOrderInfo.setPayOrderId(yborderid);
+					merchantOrderInfoService.updateOrder(merchantOrderInfo);
+			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+	       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
+			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
+	       	     return "redirect:" + fullUri;
+		    }else{
+		    	   String errorcode= formatString(result.get("errorcode")); 
+				   String errormsg	= formatString(result.get("errormsg")); 
+				   //String customError	= formatString(result.get("customError"));
+				    payServiceLog.setErrorCode("10");
+					payServiceLog.setStatus("error");
+					payServiceLog.setLogName(PayLogName.BIND_CARD_END);
+					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"5"+"&failureCode="+errorcode+"&failureMsg="+errormsg;
+		    }	
+		}else{
+			    payServiceLog.setErrorCode("6");
 				payServiceLog.setStatus("error");
 				payServiceLog.setLogName(PayLogName.BIND_CARD_END);
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"11"+"&failureCode="+errorcode+"&failureMsg="+errormsg;
-	    }
+				return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"6";
+		}
+        
 		
     }
+    /**
+     * 有短验绑卡请求短验确认
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
+    @RequestMapping("confirm")
+    public String confirm(HttpServletRequest request,HttpServletResponse response,Model model){
+    	long startTime = System.currentTimeMillis();
+    	String fullUri=payserviceDev.getServer_host()+"tzt/bindCard/errorPayChannel";
+    	String requestno=request.getParameter("requestNo");
+    	String outTradeNo=request.getParameter("outTradeNo");
+    	String signature=request.getParameter("signature");
+        String merchantId=request.getParameter("merchantId");
+	    String timestamp=request.getParameter("timestamp");
+	    String signatureNonce=request.getParameter("signatureNonce");
+	    String appId = request.getParameter("appId");
+	    String validatecode=request.getParameter("validateCode");
+	    
+	    PayServiceLog payServiceLog=new PayServiceLog();
+	    payServiceLog.setOrderId(requestno);
+	    payServiceLog.setAppId(appId);
+	    payServiceLog.setChannelId(String.valueOf(Channel.TZT));//
+	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
+	    payServiceLog.setLogType(payserviceDev.getLog_type());
+	    payServiceLog.setMerchantId(merchantId);
+	    payServiceLog.setMerchantOrderId(outTradeNo);
+    	payServiceLog.setStatus("ok");
+    	payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+    	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+    	 if(!paraMandatoryCheck(Arrays.asList(outTradeNo,merchantId,appId,requestno,validatecode))){
+         	payServiceLog.setErrorCode("1");
+         	payServiceLog.setStatus("error");
+         	payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+         	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+         	
+         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
+         }
+         //获取商户信息
+     	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
+     	if(merchantInfo==null){
+         	//paraMandaChkAndReturn(2, response,"商户ID不存在");
+     		payServiceLog.setErrorCode("2");
+     		payServiceLog.setStatus("error");
+     		payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+     		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
+         }
+     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+     		sParaTemp.put("appId",appId);
+     		sParaTemp.put("timestamp", timestamp);
+    		sParaTemp.put("signatureNonce", signatureNonce);
+    		sParaTemp.put("outTradeNo",outTradeNo );
+    		sParaTemp.put("merchantId", merchantId);
+    		sParaTemp.put("requestNo", requestno);
+    		sParaTemp.put("validateCode", validatecode);
+    		String params=createSign(sParaTemp);
+    	Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+ 		if(!hmacSHA1Verification){
+ 			//paraMandaChkAndReturn(3, response,"认证失败");
+ 			payServiceLog.setErrorCode("3");
+ 			payServiceLog.setStatus("error");
+ 			payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+ 			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
+ 		} 
+ 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
+ 		if(merchantOrderInfo!=null){
+ 			//有短验绑卡请求短验确认
 
+ 			Map<String, String> confirmParams 	= new HashMap<String, String>();
+ 			confirmParams.put("requestno", 		requestno);
+ 			confirmParams.put("validatecode", 		validatecode);
+ 		    Map<String, String> others = getOtherInfo(merchantOrderInfo);
+ 			String merchantno= others.get("merchantAccount");
+ 			String merchantPrivateKey=others.get("merchantPrivateKey");
+ 			String merchantAESKey= TZTService.getMerchantAESKey();
+ 			String yeepayPublicKey= others.get("yeepayPublicKey");
+ 			String confirmBindBankcardURL= payserviceDev.getBindCardConfirmURL();
+
+ 			Map<String, String> result			= TZTService.bindCardConfirm(confirmParams,merchantno,merchantPrivateKey,merchantAESKey,yeepayPublicKey,confirmBindBankcardURL);
+ 			
+ 		    String status 		   			= formatString(result.get("status")); 
+
+ 		   if(!nullEmptyBlankJudge(status)&&status.equals("BIND_SUCCESS")){
+ 			      String requestnoback = formatString(result.get("requestno")); 
+ 			      String yborderid=formatString(result.get("yborderid")); 
+ 				  merchantOrderInfo.setPayStatus(1);
+ 				  merchantOrderInfo.setDealDate(new Date());
+ 				  merchantOrderInfo.setPayOrderId(yborderid);
+ 				  merchantOrderInfoService.updateOrder(merchantOrderInfo);
+ 			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+ 	       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
+ 			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
+ 	       	     return "redirect:" + fullUri;
+ 		    }else{
+ 		    	   String errorcode= formatString(result.get("errorcode")); 
+ 				   String errormsg	= formatString(result.get("errormsg")); 
+ 				   //String customError	= formatString(result.get("customError"));
+ 				    payServiceLog.setErrorCode("8");
+ 					payServiceLog.setStatus("error");
+ 					payServiceLog.setLogName(PayLogName.BIND_CARD_END);
+ 					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+ 		        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+errorcode+"&failureMsg="+errormsg;
+ 		    }
+ 		}else{
+ 			payServiceLog.setErrorCode("7");
+			payServiceLog.setStatus("error");
+			payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"7";
+ 		}
+    }
+    /**
+     * 有短验绑卡请求短验重发
+     * @param request
+     * @param response
+     * @param model
+     * @return
+     */
+    @RequestMapping("resendsms")
+    public String resendsms(HttpServletRequest request,HttpServletResponse response,Model model){
+    	long startTime = System.currentTimeMillis();
+    	String fullUri=payserviceDev.getServer_host()+"tzt/bindCard/errorPayChannel";
+    	String requestno=request.getParameter("requestNo");
+    	String outTradeNo=request.getParameter("outTradeNo");
+    	String signature=request.getParameter("signature");
+        String merchantId=request.getParameter("merchantId");
+	    String timestamp=request.getParameter("timestamp");
+	    String signatureNonce=request.getParameter("signatureNonce");
+	    String appId = request.getParameter("appId");
+	    PayServiceLog payServiceLog=new PayServiceLog();
+	    payServiceLog.setOrderId(requestno);
+	    payServiceLog.setAppId(appId);
+	    payServiceLog.setChannelId(String.valueOf(Channel.TZT));//
+	    payServiceLog.setCreatTime(DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
+	    payServiceLog.setLogType(payserviceDev.getLog_type());
+	    payServiceLog.setMerchantId(merchantId);
+	    payServiceLog.setMerchantOrderId(outTradeNo);
+    	payServiceLog.setStatus("ok");
+    	payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+    	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+    	 if(!paraMandatoryCheck(Arrays.asList(outTradeNo,merchantId,appId,requestno))){
+         	payServiceLog.setErrorCode("1");
+         	payServiceLog.setStatus("error");
+         	payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+         	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+         	
+         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
+         }
+         //获取商户信息
+     	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
+     	if(merchantInfo==null){
+         	//paraMandaChkAndReturn(2, response,"商户ID不存在");
+     		payServiceLog.setErrorCode("2");
+     		payServiceLog.setStatus("error");
+     		payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+     		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
+         }
+     	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+     		sParaTemp.put("appId",appId);
+     		sParaTemp.put("timestamp", timestamp);
+    		sParaTemp.put("signatureNonce", signatureNonce);
+    		sParaTemp.put("outTradeNo",outTradeNo );
+    		sParaTemp.put("merchantId", merchantId);
+    		sParaTemp.put("requestNo", requestno);
+    		String params=createSign(sParaTemp);
+    	Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
+ 		if(!hmacSHA1Verification){
+ 			//paraMandaChkAndReturn(3, response,"认证失败");
+ 			payServiceLog.setErrorCode("3");
+ 			payServiceLog.setStatus("error");
+ 			payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+ 			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
+ 		} 
+ 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
+ 		if(merchantOrderInfo!=null){
+ 			//换卡请求短验重发
+ 			Map<String, String> resendParams 	= new HashMap<String, String>();
+ 			Map<String, String> others = getOtherInfo(merchantOrderInfo);
+ 			resendParams.put("requestno", 		requestno);
+ 			String merchantno= others.get("merchantAccount");
+ 			String merchantPrivateKey=others.get("merchantPrivateKey");
+ 			String merchantAESKey= TZTService.getMerchantAESKey();
+ 			String yeepayPublicKey= others.get("yeepayPublicKey");
+ 			String bindCardResendsmsURL		= payserviceDev.getBindCardResendsmsURL();
+ 			Map<String, String> result			= TZTService.changeCardResendsms(resendParams,merchantno,merchantPrivateKey,merchantAESKey,yeepayPublicKey,bindCardResendsmsURL);
+ 			
+ 		    String status 		   			= formatString(result.get("status")); 
+
+ 		   if(!nullEmptyBlankJudge(status)&&status.equals("TO_VALIDATE")){
+ 			      String requestnoback = formatString(result.get("requestno")); 
+ 			       String yborderid=formatString(result.get("yborderid")); 
+ 					merchantOrderInfo.setPayStatus(3);
+ 					merchantOrderInfo.setDealDate(new Date());
+ 					merchantOrderInfo.setPayOrderId(yborderid);
+ 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
+ 			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+ 	       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
+ 			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
+ 	       	     return "redirect:" + fullUri;
+ 		    }else{
+ 		    	   String errorcode= formatString(result.get("errorcode")); 
+ 				   String errormsg	= formatString(result.get("errormsg")); 
+ 				    payServiceLog.setErrorCode("9");
+ 					payServiceLog.setStatus("error");
+ 					payServiceLog.setLogName(PayLogName.BIND_CARD_END);
+ 					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+ 		        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"9"+"&failureCode="+errorcode+"&failureMsg="+errormsg;
+ 		    }
+ 		}else{
+ 			payServiceLog.setErrorCode("4");
+			payServiceLog.setStatus("error");
+			payServiceLog.setLogName(PayLogName.BIND_CARD_CONFIRM_START);
+			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+	        return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
+ 		}
+    }
     /**
      * 返回绑卡成功参数
      */
     @RequestMapping(value = "back", method = RequestMethod.GET)
     public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
     	String requestno=request.getParameter("requestno");
-    	 model.addAttribute("requestno", requestno);
     	 Map<String, Object> map=new HashMap<String,Object>();
     	 map.put("status", "ok");
     	 map.put("requestno", requestno);
+    	 map.put("errorCode", "");
+  	     map.put("errMsg", "");
     	 writeSuccessJson(response,map);
     }
 	/**
@@ -278,157 +527,41 @@ public class TztBindCardController extends BaseControllerUtil{
      	 return others;
 	}
     
- 	
- 
-    public Boolean validatePayType(String paymentChannel,String paymentType){
-    	Boolean returnValue=false;
-    	if(nullEmptyBlankJudge(paymentChannel)&&nullEmptyBlankJudge(paymentType)){
-    		 returnValue=true;	
-    	}
-    	if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.ALI.getValue()))){
-    	 if(paymentType!=null&&(PaymentType.ALIPAY.getValue()).equals(paymentType)){
-    		 returnValue=true;
-    	 }else{
-    		 returnValue=false; 
-    	 }
-    	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WEIXIN.getValue()))){
-    	 if(paymentType!=null&&String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
-    		 returnValue=true;
-    	 } else{
-    		 returnValue=false; 
-    	 }
-    	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EBANK.getValue()))){
-    	if(ifTruePayMentType(paymentType)){
-       		 returnValue=true;
-       	 }else{
-       		 returnValue=false; 
-       	 }
-    	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-    		if(paymentType!=null&&PaymentType.WECHAT_WAP.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-          }
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX_WECHAT_CSB.getValue()))){
-    		if(paymentType!=null&&PaymentType.PAYMAX_WECHAT_CSB.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-          }
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WEIXIN_WECHAT_WAP.getValue()))){
-    		if(paymentType!=null&&PaymentType.WECHAT_WAP.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-          }
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.UPOP.getValue()))){
-    		if(paymentType!=null&&PaymentType.UPOP.getValue().equals(paymentType)){
-          		 returnValue=true;
-          	 }else{
-          		 returnValue=false; 
-          	 }
-       	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_WEIXIN_PAY.getValue()))){
-    		if(paymentType!=null&&PaymentType.EHK_WEIXIN_PAY.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_BANK.getValue()))){
-    		if((paymentType!=null&&PaymentType.EHK_BANK.getValue().equals(paymentType))){
-        		 returnValue=true;
-        	 }else{
-        		 returnValue=false; 
-        	 }
-     	}
-       	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX.getValue()))){
-    		 if(paymentType!=null&&PaymentType.PAYMAX.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_EB.getValue()))){
-      		if(paymentType!=null&&PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
-        		 returnValue=true; 
-        	 }else{
-     		 returnValue=false; 
-     	 }
-  	  }else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.ALIFAF.getValue()))){
-  		if(paymentType!=null&&PaymentType.ALIFAF.getValue().equals(paymentType)){
-   		 returnValue=true; 
-   	  }else{
-	 	 returnValue=false; 
-	   }
-  	  }
-    	return returnValue;
-    }
+  
     /**
-     * 判断直连银行的选择支付方式是否为直连银行
-     * @param paymentType
-     * @return
-     */
-    public Boolean ifTruePayMentType(String paymentType){
-    	boolean returnValue=false;
-    	if(paymentType!=null&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
-      		 returnValue=true;
-      	 }else if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)){
-      		returnValue=true;
-      	 }else if(!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){
-       		returnValue=true;
-       	 }else if(!String.valueOf(PaymentType.PAYMAX.getValue()).equals(paymentType)){
-       		returnValue=true;
-       	 }else if(!String.valueOf(PaymentType.PAYMAX_H5.getValue()).equals(paymentType)){
-       		returnValue=true;
-       	 }else if(!String.valueOf(PaymentType.WECHAT_WAP.getValue()).equals(paymentType)){
-        		returnValue=true;
-         }else{
-      		 returnValue=false;  
-      	 }
-    	return returnValue;
-    }
- 
-    /**
-     * 跳转到错误页面
+     * 跳转到wxpay页面
      */
     @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	String errorMsg="";
-    	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-    		errorMsg="必传参数中有空值";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-    		errorMsg="验证失败";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-    		errorMsg="所选支付渠道与支付类型不匹配";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-    		errorMsg="商户ID不存在";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-    		errorMsg="订单金额格式有误";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-    		errorMsg="订单处理失败，请重新提交！";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-    		errorMsg="订单已处理，请勿重复提交！";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-    		errorMsg="您好：订单号重复,请检查后重新下单！";
-    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-    		errorMsg="绑卡失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}
-    	model.addAttribute("outTradeNo", outTradeNo);
-    	model.addAttribute("errorMsg", errorMsg);
-    	return "pay/errorPayChannel";
-    }	
-    String formatString(String text){
-		return text==null ? "" : text.trim();
-	}
-
+    public void bindError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    		String errorMsg="";
+    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="订单号重复";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="绑卡请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="渠道未开通！";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="订单不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="绑卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="绑卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}
+    	   map.put("status", "error");
+    	   map.put("requestno", outTradeNo);
+    	   map.put("errorCode", errorCode);
+    	   map.put("errMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
 
 
 

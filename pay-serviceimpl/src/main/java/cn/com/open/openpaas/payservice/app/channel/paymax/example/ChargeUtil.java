@@ -90,6 +90,11 @@ public class ChargeUtil {
               returnValue.put("wechat_csb",wechat_csb);
               returnValue.put("status", "ok");	
     	      }
+        	else if(charge.getChannel().equals("lakala_h5")){
+        		  String wechat_csb=credential.get("lakala_h5").toString();
+                returnValue.put("wechat_csb",wechat_csb);
+                returnValue.put("status", "ok");	
+      	      }
            // System.out.println(returnValue);
         }else {//http请求失败
 	       // System.out.println(JSON.toJSONString(charge));
