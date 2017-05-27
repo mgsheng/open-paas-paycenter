@@ -9,7 +9,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
-import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
-import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
-import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
-import cn.com.open.openpaas.payservice.app.redis.service.RedisClientTemplate;
-import cn.com.open.openpaas.payservice.app.redis.service.RedisConstant;
-import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
-import cn.com.open.openpaas.payservice.app.tools.WebUtils;
-import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 import com.alibaba.fastjson15.JSONArray;
 import com.alibaba.fastjson15.JSONObject;
@@ -40,6 +30,16 @@ import com.ehking.sdk.exception.UnknownException;
 import com.ehking.sdk.executer.ResultListenerAdpater;
 import com.ehking.sdk.onlinepay.builder.OrderBuilder;
 import com.ehking.sdk.onlinepay.executer.OnlinePayOrderExecuter;
+
+import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
+import cn.com.open.openpaas.payservice.app.redis.service.RedisClientTemplate;
+import cn.com.open.openpaas.payservice.app.redis.service.RedisConstant;
+import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 
 /**
  * 
