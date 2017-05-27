@@ -84,11 +84,31 @@ allprojects{
 			 'com.baidu.disconf:disconf-core:2.6.33',
              'org.bouncycastle:bcprov-jdk16:1.45',
              'com.baidu.disconf:disconf-client:2.6.33',
+             'com.jcraft:jsch:0.1.54',
+             'com.fasterxml.jackson.core:jackson-core:2.8.7',
+             'com.fasterxml.jackson.core:jackson-databind:2.8.7',
+             'com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.8.7',
+             'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.8.7',
+             'org.apache.logging.log4j:log4j-api:2.3',
+             'org.apache.logging.log4j:log4j-core:2.3',
+             'org.apache.logging.log4j:log4j-slf4j-impl:2.3',
+             'org.apache.logging.log4j:log4j-web:2.3',
+             'org.slf4j:jul-to-slf4j:1.7.6',
+             'ch.qos.logback:logback-classic:1.1.2',
+             'com.googlecode.log4jdbc:log4jdbc:1.2',
+             'org.assertj:assertj-core:1.5.0',
+             'org.apache.poi:poi-excelant:3.10.1',
+             'org.apache.poi:poi-ooxml:3.10.1',
+             'org.apache.poi:poi-ooxml-schemas:3.10.1',
+             'org.apache.poi:poi-scratchpad:3.10.1',
+             'org.json:json:20151123',
              files('../lib/QRCode.jar'),
              files('../lib/alipay-trade-sdk.jar'),
-             files('../lib/alipay-sdk-java20151021120052.jar')
+             files('../lib/alipay-sdk-java20151021120052.jar'),
+             files('../lib/ehking-sdk-core-1.0.0.jar'),
+             files('../lib/zx-java-sdk-1.0.0.jar')
 
-  }
+   }
 
 }
              
