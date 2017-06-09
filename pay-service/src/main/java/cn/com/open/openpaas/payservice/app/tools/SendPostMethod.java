@@ -41,13 +41,13 @@ public class SendPostMethod {
 	            String location = null; 
 	            if (locationHeader != null) { 
 	                location = locationHeader.getValue(); 
-	                System.out.println("The page was redirected to:" + location); 
+	                //System.out.println("The page was redirected to:" + location); 
 	                response= methodPost(location,data);//用跳转后的页面重新请求。 
 	            } else { 
 	                System.err.println("Location field value is null."); 
 	            } 
 	        } else { 
-	            System.out.println(postMethod.getStatusLine()); 
+	           // System.out.println(postMethod.getStatusLine()); 
 	 
 	            try { 
 	                response= postMethod.getResponseBodyAsString(); 
@@ -73,7 +73,7 @@ public class SendPostMethod {
 	      
 	        String response=new SendPostMethod().methodPost(url,data);
 	       
-	        System.out.println("********"+response);
+	        //System.out.println("********"+response);
 	        
 	       
 	    }  

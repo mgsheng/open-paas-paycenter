@@ -56,12 +56,12 @@ public class RefundExample {
      */
     private void printResult(Refund refund) {
         if (refund.getReqSuccessFlag()){//http请求成功
-            System.out.println(refund);
+           // System.out.println(refund);
         }else {//http请求失败
             String failureCode = refund.getFailureCode();
             String failureMsg = refund.getFailureMsg();
-            System.out.println("failureCode:"+failureCode);
-            System.out.println("failureMsg:"+failureMsg);
+           // System.out.println("failureCode:"+failureCode);
+          //  System.out.println("failureMsg:"+failureMsg);
         }
     }
 

@@ -313,7 +313,7 @@ public class TestAlipayController extends BaseControllerUtil {
                     result += line;  
                     
                 }  
-                System.out.println(result);
+                //System.out.println(result);
             } catch (Exception e) {  
                 e.printStackTrace();  
             } finally {  
@@ -359,7 +359,7 @@ public class TestAlipayController extends BaseControllerUtil {
                 Map<String, List<String>> map = connection.getHeaderFields();
                 // 遍历所有的响应头字段
                 for (String key : map.keySet()) {
-                    System.out.println(key + "--->" + map.get(key));
+                   // System.out.println(key + "--->" + map.get(key));
                 }
                 // 定义 BufferedReader输入流来读取URL的响应
                 in = new BufferedReader(new InputStreamReader(
@@ -368,9 +368,9 @@ public class TestAlipayController extends BaseControllerUtil {
                 while ((line = in.readLine()) != null) {
                    result += line;
                 }
-                System.out.println(result);
+               // System.out.println(result);
             } catch (Exception e) {
-                System.out.println("发送GET请求出现异常！" + e);
+              //  System.out.println("发送GET请求出现异常！" + e);
                 e.printStackTrace();
             }
             // 使用finally块来关闭输入流

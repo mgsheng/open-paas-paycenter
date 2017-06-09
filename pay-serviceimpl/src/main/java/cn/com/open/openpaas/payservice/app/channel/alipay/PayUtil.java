@@ -18,8 +18,8 @@ public class PayUtil {
 			 * @param args
 			 */
 			public static void main(String[] args) {
-				System.out.println(">>>模拟微信支付<<<");
-				System.out.println("==========华丽的分隔符==========");
+				//System.out.println(">>>模拟微信支付<<<");
+				//System.out.println("==========华丽的分隔符==========");
 				//微信api提供的参数
 				String appid = "wxd930ea5d5a258f4f";
 				String mch_id = "10000100";
@@ -36,14 +36,14 @@ public class PayUtil {
 				
 				String characterEncoding = "UTF-8";
 				String weixinApiSign = "0D116A34A890046D2DEF526BB2E0EB0D";
-				System.out.println("微信的签名是：" + weixinApiSign);
+				//System.out.println("微信的签名是：" + weixinApiSign);
 				String mySign = createSign(characterEncoding,parameters,Key);
-				System.out.println("我     的签名是："+mySign);
+				//System.out.println("我     的签名是："+mySign);
 				
 				if(weixinApiSign.equals(mySign)){
-					System.out.println("恭喜你成功了~");
+					//System.out.println("恭喜你成功了~");
 				}else{
-					System.out.println("注定了你是个失败者~");
+					//System.out.println("注定了你是个失败者~");
 				}
 				//appUid=1&goodsDesc=sddsd&goodsName=test1&merchantId=10001&orderId=20160506113639952053&parameter=sddsd&paymentChannel=1&paymentType=null&timeEnd=20160506033825&totalFee=0.0&key=fc3db98a48a5434aaddbd2c75a7382ba
                 //
@@ -51,7 +51,7 @@ public class PayUtil {
 				
 				char agent = userAgent.charAt(userAgent.indexOf("MicroMessenger")+15);
 				
-				System.out.println("微信的版本号："+new String(new char[]{agent}));
+				//System.out.println("微信的版本号："+new String(new char[]{agent}));
 			}
 
 			/**

@@ -14,4 +14,6 @@ public class PaymaxConfig {
     public static final String SIGN = "sign";
     //SDK版本
     public static final String SDK_VERSION = "1.0.0";
+    //请求下载对账单method
+    public static final String STATEMENT_DOWNLOAD = "v1/statement/download";
 }
