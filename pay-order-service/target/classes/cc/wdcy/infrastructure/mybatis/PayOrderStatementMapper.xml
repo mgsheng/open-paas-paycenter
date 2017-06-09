@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.pay.order.service.infrastructure.mybatis.PayOrderStatementRepositoryMyBatis">
+	<resultMap type="PayOrderStatement" id="payOrderStatementMap">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="merchant_order_id" property="merchantOrderId" jdbcType="VARCHAR" />
+		<result column="pay_order_id" property="payOrderId" jdbcType="VARCHAR" />
+		<result column="order_amount" property="orderAmount" jdbcType="DECIMAL" />
+		<result column="feeType" property="feeType" jdbcType="TIMESTAMP" />
+		<result column="create_order_date" property="createOrderDate" jdbcType="TIMESTAMP" />
+		<result column="pay_order_date" property="payOrderDate" jdbcType="TIMESTAMP" />
+		<result column="parmenter1" property="parmenter1" jdbcType="VARCHAR" />
+		<result column="pay_charge" property="payCharge" jdbcType="DECIMAL" />
+		<result column="statement_status" property="statementStatus" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Insert_Column_List">
+		merchant_order_id,
+  		pay_order_id,
+  		order_amount,
+		feeType,
+		create_order_date,
+		pay_order_date,
+		parmenter1,
+		statement_status
+	</sql>
+	<sql id="Base_Column_List">
+		ID,
+		<include refid="Insert_Column_List" />
+	</sql>
+	<insert id="insert" parameterType="cn.com.open.pay.order.service.statement.model.PayOrderStatement">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		select last_insert_id() as id
+		</selectKey>
+		insert into PAY_ORDER_STATEMENT
+		(
+			<include refid="Insert_Column_List" />
+		)
+		values 
+		(
+			#{merchantOrderId, jdbcType=VARCHAR},
+			#{payOrderId, jdbcType=VARCHAR},
+			#{orderAmount, jdbcType=DECIMAL},
+			#{feeType, jdbcType=VARCHAR},
+			#{createOrderDate, jdbcType=TIMESTAMP},
+			#{payOrderDate, jdbcType=TIMESTAMP},
+			#{parmenter1, jdbcType=VARCHAR},
+			#{payCharge, jdbcType=DECIMAL},
+			#{statementStatus, jdbcType=INTEGER}
+		)
+	</insert>
+	<select id="findById" resultMap="payOrderStatementMap">
+         select * from PAY_ORDER_STATEMENT
+         where  id = #{id}
+	</select>
+	<select id="findOrderId" resultMap="payOrderStatementMap">
+         select * from PAY_ORDER_STATEMENT
+         where  merchant_order_id = #{merchantOrderId}
+	</select>
+	
+	    <select id="batchInsert" parameterType="java.util.List">  
+           insert into PAY_ORDER_STATEMENT
+			(
+				<include refid="Insert_Column_List" />
+			)values  
+            <foreach collection="list" item="item" index="index"  
+                separator=",">  
+                (#{item.merchantOrderId,jdbcType=VARCHAR},#{item.payOrderId,jdbcType=VARCHAR},#{item.orderAmount,jdbcType=DECIMAL},
+                 #{item.createOrderDate,jdbcType=TIMESTAMP},#{item.payOrderDate,jdbcType=TIMESTAMP},#{item.parmenter1,jdbcType=VARCHAR},
+                 #{item.payCharge,jdbcType=DECIMAL},#{item.statementStatus,jdbcType=INTEGER}
+                )  
+            </foreach>  
+        </select>  
+        <select id="batchInsertFailData" parameterType="java.util.List">  
+            insert into apk_statistic_raw_fail  
+            (uuid,file_upload_record_id,time,event,product_name,version,number,percentage,create_time,status,creator,other  
+            )values  
+            <foreach collection="list" item="item" index="index"  
+                separator=",">  
+                (#{item.uuid,jdbcType=CHAR},#{item.fileUploadRecordId,jdbcType=CHAR},#{item.time,jdbcType=VARCHAR},#{item.event,jdbcType=VARCHAR},#{item.productName,jdbcType=VARCHAR},#{item.version,jdbcType=VARCHAR},  
+                #{item.number,jdbcType=INTEGER},#{item.percentage,jdbcType=VARCHAR},#{item.createTime,jdbcType=BIGINT},#{item.status,jdbcType=INTEGER},#{item.creator,jdbcType=VARCHAR},#{item.other,jdbcType=VARCHAR}  
+                )  
+            </foreach>  
+        </select>  
+     <select id="getOrderIdByTime" resultType="java.util.Map" flushCache="true">
+         select a.merchant_order_id as merchantOrderId  from PAY_ORDER_STATEMENT a,MERCHANT_ORDER_INFO b
+         where 1=1
+         and create_order_date BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and a.merchant_order_id= b.ID and a.order_amount=b.ORDER_AMOUNT
+	</select>
+</mapper>
