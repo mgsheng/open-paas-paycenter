@@ -16,6 +16,8 @@ public class DateTools {
 
     // 格式：年月日 小时分钟秒
     public static final String FORMAT_THREE = "yyyyMMdd-HHmmss";
+    // 格式：年月日 小时分钟秒
+    public static final String FORMAT_FOUR = "yyyyMMddHHmmss";
 
     // 格式：年－月－日
     public static final String LONG_DATE_FORMAT = "yyyy-MM-dd";

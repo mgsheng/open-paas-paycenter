@@ -29,9 +29,12 @@ public final class DBUtil {
 
     // 获得连接
     public static  Connection getConnection() throws SQLException {
-         url = PropertiesTool.getAppPropertieByKey("jdbc.url");
-         username = PropertiesTool.getAppPropertieByKey("jdbc.username");
-         password = PropertiesTool.getAppPropertieByKey("jdbc.password");
+    	 url="jdbc:mysql://10.100.134.76:3306/unionpay?autoReconnect=true&autoReconnectForPools=true&useUnicode=true&characterEncoding=utf8";
+    	 username="root";
+    	 password="root";
+//         url = PropertiesTool.getAppPropertieByKey("jdbc.url");
+//         username = PropertiesTool.getAppPropertieByKey("jdbc.username");
+//         password = PropertiesTool.getAppPropertieByKey("jdbc.password");
         return DriverManager.getConnection(url, username, password);
     }
 

@@ -80,6 +80,11 @@ public class test1 {
 		BigDecimal   b   =   new   BigDecimal(f); 
 		double   f1   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue();  
 		  System.out.println(reqjson);*/
+		String a="20170605152111";
+		Date b=DateTools.stringtoDate(a,DateTools.FORMAT_FOUR);
+		String c=DateTools.dateToString(b, DateTools.FORMAT_ONE);
+		System.out.println("a="+c);
+		
 	}
 
 }
