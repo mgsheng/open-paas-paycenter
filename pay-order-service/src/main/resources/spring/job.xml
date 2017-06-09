@@ -10,7 +10,6 @@
 		  http://www.springframework.org/schema/context/spring-context-3.1.xsd ">
 
 	<!-- 当Spring容器启动完成后执行下面的这个Bean -->
-	
 	<!-- 订单自动补发定时任务配置开始 -->
 	<bean id="orderAutoSendJob" class="cn.com.open.pay.order.service.web.OrderAutoSendController"></bean><!-- 定义调用对象和调用对象的方法 -->
 	<!-- 【订单自动补发】调用类配置-->
@@ -32,6 +31,29 @@
 			<!-- <value>0 25 16 * * ?</value> -->
 		</property>
 	</bean>
+	
+	<!-- 拉卡拉对账单下载定时任务配置开始 -->
+	<bean id="payMaxOrderStatementJob" class="cn.com.open.pay.order.service.web.PayMaxFileUploadController"></bean><!-- 定义调用对象和调用对象的方法 -->
+	<!-- 【订单自动补发】调用类配置-->
+	<bean id="payMaxOrderStatementTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"><!-- 调用的类 -->
+		<property name="targetObject">
+			<ref bean="payMaxOrderStatementJob" />
+		</property>
+		<property name="targetMethod">
+			<value>fileUploadStatement</value>
+		</property>
+	</bean>
+	<bean id="dopayMaxOrderStatementTask" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref bean="payMaxOrderStatementTask" />
+		</property>
+		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
+		<property name="cronExpression">
+			<!-- <value>0 0 0/1 * * ?</value> -->
+			<value>0 0 1 * * ?</value>
+		</property>
+	</bean>
+		
 	
 	<!-- 对账单下载定时任务配置开始 -->
 	<bean id="payOrderStatementJob" class="cn.com.open.pay.order.service.web.FileUploadController"></bean><!-- 定义调用对象和调用对象的方法 -->
@@ -84,6 +106,7 @@
 				<ref bean="doOrderAutoSendTask" />
 				<ref bean="doPayOrderStatementTask" />
 				<ref bean="doUpdateStatementTask" />
+				<ref bean="dopayMaxOrderStatementTask" />
 			</list>
 		</property>
 	</bean>
