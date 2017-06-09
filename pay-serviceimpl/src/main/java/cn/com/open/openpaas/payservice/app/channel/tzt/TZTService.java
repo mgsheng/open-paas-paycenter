@@ -344,8 +344,8 @@ public class TZTService {
 		String merchantPrivateKey	= getMerchantPrivateKey();
 		String yeepayPublicKey		= getYeepayPublicKey();
 		
-		System.out.println("data : " + data);
-		System.out.println("encryptkey : " + encryptkey);
+		//System.out.println("data : " + data);
+		//System.out.println("encryptkey : " + encryptkey);
 		
 		Map<String, String> callbackResult	= new HashMap<String, String>();
 		String customError			= "";
@@ -424,8 +424,8 @@ public class TZTService {
 		String sign						= EncryUtil.handleRSA(dataMap, merchantPrivateKey);
 		dataMap.put("sign", sign);
 
-		System.out.println("bindBankcardURL : " + bindBankcardURL);
-		System.out.println("dataMap : " + dataMap);
+		//System.out.println("bindBankcardURL : " + bindBankcardURL);
+		//System.out.println("dataMap : " + dataMap);
 
 		HttpClient httpClient			= new HttpClient();
 		PostMethod postMethod			= new PostMethod(bindBankcardURL);
@@ -435,8 +435,8 @@ public class TZTService {
 			String data					= AES.encryptToBase64(jsonStr, merchantAESKey);
 			String encryptkey			= RSA.encrypt(merchantAESKey, yeepayPublicKey);
 
-			System.out.println("data=" + data);
-			System.out.println("encryptkey=" + encryptkey);
+			//System.out.println("data=" + data);
+			//System.out.println("encryptkey=" + encryptkey);
 
 			NameValuePair[] datas		= {new NameValuePair("merchantno", merchantno),
 										   new NameValuePair("data", data),
@@ -523,7 +523,7 @@ public class TZTService {
 			postMethod.releaseConnection();
 		}
 
-		System.out.println("result : " + result);
+		//System.out.println("result : " + result);
 
 		return (result);
 	}

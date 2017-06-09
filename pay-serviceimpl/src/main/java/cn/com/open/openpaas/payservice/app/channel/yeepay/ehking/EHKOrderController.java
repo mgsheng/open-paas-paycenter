@@ -114,7 +114,7 @@ public class EHKOrderController extends BaseControllerUtil{
 		ProductDetail productDetail = new ProductDetail();
 		
 		
-		LOGGER.info("productDetail++++++++++++++"+jsonPDStr);
+		//LOGGER.info("productDetail++++++++++++++"+jsonPDStr);
 		
 		JSONArray productDetailArray = JSONObject.parseArray(jsonPDStr);
 		for(Object o:productDetailArray) {
@@ -152,7 +152,7 @@ public class EHKOrderController extends BaseControllerUtil{
 				 * 提交成功，不代表支付成功
 				 */
 				public void success(JSONObject jsonObject) {
-					LOGGER.debug("success jsonObject:[" + jsonObject + "]");
+					///LOGGER.debug("success jsonObject:[" + jsonObject + "]");
 					//out.println("提交成功</br>");
 					//System.out.println(jsonObject.toJSONString());
 					
@@ -163,7 +163,7 @@ public class EHKOrderController extends BaseControllerUtil{
 //				    	   scanCode = scanCode.replaceAll(new String("\r"), "");
 //				    	   scanCode = scanCode.replaceAll(new String("\n"), "");
 //				    	   scanCode=scanCode.replaceAll("\\+", "%2B");
-				    	   System.out.println(scanCode);
+				    	  // System.out.println(scanCode);
 //				    	     OrderInfoDto verifyDto=new  OrderInfoDto();
 //				    	      verifyDto.setOrderId(requestId);
 //				    		  verifyDto.setScanCode(scanCode);

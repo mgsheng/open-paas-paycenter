@@ -57,7 +57,7 @@ public class OrderRefundService {
             String Wsign=HytUtils.getVertifyFromStr(response,retMap); //获得待签名报文
             String server_sign=retMap.get(HytParamKeys.SERVER_SIGN);
             String  server_cert=retMap.get(HytParamKeys.SERVER_CERT);
-            System.out.println("==================待签名报文===============>>>>"+ Wsign);
+            //System.out.println("==================待签名报文===============>>>>"+ Wsign);
             // -- 验证签名
 				boolean flag = false;	
 				RSASign rsautil =HytUtils.getRSASignVertifyObject(); 

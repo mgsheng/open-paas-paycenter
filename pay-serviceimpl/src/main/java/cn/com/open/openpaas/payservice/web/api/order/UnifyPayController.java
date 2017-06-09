@@ -1,7 +1,6 @@
 package cn.com.open.openpaas.payservice.web.api.order;
 
 import java.io.IOException;
-
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Date;
@@ -13,10 +12,7 @@ import java.util.TreeMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.xpath.operations.Bool;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +22,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.alipay.api.AlipayResponse;
+import com.alipay.demo.trade.service.AlipayTradeService;
+
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AlifafUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayPropetyFactory;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayUtil;
@@ -44,7 +42,6 @@ import cn.com.open.openpaas.payservice.app.channel.tclpay.data.ScanCodeOrderData
 import cn.com.open.openpaas.payservice.app.channel.tclpay.service.OrderQryService;
 import cn.com.open.openpaas.payservice.app.channel.tclpay.service.ScanCodeOrderService;
 import cn.com.open.openpaas.payservice.app.channel.unionpay.sdk.AcpService;
-import cn.com.open.openpaas.payservice.app.channel.unionpay.sdk.SDKConfig;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
@@ -59,7 +56,6 @@ import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoServic
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.tools.DateUtils;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
 import cn.com.open.openpaas.payservice.app.tools.PropertiesTool;
 import cn.com.open.openpaas.payservice.app.tools.QRCodeEncoderHandler;
@@ -69,20 +65,7 @@ import cn.com.open.openpaas.payservice.app.tools.SysUtil;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
-
-import com.alipay.api.AlipayResponse;
-import com.alipay.api.response.AlipayTradePrecreateResponse;
-import com.alipay.demo.trade.config.Configs;
-import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
-import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
-import com.alipay.demo.trade.service.AlipayMonitorService;
-import com.alipay.demo.trade.service.AlipayTradeService;
-import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
-
-import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
-
+import net.sf.json.JSONObject;
 
 
 /**
@@ -1163,7 +1146,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			 			 payServiceLog.setLogName(PayLogName.PAY_END);
 			 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			 	         return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"8";
-			    		 
 			    	 }
 			     }
 		      else if(String.valueOf(Channel.WECHAT_WAP.getValue()).equals(paymentChannel)){
@@ -1216,9 +1198,9 @@ public class UnifyPayController extends BaseControllerUtil{
 					          if(backValue){
 					     	        String formValue="";
 					        	  formValue=res.get("jsApiParams").toString();
-//					          	 // formValue="{\'appId\':\'wxbdf94d9e022e2d07\',\'timeStamp\':\'1474960493\',\'signType\':\'MD5\',\'package\':\'prepay_id=wx201609271514528c217a70c40323801340\',\'nonceStr\':\'zOa9bo3ZlNyyXmAt\',\'paySign\':\'7AF10A5BC2D82B90D59B82BFA1DD406A\'}";
+//					          	 // formValue="{\'appId\':\'wxbdf94d9e022e2d07\',\'timeStamp\':\'1 474960493\',\'signType\':\'MD5\',\'package\':\'prepay_id=wx201609271514528c217a70c40323801340\',\'nonceStr\':\'zOa9bo3ZlNyyXmAt\',\'paySign\':\'7AF10A5BC2D82B90D59B82BFA1DD406A\'}";
 					          	    JSONObject lakalaWebJson = JSONObject.fromObject(formValue);
-					          	/*     SortedMap<String,String> lakalasParaTemp = new TreeMap<String,String>();
+					          	/*  SortedMap<String,String> lakalasParaTemp = new TreeMap<String,String>();
 					        	    lakalasParaTemp.put("appId", lakalaWebJson.getString("appId"));
 					        	    lakalasParaTemp.put("timeStamp",lakalaWebJson.getString("timeStamp"));
 					        	    lakalasParaTemp.put("nonceStr", lakalaWebJson.getString("nonceStr"));
@@ -1227,7 +1209,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					        	    lakalasParaTemp.put("paySign", lakalaWebJson.getString("paySign"));
 								    String buf =SendPostMethod.buildRequest(lakalasParaTemp, "post", "ok", dictTradeChannels.getBackurl());
 								    model.addAttribute("res", buf);
-						    	  return "pay/payMaxRedirect";*/
+						    	    return "pay/payMaxRedirect";*/
 						          	  model.addAttribute("appId", lakalaWebJson.getString("appId"));
 						        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
 						        	  model.addAttribute("nonceStr", lakalaWebJson.getString("nonceStr"));

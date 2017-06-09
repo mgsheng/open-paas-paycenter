@@ -84,9 +84,9 @@ public class EncryUtil {
 		
 		/** 5. result为true时表明验签通过 */
 		//String str = '"'+"CUSTOMER"+'"'+"1004002057817701200070NEWTZTBINDPAY160422_141536221204573TO_VALIDATE";
-		System.out.println("signData.toString()==="+signData.toString());
-		System.out.println("sign==="+sign);
-		System.out.println("yibaoPublickKey==="+yibaoPublickKey);
+		//System.out.println("signData.toString()==="+signData.toString());
+		//System.out.println("sign==="+sign);
+		//System.out.println("yibaoPublickKey==="+yibaoPublickKey);
 		boolean result = RSA.checkSign(signData.toString(), sign,
 				yibaoPublickKey);
 		

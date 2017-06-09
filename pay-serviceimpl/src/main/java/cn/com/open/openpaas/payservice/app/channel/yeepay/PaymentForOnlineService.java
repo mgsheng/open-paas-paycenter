@@ -320,8 +320,8 @@ public class PaymentForOnlineService {
 		// 交易结果返回类型
 		sValue.append(r9_BType);
 		String sNewString = null;
-		System.out.println("sValue=========="+sValue.toString());
-		System.out.println("keyValue=========="+keyValue);
+		//System.out.println("sValue=========="+sValue.toString());
+		//System.out.println("keyValue=========="+keyValue);
 		sNewString = DigestUtil.hmacSign(sValue.toString(), keyValue);
 
 		if (hmac.equals(sNewString)) {

@@ -62,7 +62,7 @@ public class CAP12CertTool {
 			}
 
 			PrivateKey priKey = (PrivateKey) ks.getKey(keyAlias, nPassword);
-			System.out.println(priKey);
+			//System.out.println(priKey);
 			Certificate cert = ks.getCertificate(keyAlias);
 			PublicKey pubKey = cert.getPublicKey();
 			sp.setCert((X509Certificate) cert);
