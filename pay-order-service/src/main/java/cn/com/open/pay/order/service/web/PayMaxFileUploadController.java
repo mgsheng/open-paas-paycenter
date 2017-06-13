@@ -42,7 +42,7 @@ public class PayMaxFileUploadController  extends BaseControllerUtil {
 	      String paymax_public_key=payserviceDev.getPaymax_public_key();
           String result = "";
           //
-          log.info("~~~~~~~~~~~~~~~~~~~~~~open lakala pay start~~~~~~~~~~~~~~~~~~~~~~~~");
+          	log.info("~~~~~~~~~~~~~~~~~~~~~~open lakala pay start~~~~~~~~~~~~~~~~~~~~~~~~");
 	    	try {
 	    		result= StatementDownload.download(statementMap,secert_key,private_key,paymax_public_key);
 			} catch (Exception e) {
@@ -120,12 +120,13 @@ public class PayMaxFileUploadController  extends BaseControllerUtil {
                  String cell4 = values[11];   
                  String cell5 ="";
                  String cell6 ="";
+                 String cell7 ="3";
                  if(!nullEmptyBlankJudge(values[13])){
                 	 cell5 =DateTools.dateToString(DateTools.stringtoDate(values[13],DateTools.FORMAT_FOUR),DateTools.FORMAT_ONE);
                 	 cell6=cell5;
                  }
-                 sql = String.format("INSERT INTO PAY_ORDER_STATEMENT(merchant_order_id,pay_order_id,order_amount,pay_charge,create_order_date,pay_order_date) VALUES ('%s','%s','%s','%s','%s','%s')",  
-                         cell0,cell1,cell2,cell4,cell5,cell6);  
+                 sql = String.format("INSERT INTO PAY_ORDER_STATEMENT(merchant_order_id,pay_order_id,order_amount,pay_charge,create_order_date,pay_order_date,parmenter1) VALUES ('%s','%s','%s','%s','%s','%s','%s')",  
+                         cell0,cell1,cell2,cell4,cell5,cell6,cell7);  
                  ps.executeUpdate(sql); 
                 }
                  if(i%500 == 0){  
@@ -200,12 +201,13 @@ public class PayMaxFileUploadController  extends BaseControllerUtil {
 	                 String cell4 = values[6];  
 	                 String cell5 ="";
 	                 String cell6 ="";
+	                 String cell7 ="3";
 	                 if(!nullEmptyBlankJudge(values[1])){
 	                	 cell5 =DateTools.dateToString(DateTools.stringtoDate(values[1],DateTools.FORMAT_FOUR),DateTools.FORMAT_ONE);
 	                	 cell6=cell5;
 	                 }
-	                 sql = String.format("INSERT INTO PAY_ORDER_STATEMENT(merchant_order_id,pay_order_id,order_amount,pay_charge,create_order_date,pay_order_date) VALUES ('%s','%s','%s','%s','%s','%s')",  
-	                         cell0,cell1,cell2,cell4,cell5,cell6);  
+	                 sql = String.format("INSERT INTO PAY_ORDER_STATEMENT(merchant_order_id,pay_order_id,order_amount,pay_charge,create_order_date,pay_order_date,parmenter1) VALUES ('%s','%s','%s','%s','%s','%s','%s')",  
+	                         cell0,cell1,cell2,cell4,cell5,cell6,cell7);  
 	                 ps.executeUpdate(sql); 
 	                }
 	                 if(i%500 == 0){  
