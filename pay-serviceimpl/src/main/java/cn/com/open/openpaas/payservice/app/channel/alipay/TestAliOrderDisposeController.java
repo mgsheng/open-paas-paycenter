@@ -81,7 +81,7 @@ public class TestAliOrderDisposeController extends BaseControllerUtil {
 		sParaTemp.put("parameter", "");
 		 Map<String, String> parameters = buildRequestPara(sParaTemp);
 		 sendPost(merchantOrderInfo.getNotifyUrl(),parameters);*/
-		System.out.println("订单处理:"+backMsg);
+		//System.out.println("订单处理:"+backMsg);
 	 }
 	/**
 	 * 订单结果处理
@@ -230,7 +230,7 @@ public class TestAliOrderDisposeController extends BaseControllerUtil {
                 result += line;  
                 
             }  
-            System.out.println(result);
+            //System.out.println(result);
         } catch (Exception e) {  
             e.printStackTrace();  
         } finally {  

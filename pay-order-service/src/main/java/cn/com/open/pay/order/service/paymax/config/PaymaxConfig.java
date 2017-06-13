@@ -1,4 +1,4 @@
-package cn.com.open.openpaas.payservice.app.channel.paymax.config;
+package cn.com.open.pay.order.service.paymax.config;
 
 /**
  * Created by xiaowei.wang on 2016/4/26.

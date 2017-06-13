@@ -121,7 +121,8 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 		String amount=dataobj.getString("amount");
 		//log.info("amount======================="+ amount);
 		String status=dataobj.getString("status");
-		//log.info("status======================="+ status);
+		log.info("status======================="+ status);
+		//System.out.println("paymax_status=="+status);
 		
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(order_no);
 		//log.info("notify orderId======================="+ order_no);
@@ -154,7 +155,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 	  		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 	  		if(nullEmptyBlankJudge(returnUrl)){
 	  		
-	  			returnUrl=merchantInfo.getReturnUrl();
+	  			returnUrl=merchantInfo.getNotifyUrl();
 	  		}
 	  		 String other= dictTradeChannel.getOther();
 		  	Map<String, String> others = new HashMap<String, String>();

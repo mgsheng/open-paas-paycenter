@@ -3,7 +3,7 @@
 /.settings/
 /build/
 /.gradle/
-/bin/
+/bin/ 
 *~
 #*
 *#

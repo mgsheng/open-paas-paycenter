@@ -319,7 +319,7 @@ public class HttpTools {
 		    args.put("password","123");*/
 		    String aa=args1.toString();
 		    String a="{\"UserInfoList\":[{\"username\":\"yzher\",\"sourceid\":\"315407\",\"password\":\"27CD3E53E9B1D43C\",\"key\":\"9ebada02676c4ccbbbdaeae27362896b\"}]}";
-		    System.out.println(aa);
+		    //System.out.println(aa);
 		     writer.write(a);
 		  /*  out.writeBytes(a);
 		    out.flush();
@@ -333,7 +333,7 @@ public class HttpTools {
 		        sb.append(lines);
 		    }
 		    reader.close();
-		    System.out.println(sb);
+		   // System.out.println(sb);
 		    returnValue=sb.toString();
 		    // 关闭连接
 			conn.disconnect();

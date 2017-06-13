@@ -44,8 +44,8 @@ public class OrderQryService {
 					+ merchant_sign + HytConstants.SYMBOL_AND
 					+ HytParamKeys.MERCHANT_CERT + HytConstants.SYMBOL_EQUAL
 					+ merchant_cert;
-			System.out.println("==================request===============>>>>"
-					+ buf);
+			//System.out.println("==================request===============>>>>"
+			//		+ buf);
 			HttpsURLConnection httpsURLConnection = HytHttpsClient
 					.getHttpsURLConnection(url);
 			response = HytHttpsClient.doHttpsPost(httpsURLConnection, buf,
@@ -65,14 +65,14 @@ public class OrderQryService {
 			    if (!flag) {
 			    	String info="错误信息：验签错误";
 					  String CODE="MCG111111";
-					  System.out.println("{\"return_code\":\""+CODE+"\",\"return_message\":\""+URLDecoder.decode(info,"UTF-8")+"\"}");				
+					//  System.out.println("{\"return_code\":\""+CODE+"\",\"return_message\":\""+URLDecoder.decode(info,"UTF-8")+"\"}");				
 					return;
 				}
 			  
 			    System.out.println("验签成功");
 			    String code = (String)retMap.get("return_code");
 				if (!code.equals("000000")) { //请求异常
-					System.out.println("{\"return_code\":\""+code+"\",\"return_message\":\""+URLDecoder.decode((String)retMap.get("return_message"),"UTF-8")+"\"}");				
+					//System.out.println("{\"return_code\":\""+code+"\",\"return_message\":\""+URLDecoder.decode((String)retMap.get("return_message"),"UTF-8")+"\"}");				
 					return;
 				} 
 				System.out.println("正常返回,商户可进行后续逻辑处理............{\"charset\":\""+(String)retMap.get("charset")+"\",\"version\":\""

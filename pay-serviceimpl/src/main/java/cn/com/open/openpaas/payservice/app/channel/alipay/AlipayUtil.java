@@ -69,24 +69,24 @@ public class AlipayUtil {
       	        AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
       	        switch (result.getTradeStatus()) {
       	            case SUCCESS:
-      	            	System.out.println("支付宝预下单成功: )");
+      	            	//System.out.println("支付宝预下单成功: )");
       	                AlipayTradePrecreateResponse response = result.getResponse();
       	                //dumpResponse(response);
       	                aliCode=response.getQrCode();
       	                break;
 
       	            case FAILED:
-      	            	System.out.println("支付宝预下单失败!!!");
+      	            	//System.out.println("支付宝预下单失败!!!");
       	                aliCode="";
       	                break;
 
       	            case UNKNOWN:
-      	            	System.out.println("系统异常，预下单状态未知!!!");
+      	            	//System.out.println("系统异常，预下单状态未知!!!");
       	                aliCode="";
       	                break;
 
       	            default:
-      	            	System.out.println("不支持的交易状态，交易返回异常!!!");
+      	            	//System.out.println("不支持的交易状态，交易返回异常!!!");
       	                aliCode="";
       	                break;
       	        }

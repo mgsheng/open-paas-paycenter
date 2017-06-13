@@ -1,15 +1,18 @@
-package cn.com.open.openpaas.payservice.app.channel.paymax.model;
+package cn.com.open.pay.order.service.paymax.model;
 
-import cn.com.open.openpaas.payservice.app.channel.paymax.config.PaymaxConfig;
-import cn.com.open.openpaas.payservice.app.channel.paymax.config.SignConfig;
-import cn.com.open.openpaas.payservice.app.channel.paymax.exception.AuthorizationException;
-import cn.com.open.openpaas.payservice.app.channel.paymax.exception.InvalidRequestException;
-import cn.com.open.openpaas.payservice.app.channel.paymax.exception.InvalidResponseException;
-import cn.com.open.openpaas.payservice.app.channel.paymax.sign.HttpRequestWrapper;
-import cn.com.open.openpaas.payservice.app.channel.paymax.sign.RSA;
-import cn.com.open.openpaas.payservice.app.channel.paymax.sign.Request;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.charset.Charset;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-import com.alibaba.fastjson.JSON;
+import javax.net.ssl.SSLContext;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -33,17 +36,16 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 
-import javax.net.ssl.SSLContext;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.security.KeyStore;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.*;
+import com.alibaba.fastjson.JSON;
+
+import cn.com.open.pay.order.service.paymax.config.PaymaxConfig;
+import cn.com.open.pay.order.service.paymax.config.SignConfig;
+import cn.com.open.pay.order.service.paymax.exception.AuthorizationException;
+import cn.com.open.pay.order.service.paymax.exception.InvalidRequestException;
+import cn.com.open.pay.order.service.paymax.exception.InvalidResponseException;
+import cn.com.open.pay.order.service.paymax.sign.HttpRequestWrapper;
+import cn.com.open.pay.order.service.paymax.sign.RSA;
+import cn.com.open.pay.order.service.paymax.sign.Request;
 
 /**
  * Created by xiaowei.wang on 2016/4/26.
@@ -123,7 +125,7 @@ public abstract class Paymax extends PaymaxBase {
         if (StringUtils.isBlank(jsonReqData)){
             result = buildGetRequest(url,private_key,secret_key,paymax_public_key);
         }else {
-        	//System.out.println(jsonReqData);
+        	System.out.println(jsonReqData);
             result = buildPostRequest(url, jsonReqData,secret_key,private_key,paymax_public_key);
         }
 
@@ -216,7 +218,7 @@ public abstract class Paymax extends PaymaxBase {
 
                 String resData = EntityUtils.toString(entity, Charset.forName(PaymaxConfig.CHARSET));
                 //resData=URLEncoder.encode(resData);
-              //  System.out.println(resData);
+                System.out.println(resData);
                 int responseCode = response.getStatusLine().getStatusCode();
                 if (Integer.valueOf(responseCode)<400){
                     String nonce = response.getFirstHeader(HEADER_KEY_NONCE)!=null ? response.getFirstHeader(HEADER_KEY_NONCE).getValue() : "";
@@ -235,7 +237,7 @@ public abstract class Paymax extends PaymaxBase {
                     String aa=new String( data);*/
                     String toVerifyData = new String( out.toByteArray())+resData;
                     //toVerifyData=URLDecoder.decode(toVerifyData);
-                   // System.out.println(toVerifyData);
+                    System.out.println(toVerifyData);
                     String sign = response.getFirstHeader(PaymaxConfig.SIGN)!=null ? response.getFirstHeader(PaymaxConfig.SIGN).getValue() : "";
                     boolean flag = RSA.verify(toVerifyData,sign,paymax_public_key);
                     if (!flag){
