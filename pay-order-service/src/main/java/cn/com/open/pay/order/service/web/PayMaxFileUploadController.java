@@ -33,6 +33,7 @@ public class PayMaxFileUploadController  extends BaseControllerUtil {
     public void fileUploadStatement() {
     	  Map<String, Object> statementMap = new HashMap<String, Object>();
     	  String yesterday=DateTools.getYesterdayTime("yyyyMMdd");
+    	 // String yesterday="20170701";
     	  //奥鹏教育网关支付
     	  statementMap.put("appointDay", yesterday);
           statementMap.put("channelCategory", ChannelCategory.LAKALA.getValue());

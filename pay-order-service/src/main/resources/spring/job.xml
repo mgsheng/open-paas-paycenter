@@ -50,10 +50,9 @@
 		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
 		<property name="cronExpression">
 			<!-- <value>0 0 0/1 * * ?</value> -->
-			<value>0 10 12 * * ?</value>
+			<value>0 40 11 * * ?</value>
 		</property>
 	</bean>
-		
 	
 	<!-- 对账单下载定时任务配置开始 -->
 	<bean id="payOrderStatementJob" class="cn.com.open.pay.order.service.web.FileUploadController"></bean><!-- 定义调用对象和调用对象的方法 -->
@@ -73,13 +72,13 @@
 		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
 		<property name="cronExpression">
 			<!-- <value>0 0 0/1 * * ?</value> -->
-			<value>0 10 23 * * ?</value>
+			<value>0 10 1 * * ?</value>
 		</property>
 	</bean>
 	
 	<!-- 对账单更新状态定时任务配置开始 -->
 	<bean id="updateStatementJob" class="cn.com.open.pay.order.service.web.UpdateStatementController"></bean><!-- 定义调用对象和调用对象的方法 -->
-	<!-- 【订单自动补发】调用类配置-->
+	<!-- 【对账单更新状态】调用类配置-->
 	<bean id="updateStatementTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean"><!-- 调用的类 -->
 		<property name="targetObject">
 			<ref bean="updateStatementJob" />
@@ -95,7 +94,7 @@
 		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
 		<property name="cronExpression">
 			<!-- <value>0 0 0/1 * * ?</value> -->
-			<value>0 30 2 * * ?</value>
+			<value>0 30 18 * * ?</value>
 		</property>
 	</bean>
 		
