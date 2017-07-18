@@ -114,9 +114,9 @@ public class UnifyPayUtil {
 		    Double rete=0.0;
 			ChannelRate channelRate=channelRateService.getChannelRate(String.valueOf(merchantOrderInfo.getChannelId()), merchantOrderInfo.getSourceType());
 			if(channelRate!=null){
-				Double amount=1000.00;
-				//rete=merchantOrderInfo.getOrderAmount() * Double.parseDouble(channelRate.getPayRate());
-				rete=amount* Double.parseDouble(channelRate.getPayRate());
+				//Double amount=1000.00;
+				rete=merchantOrderInfo.getOrderAmount() * Double.parseDouble(channelRate.getPayRate());
+				//rete=amount* Double.parseDouble(channelRate.getPayRate());
 			/*	BigDecimal b =new BigDecimal(rete/100);  
 				returnValue =b.setScale(2,BigDecimal.ROUND_HALF_UP).doubleValue(); */
 				

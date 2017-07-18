@@ -42,6 +42,17 @@ public class MerchantInfo implements Serializable {
 	private Double monthNorm;
 	
 	private Double singleNorm;
+	private Integer smsSwitch;
+	
+
+
+	public Integer getSmsSwitch() {
+		return smsSwitch;
+	}
+
+	public void setSmsSwitch(Integer smsSwitch) {
+		this.smsSwitch = smsSwitch;
+	}
 
 	public MerchantInfo(){
 		

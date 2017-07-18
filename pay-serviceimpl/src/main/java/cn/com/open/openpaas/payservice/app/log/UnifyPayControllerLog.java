@@ -50,7 +50,6 @@ public class UnifyPayControllerLog {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 			ex = null;
 		} catch (Exception e) {
 			e.printStackTrace();

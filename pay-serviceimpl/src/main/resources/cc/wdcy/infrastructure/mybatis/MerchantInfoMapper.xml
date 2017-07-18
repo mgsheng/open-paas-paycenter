@@ -19,6 +19,7 @@
 		<result column="MONTH_NORM" property="monthNorm" jdbcType="DECIMAL" />
 		<result column="SINGLE_NORM" property="singleNorm" jdbcType="DECIMAL" />
 		<result column="MEMO" property="memo" jdbcType="VARCHAR" />
+		<result column="SMS_SWITCH" property="smsSwitch" jdbcType="INTEGER" />
 	</resultMap>
 	<sql id="Insert_Column_List">
 		MERCHANT_NAME,
@@ -36,7 +37,8 @@
 		DAY_NORM,
 		MONTH_NORM,
 		SINGLE_NORM,
-		MEMO
+		MEMO,
+		SMS_SWITCH
 	</sql>
 	<sql id="Base_Column_List">
 		ID,
@@ -67,7 +69,8 @@
 			#{dayNorm, jdbcType=DECIMAL},
 			#{monthNorm, jdbcType=DECIMAL},
 			#{singleNorm, jdbcType=DECIMAL},
-			#{memo, jdbcType=VARCHAR}
+			#{memo, jdbcType=VARCHAR},
+			#{smsSwitch, jdbcType=INTEGER}
 		)
 	</insert>
 	

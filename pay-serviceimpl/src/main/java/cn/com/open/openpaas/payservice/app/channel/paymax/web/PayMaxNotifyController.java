@@ -39,6 +39,7 @@ import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.paymax.sign.RSA;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
+import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -47,11 +48,11 @@ import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
-import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
+import cn.com.open.openpaas.payservice.web.api.order.BaseControllerUtil;
 
 
 /**
@@ -75,6 +76,8 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 	 private UserSerialRecordService userSerialRecordService;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
+	 @Autowired
+	 private KafkaProducer kafkaProducer;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -155,7 +158,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 	  		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
 	  		if(nullEmptyBlankJudge(returnUrl)){
 	  		
-	  			returnUrl=merchantInfo.getNotifyUrl();
+	  			returnUrl=merchantInfo.getReturnUrl();
 	  		}
 	  		 String other= dictTradeChannel.getOther();
 		  	Map<String, String> others = new HashMap<String, String>();
@@ -217,6 +220,62 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
 									   thread.run();	
 								}
+					        	//  sendSms(merchantOrderInfo,merchantInfo,kafkaProducer);
+							} catch (Exception e) {
+								backMsg="success";
+							}
+						   
+						  // log.info("==========================notify--end======================================");
+						   backMsg="success";
+					 }else if(nullEmptyBlankJudge(returnUrl)&&!nullEmptyBlankJudge(merchantInfo.getNotifyUrl())){
+						 //Map<String, String> dataMap=new HashMap<String, String>();
+						 String buf="";
+						    int notifyStatus=merchantOrderInfo.getNotifyStatus();
+							int payStatus=merchantOrderInfo.getPayStatus();
+							Double payCharge=0.0;
+							payCharge=UnifyPayUtil.getTclPayCharge(merchantOrderInfo,channelRateService);
+							if(payStatus!=1){
+								merchantOrderInfo.setPayStatus(1);
+								merchantOrderInfo.setPayAmount(Double.parseDouble(amount)-payCharge);
+								merchantOrderInfo.setAmount(Double.parseDouble(amount));
+								merchantOrderInfo.setPayCharge(payCharge);
+								merchantOrderInfo.setDealDate(new Date());
+								merchantOrderInfo.setPayOrderId(id);
+								merchantOrderInfoService.updateOrder(merchantOrderInfo);
+								if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+									String rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(amount)*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+								}
+							}
+						    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+							sParaTemp.put("orderId", merchantOrderInfo.getId());
+					        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+					        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+					        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+							sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
+							sParaTemp.put("feeType", "CNY");
+							sParaTemp.put("guid", merchantOrderInfo.getGuid());
+							sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
+							//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
+							sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
+							sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
+							sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
+							sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
+							sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
+							sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf((int)(merchantOrderInfo.getPayCharge()*100))+";");
+							sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
+						    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+						    sParaTemp.put("secret", mySign);
+						    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", merchantInfo.getNotifyUrl());
+						    model.addAttribute("res", buf);
+						    //log.info("==========================notify-start======================================");
+						    //并且异步通知
+						    try {
+						    	if(notifyStatus!=1){
+									 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
+									   thread.run();	
+								}
+						   //发送短信服务
+					      // sendSms(merchantOrderInfo,merchantInfo,kafkaProducer);
 							} catch (Exception e) {
 								backMsg="success";
 							}
@@ -224,7 +283,7 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 						  // log.info("==========================notify--end======================================");
 						   backMsg="success";
 					 }else{
-						  merchantOrderInfoService.updatePayStatus(5,String.valueOf(merchantOrderInfo.getId()));
+						merchantOrderInfoService.updatePayStatus(5,String.valueOf(merchantOrderInfo.getId()));
 					 }
 		    		
 		    	}else if(status.equals("PROCESSING")){
@@ -260,6 +319,8 @@ public class PayMaxNotifyController extends BaseControllerUtil {
 	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 				 {
 	        	  payServiceLog.setStatus("already processed");
+//	        	  MerchantInfo merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+//	        	  sendSms(merchantOrderInfo,merchantInfo,kafkaProducer);
 	        	  backMsg="success";
 				 }
 	          payServiceLog.setLogName(PayLogName.PAYMAX_NOTIFY_END);

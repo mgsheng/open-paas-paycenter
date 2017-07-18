@@ -217,6 +217,7 @@ public class UserInterfaceController {
 	   		sParaTemp.put("feeType", unifyPayDto.getFeeType());
 	   		sParaTemp.put("clientIp", unifyPayDto.getClientIp());
 	   		sParaTemp.put("parameter", unifyPayDto.getParameter());
+	   		sParaTemp.put("phone", unifyPayDto.getPhone());
 	   		String params=createSign(sParaTemp);
 	   		signature=HMacSha1.HmacSHA1Encrypt(params, key);
 	   		signature=HMacSha1.getNewResult(signature);

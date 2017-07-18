@@ -286,6 +286,16 @@
                             <p class="help-block">扩展字段（可以传递自定义参数，支付成功后会回传）</p>
                         </div>
                     </div>
+                     <div class="form-group">
+                        <label class="col-sm-2 control-label">phone</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" name="phone" id="phone" size="50" class="form-control"
+                                   ng-model="phone"/>
+
+                            <p class="help-block">手机号（用来通知用户支付成功）</p>
+                        </div>
+                    </div>
                     
                     <div class="well well-sm">
                          <span class="text-muted">最终发给 pay-service-server的 URL:</span>

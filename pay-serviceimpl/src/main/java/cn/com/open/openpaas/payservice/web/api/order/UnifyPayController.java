@@ -46,6 +46,7 @@ import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
 import cn.com.open.openpaas.payservice.app.channel.yeepay.HmacUtils;
+import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -54,7 +55,6 @@ import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
-import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
 import cn.com.open.openpaas.payservice.app.tools.PropertiesTool;
@@ -89,7 +89,9 @@ public class UnifyPayController extends BaseControllerUtil{
 	 
 	 // 支付宝当面付2.0服务
 	 private static AlipayTradeService tradeService;
-
+/*	 @Autowired
+	 private KafkaProducer kafkaProducer;
+*/
 
 	 /**
      * 请求统一支付
@@ -115,6 +117,7 @@ public class UnifyPayController extends BaseControllerUtil{
         String appId = request.getParameter("appId");
     	String goodsId=request.getParameter("goodsId");
     	String goodsName=new String(request.getParameter("goodsName").getBytes("iso-8859-1"),"utf-8");
+    	String phone=request.getParameter("phone");
     	//String goodsName=request.getParameter("goodsName");
     	
     	String goodsDesc="";
@@ -188,6 +191,9 @@ public class UnifyPayController extends BaseControllerUtil{
         	//调用用户中心接口判断用户是否存在
         }*/
     	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
+    	
+    	
+    	
     	if(merchantInfo==null){
         	//paraMandaChkAndReturn(2, response,"商户ID不存在");
     		payServiceLog.setErrorCode("2");
@@ -215,6 +221,7 @@ public class UnifyPayController extends BaseControllerUtil{
    		sParaTemp.put("businessType", businessType);
    		sParaTemp.put("goodsDesc", goodsDesc);
    		sParaTemp.put("goodsTag", goodsTag);
+   		sParaTemp.put("phone", phone);
    		sParaTemp.put("showUrl", showUrl);
    		sParaTemp.put("buyerRealName",buyerRealName);
    		sParaTemp.put("buyerCertNo",buyerCertNo);
@@ -335,6 +342,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setParameter1(parameter);
 			merchantOrderInfo.setNotifyUrl(notifyUrl);
 			merchantOrderInfo.setReturnUrl(returnUrl);
+			merchantOrderInfo.setPhone(phone);
 			int paymentTypeId=PaymentType.getTypeByValue(paymentType).getType();
 			merchantOrderInfo.setPaymentId(paymentTypeId);
 			if(!nullEmptyBlankJudge(paymentChannel)){
@@ -374,6 +382,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
 		}
+		
+		//sendSms(merchantOrderInfo,merchantInfo,kafkaProducer);
 		  //用户账户创
 			if(!nullEmptyBlankJudge(businessType)&&String.valueOf(BusinessType.COSTS.getValue()).equals(businessType)){
 				UserAccountBalance  userAccountBalance=userAccountBalanceService.getBalanceInfo(userId, Integer.parseInt(appId));

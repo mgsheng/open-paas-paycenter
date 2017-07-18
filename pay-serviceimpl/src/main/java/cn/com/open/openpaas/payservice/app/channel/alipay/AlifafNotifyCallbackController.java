@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,17 +29,20 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
+import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
+import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
-import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.thread.PaySendSmsThread;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
+import cn.com.open.openpaas.payservice.web.api.order.BaseControllerUtil;
 
 
 /**
@@ -61,6 +66,8 @@ public class AlifafNotifyCallbackController extends BaseControllerUtil {
 	 private ChannelRateService channelRateService;
 	 @Autowired
 	 private DictTradeChannelService dictTradeChannelService;
+	 @Autowired
+	 private KafkaProducer kafkaProducer;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -179,12 +186,8 @@ public class AlifafNotifyCallbackController extends BaseControllerUtil {
 					   thread.run();	
 				}
 				 log.info("-----------------------notify:alifaf:AliOrderProThread:end-----------------------------------------");
-					//验证成功
-			//如果有做过处理，不执行商户的业务程序
-			//该页面可做页面美工编辑
-			  //backValue="redirect:"+ALI_ORDER_DISPOSE_URI+"?out_trade_no="+out_trade_no+"&goodsName="+goodsName+"&goodsDesc="+goodsDesc+"&goodsId="+goodsId+"&total_fee"+total_fee;
-			//——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-			//////////////////////////////////////////////////////////////////////////////////////////
+//				 MerchantInfo merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+//	        	 sendSms(merchantOrderInfo,merchantInfo,kafkaProducer);
 		}else{
 			log.info("-----------------------notify:alifaf:PAYFAIL-----------------------------------------");
 			//该页面可做页面美工编辑
@@ -211,10 +214,16 @@ public class AlifafNotifyCallbackController extends BaseControllerUtil {
 	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
 				 {
 	        	  payServiceLog.setStatus("already processed");
+	        	 /* MerchantInfo merchantInfo = null;
+			 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
+					if(merchantInfo.getSmsSwitch()==1){
+						SortedMap<Object,Object> sParaTemp= new TreeMap<Object,Object>();
+						 Thread thread = new Thread(new PaySendSmsThread(sParaTemp, kafkaProducer));
+						   thread.run();	
+					}*/
 	        	  backMsg="success";
 				 }
 	          payServiceLog.setLogName(PayLogName.ALIFAF_NOTIFY_END);
-				
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			
 		} 

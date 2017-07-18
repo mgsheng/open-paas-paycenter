@@ -100,11 +100,20 @@ public class MerchantOrderInfo implements Serializable {
 	
 	private String createDate1;
 	private String dealDate1;
+	private String phone;
 	
 
 	
 	
 	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public Integer getBusinessType() {
 		return businessType;
 	}
