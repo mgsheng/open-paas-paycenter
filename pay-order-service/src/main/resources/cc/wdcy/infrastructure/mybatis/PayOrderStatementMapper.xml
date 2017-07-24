@@ -84,6 +84,11 @@
      <select id="getOrderIdByTime" resultType="java.util.Map" flushCache="true">
          select a.merchant_order_id as merchantOrderId  from PAY_ORDER_STATEMENT a,MERCHANT_ORDER_INFO b
          where 1=1
-         and create_order_date BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and a.merchant_order_id= b.ID and a.order_amount=b.ORDER_AMOUNT
+         and create_order_date BETWEEN #{startTime, jdbcType=TIMESTAMP}  AND #{endTime, jdbcType=TIMESTAMP} and a.merchant_order_id= b.ID and a.order_amount=b.ORDER_AMOUNT and a.statement_status=0
+	</select>
+	  <select id="getOrderIdByStatus" resultType="java.util.Map" flushCache="true">
+         select a.merchant_order_id as merchantOrderId  from PAY_ORDER_STATEMENT a,MERCHANT_ORDER_INFO b
+         where 1=1
+         and a.merchant_order_id= b.ID and a.order_amount=b.ORDER_AMOUNT and a.statement_status=#{status, jdbcType=INTEGER}
 	</select>
 </mapper>

@@ -32,13 +32,16 @@ public class UpdateStatementController  extends BaseControllerUtil {
 	     * @return Json
 	     */
     public void updateStatement() {
-    	String startTime="";
-    	String endTime="";
-    	String yesterday=DateTools.getYesterdayTime("yyyy-MM-dd");
-    	//yesterday="2016-11-14";
-    	startTime = yesterday+" 00:00:00";
-		endTime = yesterday+" 23:59:59";
-		List<Map<String, Object>> list=payOrderStatementService.getOrderIdByTime(startTime, endTime);
+//    	String startTime="";
+//    	String endTime="";
+//    	String yesterday=DateTools.getYesterdayTime("yyyy-MM-dd");
+    	//yesterday="2017-07-17";
+    	//startTime = "2017-07-17 00:00:00";
+		//endTime =   "2017-07-24 23:59:59";
+//    	startTime = yesterday+" 00:00:00";
+//		endTime = yesterday+" 23:59:59";
+//		List<Map<String, Object>> list=payOrderStatementService.getOrderIdByTime(startTime, endTime);
+    	List<Map<String, Object>> list=payOrderStatementService.getOrderIdByStatus(0);
 		if(list!=null&&list.size()>0){
             int i = 0;  
             String strLine = null;  
@@ -54,10 +57,11 @@ public class UpdateStatementController  extends BaseControllerUtil {
                     String merchantOrderId=list.get(j).get("merchantOrderId").toString();
                     sql = "update  PAY_ORDER_STATEMENT set statement_status=1 where merchant_order_id="+merchantOrderId;
                     ps.executeUpdate(sql);  
+                  //  System.out.println(i);
                     if(i%500 == 0){  
                         //500条记录提交一次  
                         conn.commit();  
-                        System.out.println("已成功提交"+i+"行!");  
+                       // System.out.println("已成功提交"+i+"行!");  
                     }  
                 }  
                 if(i%500 != 0){  

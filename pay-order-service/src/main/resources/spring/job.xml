@@ -50,7 +50,7 @@
 		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
 		<property name="cronExpression">
 			<!-- <value>0 0 0/1 * * ?</value> -->
-			<value>0 40 11 * * ?</value>
+			<value>0 1 12 * * ?</value>
 		</property>
 	</bean>
 	
@@ -94,7 +94,7 @@
 		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
 		<property name="cronExpression">
 			<!-- <value>0 0 0/1 * * ?</value> -->
-			<value>0 30 18 * * ?</value>
+			<value>0 30 12 * * ?</value>
 		</property>
 	</bean>
 		

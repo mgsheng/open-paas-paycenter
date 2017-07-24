@@ -18,4 +18,5 @@ public interface PayOrderStatementRepository extends Repository {
 	  @SelectProvider(type=DataFileSqlProvider.class,method="getInsertDataByCSVFileSql")  
 	  public void insertDataByCSVFile(@Param("filepath") String filepath, @Param("tableName") String tableName);  
 	  List<Map<String, Object>> getOrderIdByTime(@Param("startTime")String startTime, @Param("endTime")String endTime);
+	  List<Map<String, Object>> getOrderIdByStatus(@Param("status")Integer status);
 }

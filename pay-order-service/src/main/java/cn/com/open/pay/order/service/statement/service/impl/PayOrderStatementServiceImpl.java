@@ -44,5 +44,11 @@ public class PayOrderStatementServiceImpl implements PayOrderStatementService {
 		return payOrderStatementRepository.getOrderIdByTime(startTime, endTime);
 	}
 
+	@Override
+	public List<Map<String, Object>> getOrderIdByStatus(Integer status) {
+		// TODO Auto-generated method stub
+		return payOrderStatementRepository.getOrderIdByStatus(status);
+	}
+
 
 }
