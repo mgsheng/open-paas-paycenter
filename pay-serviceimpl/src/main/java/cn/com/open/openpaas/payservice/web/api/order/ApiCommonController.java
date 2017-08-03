@@ -65,4 +65,9 @@ public class ApiCommonController   {
 		}
     	WebUtils.writeJson(response, JSONObject.fromObject(map));
     }
+    
+    @RequestMapping("/dnotdelet/mom.html")
+    public String home() {
+        return "pay/mom";
+    }
 }
