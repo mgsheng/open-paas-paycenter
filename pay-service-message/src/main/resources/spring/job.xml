@@ -10,6 +10,35 @@
 		  http://www.springframework.org/schema/context/spring-context-3.1.xsd ">
 
 	<!-- 当Spring容器启动完成后执行下面的这个Bean -->
-    <bean class="cn.com.open.user.platform.manager.web.InitJob"/>
+    <!-- <bean class="cn.com.open.user.platform.manager.web.InitJob"/> -->
+    
+    <!-- 配置 定时任务 videoJson.redisbegin Begin  -->  
+    <bean id="initJob" class="cn.com.open.user.platform.manager.web.InitJob" />    
+    <!--定时器任务配置（开始）-->         
+    <!--配置JOB-->    
+    <bean id="initJobDetail"    
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">    
+        <property name="targetObject" ref="initJob" />    
+        <property name="targetMethod" value="executeA" />    
+        <!--   <property name="arguments" /> -->    
+    </bean>    
+    <!--配置Trigger-->    
+    <bean id="initTrigger"      
+        class="org.springframework.scheduling.quartz.SimpleTriggerBean">      
+        <property name="jobDetail" ref="initJobDetail" />      
+        <property name="startDelay" value="10000" />    
+        <property name="repeatInterval" value="300000" />    
+        <property name="repeatCount" value="0" />   
+    </bean>    
+    <!--配置Scheduler-->    
+    <bean id="schedulerFactory"      
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean" autowire="no">      
+        <property name="triggers">      
+            <list>      
+                <ref bean="initTrigger" />      
+            </list>      
+        </property>      
+        <property name="autoStartup" value="true"/>    
+    </bean>  
 	
 </beans>

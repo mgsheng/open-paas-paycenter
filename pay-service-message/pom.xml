@@ -79,24 +79,6 @@
 					<skip>${jdbc.execute.skip}</skip>
 				</configuration>
 
-				<executions>
-					<execution>
-						<id>init db</id>
-						<phase>initialize</phase>
-						<goals>
-							<goal>execute</goal>
-						</goals>
-						<configuration>
-							<url>${jdbc.url}</url>
-							<autocommit>true</autocommit>
-							<srcFiles>
-								<srcFile>others/database/initial_db.ddl</srcFile>
-								<srcFile>others/database/oauth.ddl</srcFile>
-							</srcFiles>
-							<onError>continue</onError>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -447,6 +429,10 @@
 			<artifactId>geronimo-jaxws_2.1_spec</artifactId>
 			<version>1.0</version>
 		</dependency> -->
-	
+		<dependency>
+	    <groupId>quartz</groupId>
+	    <artifactId>quartz</artifactId>
+	    <version>1.5.2</version>
+	     </dependency>
 	</dependencies>
 </project>

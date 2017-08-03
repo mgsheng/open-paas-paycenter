@@ -76,6 +76,16 @@
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>
+      <servlet>  
+       <servlet-name>event-collector</servlet-name>  
+       <servlet-class>cn.com.open.user.platform.manager.web.InitJob2</servlet-class>  
+       <load-on-startup>60</load-on-startup>  
+     </servlet>  
+       
+     <servlet-mapping>  
+       <servlet-name>event-collector</servlet-name>  
+       <url-pattern>/event-collect</url-pattern>  
+     </servlet-mapping>  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
