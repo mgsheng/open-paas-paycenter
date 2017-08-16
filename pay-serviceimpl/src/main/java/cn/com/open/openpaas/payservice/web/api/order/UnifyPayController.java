@@ -118,8 +118,9 @@ public class UnifyPayController extends BaseControllerUtil{
     	String goodsId=request.getParameter("goodsId");
     	String goodsName=new String(request.getParameter("goodsName").getBytes("iso-8859-1"),"utf-8");
     	String phone=request.getParameter("phone");
-    	//String goodsName=request.getParameter("goodsName");
-    	
+    	if (!nullEmptyBlankJudge(request.getParameter("userName"))){
+    		userName=new String(request.getParameter("userName").getBytes("iso-8859-1"),"utf-8");
+    	}
     	String goodsDesc="";
     	if (!nullEmptyBlankJudge(request.getParameter("goodsDesc"))){
     		goodsDesc=new String(request.getParameter("goodsDesc").getBytes("iso-8859-1"),"utf-8");
