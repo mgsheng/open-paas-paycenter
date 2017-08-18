@@ -238,7 +238,7 @@
 	<insert id="saveMerchantOrderInfo" parameterType="MerchantOrderInfo" useGeneratedKeys="true" keyProperty="id">
         insert into MERCHANT_ORDER_INFO(ID,APPID,PHONE,MERCHANT_ORDERID,SOURCE_USERNAME,MERCHANT_ID,SOURCE_UID,IP,MERCHANT_PRODUCTNAME,MERCHANT_PRODUCTID,MERCHANT_PRODUCTDESC,STATUS,CREATE_DATE,ORDER_AMOUNT,CHANNEL_ID,MERCHANT_VERSION,PARAMETER1,BUSINESS_TYPE,PAYMENT_ID,SOURCE_TYPE,NOTIFY_URL,RETURN_URL)
         values
-        (#{id},#{appId},#{phone},#{merchantOrderId},#{userName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId},#{sourceType},#{notifyUrl},#{returnUrl})
+        (#{id},#{appId},#{phone},#{merchantOrderId},#{sourceUserName},#{merchantId},#{sourceUid},#{ip},#{merchantProductName},#{merchantProductId},#{merchantProductDesc},#{status},#{createDate},#{orderAmount},#{channelId},#{merchantVersion},#{parameter1},#{businessType},#{paymentId},#{sourceType},#{notifyUrl},#{returnUrl})
     </insert>
      <select id="findOrderByTime" resultType="java.util.Map" flushCache="true">
          select ID,MERCHANT_ORDERID merchantOrderId,MERCHANT_PRODUCTNAME merchantProductName,AMOUNT amount,PAYMENT_ID  paymentId,CHANNEL_ID channelId,SOURCE_UID sourceUid,SOURCE_USERNAME sourceUserName,APPID appId,PAY_STATUS payStatus,NOTIFY_STATUS notifyStatus from MERCHANT_ORDER_INFO
