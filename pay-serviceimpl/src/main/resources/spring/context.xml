@@ -198,7 +198,6 @@
             <property name="changeCardConfirmURL" value="${changeCardConfirmURL}"></property>
             <property name="changeCardResendsmsmURL" value="${changeCardResendsmsmURL}"></property>
             <property name="unbindRequestURL" value="${unbindRequestURL}"></property>
-            
             <property name="zxpt_score_method" value="${zxpt_score_method}"></property>
             <property name="zxpt_cert_type" value="${zxpt_cert_type}"></property>
             <property name="zxpt_charset" value="${zxpt_charset}"></property>
@@ -207,14 +206,17 @@
             <property name="zxpt_entityAuthCode" value="${zxpt_entityAuthCode}"></property>
             <property name="zxpt_sender" value="${zxpt_sender}"></property>
             <property name="zxpt_third_url" value="${zxpt_third_url}"></property>
-            
             <property name="zxpt_version" value="${zxpt_version}"></property>
             <property name="zxpt_source" value="${zxpt_source}"></property>
             <property name="zxpt_des" value="${zxpt_des}"></property>
             <property name="zxpt_app" value="${zxpt_app}"></property>
             <property name="zxpt_tranref" value="${zxpt_tranref}"></property>
             <property name="metadata_broker_list" value="${metadata_broker_list}"></property>
+            <property name="yeepay_pay_url" value="${yeepay_pay_url}"></property>
             <property name="zookeeper_connect" value="${zookeeper_connect}"></property>
-            
+            <property name="merchant_account" value="${merchant_account}"></property>
+            <property name="merchant_private_key"  value="${merchant_private_key}"></property>
+            <property name="yeepay_public_key"  value="${yeepay_public_key}"></property>
+           
         </bean>
 </beans>

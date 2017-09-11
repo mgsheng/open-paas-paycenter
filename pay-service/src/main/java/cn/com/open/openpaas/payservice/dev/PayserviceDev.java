@@ -51,8 +51,36 @@ public class PayserviceDev {
 	private String unbindRequestURL;
 	private String metadata_broker_list;
 	private String zookeeper_connect;
+	private String yeepay_pay_url;
+	private String merchant_private_key;
+	private String merchant_account;
+	private String yeepay_public_key;
 	
 	
+	public String getMerchant_private_key() {
+		return merchant_private_key;
+	}
+	public void setMerchant_private_key(String merchant_private_key) {
+		this.merchant_private_key = merchant_private_key;
+	}
+	public String getMerchant_account() {
+		return merchant_account;
+	}
+	public void setMerchant_account(String merchant_account) {
+		this.merchant_account = merchant_account;
+	}
+	public String getYeepay_public_key() {
+		return yeepay_public_key;
+	}
+	public void setYeepay_public_key(String yeepay_public_key) {
+		this.yeepay_public_key = yeepay_public_key;
+	}
+	public String getYeepay_pay_url() {
+		return yeepay_pay_url;
+	}
+	public void setYeepay_pay_url(String yeepay_pay_url) {
+		this.yeepay_pay_url = yeepay_pay_url;
+	}
 	public String getMetadata_broker_list() {
 		return metadata_broker_list;
 	}

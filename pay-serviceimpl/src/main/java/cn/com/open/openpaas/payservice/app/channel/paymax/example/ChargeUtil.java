@@ -90,6 +90,11 @@ public class ChargeUtil {
               returnValue.put("wechat_csb",wechat_csb);
               returnValue.put("status", "ok");	
     	      }
+        	else if(charge.getChannel().equals("lakala_web_fast")){
+        		  String lakala_web_fast=credential.get("lakala_web_fast").toString();
+                returnValue.put("lakala_web_fast",lakala_web_fast);
+                returnValue.put("status", "ok");	
+      	      }
         	else if(charge.getChannel().equals("lakala_h5")){
         		  String wechat_csb=credential.get("lakala_h5").toString();
                 returnValue.put("wechat_csb",wechat_csb);

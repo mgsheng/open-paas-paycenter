@@ -87,7 +87,7 @@ public class AESUtil {
 			return iv;
 		}
 	  public static void main(String[] args) {
-	      String data = "!32322&$343水电费水电费";
+	      String data = "open888888";
 	      String key = "1d4d8c77108a4fd2a3c23feba0cfdccc";
 	     try {
 			String a= encrypt(data,key);

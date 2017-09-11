@@ -151,6 +151,13 @@ public interface PayLogName {
 	//自动还款结束
 	public static String BIND_PAY_END = "bind_pay_end";
 	
+	public static String YEEPAY_PAYMOBILE_START="yeepay_paymobile_start";
+	public static String YEEPAY_PAYMOBILE_END="yeepay_paymobile_end";
+	//易宝扫码回调开始
+	public static String PAYMOBILE_NOTIFY_START = "paymobile_notify_start";
+	//易宝扫码回调开始
+	public static String PAYMOBILE_NOTIFY_END = "paymobile_notify_end";
+	
 	
 	
 	

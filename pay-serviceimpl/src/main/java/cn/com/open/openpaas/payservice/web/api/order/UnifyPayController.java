@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,6 +33,7 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayPropetyFactory;
 import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.BusinessType;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PayError;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaySwitch;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
@@ -46,7 +48,8 @@ import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
 import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
 import cn.com.open.openpaas.payservice.app.channel.yeepay.HmacUtils;
-import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
+import cn.com.open.openpaas.payservice.app.channel.yeepay.paymobile.utils.ConvertUtils;
+import cn.com.open.openpaas.payservice.app.channel.yeepay.paymobile.utils.PaymobileUtils;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -54,6 +57,7 @@ import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.redis.service.RedisConstant;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
@@ -102,7 +106,6 @@ public class UnifyPayController extends BaseControllerUtil{
     	long startTime = System.currentTimeMillis();
     	String outTradeNo=request.getParameter("outTradeNo");
     	String pay_switch = payserviceDev.getPay_switch();
-    	//String banks_switch=payserviceDev.getBanks_switch();
     	Map<String, String> bank_map=payserviceDev.getBank_map();
     	String paySwitch []=pay_switch.split("#");
     	String payZhifubao = paySwitch[0];
@@ -110,6 +113,7 @@ public class UnifyPayController extends BaseControllerUtil{
     	String payTcl = paySwitch[2];
     	String payEbank = paySwitch[3];
     	String wechat_wap= paySwitch[4];
+    	String alifaf= paySwitch[5];
     	String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
     	String userName=request.getParameter("userName");
         String userId = request.getParameter("userId");
@@ -176,7 +180,6 @@ public class UnifyPayController extends BaseControllerUtil{
     	payServiceLog.setLogName(PayLogName.PAY_START);
     	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         if(!paraMandatoryCheck(Arrays.asList(outTradeNo,userId,merchantId,goodsName,totalFee))){
-        	//paraMandaChkAndReturn(1, response,"必传参数中有空值");
         	if(!nullEmptyBlankJudge(paymentChannel)&&getErrorType(paymentType)){
         		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
         	}
@@ -187,16 +190,11 @@ public class UnifyPayController extends BaseControllerUtil{
         	
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
         }
-        //判断用户是否存在
-        /*if(userId!=null && !("").equals(userId)){
-        	//调用用户中心接口判断用户是否存在
-        }*/
     	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
     	
     	
     	
     	if(merchantInfo==null){
-        	//paraMandaChkAndReturn(2, response,"商户ID不存在");
     		payServiceLog.setErrorCode("2");
     		payServiceLog.setStatus("error");
     		payServiceLog.setLogName(PayLogName.PAY_END);
@@ -237,11 +235,8 @@ public class UnifyPayController extends BaseControllerUtil{
    		sParaTemp.put("parameter", parameter);
    		String params=createSign(sParaTemp);
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
-        //认证
-       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
    	
 		if(!hmacSHA1Verification){
-			//paraMandaChkAndReturn(3, response,"认证失败");
 			if(!nullEmptyBlankJudge(paymentChannel)&&getErrorType(paymentType)){
         		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
         	}
@@ -259,19 +254,13 @@ public class UnifyPayController extends BaseControllerUtil{
         	payServiceLog.setErrorCode("4");
         	payServiceLog.setStatus("error");
         	payServiceLog.setLogName(PayLogName.PAY_END);
-        	//paraMandaChkAndReturn(3, response,"订单金额格式有误");
         	UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
         	
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
         }
-      /*  if(!("CNY").equals(feeType)){
-        	paraMandaChkAndReturn(3, response,"金额类型有误");
-        	UnifyPayControllerLog.log(outTradeNo, userId, merchantId, goodsName,totalFee, map);
-        	return "";
-        }*/ 
+        //验证用户支付类型和支付渠道是否匹配
        Boolean payType=validatePayType(paymentChannel,paymentType);
         if(!payType){
-        	//paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
         	if(!nullEmptyBlankJudge(paymentChannel)&&getErrorType(paymentType)){
         		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
         	}
@@ -284,38 +273,6 @@ public class UnifyPayController extends BaseControllerUtil{
 	
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
-		/*	//更新现有订单信息
-					
-			if(merchantOrderInfo.getPayStatus()==0){
-				if(nullEmptyBlankJudge(merchantOrderInfo.getChannelOrderId()))
-				{
-					merchantOrderInfo.setChannelOrderId(merchantOrderInfo.getId());
-				}
-				merchantOrderInfo.setId(newId);
-				merchantOrderInfo.setCreateDate(new Date());
-				
-				merchantOrderInfoService.updateOrderId(merchantOrderInfo);
- 			}
-		       else if(merchantOrderInfo.getPayStatus()==2){
-				//订单处理中或者订单处理失败
-				//paraMandaChkAndReturn(3, response,"认证失败");
-				payServiceLog.setErrorCode("6");
-				payServiceLog.setStatus("error");
-				payServiceLog.setLogName(PayLogName.PAY_END);
-				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"6";
- 			}else{
- 				//订单已经提交
- 				//paraMandaChkAndReturn(3, response,"认证失败");
- 				payServiceLog.setErrorCode("7");
- 				payServiceLog.setStatus("error");
- 				payServiceLog.setLogName(PayLogName.PAY_END);
- 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
- 	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"7";
- 			}
-			payEbank=getBankSwitch(paymentType, bank_map);*/
-				//订单处理中或者订单处理失败
-				//paraMandaChkAndReturn(3, response,"认证失败");
 				if(!nullEmptyBlankJudge(paymentChannel)&&getErrorType(paymentType)){
 	        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
 	        	}
@@ -378,7 +335,14 @@ public class UnifyPayController extends BaseControllerUtil{
 					merchantOrderInfo.setSourceType(PaySwitch.PAYMAX.getValue());	
 				}else if(String.valueOf(Channel.PAYMAX_H5.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(PaySwitch.PAYMAX.getValue());	
+				}else if(String.valueOf(Channel.YEEPAY_WEIXIN.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
+				}else if(String.valueOf(Channel.YEEPAY_ALI.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
+				}else if(String.valueOf(Channel.YEEPAY_ALL.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
 				}
+				
 			}
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
@@ -424,22 +388,6 @@ public class UnifyPayController extends BaseControllerUtil{
 				
 			}			
 			 if(paymentChannel==null || ("").equals(paymentChannel)){
-				 //跳转到收银台
-//		        	  model.addAttribute("totalFee",merchantOrderInfo.getOrderAmount());
-//		              model.addAttribute("goodsName",merchantOrderInfo.getMerchantProductName());
-//		              model.addAttribute("orderCreateTime",DateTools.dateToString(merchantOrderInfo.getCreateDate(),"yyyy-MM-dd HH:mm:ss"));
-//					  model.addAttribute("outTradeNo", merchantOrderInfo.getId());
-//					  model.addAttribute("merchantOrderId", merchantOrderInfo.getMerchantOrderId());
-//					  model.addAttribute("appId", appId);
-//					  model.addAttribute("payZhifubao", payZhifubao);
-//					  model.addAttribute("payWx", payWx);
-//					  model.addAttribute("payTcl", payTcl);
-//					  model.addAttribute("totalFeeValue", totalFee);
-//					  model.addAttribute("goodsDesc", goodsDesc);
-//					  model.addAttribute("goodsId", goodsId);
-//					  model.addAttribute("merchantId", merchantId);
-//					  model.addAttribute("paymentType", paymentType);
-//					  model.addAttribute("signature", signature);
 				 model.addAttribute("appId",appId);
 				 model.addAttribute("timestamp", timestamp);
 				 model.addAttribute("signatureNonce", signatureNonce);
@@ -469,7 +417,6 @@ public class UnifyPayController extends BaseControllerUtil{
 				  payServiceLog.setLogName(PayLogName.PAY_END);
     		      UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     		     return "redirect:" +payserviceDev.getPayIndex_url(); 
-    		     //"http://localhost:8080/pay-service/alipay/skipPayIndex";
 		        }else{
 		      //payZhifubao     payWx	 payTcl
              log.info("-----------------------pay start-----------------------------------------");
@@ -480,7 +427,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			        		if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
 			            		//调用支付宝即时支付方法  
 			                	String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
-			                		//response.sendRedirect(url.replace("redirect:", ""));
 			                	 payServiceLog.setLogName(PayLogName.PAY_END);
 			        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			        		    
@@ -492,20 +438,17 @@ public class UnifyPayController extends BaseControllerUtil{
 				    	 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 				    	  if((PaymentType.ALIPAY.getValue()).equals(paymentType)){
 			         			ScanCodeOrderService scanCode = new ScanCodeOrderService();
-			         			//String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
-			         			/*String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-			         			return "redirect:" + URL;*/
 			         			String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
-			         			//response.sendRedirect(URL);
 			         			 model.addAttribute("res", res);
 			         			 payServiceLog.setLogName(PayLogName.PAY_END);
 			        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
 			         			return "pay/payRedirect";
 			              }
-				        } 
+				        }
+		    	 
 		     }else if(String.valueOf(Channel.ALIFAF.getValue()).equals(paymentChannel)){		    	 
-	    		   payServiceLog.setPaySwitch(String.valueOf(merchantOrderInfo.getSourceType()));
-	        		if((PaymentType.ALIFAF.getValue()).equals(paymentType)){
+	    		   payServiceLog.setPaySwitch(alifaf);
+	        		if(String.valueOf(PaySwitch.ALI.getValue()).equals(alifaf)){
 	            		//调用支付宝当面付方法  
 	        			AlipayUtil alipayUtil=AlipayPropetyFactory.getAlifafUtil(merchantOrderInfo, dictTradeChannelService);
 	        			String alifafCode=alipayUtil.trade_precreate(merchantOrderInfo, dictTradeChannelService);
@@ -513,6 +456,25 @@ public class UnifyPayController extends BaseControllerUtil{
 	                	 payServiceLog.setLogName(PayLogName.PAY_END);
 	        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 	                	 return "redirect:" + fullUri;
+	            	}else if(String.valueOf(PaySwitch.YEEPAY.getValue()).equals(alifaf)){
+	            		  //易宝支付宝扫码
+			    		 Map <String,Object> map=getYeePayValue(merchantOrderInfo, Channel.YEEPAY_ALI.getValue());
+			    			String status=map.get("status").toString();
+			    			if(!nullEmptyBlankJudge(status)&&status.equals("ok")){
+			    				   String urlCode=map.get("urlCode").toString();
+			    				   fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode+"&status=ok";
+				                   payServiceLog.setLogName(PayLogName.PAY_END);
+				        		   UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+				        		   return "redirect:" + fullUri;
+			    			}else{
+			    				 payServiceLog.setErrorCode("11");
+					 			 payServiceLog.setStatus("error");
+					 			 String failureMsg=map.get("error_msg").toString();
+					 			 String failureCode=map.get("error_code").toString();
+					 			 payServiceLog.setLogName(PayLogName.PAY_END);
+					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+			    			} 
 	            	}
              }
 		     else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){
@@ -642,9 +604,25 @@ public class UnifyPayController extends BaseControllerUtil{
 						    		 
 						    	 }
 				     		
+				     	}else if(String.valueOf(PaySwitch.YEEPAY.getValue()).equals(payWx)){
+				     		Map <String,Object> map=getYeePayValue(merchantOrderInfo, Channel.YEEPAY_WEIXIN.getValue());
+			    			String status=map.get("status").toString();
+			    			if(!nullEmptyBlankJudge(status)&&status.equals("ok")){
+			    				   String urlCode=map.get("urlCode").toString();
+			    				   fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode+"&status=ok";
+				                   payServiceLog.setLogName(PayLogName.PAY_END);
+				        		   UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+				        		   return "redirect:" + fullUri;
+			    			}else{
+			    				 payServiceLog.setErrorCode("11");
+					 			 payServiceLog.setStatus("error");
+					 			 String failureMsg=map.get("error_msg").toString();
+					 			 String failureCode=map.get("error_code").toString();
+					 			 payServiceLog.setLogName(PayLogName.PAY_END);
+					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+			    			}
 				     	}
-		    		 
-		    		 
 		    	 }
 		     }
 		     else if(String.valueOf(Channel.WEIXIN_WECHAT_WAP.getValue()).equals(paymentChannel)){
@@ -665,7 +643,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			          }else{
 			        	  chargeMap.put("body", merchantOrderInfo.getMerchantProductDesc());  
 			          }
-			          //channel:lakala_web#client_ip:127.0.0.1#app:app_xx2sq4oZ9054H43x#currency:CNY#private_key:MIICdQIBADANBgkqhkiG9w0BAQEFAASCAl8wggJbAgEAAoGBAJD048OK0qb84WJjkNco2fTqrlvJkiIhmh79Q3XNkJvVE23UXEK9SDYXngbTjhL3W3Bcm3h9r/gmRqJErulJkdvsJ4XKiDlffKIBVcueDQix1kRGXXvXhwI/cnpo+WDYzi5lU71uIdh8hi7eO7jQ5r7iMGlWCZJTfccTGDrAY2BvAgMBAAECgYBWul6HwUh15rlG78FaKjP1yG/XtQt85lPbFLbHBd3ujpbYUIV+3NcWnhzLgsnvaRXJbW8LsU+WjfgW4DcylvTwE55800MealsgCEUkDKprkMyiiOT4cnkYMjQ8WQFxm7WTD9Ao8/iBZPeBzHO6gGA/ScsTMy0LRnYBGWo5KpKYqQJBANOE4e4cJdQ0UD8lDv1BFJFVxZB83C8qR1yAhh5sATN/DpWlSzjbvEf16ZjseNb1fgvvsjPKnCDAHMmf9ocq5usCQQCvcJ7FLG3rO4Hi2kzbTfdbdkgiB6gxxRnsi9B+CiDJH/E4J01JeI5A5aYjdf+fGJdjgdIGMK/VkRvv8EL9rFONAkAskx1Vo4LpVFjw5ath/XwLIKswxs9T9THysXcSJCqgoo79REc05UGpXI5s1rCkhDma5FmGhpUeZb3rU5WNaKIfAkBgjBez5qlvBMaL8xrMrXFs8gDsSU50ZUXI+YB5fFVimaOEBYzw29ldOYRei3drNHtLlYvhQDXj0AGR36TeOVGZAkAEbWcNlVqymY2ND2EHbqdBKtLMOxeweEUtqqkT/+33+wpWNVMqvhcKgSCJMeHiIs0XLMnL/JvwTC9IM/MauqZs#secert_key:edd52aad608d4e7a82876f664eadf1f6#paymax_public_key:MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCQ9OPDitKm/OFiY5DXKNn06q5byZIiIZoe/UN1zZCb1RNt1FxCvUg2F54G044S91twXJt4fa/4JkaiRK7pSZHb7CeFyog5X3yiAVXLng0IsdZERl1714cCP3J6aPlg2M4uZVO9biHYfIYu3ju40Oa+4jBpVgmSU33HExg6wGNgbwIDAQAB
 			          chargeMap.put("order_no", merchantOrderInfo.getId());
 			          chargeMap.put("channel", others.get("channel"));
 			          chargeMap.put("client_ip", others.get("client_ip"));
@@ -679,20 +656,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			  	    //请根据渠道要求确定是否需要传递extra字段
 			          Map<String, Object> extra = new HashMap<String, Object>();
 		    	    	//拉卡拉微信公众号支付
-		    	    	   String parameters[]=new String[10];
-					          String openId="";
-					          if(!nullEmptyBlankJudge(merchantOrderInfo.getParameter1())){
-					        	  parameters= merchantOrderInfo.getParameter1().split(";");
-					          }
-					          for(int i=0;i<parameters.length;i++){
-					        	  if(!nullEmptyBlankJudge(parameters[i])){
-					        		  String []openIds=parameters[i].split("=");
-					        		  if(openIds[0].equals("open_id")){
-					        			  openId=openIds[1];
-					        			  break;
-					        		  }
-					        	  }  
-					        }
+		    	    	   String openId = getParmenter(merchantOrderInfo);
 						  extra.put("open_id",openId);	
 						  chargeMap.put("extra",extra);
 				    	  Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
@@ -702,18 +666,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					          if(backValue){
 					     	        String formValue="";
 					        	  formValue=res.get("jsApiParams").toString();
-//					          	 // formValue="{\'appId\':\'wxbdf94d9e022e2d07\',\'timeStamp\':\'1474960493\',\'signType\':\'MD5\',\'package\':\'prepay_id=wx201609271514528c217a70c40323801340\',\'nonceStr\':\'zOa9bo3ZlNyyXmAt\',\'paySign\':\'7AF10A5BC2D82B90D59B82BFA1DD406A\'}";
 					          	    JSONObject lakalaWebJson = JSONObject.fromObject(formValue);
-					          	   /*    SortedMap<String,String> lakalasParaTemp = new TreeMap<String,String>();
-					        	    lakalasParaTemp.put("appId", lakalaWebJson.getString("appId"));
-					        	    lakalasParaTemp.put("timeStamp",lakalaWebJson.getString("timeStamp"));
-					        	    lakalasParaTemp.put("nonceStr", lakalaWebJson.getString("nonceStr"));
-					        	    lakalasParaTemp.put("package", lakalaWebJson.getString("package"));
-					        	    lakalasParaTemp.put("signType",lakalaWebJson.getString("signType"));
-					        	    lakalasParaTemp.put("paySign", lakalaWebJson.getString("paySign"));
-								    String buf =SendPostMethod.buildRequest(lakalasParaTemp, "post", "ok", returnUrl);
-								    model.addAttribute("res", buf);
-						    	  return "pay/payMaxRedirect";*/
 					        	  //测试微信公众号支付流程demo
 					        	  model.addAttribute("appId", lakalaWebJson.getString("appId"));
 					        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
@@ -751,11 +704,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			    	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 			   	 //银联支付
 	             	ScanCodeOrderService scanCode = new ScanCodeOrderService();
-	     		/*	String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
-	     			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-	     			
-	     			//response.sendRedirect(URL);
-	     			return "redirect:" + URL;*/
 	            	String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 	       			model.addAttribute("res", res);
 	       		 payServiceLog.setLogName(PayLogName.PAY_END);
@@ -831,7 +779,6 @@ public class UnifyPayController extends BaseControllerUtil{
 		     }else if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
 		    	 
 		    	  payServiceLog.setPaySwitch(payEbank);
-		    	 // payEbank=getBankSwitch(paymentType, bank_map);
 		    	  
 		    	 if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.ALI.getValue()).equals(payEbank)){
 				    	// 支付宝-网银支付
@@ -857,14 +804,11 @@ public class UnifyPayController extends BaseControllerUtil{
 				    	}else{
 				    		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TCL.getValue());
 			             	 ScanCodeOrderService scanCode = new ScanCodeOrderService();
-			       			/*String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels));
-			       			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;*/
 			       			String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",paymentType,"GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 			       			model.addAttribute("res", res);
 			       		 payServiceLog.setLogName(PayLogName.PAY_END);
 					     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
 		         			return "pay/payRedirect";
-			       			//return "redirect:" + URL;
 				    	  }	 
 				      } 
 				  }else if(!nullEmptyBlankJudge(payEbank)&&String.valueOf(PaySwitch.YEEPAY.getValue()).equals(payEbank)){
@@ -960,7 +904,6 @@ public class UnifyPayController extends BaseControllerUtil{
 					  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
 				     
 				  }
-		    	 //channel:wechat_csb#client_ip:127.0.0.1#app:app_52a8zBD2Erp56D8s#currency:CNY#private_key:MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJLNUhm0TOy8BwKlb+G4fWZbLOr8mXOVcgQMuUR/sT+V/992LwckvnCuaimeoxuiwpdaSelFPrRLkGGzdQeGxMd0foaNmLa/EZ+ZELyxxeYapS+3RmUAhB2UKsQO33s9R4LpJH1ljcZwae19vTIJfQRQ72kBafCUvBm3q4YM2cc9AgMBAAECgYEAkku5WNJcosNS/SkfUUPI/Fs6bUekKRKymCSR8RiL7EEwyGH/xc+xVZwLQkTMaXsPD0Q0ShruvUBct3De3MxKhrREb5hYG1xSxUaxUI/z1IFThaWld5zKz/KFJnII2dewoWDRYCQF95pjDDPR+ui59Z57D+JZdYV5cW7p0fx8UEUCQQDDXGzTiVFxExTP1xoldl4TqEx4BO3J0PQBD+6JTP4NHyACIrpchXGZpeOCfSBhGstilkcwupRbElv+CSIaaOUPAkEAwF5Z0ZxkheCGzkN48HksKxiYoIDSo8ufVUVj9ZOiUT//lkUMNvOU+cgqBIoM84po6BLvwUZ5KysJdNar/3YG8wJAITUguoRo95OKwhmKNDv+mdDNzsjnspp2H4gZv/T6ajiUNEi67Ocx/DAakB+81US8tbFdwIa2mRRx1qiux1Z1OQJABvEgsqS/J+mjU7wxmBP3WRLJJzme4FRPyqb3ZXxPZjk2Avk46J6/qIflpEZLE1rSUFWmm0Xsx3cFH1dD27MpqwJAQEbcYgFlmYK5iDemWxncZG6zbo74COGLfAdUbUSEUaCKU/XD+7LxL8quxj4iKyODh/m9AYrOFUfyDMutk8LZBQ==#secert_key:ca8e2aca50dd41ab8f27e7b07ecbb498#paymax_public_key:MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDE0gdZi/icODd0WAQlxfw8FgoJ/BwCgMLn+Fh1DquRXqYkgGtv35B5j+CCSpag3wxNwtrHRHpar3dpo38+KIqaMy8bhQj1hmBJmHkgM1yZZpVC5S4uc4FYT21zQn0HBI1E1gg2nAA7JkFV1+VnvFKk9rzOA2UtrYXID+ZG4BMBwwIDAQAB
 
 		      }else if(String.valueOf(Channel.PAYMAX.getValue()).equals(paymentChannel)){
 		    	  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.PAYMAX.getValue());
@@ -993,18 +936,14 @@ public class UnifyPayController extends BaseControllerUtil{
 		    		 //拉卡拉网关支付
 				     extra.put("user_id",merchantOrderInfo.getMerchantOrderId());
 				     
-				     //http://10.96.15.44:8080/payNotify/back
-				     //http://10.96.15.44:8080/payRetrun/back
 				     extra.put("return_url",dictTradeChannels.getBackurl());
-				     //extra.put("show_url","http://www.abc.cn/charge");
 		    	    chargeMap.put("extra",extra);
 		    	    Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
 			          JSONObject reqjson = JSONObject.fromObject(res);
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){
 			        	  String formValue="";
-			        	  formValue=res.get("lakala_web").toString();
-			        	  //formValue=res.get("wechat_csb").toString();
+			        	  formValue=res.get("lakala_web_fast").toString();
 			        	  formValue+="<script>document.forms[0].submit();</script>";
 				          model.addAttribute("res", formValue);
 				    	  return "pay/payMaxRedirect";
@@ -1064,7 +1003,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){
 			        	  String formValue="";
-			        	 // formValue=res.get("lakala_web").toString();
 			        	  formValue=res.get("wechat_csb").toString();
 			        	  formValue+="<script>document.forms[0].submit();</script>";
 				          model.addAttribute("res", formValue);
@@ -1186,21 +1124,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			          chargeMap.put("description",merchantOrderInfo.getMemo());
 			  	    //请根据渠道要求确定是否需要传递extra字段
 			          Map<String, Object> extra = new HashMap<String, Object>();
-		    	    	//拉卡拉微信公众号支付
-		    	    	   String parameters[]=new String[10];
-					          String openId="";
-					          if(!nullEmptyBlankJudge(merchantOrderInfo.getParameter1())){
-					        	  parameters= merchantOrderInfo.getParameter1().split(";");
-					          }
-					          for(int i=0;i<parameters.length;i++){
-					        	  if(!nullEmptyBlankJudge(parameters[i])){
-					        		  String []openIds=parameters[i].split("=");
-					        		  if(openIds[0].equals("open_id")){
-					        			  openId=openIds[1];
-					        			  break;
-					        		  }
-					        	  }  
-					        }
+		    	    	String openId = getParmenter(merchantOrderInfo);
 						  extra.put("open_id",openId);	
 						  chargeMap.put("extra",extra);
 				    	  Map<String, Object> res= ce.charge(chargeMap,others.get("private_key"),others.get("secert_key"),others.get("paymax_public_key"));
@@ -1209,18 +1133,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					          if(backValue){
 					     	        String formValue="";
 					        	  formValue=res.get("jsApiParams").toString();
-//					          	 // formValue="{\'appId\':\'wxbdf94d9e022e2d07\',\'timeStamp\':\'1 474960493\',\'signType\':\'MD5\',\'package\':\'prepay_id=wx201609271514528c217a70c40323801340\',\'nonceStr\':\'zOa9bo3ZlNyyXmAt\',\'paySign\':\'7AF10A5BC2D82B90D59B82BFA1DD406A\'}";
 					          	    JSONObject lakalaWebJson = JSONObject.fromObject(formValue);
-					          	/*  SortedMap<String,String> lakalasParaTemp = new TreeMap<String,String>();
-					        	    lakalasParaTemp.put("appId", lakalaWebJson.getString("appId"));
-					        	    lakalasParaTemp.put("timeStamp",lakalaWebJson.getString("timeStamp"));
-					        	    lakalasParaTemp.put("nonceStr", lakalaWebJson.getString("nonceStr"));
-					        	    lakalasParaTemp.put("package", lakalaWebJson.getString("package"));
-					        	    lakalasParaTemp.put("signType",lakalaWebJson.getString("signType"));
-					        	    lakalasParaTemp.put("paySign", lakalaWebJson.getString("paySign"));
-								    String buf =SendPostMethod.buildRequest(lakalasParaTemp, "post", "ok", dictTradeChannels.getBackurl());
-								    model.addAttribute("res", buf);
-						    	    return "pay/payMaxRedirect";*/
 						          	  model.addAttribute("appId", lakalaWebJson.getString("appId"));
 						        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
 						        	  model.addAttribute("nonceStr", lakalaWebJson.getString("nonceStr"));
@@ -1232,15 +1145,6 @@ public class UnifyPayController extends BaseControllerUtil{
 				                	 payServiceLog.setLogName(PayLogName.PAY_END);
 				        		     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 				                	 return "redirect:" + wechatWapUri;
-					        	  //测试微信公众号支付流程demo
-						    	  /*    model.addAttribute("appId", lakalaWebJson.getString("appId"));
-					        	  model.addAttribute("timeStamp", lakalaWebJson.getString("timeStamp"));
-					        	  model.addAttribute("nonceStr", lakalaWebJson.getString("nonceStr"));
-					        	  model.addAttribute("wxpackage", lakalaWebJson.getString("package"));
-					        	  model.addAttribute("signType", lakalaWebJson.getString("signType"));
-					        	  model.addAttribute("paySign", lakalaWebJson.getString("paySign"));
-					        	  model.addAttribute("orderId", merchantOrderInfo.getId());
-					        	  return "pay/wechat_wap";*/
 					          }else{
 					        	 payServiceLog.setErrorCode("8");
 					 			 payServiceLog.setStatus("error");
@@ -1307,12 +1211,197 @@ public class UnifyPayController extends BaseControllerUtil{
 							     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	  
 				         		 return "pay/payRedirect";
 			    	 }
+			    	
+			  }else if(String.valueOf(Channel.YEEPAY_WEIXIN.getValue()).equals(paymentChannel)){
+				  if(PaymentType.YEEPAY_WEIXIN.getValue().equals(paymentType)){
+					  //易宝微信扫码
+		    			Map <String,Object> map=getYeePayValue(merchantOrderInfo, Channel.YEEPAY_WEIXIN.getValue());
+		    			String status=map.get("status").toString();
+		    			if(!nullEmptyBlankJudge(status)&&status.equals("ok")){
+		    				   String urlCode=map.get("urlCode").toString();
+		    				   fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode+"&status=ok";
+			                   payServiceLog.setLogName(PayLogName.PAY_END);
+			        		   UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+			        		   return "redirect:" + fullUri;
+		    			}else{
+		    				 payServiceLog.setErrorCode("11");
+				 			 payServiceLog.setStatus("error");
+				 			 String failureMsg=map.get("error_msg").toString();
+				 			 String failureCode=map.get("error_code").toString();
+				 			 payServiceLog.setLogName(PayLogName.PAY_END);
+				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+		    			}
+		    			
+		    			
+		    	 }
+			  }else if(String.valueOf(Channel.YEEPAY_ALI.getValue()).equals(paymentChannel)){
+				  if(PaymentType.YEEPAY_ALI.getValue().equals(paymentType)){
+					  //易宝支付宝扫码
+		    		 Map <String,Object> map=getYeePayValue(merchantOrderInfo, Channel.YEEPAY_ALI.getValue());
+		    			String status=map.get("status").toString();
+		    			if(!nullEmptyBlankJudge(status)&&status.equals("ok")){
+		    				   String urlCode=map.get("urlCode").toString();
+		    				   fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode+"&status=ok";
+			                   payServiceLog.setLogName(PayLogName.PAY_END);
+			        		   UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+			        		   return "redirect:" + fullUri;
+		    			}else{
+		    				 payServiceLog.setErrorCode("11");
+				 			 payServiceLog.setStatus("error");
+				 			 String failureMsg=map.get("error_msg").toString();
+				 			 String failureCode=map.get("error_code").toString();
+				 			 payServiceLog.setLogName(PayLogName.PAY_END);
+				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+		    			} 	  
+	    	     } 
+			  }else if(String.valueOf(Channel.YEEPAY_ALL.getValue()).equals(paymentChannel)){
+				  if(PaymentType.YEEPAY_ALL.getValue().equals(paymentType)){
+					  //易宝聚合扫码
+	    	    	 Map <String,Object> map=getYeePayValue(merchantOrderInfo, Channel.YEEPAY_ALL.getValue());
+		    			String status=map.get("status").toString();
+		    			if(!nullEmptyBlankJudge(status)&&status.equals("ok")){
+		    				   String urlCode=map.get("urlCode").toString();
+		    				   fullUri=payserviceDev.getServer_host()+"alipay/wxpay?urlCode="+urlCode+"&status=ok";
+			                   payServiceLog.setLogName(PayLogName.PAY_END);
+			        		   UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
+			        		   return "redirect:" + fullUri;
+		    			}else{
+		    				 payServiceLog.setErrorCode("11");
+				 			 payServiceLog.setStatus("error");
+				 			 String failureMsg=map.get("error_msg").toString();
+				 			 String failureCode=map.get("error_code").toString();
+				 			 payServiceLog.setLogName(PayLogName.PAY_END);
+				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+		    			} 	  
+	    	     }  
 			  }
 		}
 		  
        	  return "redirect:" + fullUri;
     }
-    
+	private String getParmenter(MerchantOrderInfo merchantOrderInfo) {
+		String parameters[]=new String[10];
+		      String openId="";
+		      if(!nullEmptyBlankJudge(merchantOrderInfo.getParameter1())){
+		    	  parameters= merchantOrderInfo.getParameter1().split(";");
+		      }
+		      for(int i=0;i<parameters.length;i++){
+		    	  if(!nullEmptyBlankJudge(parameters[i])){
+		    		  String []openIds=parameters[i].split("=");
+		    		  if(openIds[0].equals("open_id")){
+		    			  openId=openIds[1];
+		    			  break;
+		    		  }
+		    	  }  
+		    }
+		return openId;
+	}
+	private Map <String,Object> getParmenters(MerchantOrderInfo merchantOrderInfo) {
+		String parameters[]=new String[10];
+		Map <String,Object> map=new HashMap<String, Object>();
+		      if(!nullEmptyBlankJudge(merchantOrderInfo.getParameter1())){
+		    	  parameters= merchantOrderInfo.getParameter1().split(";");
+		      }
+		      for(int i=0;i<parameters.length;i++){
+		    	  if(!nullEmptyBlankJudge(parameters[i])){
+		    		  String []openIds=parameters[i].split("=");
+		    		  if(openIds!=null&&openIds.length>=2){
+		    			  map.put(openIds[0], openIds[1]); 
+		    		  }
+		    	  }  
+		    }
+		return map;
+	}
+    public Map<String, Object> getYeePayValue(MerchantOrderInfo merchantOrderInfo,int channelId){
+		  //易宝微信扫码
+			//使用TreeMap
+		 DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),channelId);
+		 Map<String, Object> map=new HashMap<String,Object>();
+	  	  if(dictTradeChannels!=null){
+	  		String other= dictTradeChannels.getOther();
+			Map<String, String> others = new HashMap<String, String>();
+			others=getPartner(other);
+			//解析自定义参数
+			 Map<String, Object> parmenterMap=new HashMap<String,Object>();
+			 parmenterMap=getParmenters(merchantOrderInfo);
+			 
+			TreeMap<String, Object> treeMap	= new TreeMap<String, Object>();
+			treeMap.put("orderid", 			merchantOrderInfo.getId());
+			treeMap.put("productcatalog", others.get("productcatalog"));
+			treeMap.put("productname", 		merchantOrderInfo.getMerchantProductName());
+			treeMap.put("identityid", 		parmenterMap.get("identityid").toString());
+			treeMap.put("userip", 			merchantOrderInfo.getIp());
+			treeMap.put("paytool", 			 others.get("paytool"));
+			treeMap.put("terminalid", 		parmenterMap.get("terminalid").toString());
+			treeMap.put("transtime", 		(int)(System.currentTimeMillis()/1000));
+			treeMap.put("amount", 	        (new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());
+			treeMap.put("identitytype", 	Integer.parseInt(parmenterMap.get("identitytype").toString()) );
+			treeMap.put("terminaltype", 	Integer.parseInt(parmenterMap.get("terminaltype").toString()));
+			treeMap.put("callbackurl", 		dictTradeChannels.getNotifyUrl());
+			treeMap.put("currency", 		Integer.parseInt(others.get("currency")));
+			treeMap.put("version", 		   Integer.parseInt(others.get("version")));
+			
+			System.out.println(treeMap);
+			//第一步 生成AESkey及encryptkey
+			String AESKey		= PaymobileUtils.buildAESKey();
+			String encryptkey	= PaymobileUtils.buildEncyptkey(AESKey,others.get("yeepayPublicKey"));
+			//String encryptkey	= PaymobileUtils.buildEncyptkey(AESKey);
+			//第二步 生成data
+			//第三步 获取商户编号及请求地址，并组装支付链接
+			String merchantaccount	= others.get("merchantaccount");
+			String url				= payserviceDev.getYeepay_pay_url();
+			String data			= PaymobileUtils.buildData(treeMap, AESKey,merchantaccount,others.get("merchantPrivateKey"));
+			//String data			= PaymobileUtils.buildData(treeMap, AESKey);
+			TreeMap<String, String> responseMap	= PaymobileUtils.httpPost(url, merchantaccount, data, encryptkey);
+
+			
+			//第四步 判断请求是否成功
+			if(responseMap.containsKey("error_code")) {
+				map.put("status", "error");
+				map.put("error_msg", responseMap.get("error_msg").toString());
+				map.put("error_code", responseMap.get("error_code").toString());
+				map.put("urlCode", "");
+			}else{
+				//第五步 请求成功，则获取data、encryptkey，并将其解密
+				String data_response						= responseMap.get("data");
+				String encryptkey_response					= responseMap.get("encryptkey");
+				
+				TreeMap<String, String> responseDataMap	= PaymobileUtils.decrypt(data_response, encryptkey_response,others.get("merchantPrivateKey"));
+				//TreeMap<String, String> responseDataMap	= PaymobileUtils.decrypt(data_response, encryptkey_response);
+
+				//第六步 sign验签
+				if(!PaymobileUtils.checkSign(responseDataMap,others.get("yeepayPublicKey"))) {
+			         //验签失败
+					map.put("status", "error");
+					map.put("error_msg", "验签失败");
+					map.put("error_code", "11");
+					map.put("urlCode", "");
+				}else{
+					//第七步 判断请求是否成功
+					if(responseDataMap.containsKey("error_code")) {
+						map.put("status", "error");
+						map.put("error_msg", responseDataMap.get("error_msg").toString());
+						map.put("error_code", responseDataMap.get("error_code").toString());
+						map.put("urlCode", "");
+					}else{
+						//第八步 进行业务处理
+				    	   map.put("status", "ok");
+				    	   String urlCode=responseDataMap.get("payurl");
+				    	   map.put("urlCode", urlCode);
+					}
+				}
+			}
+	  	 }else{
+	  		map.put("status", "error");
+			map.put("error_msg", "渠道未开通");
+			map.put("error_code", "12");
+			map.put("urlCode", "");
+	  	 }
+	    return  map;
+    }
     /**
      * 跳转收银台页面
      * @throws  
@@ -1324,13 +1413,10 @@ public class UnifyPayController extends BaseControllerUtil{
     	  String outTradeNo = request.getParameter("outTradeNo");
           String totalFee = request.getParameter("totalFee");
           String goodsName=request.getParameter("goodsName");
-          String orderCreateTime=request.getParameter("orderCreateTime");
-          String merchantOrderId=request.getParameter("merchantOrderId");
           String appId=request.getParameter("appId");
           String payZhifubao=request.getParameter("payZhifubao");
           String payWx=request.getParameter("payWx");
           String payTcl=request.getParameter("payTcl");
-          String totalFeeValue=request.getParameter("totalFeeValue");
           String goodsDesc=request.getParameter("goodsDesc");
           String goodsId=request.getParameter("goodsId");
           String merchantId=request.getParameter("merchantId");
@@ -1362,13 +1448,8 @@ public class UnifyPayController extends BaseControllerUtil{
     	  }
     	  String fullUri=payserviceDev.getServer_host()+"alipay/errorPayChannel";
     	  PayServiceLog payServiceLog=new PayServiceLog();
-    	//判断用户是否存在
-          /*if(userId!=null && !("").equals(userId)){
-          	//调用用户中心接口判断用户是否存在
-          }*/
       	MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
       	if(merchantInfo==null){
-          	//paraMandaChkAndReturn(2, response,"商户ID不存在");
       		payServiceLog.setErrorCode("2");
       		payServiceLog.setStatus("error");
       		payServiceLog.setLogName(PayLogName.PAY_END);
@@ -1404,11 +1485,7 @@ public class UnifyPayController extends BaseControllerUtil{
      		sParaTemp.put("parameter", parameter);
      		String params=createSign(sParaTemp);
      	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
-          //认证
-         // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
-     	
   		if(!hmacSHA1Verification){
-  			//paraMandaChkAndReturn(3, response,"认证失败");
   			payServiceLog.setErrorCode("3");
   			payServiceLog.setStatus("error");
   			payServiceLog.setLogName(PayLogName.PAY_END);
@@ -1460,7 +1537,6 @@ public class UnifyPayController extends BaseControllerUtil{
 		 String p8_Url=dictTradeChannels.getNotifyUrl();
 		 String p9_SAF=others.get("p9_SAF");
 		 String pa_MP="";
-		// String pd_FrpId=getYeePayFrpId(paymentType);
 		 String pd_FrpId="";
 		 if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.YEEPAY_GW.getValue())){
 			 pd_FrpId="";
@@ -1520,45 +1596,6 @@ public class UnifyPayController extends BaseControllerUtil{
 			 } 
 		 }
 		 return returnValue;
-	}
-	/**
-	 * 根据银行编码和银行集合判断选择那种方式进行支付
-	 * 0：支付宝；1：tcl;2：易宝支付
-	 * @param bankName
-	 * @param bankMap
-	 * @return
-	 */
-	private String getBankSwitch(String bankName,Map<String, String> bankMap){
-		String returnValue="";
-		for (String key : bankMap.keySet()) {  
-			if(bankName.equals(key)){
-				returnValue=bankMap.get(key);
-				break;
-			}  
-		}
-		return returnValue;
-		
-	}
-	/**
-	 * 获取银行map银行
-	 * @param banks_switch
-	 * @return 
-	 */
-	public Map<String,String>  getBankMap(String banks_switch) {
-		Map<String, String> bank_map=null;
-		if(!nullEmptyBlankJudge(banks_switch)){
-			bank_map=new HashMap<String, String>();
-			String banks[]=banks_switch.split(",");
-			for(int i=0;i<banks.length;i++){
-			String bank[]=banks[i].split(":");
-			for(int j=0;j<bank.length;j++){
-				bank_map.put(bank[0], bank[1]);
-			 }
-		  }
-		}
-	
-		return  bank_map;
-	//	this.bank_map = bank_map;
 	}
    /**
     * 返回银行代码
@@ -1763,7 +1800,27 @@ public class UnifyPayController extends BaseControllerUtil{
    	  }else{
 	 	 returnValue=false; 
 	   }
-  	  }
+  	  }else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_WEIXIN.getValue()))){
+    		if(paymentType!=null&&PaymentType.YEEPAY_WEIXIN.getValue().equals(paymentType)){
+    	   		 returnValue=true; 
+    	   	  }else{
+    		 	 returnValue=false; 
+    		   }
+        }
+	  	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_ALI.getValue()))){
+			if(paymentType!=null&&PaymentType.YEEPAY_ALI.getValue().equals(paymentType)){
+		   		 returnValue=true; 
+		   	  }else{
+			 	 returnValue=false; 
+			   }
+	    }
+	  	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_ALL.getValue()))){
+			if(paymentType!=null&&PaymentType.YEEPAY_ALL.getValue().equals(paymentType)){
+		   		 returnValue=true; 
+		   	  }else{
+			 	 returnValue=false; 
+			   }
+	    }
     	return returnValue;
     }
     /**
@@ -1797,26 +1854,28 @@ public class UnifyPayController extends BaseControllerUtil{
     @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
     public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
     	String errorMsg="";
-    	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-    		errorMsg="必传参数中有空值";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-    		errorMsg="验证失败";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-    		errorMsg="所选支付渠道与支付类型不匹配";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-    		errorMsg="商户ID不存在";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-    		errorMsg="订单金额格式有误";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-    		errorMsg="订单处理失败，请重新提交！";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-    		errorMsg="订单已处理，请勿重复提交！";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+    	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000001.getType())){
+    		errorMsg=PayError.U1000001.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000003.getType())){
+    		errorMsg=PayError.U1000003.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000005.getType())){
+    		errorMsg=PayError.U1000005.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000002.getType())){
+    		errorMsg=PayError.U1000002.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000004.getType())){
+    		errorMsg=PayError.U1000004.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000006.getType())){
+    		errorMsg=PayError.U1000006.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000007.getType())){
+    		errorMsg=PayError.U1000007.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000008.getType())){
     		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000009.getType())){
     		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-    		errorMsg="您好：订单号重复,请检查后重新下单！";
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000010.getType())){
+    		errorMsg=PayError.U1000010.getValue();
+    	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000011.getType())){
+    		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+failureMsg;
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);
@@ -1828,41 +1887,35 @@ public class UnifyPayController extends BaseControllerUtil{
      */
     @RequestMapping(value = "wxpay/errorPayChannel", method = RequestMethod.GET)
     public void wxErrorPayChannel(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	String urlCode=request.getParameter("urlCode");
-    	model.addAttribute("urlCode", urlCode);
     	 Map<String, Object> map=new HashMap<String,Object>();
-    	
-    	//encoderQRCoder(urlCode,response);
-//    	  QRCodeEncoderHandler handler = new QRCodeEncoderHandler();   
-//    	   handler.encoderQRCode(urlCode, response);
-    	 
     		String errorMsg="";
-        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="验证失败";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="所选支付渠道与支付类型不匹配";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="订单金额格式有误";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="订单处理失败，请重新提交！";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="订单已处理，请勿重复提交！";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000001.getType())){
+        		errorMsg=PayError.U1000001.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000003.getType())){
+        		errorMsg=PayError.U1000003.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000005.getType())){
+        		errorMsg=PayError.U1000005.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000002.getType())){
+        		errorMsg=PayError.U1000002.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000004.getType())){
+        		errorMsg=PayError.U1000004.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000006.getType())){
+        		errorMsg=PayError.U1000006.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000007.getType())){
+        		errorMsg=PayError.U1000007.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000008.getType())){
         		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000009.getType())){
         		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-        		errorMsg="您好：订单号重复,请检查后重新下单！";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000010.getType())){
+        		errorMsg=PayError.U1000010.getValue();
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000011.getType())){
+        		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+failureMsg;
         	}
     	   map.put("status", "error");
     	   map.put("outTradeNo", outTradeNo);
     	   map.put("errorMsg", errorMsg);
     	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
     	   
     }
 
@@ -1872,15 +1925,6 @@ public class UnifyPayController extends BaseControllerUtil{
     @RequestMapping(value = "tclwxpay", method = RequestMethod.GET)
     public void tclwxpay(HttpServletRequest request,HttpServletResponse response, Model model){
     	String urlCode=request.getParameter("urlCode");
-    	//model.addAttribute("urlCode", urlCode);
-    	// Map<String, Object> map=new HashMap<String,Object>();
-    	
-    	//encoderQRCoder(urlCode,response);
-//    	  QRCodeEncoderHandler handler = new QRCodeEncoderHandler();   
-//    	   handler.encoderQRCode(urlCode, response);
-    	   /*map.put("status", "ok");
-    	   map.put("urlCode", payserviceDev.getServer_host()+"alipay/getCode?urlCode="+urlCode);
-    	   writeSuccessJson(response,map);*/
     	  WebUtils.writeJson(response, urlCode);
     	  return;
     	   
@@ -2019,12 +2063,9 @@ public class UnifyPayController extends BaseControllerUtil{
         String outTradeNo = request.getParameter("outTradeNo");
         String totalFee = request.getParameter("totalFee");
         String goodsName=request.getParameter("goodsName");
-    	//MerchantInfo merchantInfo=merchantInfoService.findById(Integer.parseInt(merchantId));
-    	//获取商户下的渠道信息
         try {
 			response.sendRedirect("payIndex?outTradeNo="+outTradeNo+"&totalFee="+totalFee+"goodsName="+goodsName);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  
     }
@@ -2054,7 +2095,6 @@ public class UnifyPayController extends BaseControllerUtil{
     	String goodsDesc=request.getParameter("goodsDesc");
     	String goodsId=request.getParameter("goodsId");
     	String merchantId=request.getParameter("merchantId");
-//    	String paymentType=request.getParameter("paymentType");
     	String pay_switch = payserviceDev.getPay_switch();
     	String paySwitch []=pay_switch.split("#");
     	String payZhifubao = paySwitch[0];
@@ -2119,7 +2159,6 @@ public class UnifyPayController extends BaseControllerUtil{
     		
     		if(merchantOrderInfo.getPayStatus()!=0){
 				//订单处理中或者订单处理失败
-				//paraMandaChkAndReturn(3, response,"认证失败");
 				payServiceLog.setErrorCode("6");
 				payServiceLog.setStatus("error");
 				payServiceLog.setLogName(PayLogName.PAY_END);
@@ -2134,12 +2173,7 @@ public class UnifyPayController extends BaseControllerUtil{
             		 merchantOrderInfoService.updateSourceType(Integer.parseInt(payZhifubao), merchantOrderInfo.getId());
     		    	 payServiceLog.setPaySwitch(payZhifubao);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
-         			/*String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels));
-         			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-         			response.setCharacterEncoding("GBK");
-         			response.sendRedirect(URL);*/
             		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","ALIPAY","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
-         			//response.sendRedirect(URL);
          			model.addAttribute("res", res);
          			  payServiceLog.setLogName(PayLogName.PAY_END);
                       UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -2147,7 +2181,6 @@ public class UnifyPayController extends BaseControllerUtil{
             	 }else{
             		//调用支付宝即时支付方法  
             		 String url=AlipayController.getAliPayUrl(merchantId,merchantOrderInfo.getId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev); 
-            		//response.sendRedirect(payserviceDev.getAli_pay_url()+"?"+url);
             		  payServiceLog.setLogName(PayLogName.PAY_END);
                       UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
             		 return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
@@ -2160,9 +2193,6 @@ public class UnifyPayController extends BaseControllerUtil{
 //            		 updatePayWay
             		 payServiceLog.setPaySwitch(payWx);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
-//             		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
-//             		response.sendRedirect("tclwxpay?urlCode="+qr_code_url);  
-//             		// response.getWriter().print(qr_code_url);
 //             		//调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
              		String qr_code_url=scanCode.order(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","WXPAY","ScanCodePayment",dictTradeChannels));
              		String fullUri="/alipay/wxpay?urlCode="+qr_code_url+"&status=ok";
@@ -2177,11 +2207,9 @@ public class UnifyPayController extends BaseControllerUtil{
 	            		others=getPartner(other);
             		 WxpayInfo payInfo=new WxpayInfo();
                    	 payInfo.setAppid(others.get("wx_app_id"));
-                   	 //payInfo.setDevice_info("WEB");
                    	 payInfo.setMch_id(others.get("wx_mch_id"));
                    	 payInfo.setNonce_str(WxPayCommonUtil.create_nonce_str());
                    	 payInfo.setBody(goodsName);
-                   	 //payInfo.setAttach("某某分店");
                    	 payInfo.setOut_trade_no(merchantOrderInfo.getId());
                    	 payInfo.setProduct_id(goodsId);
                    	 payInfo.setTotal_fee(Integer.parseInt(totalFee));
@@ -2190,8 +2218,6 @@ public class UnifyPayController extends BaseControllerUtil{
                    	 payInfo.setTrade_type(others.get("wx_trade_type"));
                    	 payInfo.setWx_key(dictTradeChannel.getKeyValue());
                    	 String urlCode= WxpayController.weixin_pay(payInfo, payserviceDev);
-                    //调用微信支付方法,方法未完成，暂时先跳转到错误渠道页面
-                	 //response.sendRedirect("wxpay?urlCode="+urlCode);  
                 	  String fullUri="/alipay/wxpay?urlCode="+urlCode+"&status=ok";
                 	  payServiceLog.setLogName(PayLogName.PAY_END);
                       UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -2204,10 +2230,6 @@ public class UnifyPayController extends BaseControllerUtil{
             		 merchantOrderInfoService.updateSourceType(Integer.parseInt(payTcl), merchantOrderInfo.getId());
     		    	 payServiceLog.setPaySwitch(payTcl);
             		ScanCodeOrderService scanCode = new ScanCodeOrderService();
-        		/*	String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels));
-        			String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-        			response.setCharacterEncoding("UTF-8");
-        			response.sendRedirect(URL);*/
             		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00","UPOP","GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 	       			model.addAttribute("res", res);
 	       		  payServiceLog.setLogName(PayLogName.PAY_END);
@@ -2223,10 +2245,6 @@ public class UnifyPayController extends BaseControllerUtil{
      		    	 payServiceLog.setPaySwitch(payEbank);
             		  String newareaCode=getAreaCode(areaCode);
                 	  ScanCodeOrderService scanCode = new ScanCodeOrderService();
-          			/*  String returnCode= scanCode.Aliorder1(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels));
-          			  String URL=payserviceDev.getTcl_pay_url()+"?"+returnCode;
-          			  response.setCharacterEncoding("UTF-8");
-          			  response.sendRedirect(URL);*/
                 		String res=scanCode.bulidPostRequest(ScanCodeOrderData.buildOrderDataMap(merchantOrderInfo,"1.0","00",newareaCode,"GWDirectPay",dictTradeChannels), payserviceDev.getTcl_pay_url());
 		       			model.addAttribute("res", res);
 		       		  payServiceLog.setLogName(PayLogName.PAY_END);
@@ -2246,8 +2264,6 @@ public class UnifyPayController extends BaseControllerUtil{
      		    	 if(!String.valueOf(PaymentType.UPOP.getValue()).equals(areaCode)&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(areaCode)&&!String.valueOf(PaymentType.ALIPAY.getValue()).equals(areaCode)){ 
      		    		 String defaultbank=getDefaultbank(areaCode);
      		    		 String url=AlipayController.getEBankPayUrl(merchantId,merchantOrderInfo.getId(),goodsName,AmountUtil.changeF2Y(totalFee),goodsDesc,dictTradeChannelService,payserviceDev,defaultbank); 
-//     		    		 String fullUri=payserviceDev.getAli_pay_url()+"?"+url;
-//     		    		 response.sendRedirect(fullUri.replace("redirect:", ""));
      		    		  payServiceLog.setLogName(PayLogName.PAY_END);
      		             UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
      		    		return "redirect:"+payserviceDev.getAli_pay_url()+"?"+url;
@@ -2318,18 +2334,13 @@ public class UnifyPayController extends BaseControllerUtil{
    		String params=createSign(sParaTemp);
    	    Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(signature,params,merchantInfo.getPayKey());
         //认证
-       // Boolean hmacSHA1Verification=OauthSignatureValidateHandler.validateSignature(request,merchantInfo);
 		if(!hmacSHA1Verification){
 			paraMandaChkAndReturn(2, response,"认证失败");
 			return;
 		} 
     	DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(orderInfo.getMerchantId()),Channel.TCL.getValue());
-        String notify_url =dictTradeChannels.getNotifyUrl();
         OrderQryService orderQry = new OrderQryService();
         orderQry.query(OrderQryData.buildGetOrderQryDataMap(orderInfo, dictTradeChannels));
-//    			String URL="https://ipos.tclpay.cn/hipos/payTrans?"+returnCode;
-//    			response.setCharacterEncoding("GBK");
-//    			response.sendRedirect(URL);
     	
     }
     
