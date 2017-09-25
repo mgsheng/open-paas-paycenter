@@ -480,7 +480,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			    			} 
 	            	}
              }
-		     else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){
+		     else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){ 
 		    	 payServiceLog.setPaySwitch(payWx);
 		    	if(PaymentType.WEIXIN.getValue().equals(paymentType)){
 		    		 if(String.valueOf(PaySwitch.WEIXIN.getValue()).equals(payWx)){
@@ -946,7 +946,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			          boolean backValue=analysisValue(reqjson);
 			          if(backValue){
 			        	  String formValue="";
-			        	  formValue=res.get("lakala_web_fast").toString();
+			        	  formValue=res.get("lakala_web").toString();
 			        	  formValue+="<script>document.forms[0].submit();</script>";
 				          model.addAttribute("res", formValue);
 				    	  return "pay/payMaxRedirect";
