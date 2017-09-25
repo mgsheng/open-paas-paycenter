@@ -131,6 +131,7 @@ public class YeePaymobileNotifyController extends BaseControllerUtil {
 	 					int payStatus=merchantOrderInfo.getPayStatus();
 	 					Double payCharge=0.0;
 	 					payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+	 					log.info("payCharge==================================="+payCharge);
 	 					if(payStatus!=1){
 	 					log.info("-----------------------callBack paymobile update-start-----------------------------------------");
 		 					if(!nullEmptyBlankJudge(status)&&status.equals("1")){
