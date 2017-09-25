@@ -1,7 +1,10 @@
 package cn.com.open.openpaas.payservice.web.api.order;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -328,7 +331,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				}else if(String.valueOf(Channel.YEEPAY_EB.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
 				}else if(String.valueOf(Channel.ALIFAF.getValue()).equals(paymentChannel)){
-					merchantOrderInfo.setSourceType(PaySwitch.ALI.getValue());	
+					merchantOrderInfo.setSourceType(Integer.parseInt(alifaf));	
 				}else if(String.valueOf(Channel.WECHAT_WAP.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(PaySwitch.PAYMAX.getValue());	
 				}else if(String.valueOf(Channel.PAYMAX_WECHAT_CSB.getValue()).equals(paymentChannel)){
@@ -469,11 +472,11 @@ public class UnifyPayController extends BaseControllerUtil{
 			    			}else{
 			    				 payServiceLog.setErrorCode("11");
 					 			 payServiceLog.setStatus("error");
-					 			 String failureMsg=map.get("error_msg").toString();
-					 			 String failureCode=map.get("error_code").toString();
+					 			 model.addAttribute("errorMsg", URLEncoder.encode(map.get("error_msg").toString(), "utf-8"));
+					 			  model.addAttribute("failureCode", map.get("error_code").toString());
 					 			 payServiceLog.setLogName(PayLogName.PAY_END);
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 			    			} 
 	            	}
              }
@@ -616,11 +619,11 @@ public class UnifyPayController extends BaseControllerUtil{
 			    			}else{
 			    				 payServiceLog.setErrorCode("11");
 					 			 payServiceLog.setStatus("error");
-					 			 String failureMsg=map.get("error_msg").toString();
-					 			 String failureCode=map.get("error_code").toString();
+					 			 model.addAttribute("errorMsg", URLEncoder.encode(map.get("error_msg").toString(), "utf-8"));
+					 			  model.addAttribute("failureCode", map.get("error_code").toString());
 					 			 payServiceLog.setLogName(PayLogName.PAY_END);
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 			    			}
 				     	}
 		    	 }
@@ -677,11 +680,11 @@ public class UnifyPayController extends BaseControllerUtil{
 					        	  return "pay/wechat_wap";
 					          }else{
 					 			 payServiceLog.setStatus("error");
-					 			 String failureMsg=res.get("failureMsg").toString();
-					 			 String failureCode=res.get("failureCode").toString();
+					 			 model.addAttribute("errorMsg", URLEncoder.encode(res.get("failureMsg").toString(), "utf-8"));
+					 			  model.addAttribute("failureCode",res.get("failureCode").toString());
 					 			 payServiceLog.setLogName(PayLogName.PAY_END);
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 			return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+					 			return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 					      } 
 		    	  }else{
 			    		 payServiceLog.setErrorCode("9");
@@ -1148,11 +1151,11 @@ public class UnifyPayController extends BaseControllerUtil{
 					          }else{
 					        	 payServiceLog.setErrorCode("8");
 					 			 payServiceLog.setStatus("error");
-					 			 String failureMsg=res.get("failureMsg").toString();
-					 			 String failureCode=res.get("failureCode").toString();
+					 			 model.addAttribute("errorMsg", URLEncoder.encode(res.get("failureMsg").toString(), "utf-8"));
+					 			  model.addAttribute("failureCode",res.get("failureCode").toString());
 					 			 payServiceLog.setLogName(PayLogName.PAY_END);
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 		    	      }
 		    	  }else{
 			    		 payServiceLog.setErrorCode("9");
@@ -1226,11 +1229,11 @@ public class UnifyPayController extends BaseControllerUtil{
 		    			}else{
 		    				 payServiceLog.setErrorCode("11");
 				 			 payServiceLog.setStatus("error");
-				 			 String failureMsg=map.get("error_msg").toString();
-				 			 String failureCode=map.get("error_code").toString();
+				 			 model.addAttribute("errorMsg", URLEncoder.encode(map.get("error_msg").toString(), "utf-8"));
+				 			  model.addAttribute("failureCode",map.get("error_code").toString());
 				 			 payServiceLog.setLogName(PayLogName.PAY_END);
 				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 		    			}
 		    			
 		    			
@@ -1249,11 +1252,11 @@ public class UnifyPayController extends BaseControllerUtil{
 		    			}else{
 		    				 payServiceLog.setErrorCode("11");
 				 			 payServiceLog.setStatus("error");
-				 			 String failureMsg=map.get("error_msg").toString();
-				 			 String failureCode=map.get("error_code").toString();
+				 			 model.addAttribute("errorMsg", URLEncoder.encode(map.get("error_msg").toString(), "utf-8"));
+				 			  model.addAttribute("failureCode", map.get("error_code").toString());
 				 			 payServiceLog.setLogName(PayLogName.PAY_END);
 				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"11";  
 		    			} 	  
 	    	     } 
 			  }else if(String.valueOf(Channel.YEEPAY_ALL.getValue()).equals(paymentChannel)){
@@ -1270,11 +1273,11 @@ public class UnifyPayController extends BaseControllerUtil{
 		    			}else{
 		    				 payServiceLog.setErrorCode("11");
 				 			 payServiceLog.setStatus("error");
-				 			 String failureMsg=map.get("error_msg").toString();
-				 			 String failureCode=map.get("error_code").toString();
+				 			 model.addAttribute("errorMsg", URLEncoder.encode(map.get("error_msg").toString(), "utf-8"));
+				 			  model.addAttribute("failureCode", map.get("error_code").toString());
 				 			 payServiceLog.setLogName(PayLogName.PAY_END);
 				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8"+"&failureCode="+failureCode+"&failureMsg="+failureMsg;  
+				 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 		    			} 	  
 	    	     }  
 			  }
@@ -1343,7 +1346,8 @@ public class UnifyPayController extends BaseControllerUtil{
 			treeMap.put("callbackurl", 		dictTradeChannels.getNotifyUrl());
 			treeMap.put("currency", 		Integer.parseInt(others.get("currency")));
 			treeMap.put("version", 		   Integer.parseInt(others.get("version")));
-			
+			treeMap.put("directpaytype",Integer.parseInt(others.get("directpaytype")));
+			treeMap.put("productdesc", 		merchantOrderInfo.getMerchantProductName());
 			System.out.println(treeMap);
 			//第一步 生成AESkey及encryptkey
 			String AESKey		= PaymobileUtils.buildAESKey();
@@ -1850,10 +1854,10 @@ public class UnifyPayController extends BaseControllerUtil{
  
     /**
      * 跳转到错误页面
+     * @throws UnsupportedEncodingException 
      */
     @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	String errorMsg="";
+    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo,String failureCode,String errorMsg) throws UnsupportedEncodingException{
     	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000001.getType())){
     		errorMsg=PayError.U1000001.getValue();
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000003.getType())){
@@ -1869,13 +1873,13 @@ public class UnifyPayController extends BaseControllerUtil{
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000007.getType())){
     		errorMsg=PayError.U1000007.getValue();
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000008.getType())){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000009.getType())){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000010.getType())){
     		errorMsg=PayError.U1000010.getValue();
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000011.getType())){
-    		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+failureMsg;
+    		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);
@@ -1884,11 +1888,12 @@ public class UnifyPayController extends BaseControllerUtil{
     
     /**
      * 跳转到wxpay页面
+     * @throws UnsupportedEncodingException 
      */
     @RequestMapping(value = "wxpay/errorPayChannel", method = RequestMethod.GET)
-    public void wxErrorPayChannel(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    public void wxErrorPayChannel(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String errorMsg) throws UnsupportedEncodingException{
     	 Map<String, Object> map=new HashMap<String,Object>();
-    		String errorMsg="";
+    		//String errorMsg=request.getParameter("errorMsg");
         	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000001.getType())){
         		errorMsg=PayError.U1000001.getValue();
         	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000003.getType())){
@@ -1904,13 +1909,13 @@ public class UnifyPayController extends BaseControllerUtil{
         	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000007.getType())){
         		errorMsg=PayError.U1000007.getValue();
         	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000008.getType())){
-        		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
         	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000009.getType())){
-        		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
         	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000010.getType())){
         		errorMsg=PayError.U1000010.getValue();
         	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000011.getType())){
-        		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+failureMsg;
+        		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
         	}
     	   map.put("status", "error");
     	   map.put("outTradeNo", outTradeNo);
