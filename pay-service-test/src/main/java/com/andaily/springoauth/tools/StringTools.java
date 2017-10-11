@@ -1,5 +1,6 @@
 package com.andaily.springoauth.tools;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -60,5 +61,13 @@ public class StringTools {
 		}
 	       
 		return value;
+	}
+	public static String getStringValue(double b){
+		 DecimalFormat decimalFormat = new DecimalFormat("###################.###########");  
+		  	String s="0";
+		  	if(b>0.0){
+		  		decimalFormat.format(b);
+		  	}
+		  	return s;
 	}
 }

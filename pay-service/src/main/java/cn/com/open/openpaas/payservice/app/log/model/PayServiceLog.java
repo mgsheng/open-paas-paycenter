@@ -43,8 +43,25 @@ public class PayServiceLog {
     private long executionTime;
     //支付开关
     private String paySwitch;
+    private String signature;
+    private String signparams;
     
     
+    
+    
+    
+	public String getSignature() {
+		return signature;
+	}
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
+	public String getSignparams() {
+		return signparams;
+	}
+	public void setSignparams(String signparams) {
+		this.signparams = signparams;
+	}
 	public String getPaySwitch() {
 		return paySwitch;
 	}

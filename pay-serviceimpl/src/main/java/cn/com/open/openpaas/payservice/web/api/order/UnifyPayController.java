@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -344,6 +345,8 @@ public class UnifyPayController extends BaseControllerUtil{
 					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
 				}else if(String.valueOf(Channel.YEEPAY_ALL.getValue()).equals(paymentChannel)){
 					merchantOrderInfo.setSourceType(PaySwitch.YEEPAY.getValue());	
+				}else if(String.valueOf(Channel.EHK_ALI_PAY.getValue()).equals(paymentChannel)){
+					merchantOrderInfo.setSourceType(PaySwitch.EHKING.getValue());	
 				}
 				
 			}
@@ -478,6 +481,23 @@ public class UnifyPayController extends BaseControllerUtil{
 					 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 					 	         return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"8";  
 			    			} 
+	            	}else if(String.valueOf(PaySwitch.EHKING.getValue()).equals(alifaf)){
+				    	 //易汇金支付宝扫码支付
+			    	 // merchantId:120140804#orderCurrency:CNY#paymentModeCode:BANK_CARD-B2C#clientIp:127.0.0.1#timeout:10
+							  	Map <String,Object> map=new HashMap<String, Object>();
+							  	map.put("name", merchantOrderInfo.getMerchantProductName());
+							  	map.put("quantity", 1);
+							  	//String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+							    String amount =StringTool.getStringValue(merchantOrderInfo.getOrderAmount().doubleValue()*100);
+							  	map.put("amount",amount);
+							  	String productDetails=JSONObject.fromObject(map).toString();
+							  	model.addAttribute("productDetails","["+productDetails+"]");
+							  	model.addAttribute("id", merchantOrderInfo.getId());
+							  	model.addAttribute("clientIp", merchantOrderInfo.getIp());
+							  	model.addAttribute("paymentType", "EHK_ALI_PAY");
+							  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
+							  	model.addAttribute("payAmount", amount);
+							  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
 	            	}
              }
 		     else if(String.valueOf(Channel.WEIXIN.getValue()).equals(paymentChannel)){ 
@@ -894,7 +914,10 @@ public class UnifyPayController extends BaseControllerUtil{
 					  	Map <String,Object> map=new HashMap<String, Object>();
 					  	map.put("name", merchantOrderInfo.getMerchantProductName());
 					  	map.put("quantity", 1);
-					  	String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+					  	 DecimalFormat decimalFormat = new DecimalFormat("###################.###########");  
+					  	String amount=decimalFormat.format(merchantOrderInfo.getOrderAmount().doubleValue()*100);  
+					  // String amount=StringTools.
+					    System.out.println(amount);  
 					  	map.put("amount",amount);
 					  	String productDetails=JSONObject.fromObject(map).toString();
 					  	model.addAttribute("productDetails","["+productDetails+"]");
@@ -1173,7 +1196,8 @@ public class UnifyPayController extends BaseControllerUtil{
 						  	Map <String,Object> map=new HashMap<String, Object>();
 						  	map.put("name", merchantOrderInfo.getMerchantProductName());
 						  	map.put("quantity", 1);
-						  	String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+						  	//String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+						  	 String amount =StringTool.getStringValue(merchantOrderInfo.getOrderAmount().doubleValue()*100);
 						  	map.put("amount",amount);
 						  	String productDetails=JSONObject.fromObject(map).toString();
 						  	model.addAttribute("productDetails","["+productDetails+"]");
@@ -1181,7 +1205,27 @@ public class UnifyPayController extends BaseControllerUtil{
 						  	model.addAttribute("clientIp", merchantOrderInfo.getIp());
 						  	model.addAttribute("paymentType", "EHK_WEIXIN_PAY");
 						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
-						  	model.addAttribute("payAmount", String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue()));
+						  	model.addAttribute("payAmount", amount);
+						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
+			    	 }
+			     }
+		       else if(String.valueOf(Channel.EHK_ALI_PAY.getValue()).equals(paymentChannel)){
+			    	 //易汇金支付宝扫码支付
+		    	 // merchantId:120140804#orderCurrency:CNY#paymentModeCode:BANK_CARD-B2C#clientIp:127.0.0.1#timeout:10
+			    	 if(PaymentType.EHK_ALI_PAY.getValue().equals(paymentType)){
+						  	Map <String,Object> map=new HashMap<String, Object>();
+						  	map.put("name", merchantOrderInfo.getMerchantProductName());
+						  	map.put("quantity", 1);
+						  	//String amount=String.valueOf((new Double(merchantOrderInfo.getOrderAmount().doubleValue()*100)).intValue());  
+						    String amount =StringTool.getStringValue(merchantOrderInfo.getOrderAmount().doubleValue()*100);
+						  	map.put("amount",amount);
+						  	String productDetails=JSONObject.fromObject(map).toString();
+						  	model.addAttribute("productDetails","["+productDetails+"]");
+						  	model.addAttribute("id", merchantOrderInfo.getId());
+						  	model.addAttribute("clientIp", merchantOrderInfo.getIp());
+						  	model.addAttribute("paymentType", "EHK_ALI_PAY");
+						  	model.addAttribute("merid", merchantOrderInfo.getMerchantId());
+						  	model.addAttribute("payAmount", amount);
 						  	return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
 			    	 }
 			     }
@@ -1779,7 +1823,13 @@ public class UnifyPayController extends BaseControllerUtil{
          	 }else{
          		 returnValue=false; 
          	 }
-      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_BANK.getValue()))){
+      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_ALI_PAY.getValue()))){
+    		if(paymentType!=null&&PaymentType.EHK_ALI_PAY.getValue().equals(paymentType)){
+        		 returnValue=true;
+        	 }else{
+        		 returnValue=false; 
+        	 }
+     	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_BANK.getValue()))){
     		if((paymentType!=null&&PaymentType.EHK_BANK.getValue().equals(paymentType))){
         		 returnValue=true;
         	 }else{

@@ -65,7 +65,9 @@ public class EHKOrderController extends BaseControllerUtil{
 		 DictTradeChannel dictTradeChannels=null;
          if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())){
         	  dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_WEIXIN_PAY.getValue());
-		 }else{
+		 }else if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_ALI_PAY.getValue())){
+			 dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_ALI_PAY.getValue()); 
+		 }else if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_BANK.getValue())){
 			 dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_BANK.getValue()); 
 		 }
 		 Map<String, String> others =null;
@@ -92,7 +94,7 @@ public class EHKOrderController extends BaseControllerUtil{
 		String callbackUrl = dictTradeChannels.getBackurl();
 		
 		String paymentModeCode = others.get("paymentModeCode");
-		if(!nullEmptyBlankJudge(paymentType)&&!paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())&&!paymentType.equals(PaymentType.EHK_BANK.getValue())){
+		if(!nullEmptyBlankJudge(paymentType)&&!paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())&&!paymentType.equals(PaymentType.EHK_BANK.getValue())&&!paymentType.equals(PaymentType.EHK_ALI_PAY.getValue())){
 			paymentModeCode=paymentType;
 		 }
 		String clientIp=req.getParameter("clientIp");
@@ -109,12 +111,14 @@ public class EHKOrderController extends BaseControllerUtil{
 				.setPaymentModeCode(paymentModeCode).setNotifyUrl(notifyUrl);
          if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_WEIXIN_PAY.getValue())){
         	 builder.setClientIp(clientIp);
-		 } 
+		 } if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_ALI_PAY.getValue())){
+        	 builder.setClientIp(clientIp);
+		 }
 		builder.setTimeout(timeout);
 		ProductDetail productDetail = new ProductDetail();
 		
 		
-		//LOGGER.info("productDetail++++++++++++++"+jsonPDStr);
+		LOGGER.info("productDetail++++++++++++++"+jsonPDStr);
 		
 		JSONArray productDetailArray = JSONObject.parseArray(jsonPDStr);
 		for(Object o:productDetailArray) {
