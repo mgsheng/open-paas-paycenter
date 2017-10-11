@@ -1,5 +1,6 @@
 package cn.com.open.openpaas.payservice.app.tools;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -204,6 +205,14 @@ public class StringTool {
 		}
 	       
 		return value;
+	}
+	public static String getStringValue(double b){ 
+		 DecimalFormat decimalFormat = new DecimalFormat("###################.###########");  
+		  	String s="0";
+		  	if(b>0.0){
+		  		s=decimalFormat.format(b);
+		  	}
+		  	return s;
 	}
 	
 	public static void main(String[] args) {
