@@ -67,7 +67,7 @@ public class EHKOrderController extends BaseControllerUtil{
         	  dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_WEIXIN_PAY.getValue());
 		 }else if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_ALI_PAY.getValue())){
 			 dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_ALI_PAY.getValue()); 
-		 }else if(!nullEmptyBlankJudge(paymentType)&&paymentType.equals(PaymentType.EHK_BANK.getValue())){
+		 }else{
 			 dictTradeChannels=dictTradeChannelService.findByMAI(merid,Channel.EHK_BANK.getValue()); 
 		 }
 		 Map<String, String> others =null;
