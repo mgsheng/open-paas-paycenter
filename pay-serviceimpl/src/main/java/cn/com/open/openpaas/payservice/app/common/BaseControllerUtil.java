@@ -1,4 +1,4 @@
-package cn.com.open.openpaas.payservice.web.api.order;
+package cn.com.open.openpaas.payservice.app.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +8,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,8 +22,11 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
+import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
+import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
+import cn.com.open.openpaas.payservice.app.channel.yeepay.paymobile.utils.PaymobileUtils;
 import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
-import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.thread.PaySendSmsThread;
@@ -830,6 +832,7 @@ public class BaseControllerUtil {
 	public static String formatString(String text){
 				return text==null ? "" : text.trim();
 	  }		
+
 	public void sendSms(MerchantOrderInfo merchantOrderInfo ,MerchantInfo merchantInfo ,KafkaProducer kafkaProducer) {
 		if(merchantInfo.getSmsSwitch()==1){
 			SortedMap<Object,Object> sParaTemp= new TreeMap<Object,Object>();
@@ -839,4 +842,465 @@ public class BaseControllerUtil {
 			   thread.run();	
    }
  }
+	
+    public String getAreaCode(String areaCode){
+    	String newAreaCode="";
+    	if(!nullEmptyBlankJudge(areaCode)){
+    		if(PaymentType.CMB.getValue().equals(areaCode)){
+        		newAreaCode="CMB";
+        	}
+    		else if(PaymentType.ICBC.getValue().equals(areaCode)){
+        		newAreaCode="ICBC";
+        	}
+    		else if(PaymentType.CCB.getValue().equals(areaCode)){
+        		newAreaCode="CCB";
+        	}
+    		else if(PaymentType.ABC.getValue().equals(areaCode)){
+        		newAreaCode="ABC";
+        	}
+    		else if(PaymentType.BOC.getValue().equals(areaCode)){
+        		newAreaCode="BOC";
+        	}
+    		else if(PaymentType.BCOM.getValue().equals(areaCode)){
+        		newAreaCode="BCOM";
+        	}
+    		else if(PaymentType.PSBC.getValue().equals(areaCode)){
+        		newAreaCode="PSBC";
+        	}
+    		else if(PaymentType.CGB.getValue().equals(areaCode)){
+        		newAreaCode="CGB";
+        	}
+    		else if(PaymentType.SPDB.getValue().equals(areaCode)){
+        		newAreaCode="SPDB";
+        	}
+    		else if(PaymentType.CEB.getValue().equals(areaCode)){
+        		newAreaCode="CEB";
+        	}
+    		else if(PaymentType.PAB.getValue().equals(areaCode)){
+        		newAreaCode="PAB";
+        	}
+    	}
+    	else{
+    		newAreaCode="";  
+  	   }
+  	   return newAreaCode;
+    }
+    /**
+     * 易宝支付
+     * @param areaCode
+     * @return
+     */
+    public String getYeePayCode(String paymentType){
+    	String returnValue="";
+    	if(!nullEmptyBlankJudge(paymentType)){
+    		 if(PaymentType.CMB.getValue().equals(paymentType)){
+				   returnValue="CMBCHINA-NET-B2C";
+	   		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
+				   returnValue="BOC-NET-B2C";
+	 		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+				   returnValue="ICBC-NET-B2C";
+	 		 }else if(PaymentType.CCB.getValue().equals(paymentType)){
+				   returnValue="CCB-NET-B2C";
+	 		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
+				   returnValue="ABC-NET-B2C";
+	 		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
+				   returnValue="BOCO-NET-B2C";
+	 		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
+				   returnValue="POST-NET-B2C";
+	 		 }else if(PaymentType.CGB.getValue().equals(paymentType)){
+				   returnValue="GDB-NET-B2C";
+	 		 }else if(PaymentType.SPDB.getValue().equals(paymentType)){
+				   returnValue="SPDB-NET-B2C";
+	 		 }else if(PaymentType.CEB.getValue().equals(paymentType)){
+				   returnValue="CEB-NET-B2C";
+	 		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
+				   returnValue="PINGANBANK-NET";
+			 } 
+    	}
+  	   return returnValue;
+    }
+    public Integer getPaymentId(String areaCode){
+    	int returnValue=0;
+    	if(PaymentType.CMB.getValue().equals(areaCode)){
+    		returnValue=PaymentType.CMB.getType();
+    	}
+		else if(PaymentType.ICBC.getValue().equals(areaCode)){
+			returnValue=PaymentType.ICBC.getType();
+    	}
+		else if(PaymentType.CCB.getValue().equals(areaCode)){
+			returnValue=PaymentType.CCB.getType();
+    	}
+		else if(PaymentType.ABC.getValue().equals(areaCode)){
+			returnValue=PaymentType.ABC.getType();
+    	}
+		else if(PaymentType.BOC.getValue().equals(areaCode)){
+			returnValue=PaymentType.BOC.getType();
+    	}
+		else if(PaymentType.BCOM.getValue().equals(areaCode)){
+			returnValue=PaymentType.BCOM.getType();
+    	}
+		else if(PaymentType.PSBC.getValue().equals(areaCode)){
+			returnValue=PaymentType.PSBC.getType();
+    	}
+		else if(PaymentType.CGB.getValue().equals(areaCode)){
+			returnValue=PaymentType.CGB.getType();
+    	}
+		else if(PaymentType.SPDB.getValue().equals(areaCode)){
+			returnValue=PaymentType.SPDB.getType();
+    	}
+		else if(PaymentType.CEB.getValue().equals(areaCode)){
+			returnValue=PaymentType.CEB.getType();
+    	}
+		else if(PaymentType.PAB.getValue().equals(areaCode)){
+			returnValue=PaymentType.PAB.getType();
+    	}else if(PaymentType.ALIPAY.getValue().equals(areaCode)){
+			returnValue=PaymentType.ALIPAY.getType();
+    	}else if(PaymentType.UPOP.getValue().equals(areaCode)){
+			returnValue=PaymentType.UPOP.getType();
+    	}
+    	return returnValue;
+    	
+    }
+    public Boolean getErrorType(String paymentType){
+    	Boolean errorType = false;
+    	if(PaymentType.WECHAT_WAP.getValue().equals(paymentType)){
+    		errorType=true;
+    	}if(PaymentType.WEIXIN.getValue().equals(paymentType)){
+    		errorType=true;
+    	}if(PaymentType.ALIFAF.getValue().equals(paymentType)){
+    		errorType=true;
+    	}if(PaymentType.PAYMAX_WECHAT_CSB.getValue().equals(paymentType)){
+    		errorType=true;
+    	}if(PaymentType.EHK_WEIXIN_PAY.getValue().equals(paymentType)){
+    		errorType=true;
+    	}
+    	return errorType;
+    }
+    /**
+     * 判断直连银行的选择支付方式是否为直连银行
+     * @param paymentType
+     * @return
+     */
+    public Boolean ifTruePayMentType(String paymentType){
+    	boolean returnValue=false;
+    	if(paymentType!=null&&!String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
+      		 returnValue=true;
+      	 }else if(!String.valueOf(PaymentType.UPOP.getValue()).equals(paymentType)){
+      		returnValue=true;
+      	 }else if(!String.valueOf(PaymentType.ALIPAY.getValue()).equals(paymentType)){
+       		returnValue=true;
+       	 }else if(!String.valueOf(PaymentType.PAYMAX.getValue()).equals(paymentType)){
+       		returnValue=true;
+       	 }else if(!String.valueOf(PaymentType.PAYMAX_H5.getValue()).equals(paymentType)){
+       		returnValue=true;
+       	 }else if(!String.valueOf(PaymentType.WECHAT_WAP.getValue()).equals(paymentType)){
+        		returnValue=true;
+         }else{
+      		 returnValue=false;  
+      	 }
+    	return returnValue;
+    }
+    public Boolean validatePayType(String paymentChannel,String paymentType){
+    	Boolean returnValue=false;
+    	if(nullEmptyBlankJudge(paymentChannel)&&nullEmptyBlankJudge(paymentType)){
+    		 returnValue=true;	
+    	}
+    	if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.ALI.getValue()))){
+    	 if(paymentType!=null&&(PaymentType.ALIPAY.getValue()).equals(paymentType)){
+    		 returnValue=true;
+    	 }else{
+    		 returnValue=false; 
+    	 }
+    	}
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WEIXIN.getValue()))){
+    	 if(paymentType!=null&&String.valueOf(PaymentType.WEIXIN.getValue()).equals(paymentType)){
+    		 returnValue=true;
+    	 } else{
+    		 returnValue=false; 
+    	 }
+    	}
+    	
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EBANK.getValue()))){
+    	if(ifTruePayMentType(paymentType)){
+       		 returnValue=true;
+       	 }else{
+       		 returnValue=false; 
+       	 }
+    	}
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
+    		if(paymentType!=null&&PaymentType.WECHAT_WAP.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+          }
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX_WECHAT_CSB.getValue()))){
+    		if(paymentType!=null&&PaymentType.PAYMAX_WECHAT_CSB.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+          }
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX_H5.getValue()))){
+    		if(paymentType!=null&&PaymentType.PAYMAX_H5.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+          }
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.WEIXIN_WECHAT_WAP.getValue()))){
+    		if(paymentType!=null&&PaymentType.WECHAT_WAP.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+          }
+    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.UPOP.getValue()))){
+    		if(paymentType!=null&&PaymentType.UPOP.getValue().equals(paymentType)){
+          		 returnValue=true;
+          	 }else{
+          		 returnValue=false; 
+          	 }
+       	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_WEIXIN_PAY.getValue()))){
+    		if(paymentType!=null&&PaymentType.EHK_WEIXIN_PAY.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_ALI_PAY.getValue()))){
+    		if(paymentType!=null&&PaymentType.EHK_ALI_PAY.getValue().equals(paymentType)){
+        		 returnValue=true;
+        	 }else{
+        		 returnValue=false; 
+        	 }
+     	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_BANK.getValue()))){
+    		if((paymentType!=null&&PaymentType.EHK_BANK.getValue().equals(paymentType))){
+        		 returnValue=true;
+        	 }else{
+        		 returnValue=false; 
+        	 }
+     	}
+       	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX.getValue()))){
+    		 if(paymentType!=null&&PaymentType.PAYMAX.getValue().equals(paymentType)){
+         		 returnValue=true;
+         	 }else{
+         		 returnValue=false; 
+         	 }
+      	}else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_EB.getValue()))){
+      		if(paymentType!=null&&PaymentType.YEEPAY_GW.getValue().equals(paymentType)){
+        		 returnValue=true; 
+        	 }else{
+     		 returnValue=false; 
+     	 }
+  	  }else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.ALIFAF.getValue()))){
+  		if(paymentType!=null&&PaymentType.ALIFAF.getValue().equals(paymentType)){
+   		 returnValue=true; 
+   	  }else{
+	 	 returnValue=false; 
+	   }
+  	  }else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_WEIXIN.getValue()))){
+    		if(paymentType!=null&&PaymentType.YEEPAY_WEIXIN.getValue().equals(paymentType)){
+    	   		 returnValue=true; 
+    	   	  }else{
+    		 	 returnValue=false; 
+    		   }
+        }
+	  	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_ALI.getValue()))){
+			if(paymentType!=null&&PaymentType.YEEPAY_ALI.getValue().equals(paymentType)){
+		   		 returnValue=true; 
+		   	  }else{
+			 	 returnValue=false; 
+			   }
+	    }
+	  	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.YEEPAY_ALL.getValue()))){
+			if(paymentType!=null&&PaymentType.YEEPAY_ALL.getValue().equals(paymentType)){
+		   		 returnValue=true; 
+		   	  }else{
+			 	 returnValue=false; 
+			   }
+	    }else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.EHK_INSTALLMENT_LOAN.getValue()))){
+			if(paymentType!=null&&PaymentType.EHK_INSTALLMENT_LOAN.getValue().equals(paymentType)){
+		   		 returnValue=true; 
+		   	  }else{
+			 	 returnValue=false; 
+			   }
+	    }
+    	return returnValue;
+    }
+    /**
+     * 返回易汇金银行编码
+     * @param paymentType
+     * @return
+     */
+    public String getEhkbankCode(String paymentType){
+ 	   String returnValue="";
+ 	   if(!nullEmptyBlankJudge(paymentType)){
+ 		if(PaymentType.PSBC.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-POST-P2P";
+  		 }else if(PaymentType.CMBC.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-CMBC-P2P";
+ 		 }else if(PaymentType.BOB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-BCCB-P2P";
+ 		 }
+ 		 else if(PaymentType.CMB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-CMBCHINA-P2P";
+ 		 }
+ 		 else if(PaymentType.SPDB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-SPDB-P2P";
+ 		 }
+ 		 else if(PaymentType.CIB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-CIB-P2P";
+ 		 }
+ 		 else if(PaymentType.ABC.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-ABC-P2P";
+ 		 }
+ 		 else if(PaymentType.CGB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-GDB-P2P";
+ 		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-ICBC-P2P";
+ 		 }
+ 		 else if(PaymentType.BOC.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-BOC-P2P";
+ 		 }
+ 		 else if(PaymentType.BCOM.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-BOCO-P2P";
+ 		 }
+ 		 else if(PaymentType.CCB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-CCB-P2P";
+ 		 } else if(PaymentType.PAB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-PINGANBANK-P2P";
+ 		 } else if(PaymentType.CEB.getValue().equals(paymentType)){
+ 			   returnValue="BANK_CARD-B2C-CEB-P2P";
+ 		 }else{
+ 			 returnValue=paymentType;
+ 		 }
+ 	   }else{
+ 		   returnValue="";  
+ 	   }
+ 	   return returnValue;
+    }
+    /**
+     * 返回拉卡拉银行代码
+     * @param paymentType
+     * @return
+     */
+    public String getPayMaxbank(String paymentType){
+ 	   String returnValue="";
+ 	   if(!nullEmptyBlankJudge(paymentType)){
+ 		if(PaymentType.CGB.getValue().equals(paymentType)){
+ 			   returnValue="GDB";
+  		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
+ 			   returnValue="PABC";
+ 		 }else{
+ 			 returnValue=paymentType;
+ 		 }
+ 	   }else{
+ 		   returnValue="";  
+ 	   }
+ 	   return returnValue;
+    }
+    /**
+     * 返回银行代码
+     * @param paymentType
+     * @return
+     */
+    public String getDefaultbank(String paymentType){
+ 	   String returnValue="";
+ 	   if(!nullEmptyBlankJudge(paymentType)){
+ 		 if(PaymentType.CMB.getValue().equals(paymentType)){
+ 			   returnValue="CMB";
+    		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
+ 			   returnValue="BOCB2C";
+  		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+ 			   returnValue="ICBCB2C";
+  		 }else if(PaymentType.CCB.getValue().equals(paymentType)){
+ 			   returnValue="CCB";
+  		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
+ 			   returnValue="ABC";
+  		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
+ 			   returnValue="COMM-DEBIT";
+  		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
+ 			   returnValue="POSTGC";
+  		 }else if(PaymentType.CGB.getValue().equals(paymentType)){
+ 			   returnValue="GDB";
+  		 }else if(PaymentType.SPDB.getValue().equals(paymentType)){
+ 			   returnValue="SPDB";
+  		 }else if(PaymentType.CEB.getValue().equals(paymentType)){
+ 			   returnValue="CEB-DEBIT";
+  		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
+ 			   returnValue="SPABANK";
+ 		 }else if(PaymentType.BOB.getValue().equals(paymentType)){
+ 			   returnValue="BJBANK";
+ 		 }
+ 	   }else{
+ 		   returnValue="";  
+ 	   }
+ 	   return returnValue;
+    }
+    
+    public String getParmenter(MerchantOrderInfo merchantOrderInfo) {
+		String parameters[]=new String[10];
+		      String openId="";
+		      if(!nullEmptyBlankJudge(merchantOrderInfo.getParameter1())){
+		    	  parameters= merchantOrderInfo.getParameter1().split(";");
+		      }
+		      for(int i=0;i<parameters.length;i++){
+		    	  if(!nullEmptyBlankJudge(parameters[i])){
+		    		  String []openIds=parameters[i].split("=");
+		    		  if(openIds[0].equals("open_id")){
+		    			  openId=openIds[1];
+		    			  break;
+		    		  }
+		    	  }  
+		    }
+		return openId;
+	}
+	public Map <String,Object> getParmenters(MerchantOrderInfo merchantOrderInfo) {
+		String parameters[]=new String[10];
+		Map <String,Object> map=new HashMap<String, Object>();
+		      if(!nullEmptyBlankJudge(merchantOrderInfo.getParameter1())){
+		    	  parameters= merchantOrderInfo.getParameter1().split(";");
+		      }
+		      for(int i=0;i<parameters.length;i++){
+		    	  if(!nullEmptyBlankJudge(parameters[i])){
+		    		  String []openIds=parameters[i].split("=");
+		    		  if(openIds!=null&&openIds.length>=2){
+		    			  map.put(openIds[0], openIds[1]); 
+		    		  }
+		    	  }  
+		    }
+		return map;
+	}
+	public String getYeePayFrpId(String paymentType){
+		 String returnValue="";
+		 if(!nullEmptyBlankJudge(paymentType)){
+			 if(PaymentType.CMB.getValue().equals(paymentType)){
+				   returnValue="CMBCHINA-NET-B2C";
+	   		 }else if(PaymentType.BOC.getValue().equals(paymentType)){
+				   returnValue="BOC-NET-B2C";
+	 		 }else if(PaymentType.ICBC.getValue().equals(paymentType)){
+				   returnValue="ICBC-NET-B2C";
+	 		 }else if(PaymentType.CCB.getValue().equals(paymentType)){
+				   returnValue="CCB-NET-B2C";
+	 		 }else if(PaymentType.ABC.getValue().equals(paymentType)){
+				   returnValue="ABC-NET-B2C";
+	 		 }else if(PaymentType.BCOM.getValue().equals(paymentType)){
+				   returnValue="BOCO-NET-B2C";
+	 		 }else if(PaymentType.PSBC.getValue().equals(paymentType)){
+				   returnValue="POST-NET-B2C";
+	 		 }else if(PaymentType.CGB.getValue().equals(paymentType)){
+				   returnValue="GDB-NET-B2C";
+	 		 }else if(PaymentType.SPDB.getValue().equals(paymentType)){
+				   returnValue="SPDB-NET-B2C";
+	 		 }else if(PaymentType.CEB.getValue().equals(paymentType)){
+				   returnValue="CEB-NET-B2C";
+	 		 }else if(PaymentType.PAB.getValue().equals(paymentType)){
+				   returnValue="PINGANBANK-NET";
+			 }else if(PaymentType.BOB.getValue().equals(paymentType)){
+				   returnValue="BCCB-NET-B2C";
+			 } 
+		 }
+		 return returnValue;
+	}
+ 
 }

@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,25 +22,21 @@ import com.alipay.api.internal.util.AlipaySignature;
 
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
 import cn.com.open.openpaas.payservice.app.channel.UnifyPayUtil;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AliOrderProThread;
-import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
+import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
-import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
-import cn.com.open.openpaas.payservice.app.thread.PaySendSmsThread;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
-import cn.com.open.openpaas.payservice.web.api.order.BaseControllerUtil;
 
 
 /**

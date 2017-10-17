@@ -39,6 +39,7 @@ import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.paymax.sign.RSA;
 import cn.com.open.openpaas.payservice.app.channel.service.ChannelRateService;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
+import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
@@ -52,7 +53,6 @@ import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
-import cn.com.open.openpaas.payservice.web.api.order.BaseControllerUtil;
 
 
 /**
