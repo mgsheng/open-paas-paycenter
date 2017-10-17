@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import cn.com.open.openpaas.payservice.app.order.model.PayOrderDetail;
 import cn.com.open.openpaas.payservice.app.order.service.PayOrderDetailService;
-import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 
 @Controller

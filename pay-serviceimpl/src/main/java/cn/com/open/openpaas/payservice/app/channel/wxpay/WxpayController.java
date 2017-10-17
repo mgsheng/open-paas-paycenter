@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.com.open.openpaas.payservice.app.channel.alipay.MD5;
-import cn.com.open.openpaas.payservice.app.tools.BaseControllerUtil;
+import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 public class WxpayController extends BaseControllerUtil {
 	private static final Logger log = LoggerFactory.getLogger(WxpayController.class);
