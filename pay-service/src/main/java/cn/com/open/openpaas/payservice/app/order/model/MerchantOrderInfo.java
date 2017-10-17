@@ -101,11 +101,31 @@ public class MerchantOrderInfo implements Serializable {
 	private String createDate1;
 	private String dealDate1;
 	private String phone;
+	private String buyerCertNo;
+	private String buyerRealName;
+	
+	
 	
 
 	
 	
 	
+	public String getBuyerCertNo() {
+		return buyerCertNo;
+	}
+
+	public void setBuyerCertNo(String buyerCertNo) {
+		this.buyerCertNo = buyerCertNo;
+	}
+
+	public String getBuyerRealName() {
+		return buyerRealName;
+	}
+
+	public void setBuyerRealName(String buyerRealName) {
+		this.buyerRealName = buyerRealName;
+	}
+
 	public String getPhone() {
 		return phone;
 	}
