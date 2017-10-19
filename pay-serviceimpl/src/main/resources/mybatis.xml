@@ -22,6 +22,7 @@
     	<typeAlias alias="PayOrderDetail" type="cn.com.open.openpaas.payservice.app.order.model.PayOrderDetail"/>
     	<typeAlias alias="PayCardInfo" type="cn.com.open.openpaas.payservice.app.order.model.PayCardInfo"/>
     	<typeAlias alias="PayZxptInfo" type="cn.com.open.openpaas.payservice.app.zxpt.model.PayZxptInfo"/>
+    	<typeAlias alias="PayLoanInfo" type="cn.com.open.openpaas.payservice.app.order.model.PayLoanInfo"/>
     </typeAliases>
     <mappers>
         <mapper resource="cc/wdcy/infrastructure/mybatis/DictTradeChannelMapper.xml"/>
@@ -37,5 +38,6 @@
 		<mapper resource="cc/wdcy/infrastructure/mybatis/PayOrderDetailMapper.xml"/>
 		<mapper resource="cc/wdcy/infrastructure/mybatis/PayCardInfoMapper.xml"/>
 		<mapper resource="cc/wdcy/infrastructure/mybatis/PayZxptInfoMapper.xml"/>
+		<mapper resource="cc/wdcy/infrastructure/mybatis/PayLoanInfoMapper.xml"/>
     </mappers>
 </configuration>

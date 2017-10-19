@@ -185,6 +185,7 @@
 								<option value="PAYMAX_H5">拉卡拉-移动支付</option>
 								<option value="EHK_WEIXIN_PAY">易汇金-微信扫码</option>
 								<option value="EHK_ALI_PAY">易汇金-支付宝扫码</option>
+								<option value="EHK_INSTALLMENT_LOAN">易汇金-分期贷款</option>
 								<option value="EHK_BANK">易汇金-收银台</option>
 								<option value="YEEPAY_GW">易宝-收银台</option>
 								<option value="YEEPAY_WEIXIN">易宝-微信扫码</option>
@@ -234,6 +235,7 @@
 								<option value="10016">易宝-微信扫码</option>
 								<option value="10017">易宝-支付宝扫码</option>
 								<option value="10018">易宝-聚合扫码</option>
+								<option value="10020">易汇金-分期贷款</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>

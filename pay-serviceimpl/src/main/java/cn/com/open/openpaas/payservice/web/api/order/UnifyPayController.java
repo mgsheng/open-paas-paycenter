@@ -1276,14 +1276,14 @@ public class UnifyPayController extends BaseControllerUtil{
 							String productDetails=JSONObject.fromObject(map).toString();
 							model.addAttribute("productDetails","["+productDetails+"]");
 							model.addAttribute("id", merchantOrderInfo.getId());
-							model.addAttribute("name", merchantOrderInfo.getBuyerRealName());
+							model.addAttribute("name",URLEncoder.encode(merchantOrderInfo.getBuyerRealName(),"utf-8") );
 							model.addAttribute("idCard", merchantOrderInfo.getBuyerCertNo());
 							model.addAttribute("mobliePhone", merchantOrderInfo.getPhone());
 							model.addAttribute("clientIp", merchantOrderInfo.getIp());
-							model.addAttribute("paymentType", "EHK_ALI_PAY");
+							model.addAttribute("paymentType", "EHK_INSTALLMENT_LOAN");
 							model.addAttribute("merid", merchantOrderInfo.getMerchantId());
 							model.addAttribute("payAmount", amount);
-						    return "redirect:"+payserviceDev.getServer_host()+"ehk/order/pay";
+						    return "redirect:"+payserviceDev.getServer_host()+"ehk/loan/order";
 	            	
 				  }  
 			  }

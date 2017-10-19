@@ -2,6 +2,7 @@ package cn.com.open.openpaas.payservice.app.channel.yeepay.ehking;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +48,7 @@ import com.ehking.sdk.consumerFinance.v_2.entity.ProductDetail;
  * 
  */
 @Controller
-@RequestMapping("/ehk/order/")
+@RequestMapping("/ehk/loan/")
 public class EHKLoanController extends BaseControllerUtil{
 	static final Logger LOGGER = LoggerFactory.getLogger(EHKLoanController.class);
 	 @Autowired
@@ -58,7 +59,7 @@ public class EHKLoanController extends BaseControllerUtil{
 	/**
 	 * 易汇金-分期贷款
 	 */
-	@RequestMapping("loan")
+	@RequestMapping("order")
 	public void loan(HttpServletRequest req, final HttpServletResponse resp,Model model) throws ServletException, IOException {
 		 String id=req.getParameter("id");
 		 String merid=req.getParameter("merid");
@@ -94,7 +95,7 @@ public class EHKLoanController extends BaseControllerUtil{
 //		String orderAmount = req.getParameter("orderAmount").trim();
 //		String notifyUrl = req.getParameter("notifyUrl").trim();
 //		String remark = req.getParameter("remark").trim();
-		String name = req.getParameter("name").trim();
+		String name = URLDecoder.decode(req.getParameter("name").trim(),"UTF-8");
 		String idCard = req.getParameter("idCard").trim();
 		String mobliePhone = req.getParameter("mobliePhone").trim();
 //		String email = req.getParameter("email").trim();

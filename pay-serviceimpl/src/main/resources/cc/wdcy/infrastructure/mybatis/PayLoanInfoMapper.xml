@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.open.openpaas.payservice.app.infrastructure.mybatis.PayLoanInfoRepositoryMyBatis" >
+	<resultMap id="BaseResultMap" type="PayLoanInfo" >
+		<result column="id" property="id"/>
+		<result column="merchant_id" property="merchantId"/>
+		<result column="order_id" property="orderId"/>
+		<result column="order_amount" property="orderAmount"/>
+		<result column="repayment_method" property="repaymentMethod"/>
+		<result column="terms" property="terms"/>
+		<result column="status" property="status"/>
+		<result column="annual_rate" property="annualRate"/>
+		<result column="create_time" property="createTime"/>
+		<result column="complete_time" property="completeTime"/>
+		<result column="due_date" property="dueDate"/>
+		<result column="total_amount" property="totalAmount"/>
+		<result column="estimated_dueInterest" property="estimatedDueInterest"/>
+		<result column="due_principal" property="duePrincipal"/>
+		<result column="over_due_date" property="overDueDate"/>
+		<result column="break_contract_date" property="breakContractDate"/>
+	</resultMap>
+
+	<sql id="Base_Column_List" >
+		 id,merchant_id,order_id,order_amount,repayment_method,terms,status,annual_rate,create_time,complete_time,due_date,total_amount,estimated_dueInterest,due_principal,over_due_date,break_contract_date
+	</sql>
+
+	<sql id="Example_Where_Clause">
+		<where>
+	<if test="id != null" >
+			and id =  #{id}
+		</if>
+		<if test="merchantId != null and merchantId != ''" >
+			and merchant_id =  #{merchantId}
+		</if>
+		<if test="orderId != null and orderId != ''" >
+			and order_id =  #{orderId}
+		</if>
+		<if test="orderAmount != null and orderAmount != ''" >
+			and order_amount =  #{orderAmount}
+		</if>
+		<if test="repaymentMethod != null and repaymentMethod != ''" >
+			and repayment_method =  #{repaymentMethod}
+		</if>
+		<if test="terms != null and terms != ''" >
+			and terms =  #{terms}
+		</if>
+		<if test="status != null and status != ''" >
+			and status =  #{status}
+		</if>
+		<if test="annualRate != null and annualRate != ''" >
+			and annual_rate =  #{annualRate}
+		</if>
+	<if test="createTime != null" >
+			and create_time =  #{createTime}
+		</if>
+	<if test="completeTime != null" >
+			and complete_time =  #{completeTime}
+		</if>
+	<if test="dueDate != null" >
+			and due_date =  #{dueDate}
+		</if>
+	<if test="totalAmount != null" >
+			and total_amount =  #{totalAmount}
+		</if>
+	<if test="estimatedDueInterest != null" >
+			and estimated_dueInterest =  #{estimatedDueInterest}
+		</if>
+	<if test="duePrincipal != null" >
+			and due_principal =  #{duePrincipal}
+		</if>
+	<if test="overDueDate != null" >
+			and over_due_date =  #{overDueDate}
+		</if>
+	<if test="breakContractDate != null" >
+			and break_contract_date =  #{breakContractDate}
+		</if>
+		</where>
+	</sql>
+
+	<insert id="insert" parameterType="Object" >
+				<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+				insert into pay_loan_info (id,merchant_id,order_id,order_amount,repayment_method,terms,status,annual_rate,create_time,complete_time,due_date,total_amount,estimated_dueInterest,due_principal,over_due_date,break_contract_date) values (#{id},#{merchantId},#{orderId},#{orderAmount},#{repaymentMethod},#{terms},#{status},#{annualRate},now(),#{completeTime},#{dueDate},#{totalAmount},#{estimatedDueInterest},#{duePrincipal},#{overDueDate},#{breakContractDate})
+	</insert>
+
+	<update id="update" parameterType="Object" >
+		update pay_loan_info set id = #{id},merchant_id = #{merchantId},order_id = #{orderId},order_amount = #{orderAmount},repayment_method = #{repaymentMethod},terms = #{terms},status = #{status},annual_rate = #{annualRate},complete_time = #{completeTime},due_date = #{dueDate},total_amount = #{totalAmount},estimated_dueInterest = #{estimatedDueInterest},due_principal = #{duePrincipal},over_due_date = #{overDueDate},break_contract_date = #{breakContractDate} where id = #{id}
+	</update>
+
+	<update id="updateBySelective" parameterType="Object" >
+		update pay_loan_info 
+	<set>
+	<if test="id != null">
+		id = #{id},
+	</if>
+	<if test="merchantId != null and merchantId != null">
+		merchant_id = #{merchantId},
+	</if>
+	<if test="orderId != null and orderId != null">
+		order_id = #{orderId},
+	</if>
+	<if test="orderAmount != null and orderAmount != null">
+		order_amount = #{orderAmount},
+	</if>
+	<if test="repaymentMethod != null and repaymentMethod != null">
+		repayment_method = #{repaymentMethod},
+	</if>
+	<if test="terms != null and terms != null">
+		terms = #{terms},
+	</if>
+	<if test="status != null and status != null">
+		status = #{status},
+	</if>
+	<if test="annualRate != null and annualRate != null">
+		annual_rate = #{annualRate},
+	</if>
+	<if test="createTime != null">
+		create_time = #{createTime},
+	</if>
+	<if test="completeTime != null">
+		complete_time = #{completeTime},
+	</if>
+	<if test="dueDate != null">
+		due_date = #{dueDate},
+	</if>
+	<if test="totalAmount != null">
+		total_amount = #{totalAmount},
+	</if>
+	<if test="estimatedDueInterest != null">
+		estimated_dueInterest = #{estimatedDueInterest},
+	</if>
+	<if test="duePrincipal != null">
+		due_principal = #{duePrincipal},
+	</if>
+	<if test="overDueDate != null">
+		over_due_date = #{overDueDate},
+	</if>
+	<if test="breakContractDate != null">
+		break_contract_date = #{breakContractDate},
+	</if>
+	</set> where id = #{id}
+	</update>
+
+	<delete id="deleteById" parameterType="Object">
+		delete from pay_loan_info where id = #{id}
+	</delete>
+
+	<select id="getById"  resultMap="BaseResultMap" parameterType="Object">
+		select <include refid="Base_Column_List" /> from pay_loan_info where id = #{id}
+	</select>
+
+	<select id="findPageCount" resultType="java.lang.Integer"  parameterType="Object">
+		select count(1) from pay_loan_info
+		<include refid="Example_Where_Clause"/>
+	</select>
+
+	<select id="findPageList" resultMap="BaseResultMap"  parameterType="Object">
+		select
+		<include refid="Base_Column_List"/>
+		from pay_loan_info
+		<include refid="Example_Where_Clause"/>
+		<if test="mysqlQueryCondition != null and mysqlQueryCondition != ''" >
+			${mysqlQueryCondition}
+		</if>
+	</select>
+
+	<select id="findBySelective" resultMap="BaseResultMap"  parameterType="Object">
+		select
+		<include refid="Base_Column_List"/>
+		from pay_loan_info
+		<include refid="Example_Where_Clause"/>
+	</select>
+
+</mapper>   
