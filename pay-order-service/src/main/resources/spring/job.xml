@@ -72,7 +72,7 @@
 		<!-- 每隔一个小时执行 更具体时间配置请搜索CronTriggerBean说明  --> 
 		<property name="cronExpression">
 			<!-- <value>0 0 0/1 * * ?</value> -->
-			<value>0 10 1 * * ?</value>
+			<value>0 48 17 * * ?</value>
 		</property>
 	</bean>
 	
