@@ -580,7 +580,7 @@ public class UnifyPayController extends BaseControllerUtil{
 						          }else{
 						        	 payServiceLog.setErrorCode("8");
 						 			 payServiceLog.setStatus("error");
-						 			 String failureMsg=res.get("failureMsg").toString();
+						 			 String failureMsg=URLEncoder.encode(res.get("failureMsg").toString(), "utf-8");
 						 			 String failureCode=res.get("failureCode").toString();
 						 			 payServiceLog.setLogName(PayLogName.PAY_END);
 						 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -847,7 +847,8 @@ public class UnifyPayController extends BaseControllerUtil{
 				          }else{
 				        	 payServiceLog.setErrorCode("8");
 				 			 payServiceLog.setStatus("error");
-				 			 String failureMsg=res.get("failureMsg").toString();
+				 			 
+				 			 String failureMsg=URLEncoder.encode(res.get("failureMsg").toString(), "utf-8");
 				 			 String failureCode=res.get("failureCode").toString();
 				 			 payServiceLog.setLogName(PayLogName.PAY_END);
 				 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -925,7 +926,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			          }else{
 			        	 payServiceLog.setErrorCode("8");
 			 			 payServiceLog.setStatus("error");
-			 			 String failureMsg=res.get("failureMsg").toString();
+			 			 String failureMsg=URLEncoder.encode(res.get("failureMsg").toString(), "utf-8");
 			 			 String failureCode=res.get("failureCode").toString();
 			 			 payServiceLog.setLogName(PayLogName.PAY_END);
 			 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -985,7 +986,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			          }else{
 			        	 payServiceLog.setErrorCode("8");
 			 			 payServiceLog.setStatus("error");
-			 			 String failureMsg=res.get("failureMsg").toString();
+			 			 String failureMsg=URLEncoder.encode(res.get("failureMsg").toString(), "utf-8");
 			 			 String failureCode=res.get("failureCode").toString();
 			 			 payServiceLog.setLogName(PayLogName.PAY_END);
 			 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
@@ -1056,7 +1057,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			          }else{
 			        	 payServiceLog.setErrorCode("8");
 			 			 payServiceLog.setStatus("error");
-			 			 String failureMsg=res.get("failureMsg").toString();
+			 			 String failureMsg=URLEncoder.encode(res.get("failureMsg").toString(), "utf-8");
 			 			 String failureCode=res.get("failureCode").toString();
 			 			 payServiceLog.setLogName(PayLogName.PAY_END);
 			 			 UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
