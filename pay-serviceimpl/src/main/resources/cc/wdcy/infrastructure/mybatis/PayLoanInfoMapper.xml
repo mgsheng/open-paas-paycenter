@@ -18,6 +18,7 @@
 		<result column="due_principal" property="duePrincipal"/>
 		<result column="over_due_date" property="overDueDate"/>
 		<result column="break_contract_date" property="breakContractDate"/>
+		<result column="app_id" property="appId"/>
 	</resultMap>
 
 	<sql id="Base_Column_List" >
@@ -81,7 +82,7 @@
 				<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
-				insert into pay_loan_info (id,merchant_id,order_id,order_amount,repayment_method,terms,status,annual_rate,create_time,complete_time,due_date,total_amount,estimated_dueInterest,due_principal,over_due_date,break_contract_date) values (#{id},#{merchantId},#{orderId},#{orderAmount},#{repaymentMethod},#{terms},#{status},#{annualRate},now(),#{completeTime},#{dueDate},#{totalAmount},#{estimatedDueInterest},#{duePrincipal},#{overDueDate},#{breakContractDate})
+				insert into pay_loan_info (id,merchant_id,order_id,order_amount,repayment_method,terms,status,annual_rate,create_time,complete_time,due_date,total_amount,estimated_dueInterest,due_principal,over_due_date,break_contract_date,app_id) values (#{id},#{merchantId},#{orderId},#{orderAmount},#{repaymentMethod},#{terms},#{status},#{annualRate},now(),#{completeTime},#{dueDate},#{totalAmount},#{estimatedDueInterest},#{duePrincipal},#{overDueDate},#{breakContractDate},#{appId})
 	</insert>
 
 	<update id="update" parameterType="Object" >
@@ -148,6 +149,9 @@
 
 	<select id="getById"  resultMap="BaseResultMap" parameterType="Object">
 		select <include refid="Base_Column_List" /> from pay_loan_info where id = #{id}
+	</select>
+	<select id="findByOrderId"  resultMap="BaseResultMap" parameterType="PayLoanInfo">
+		select <include refid="Base_Column_List" /> from pay_loan_info where order_id = #{orderId}
 	</select>
 
 	<select id="findPageCount" resultType="java.lang.Integer"  parameterType="Object">

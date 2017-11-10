@@ -59,7 +59,9 @@ import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
+import cn.com.open.openpaas.payservice.app.order.model.PayLoanInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.order.service.PayLoanInfoService;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
@@ -92,7 +94,8 @@ public class UnifyPayController extends BaseControllerUtil{
 	 private PayserviceDev payserviceDev;
 	 @Autowired
 	 private UserAccountBalanceService userAccountBalanceService;
-	 
+	 @Autowired
+	 private PayLoanInfoService payLoanInfoService;
 	 // 支付宝当面付2.0服务
 	 private static AlipayTradeService tradeService;
 /*	 @Autowired
@@ -212,7 +215,6 @@ public class UnifyPayController extends BaseControllerUtil{
    		sParaTemp.put("goodsName", goodsName);
    		sParaTemp.put("totalFee", totalFee);
    		sParaTemp.put("merchantId", merchantId);
-   		sParaTemp.put("businessType", merchantId);
    		sParaTemp.put("userName", userName);
    		sParaTemp.put("merchantId", merchantId);
    		sParaTemp.put("goodsId", goodsId);
@@ -351,6 +353,7 @@ public class UnifyPayController extends BaseControllerUtil{
 			}
 			merchantOrderInfo.setBusinessType(Integer.parseInt(businessType));
 			merchantOrderInfoService.saveMerchantOrderInfo(merchantOrderInfo);
+			
 		}
 		//sendSms(merchantOrderInfo,merchantInfo,kafkaProducer);
 		  //用户账户创

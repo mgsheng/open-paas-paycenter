@@ -23,6 +23,24 @@ public class PayLoanInfoServiceImpl implements PayLoanInfoService{
 			return false;
 		}
 	}
+
+	@Override
+	public PayLoanInfo findByOrderId(String id) {
+		// TODO Auto-generated method stub
+		return payLoanInfoRepository.findByOrderId(id);
+	}
+
+	@Override
+	public Boolean updateStatus(Integer id, Integer status) {
+		// TODO Auto-generated method stub
+		try {
+			payLoanInfoRepository.updateStatus(id, status);
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return false;
+		}
+	}
 	
 
 }

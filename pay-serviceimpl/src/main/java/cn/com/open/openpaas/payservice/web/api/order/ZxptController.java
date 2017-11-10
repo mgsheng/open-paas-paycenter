@@ -500,7 +500,6 @@ public class ZxptController extends BaseControllerUtil{
 		thirdScoreRequest.setScoreChannel("2");
 		thirdScoreRequest.setScoreMethod("1");
 		thirdScoreRequest.setMobile(payZxptInfo.getPhone());
-		thirdScoreRequest.setCardNo("62222744552211111112");
 		thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
 		thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
 		thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));

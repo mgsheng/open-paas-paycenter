@@ -8,7 +8,16 @@ public class PayLoanInfo  implements Serializable {
 	 *易汇金分期贷款 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Integer id; //主键	private String merchantId; //商户号	private String orderId; //订单id	private String orderAmount; //分期金额	private String repaymentMethod; //还款方式	private String terms; //分期期数	private String status; //放款状态	private String annualRate; //年利率	private Date createTime; //创建时间	private Date completeTime; //完成时间	private Date dueDate; //应还款日期	private Double totalAmount; //还款总金额	private Double estimatedDueInterest; //还款利息	private Double duePrincipal; //还款本金	private Date overDueDate; //逾期日期	private Date breakContractDate; //违约日期  
+	private Integer id; //主键	private String merchantId; //商户号	private String orderId; //订单id	private String orderAmount; //分期金额	private String repaymentMethod; //还款方式	private String terms; //分期期数	private Integer status; //放款状态	private String annualRate; //年利率	private Date createTime; //创建时间	private Date completeTime; //完成时间	private Date dueDate; //应还款日期	private Double totalAmount; //还款总金额	private Double estimatedDueInterest; //还款利息	private Double duePrincipal; //还款本金	private Date overDueDate; //逾期日期	private Date breakContractDate; //违约日期  
+	private Integer appId;
+	
+	
+	public Integer getAppId() {
+		return appId;
+	}
+	public void setAppId(Integer appId) {
+		this.appId = appId;
+	}
 	public Integer getId() {
 		return id;
 	}
@@ -45,10 +54,11 @@ public class PayLoanInfo  implements Serializable {
 	public void setTerms(String terms) {
 		this.terms = terms;
 	}
-	public String getStatus() {
+	
+	public Integer getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 	public String getAnnualRate() {

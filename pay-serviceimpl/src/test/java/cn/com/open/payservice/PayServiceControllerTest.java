@@ -763,14 +763,12 @@ public class PayServiceControllerTest extends BaseTest {
 			};
 			if("1".equals(type)){
 				unifyPayController.unifyPay(request, response,model);
-			//	unifyPayController.skipPayIndex(request, model);
+			//	unifyPayController.skipPayIndex(request, model);qswsxzs
 				unifyPayController.errorPayChannel(request, model,"1","2","3","4");
 			}else if("3".equals(type)){
 				userOrderQueryController.unifyPay(request, response, model);
 				userOrderQueryController.getOrderQuery(request, response, model);
 				userOrderQueryController.fileDownlond(request, response, model);
-
-				
 			}else if("4".equals(type)){
 				orderManualSendController.orderManualSend(request, response);
 			}else if("5".equals(type)){

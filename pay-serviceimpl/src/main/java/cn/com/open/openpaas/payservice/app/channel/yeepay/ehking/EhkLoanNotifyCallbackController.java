@@ -34,8 +34,11 @@ import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
 import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
+import cn.com.open.openpaas.payservice.app.order.model.PayLoanInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
+import cn.com.open.openpaas.payservice.app.order.service.PayLoanInfoService;
 import cn.com.open.openpaas.payservice.app.record.service.UserSerialRecordService;
+import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
@@ -56,6 +59,12 @@ public class EhkLoanNotifyCallbackController extends BaseControllerUtil {
 	 private PayserviceDev payserviceDev;
 	 @Autowired
 	 private ChannelRateService channelRateService;
+	 @Autowired
+	 private PayLoanInfoService payLoanInfoService;
+	 @Autowired
+	 private UserSerialRecordService userSerialRecordService;
+	 @Autowired
+	 private UserAccountBalanceService userAccountBalanceService;
 	/**
 	 * 支付宝订单回调接口
 	 * @param request
@@ -83,9 +92,7 @@ public class EhkLoanNotifyCallbackController extends BaseControllerUtil {
  	       	     String orderAmount=jsonObject.getString("orderAmount");
  	       	     String status=jsonObject.getString("status");
  	       	     String repaymentStatus=jsonObject.getString("repaymentStatus");
- 	       	     if(!nullEmptyBlankJudge(status)&&status.equals("LOANED")){
- 	       	    	 
- 	       	     }
+ 	       	    
  	       	     
  	       	    //log.info("requestId========="+out_trade_no);
  	       	    //log.info("serialNumber========="+serialNumber);
@@ -124,13 +131,27 @@ public class EhkLoanNotifyCallbackController extends BaseControllerUtil {
  					int payStatus=merchantOrderInfo.getPayStatus();
  					if(payStatus!=1){
  	 					log.info("-----------------------callBack  update-start-----------------------------------------");
- 	 					   
  	 					if(!nullEmptyBlankJudge(status)&&status.equals("LOANED")){
  	 						merchantOrderInfo.setPayStatus(1);
- 	 						if(!nullEmptyBlankJudge(repaymentStatus)&&repaymentStatus.equals("REPAYMENTED")){
- 	 							merchantOrderInfoService.updatePayInfo(PayStatus.SUCCESS.getType(),String.valueOf(merchantOrderInfo.getId()),PayStatus.REPAYMENTED.getValue());	
- 	 						}if(!nullEmptyBlankJudge(repaymentStatus)&&repaymentStatus.equals("IN_REPAYMENT")){
- 	 							merchantOrderInfoService.updatePayInfo(PayStatus.SUCCESS.getType(),String.valueOf(merchantOrderInfo.getId()),PayStatus.IN_REPAYMENT.getValue());	
+ 	 						//保存用户贷款详细信息
+ 	 						PayLoanInfo payLoanInfo=payLoanInfoService.findByOrderId(out_trade_no);
+ 	 						if(payLoanInfo!=null&&!nullEmptyBlankJudge(repaymentStatus)&&repaymentStatus.equals("REPAYMENTED")){
+ 	 							payLoanInfoService.updateStatus(payLoanInfo.getId(),3);
+ 	 						}else if(payLoanInfo!=null&&!nullEmptyBlankJudge(repaymentStatus)&&repaymentStatus.equals("IN_REPAYMENT")){
+ 	 							payLoanInfoService.updateStatus(payLoanInfo.getId(),2);
+ 	 						}else if(payLoanInfo==null) {
+ 	 							payLoanInfo=new PayLoanInfo();
+ 	 							payLoanInfo.setAnnualRate(jsonObject.getString("annualRate"));
+ 	 							payLoanInfo.setTerms(String.valueOf(jsonObject.getInteger("terms")));
+ 	 							payLoanInfo.setStatus(2);
+ 	 							payLoanInfo.setMerchantId(String.valueOf(merchantOrderInfo.getMerchantId()));
+ 	 							payLoanInfo.setOrderId(out_trade_no);
+ 	 							payLoanInfo.setDuePrincipal(merchantOrderInfo.getOrderAmount());
+ 	 							if(!nullEmptyBlankJudge(jsonObject.getString("completeDateTime"))){
+ 	 								payLoanInfo.setCompleteTime(DateTools.stringtoDate(jsonObject.getString("completeDateTime"), DateTools.FORMAT_ONE));
+ 	 							}
+ 	 							payLoanInfo.setCreateTime(new Date());
+ 	 							payLoanInfoService.savePayLoanInfo(payLoanInfo);
  	 						}
  	 					}else{
  	 					  merchantOrderInfo.setPayStatus(2);	
@@ -139,6 +160,10 @@ public class EhkLoanNotifyCallbackController extends BaseControllerUtil {
  	 	    	          payServiceLog.setStatus(status);
  	 	    	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
  	 					}
+ 	 					//创建账户
+ 	 					if(merchantOrderInfo!=null&&!nullEmptyBlankJudge(String.valueOf(merchantOrderInfo.getBusinessType()))&&"2".equals(String.valueOf(merchantOrderInfo.getBusinessType()))){
+ 						String	rechargeMsg=UnifyPayUtil.recordAndBalance(Double.parseDouble(orderAmount)*100,merchantOrderInfo,userSerialRecordService,userAccountBalanceService,payserviceDev);
+ 						}
  	 					merchantOrderInfo.setAmount(Double.parseDouble(orderAmount)/100);
  	 					merchantOrderInfo.setDealDate(new Date());
  	 					merchantOrderInfo.setPayCharge(0.0);
