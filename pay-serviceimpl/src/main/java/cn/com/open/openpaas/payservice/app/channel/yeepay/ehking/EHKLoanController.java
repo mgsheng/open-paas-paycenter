@@ -110,7 +110,7 @@ public class EHKLoanController extends BaseControllerUtil{
 				.setNotifyUrl(notifyUrl);
 			//	.setRemark(remark);
 
-		String jsonPDStr = req.getParameter("productDetails");
+		String jsonPDStr = URLDecoder.decode(req.getParameter("productDetails").trim(),"UTF-8");
 		ProductDetail productDetail = new ProductDetail();
 		//String jsonPDStr = req.getParameter("hiddenPD").trim();
 

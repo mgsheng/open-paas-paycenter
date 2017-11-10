@@ -1278,7 +1278,7 @@ public class UnifyPayController extends BaseControllerUtil{
 							String amount =StringTool.getStringValue(merchantOrderInfo.getOrderAmount().doubleValue()*100);
 							map.put("amount",amount);
 							String productDetails=JSONObject.fromObject(map).toString();
-							model.addAttribute("productDetails","["+productDetails+"]");
+							model.addAttribute("productDetails",URLEncoder.encode("["+productDetails+"]","utf-8"));
 							model.addAttribute("id", merchantOrderInfo.getId());
 							model.addAttribute("name",URLEncoder.encode(merchantOrderInfo.getBuyerRealName(),"utf-8") );
 							model.addAttribute("idCard", merchantOrderInfo.getBuyerCertNo());
