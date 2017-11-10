@@ -52,6 +52,7 @@ public class ChargeUtil {
 	    try {
             Charge charge = Charge.create(chargeMap,private_key,secret_key,paymax_public_key);
             returnValue=  printResult(charge);
+            System.out.println(returnValue+"===returnValue");
         } catch (AuthorizationException e) {
             e.printStackTrace();
         } catch (IOException e) {

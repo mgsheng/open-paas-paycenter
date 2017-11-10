@@ -1456,13 +1456,13 @@ public class UnifyPayController extends BaseControllerUtil{
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000007.getType())){
     		errorMsg=PayError.U1000007.getValue();
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000008.getType())){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
+    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+errorMsg;
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000009.getType())){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
+    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+errorMsg;
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000010.getType())){
     		errorMsg=PayError.U1000010.getValue();
     	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals(PayError.U1000011.getType())){
-    		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+URLDecoder.decode(errorMsg, "UTF-8");
+    		errorMsg="获取二维码失败错误码:"+failureCode+"--错误原因："+errorMsg;
     	}
     	model.addAttribute("outTradeNo", outTradeNo);
     	model.addAttribute("errorMsg", errorMsg);
