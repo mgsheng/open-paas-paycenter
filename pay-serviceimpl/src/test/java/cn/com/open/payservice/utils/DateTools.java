@@ -1,4 +1,4 @@
-package cn.com.open.payservice;
+package cn.com.open.payservice.utils;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -95,7 +95,7 @@ public class DateTools {
     /**
      * 把日期转换为字符串
      */
-    public static String dateToString(java.util.Date date, String format) {
+    public static String dateToString(Date date, String format) {
         String result = "";
         SimpleDateFormat formater = new SimpleDateFormat(format);
         try {

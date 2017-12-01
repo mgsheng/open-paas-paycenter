@@ -1,12 +1,8 @@
 package cn.com.open.payservice.signature;
 
+import cn.com.open.payservice.utils.DateTools;
+import cn.com.open.payservice.utils.StringTools;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import cn.com.open.openpaas.payservice.app.tools.DateUtils;
-import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
-import cn.com.open.openpaas.payservice.app.tools.StringTool;
-import cn.com.open.payservice.DateTools;
-import cn.com.open.payservice.StringTools;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -18,14 +14,14 @@ import java.util.TreeMap;
 public class Signature {
 
     public static MockHttpServletRequest getSignatureRequest(SortedMap<Object,Object> sParaTemp) {
-    	 String appId="aa98545f11cb49418f18a2ea9ed9873c";
+    	 String appId="aa98545f11cb49418f18a2ea9ed9873c00";
     	 String key="945fa18c666a4e0097809f6727bc6997";//9ebada02676c4ccbbbdaeae27362896b
   	  	 String timestamp="2017-07-11T12:00:00Z";
   	  	 String signatureNonce="";
 	   	 if(key!=null){
 	   	//	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
-	   		timestamp=DateTools.getSolrDate(new Date());
-	   		signatureNonce=StringTools.getRandom(100,1);
+	   		timestamp= DateTools.getSolrDate(new Date());
+	   		signatureNonce= StringTools.getRandom(100,1);
 	   		sParaTemp.put("appId",appId);//1
 	   		sParaTemp.put("timestamp", timestamp);
 	   		sParaTemp.put("signatureNonce", signatureNonce);
@@ -59,7 +55,30 @@ public class Signature {
        return request;
    }
 
-    public static SortedMap<Object,Object>  createSigns(SortedMap<Object,Object> parameters){
+
+	public static MockHttpServletRequest getSignatureByAppId(SortedMap<Object,Object> sParaTemp) {
+	//	String appId="aa98545f11cb49418f18a2ea9ed9873c";
+		String key="945fa18c666a4e0097809f6727bc6997";//9ebada02676c4ccbbbdaeae27362896b
+		String timestamp="2017-07-11T12:00:00Z";
+		String signatureNonce="";
+		if(key!=null){
+			//	SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+			timestamp=DateTools.getSolrDate(new Date());
+			signatureNonce=StringTools.getRandom(100,1);
+			sParaTemp.put("appId",sParaTemp.get("appId"));//1
+			sParaTemp.put("timestamp", timestamp);
+			sParaTemp.put("signatureNonce", signatureNonce);
+		}
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		request.addParameter("appId", sParaTemp.get("appId").toString());
+		//	 request.addParameter("signature", signature);
+		request.addParameter("timestamp", timestamp);
+		request.addParameter("signatureNonce", signatureNonce);
+		return request;
+	}
+
+
+	public static SortedMap<Object,Object>  createSigns(SortedMap<Object,Object> parameters){
    		SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
    		String timestamp=DateTools.getSolrDate(new Date());
    		String signatureNonce=StringTools.getRandom(100,1);
@@ -87,6 +106,17 @@ public class Signature {
 		}
 		 String temp_params = sb.toString();  
 		return sb.toString().substring(0, temp_params.length()-1);
+	}
+    
+    
+    
+    public static MockHttpServletRequest sParaTemp(SortedMap<Object,Object> sParaTemp ){
+		MockHttpServletRequest request = new MockHttpServletRequest();
+		Set<Object>  sss=sParaTemp.keySet();
+		for (Object object : sss) {
+			request.addParameter((String)object,(String)sParaTemp.get(object));
+		}
+		return request;
 	}
     
 }
