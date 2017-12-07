@@ -49,7 +49,7 @@ public class UserOrderQueryControllerTest extends BaseTest {
 			signature=HMacSha1.HmacSHA1Encrypt(params, "945fa18c666a4e0097809f6727bc6997");
 	   		request.addParameter("outTradeNo","10");
 	   		request.addParameter("signature",signature);
-	   		unifyPayQuery(request,"4");
+	   		unifyPayQuery(request,"1");
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -73,10 +73,28 @@ public class UserOrderQueryControllerTest extends BaseTest {
 		}
 	}
 
+	@Test
+	public void fileDownlond() throws Exception{//文件下载
+		try {
+			SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
+			sParaTemp.put("appId","aa98545f11cb49418f18a2ea9ed9873c");
+			MockHttpServletRequest request = Signature.getSignatureByAppId(sParaTemp);
+			String signature="";
+			sParaTemp.put("acDate","acDate");
+			sParaTemp.put("merchantId","10001");
+			String params=createSign(sParaTemp);
+			request = Signature.sParaTemp(sParaTemp);
+			signature=HMacSha1.HmacSHA1Encrypt(params, "945fa18c666a4e0097809f6727bc6997");
+			request.addParameter("signature",signature);
+			unifyPayQuery(request,"3");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 
 	@Test
-	public void getOrderQuer2() throws Exception{//获取订单信息
+	public void fileDownlond2() throws Exception{//获取订单信息
 		try {
 			SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 			sParaTemp.put("appId","aa98545f11cb49418f18a2ea9ed9873c");
@@ -97,7 +115,7 @@ public class UserOrderQueryControllerTest extends BaseTest {
 
 
 	@Test
-	public void getOrderQuer3() throws Exception{//认证失败
+	public void fileDownlond3() throws Exception{//认证失败
 		try {
 			SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
 			sParaTemp.put("appId","aa98545f11cb49418f18a2ea9ed9873c");
@@ -153,12 +171,12 @@ public class UserOrderQueryControllerTest extends BaseTest {
 		if("1".equals(type)){
 			userOrderQueryController.unifyPay(request, response, model);
 		}else if("2".equals(type)) {
-			userOrderQueryController.getOrderQuery(request, response, model);
+		//	userOrderQueryController.getOrderQuery(request, response, model);
 		}else if("3".equals(type)) {
 			userOrderQueryController.fileDownlond(request, response, model);
 		}else{
 			userOrderQueryController.unifyPay(request, response, model);
-			userOrderQueryController.getOrderQuery(request, response, model);
+		//	userOrderQueryController.getOrderQuery(request, response, model);
 			userOrderQueryController.fileDownlond(request, response, model);
 		}
 

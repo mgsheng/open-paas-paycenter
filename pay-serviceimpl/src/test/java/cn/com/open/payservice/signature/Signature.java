@@ -14,7 +14,8 @@ import java.util.TreeMap;
 public class Signature {
 
     public static MockHttpServletRequest getSignatureRequest(SortedMap<Object,Object> sParaTemp) {
-    	 String appId="aa98545f11cb49418f18a2ea9ed9873c00";
+    //	 String appId="aa98545f11cb49418f18a2ea9ed9873c00";
+		 String appId="aa98545f11cb49418f18a2ea9ed9873c";
     	 String key="945fa18c666a4e0097809f6727bc6997";//9ebada02676c4ccbbbdaeae27362896b
   	  	 String timestamp="2017-07-11T12:00:00Z";
   	  	 String signatureNonce="";

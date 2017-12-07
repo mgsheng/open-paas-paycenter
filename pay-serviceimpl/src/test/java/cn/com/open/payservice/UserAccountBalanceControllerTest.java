@@ -25,10 +25,8 @@ public class UserAccountBalanceControllerTest extends BaseTest {
 
     @Test
 	public void userAccountBalance() throws Exception{
-		System.out.println("==========");
 		try {
 			SortedMap<Object,Object> sParaTemp = new TreeMap<Object,Object>();
-
 			String appId="1";
 			String key="945fa18c666a4e0097809f6727bc6997";//9ebada02676c4ccbbbdaeae27362896b
 			String timestamp="2017-07-11T12:00:00Z";
@@ -41,16 +39,11 @@ public class UserAccountBalanceControllerTest extends BaseTest {
 				sParaTemp.put("signatureNonce", signatureNonce);
 			}
 			MockHttpServletRequest request = new MockHttpServletRequest();
-			request.addParameter("appId", appId);
-			request.addParameter("timestamp", timestamp);
-			request.addParameter("signatureNonce", signatureNonce);
 			String signature="";
 			sParaTemp.put("userId", "2334");
 			String params=createSign(sParaTemp);
 			signature=HMacSha1.HmacSHA1Encrypt(params, key);
 			request.addParameter("signature",signature);
-			request.addParameter("userId","2334");
-
 			unifyPayQuery(request);
 		} catch (Exception e) {
 			e.printStackTrace();

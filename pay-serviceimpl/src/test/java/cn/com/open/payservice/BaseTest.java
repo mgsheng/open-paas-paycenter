@@ -1,5 +1,5 @@
 package cn.com.open.payservice;
-
+import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,12 +9,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath*:/spring/*.xml", "file:src/main/webapp/WEB-INF/wdcy-servlet.xml"})
 @Transactional
-public class BaseTest extends BaseControllerUtil{
+public class BaseTest extends BaseControllerUtil {
 
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
