@@ -15,7 +15,7 @@
     	<!--表单开始-->
         <div class="login_form">
         	<h4 class="login_form_title">选择支付渠道</h4>
-            <form id="inputForm" action="${pageContext.request.contextPath}/alipay/selectPayChannel" method="post">
+            <form id="inputForm" action="${pageContext.request.contextPath}/pay/redirect/selectPayChannel" method="post">
             	<input type="hidden" name="orderId" value='<c:out value="${orderId}"/>' />
             	<input type="hidden" name="paymentType" value='<c:out value="${paymentType}"/>' />
                 <select name="dictTradeChannel">

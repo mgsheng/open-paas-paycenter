@@ -158,6 +158,15 @@ public interface PayLogName {
 	//易宝扫码回调开始
 	public static String PAYMOBILE_NOTIFY_END = "paymobile_notify_end";
 	
+	//易宝POS回调开始
+	public static String YPOS_RETURN_START = "ypos_return_start";
+	//易宝POS回调结束
+	public static String YPOS_RETURN_END = "ypos_return_end";
+	//易宝POS異步回調开始
+	public static String YPOS_NOTIFY_START = "ypos_notify_start";
+	//易宝POS異步回调结束
+	public static String YPOS_NOTIFY_END = "ypos_notify_end";
+	
 	
 	
 	

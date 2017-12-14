@@ -12,4 +12,5 @@ public interface UserAccountBalanceService {
 	UserAccountBalance findByUserId(String userId);
 	UserAccountBalance getBalanceInfo(String sourceId,Integer appId);
 	public Boolean updateBalanceInfo(UserAccountBalance userAccountBalance);
+	public void saveAccountBalance(String sourceId,Integer appId,String payKey,String userName);
 }

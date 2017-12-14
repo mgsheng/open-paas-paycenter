@@ -109,7 +109,9 @@ public class EHKLoanController extends BaseControllerUtil{
 		builder.setRequestId(requestId).setAmount(orderAmount)
 				.setNotifyUrl(notifyUrl);
 			//	.setRemark(remark);
-
+		//merchantId:900003283#orderCurrency:CNY#paymentModeCode:SCANCODE-ALI_PAY-P2P#clientIp:127.0.0.1#timeout:10
+		
+		
 		String jsonPDStr = URLDecoder.decode(req.getParameter("productDetails").trim(),"UTF-8");
 		ProductDetail productDetail = new ProductDetail();
 		//String jsonPDStr = req.getParameter("hiddenPD").trim();

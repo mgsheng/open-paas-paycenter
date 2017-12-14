@@ -98,14 +98,33 @@ public class AmountUtil {
         }    
         return amLong.toString();    
     }    
-        
+    /**
+     * 
+     * @param sourceDate要转换的数字
+     * @param formatLength转换后字符串的长度
+     * @return
+     */
+    public static String frontCompWithZore(String sourceDate,int formatLength){
+    	int data=Integer.parseInt(sourceDate);
+    	String newString = String.format("%0"+formatLength+"d", data);  
+    	return newString;
+    } 
+    /**
+     * 
+     * @param sourceDate要转换的数字
+     * @param formatLength转换后字符串的长度
+     * @return
+     */
+    public static String frontCompWithNull(String sourceDate,int formatLength){
+    	    for(int i=0;i<=formatLength;i++){
+    	    	sourceDate+=" ";
+    	    }
+    	 return sourceDate;
+    }
+   
     public static void main(String[] args) {    
-        System.out.println(AmountUtil.changeY2F("1.33"));    
-        try {  
-            System.out.println(AmountUtil.changeF2Y("1"));  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        }    
+    	String newString = String.format("%011d", 100);   
+    	System.out.println("newString === "+newString);
             
     }    
 }    
