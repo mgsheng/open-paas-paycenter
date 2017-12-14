@@ -191,6 +191,7 @@
 								<option value="YEEPAY_WEIXIN">易宝-微信扫码</option>
 								<option value="YEEPAY_ALI">易宝-支付宝扫码</option>
 								<option value="YEEPAY_ALL">易宝-聚合扫码</option>
+								<option value="YEEPAY_POS">易宝-POS支付</option>
 								<option value="UPOP">银联</option>
 								<option value="CMB">招商银行</option>
 								<option value="ICBC">工商银行</option>
@@ -236,6 +237,7 @@
 								<option value="10017">易宝-支付宝扫码</option>
 								<option value="10018">易宝-聚合扫码</option>
 								<option value="10020">易汇金-分期贷款</option>
+								<option value="10021">易宝-POS支付</option>
 							</select>
                             <p class="help-block">支付渠道:10001-支付宝渠道   10002-微信渠道</p>
                         </div>
