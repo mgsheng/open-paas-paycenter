@@ -217,6 +217,7 @@
             <property name="merchant_account" value="${merchant_account}"></property>
             <property name="merchant_private_key"  value="${merchant_private_key}"></property>
             <property name="yeepay_public_key"  value="${yeepay_public_key}"></property>
+            <property name="yeepay_plug_url"  value="${yeepay_plug_url}"></property>
            
         </bean>
 </beans>

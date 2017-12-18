@@ -55,8 +55,15 @@ public class PayserviceDev {
 	private String merchant_private_key;
 	private String merchant_account;
 	private String yeepay_public_key;
+	private String yeepay_plug_url;
 	
 	
+	public String getYeepay_plug_url() {
+		return yeepay_plug_url;
+	}
+	public void setYeepay_plug_url(String yeepay_plug_url) {
+		this.yeepay_plug_url = yeepay_plug_url;
+	}
 	public String getMerchant_private_key() {
 		return merchant_private_key;
 	}

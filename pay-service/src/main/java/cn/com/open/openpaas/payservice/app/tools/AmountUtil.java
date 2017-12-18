@@ -116,15 +116,20 @@ public class AmountUtil {
      * @return
      */
     public static String frontCompWithNull(String sourceDate,int formatLength){
-    	    for(int i=0;i<=formatLength;i++){
-    	    	sourceDate+=" ";
-    	    }
-    	 return sourceDate;
+    	if(sourceDate.length()<formatLength){
+    		int leng=formatLength-sourceDate.length();
+    		 for(int i=0;i<leng;i++){
+    			 sourceDate+=" ";
+     	    }
+    	}
+    	 return sourceDate;	   
     }
    
     public static void main(String[] args) {    
-    	String newString = String.format("%011d", 100);   
-    	System.out.println("newString === "+newString);
+//    	String newString = String.format("%011d", 100);   
+//    	System.out.println("newString === "+newString);
+    	String aa="000000     ";
+    	System.out.println(aa.length());
             
     }    
 }    

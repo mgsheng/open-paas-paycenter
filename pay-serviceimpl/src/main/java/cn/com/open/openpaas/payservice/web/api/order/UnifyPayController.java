@@ -78,7 +78,7 @@ import net.sf.json.JSONObject;
 
 
 /**
- * BANK_CARD-B2C(易慧金)
+ * 统一支付接口
  */
 @Controller
 @RequestMapping("/alipay/")
@@ -1228,7 +1228,7 @@ public class UnifyPayController extends BaseControllerUtil{
 					  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.YEEPAY_POS.getValue());
 					   
 					  if(dictTradeChannels!=null){
-						//amount_length:12#commpany_length:11#terminal_length:8#orderId_length:30#p1_MerId:10011578619#commpany:000000#merchantId:000000000000000#terminal:00000000#comNo:1#baudrate:115200#timeout:120
+						//merchant_length:15#amount_length:12#commpany_length:11#terminal_length:8#yeepay_orderId:00000000002#p1_MerId:10011578619#commpany:000000#merchantId:000000000000000#terminal:00000000#comNo:1#baudrate:115200#timeout:120
 						  String other= dictTradeChannels.getOther();
 						  Map<String, String> others = new HashMap<String, String>();
 						  others=getPartner(other);
@@ -1236,7 +1236,6 @@ public class UnifyPayController extends BaseControllerUtil{
 							 String commpany=AmountUtil.frontCompWithNull(others.get("commpany"), Integer.parseInt(others.get("commpany_length")));
 							 String merchantCode=AmountUtil.frontCompWithNull(others.get("merchantId"), Integer.parseInt(others.get("merchant_length")));
 							 String terminal=AmountUtil.frontCompWithNull(others.get("terminal"), Integer.parseInt(others.get("terminal_length")));
-							 String payId=AmountUtil.frontCompWithNull(newId, Integer.parseInt(others.get("terminal_length")));
 							 String comNo=others.get("comNo");
 							 String baudrate=others.get("baudrate");
 							 String timeout=others.get("timeout");
@@ -1245,15 +1244,14 @@ public class UnifyPayController extends BaseControllerUtil{
 				    		 model.addAttribute("merchantCode", merchantCode);
 				    		 model.addAttribute("terminal", terminal);
 				    		 model.addAttribute("orderId", newId);
-				    		 model.addAttribute("payId", payId);
+				    		 model.addAttribute("payId", others.get("yeepay_orderId"));
 				    		 model.addAttribute("comNo", comNo);
 				    		 model.addAttribute("baudrate", baudrate);
 				    		 model.addAttribute("timeout", timeout);
-				    		 model.addAttribute("backUrl", merchantInfo.getReturnUrl());
-				    		 model.addAttribute("notifyUrl", merchantInfo.getNotifyUrl());
 				    		 payServiceLog.setLogName(PayLogName.PAY_END);
 				             UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-			         		 return "pay/payRedirect"; 
+			         		 //return "pay/payPosRedirect"; 
+				             return "pay/NLHostcomm3";
 					  }else{
 				    		 payServiceLog.setErrorCode("9");
 				 			 payServiceLog.setStatus("error");
