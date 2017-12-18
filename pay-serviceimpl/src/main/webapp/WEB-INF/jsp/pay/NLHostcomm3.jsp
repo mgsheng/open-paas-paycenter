@@ -1,6 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>Ò×±¦Ö§¸¶²å¼şµ÷ÊÔDemo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>æ˜“å®æ”¯ä»˜æ’ä»¶è°ƒè¯•Demo</title>
 
 <embed id="NPCom" type="application/x-yibao-plugin" width=0 height=0>
 <OBJECT id="NLHostcomm" classid="clsid:CC872CC4-13DD-4E17-8A85-67FD420767E4" width=0 height=0
@@ -10,7 +12,8 @@
     .btn { width:100px; height:30px; }
 </style>
     
-<SCRIPT>
+<script type="text/javascript">
+window.onload = install();
 function install() {
     var bInstall = true;
     var name = navigator.appName;
@@ -27,11 +30,11 @@ function install() {
         }
     } else {
         bInstall = false;
-        alert("ä¯ÀÀÆ÷ÄÚºË²»Ö§³Ö¸Ã²å¼ş£¡");
+        alert("æµè§ˆå™¨å†…æ ¸ä¸æ”¯æŒè¯¥æ’ä»¶ï¼");
     }
     if(bInstall) {
-        if (confirm("Äú»¹Ã»ÓĞ°²×°²å¼ş\n\nÏÖÔÚÏÂÔØ°²×°Âğ£¿")) {
-            location = "yibaoSetup.msi";
+        if (confirm("æ‚¨è¿˜æ²¡æœ‰å®‰è£…æ’ä»¶\n\nç°åœ¨ä¸‹è½½å®‰è£…å—ï¼Ÿ")) {
+            location = "${pageContext.request.contextPath}/download/yeepay/plug";
         }
     }
 }
@@ -41,10 +44,90 @@ function getobj(){
     if( typeof(obj.Req) == "undefined" ) {
         obj = document.getElementById("NPCom");
         if( typeof(obj.Req) == "undefined" ) {
-            throw "¸Ãä¯ÀÀÆ÷²»Ö§³Ö²å¼ş£¬½¨ÒéÊ¹ÓÃIE»ò360ä¯ÀÀÆ÷£¡";
+            throw "è¯¥æµè§ˆå™¨ä¸æ”¯æŒæ’ä»¶ï¼Œå»ºè®®ä½¿ç”¨IEæˆ–360æµè§ˆå™¨ï¼";
         }
     }
     return obj;
+}
+
+
+
+function isInvaild(obj, len) {
+    if(obj.length != len) {
+        document.getElementById("result").innerHTML = obj.name + " è¾“å…¥é•¿åº¦ä¸å¯¹!";
+        obj.focus();
+        return true;
+    }
+    return false;
+}
+
+function DoTrans(cmd) {
+   var totalFee='${totalFee}';
+    var commpany='${commpany}';
+    var merchantCode='${merchantCode}';
+    var terminal='${terminal}';
+    var payId='${payId}';
+    var comNo='${comNo}';
+    var baudrate='${baudrate}';
+    var timeout='${timeout}';
+    var orderId='${orderId}';
+    var space = "                                                                                                    ";
+	var buf="", bufr="", i, str;
+    var errMsg = "æ­£åœ¨äº¤æ˜“ä¸­ è¯·èµ–å¿ƒç­‰å¾…... ..."
+    var tcom;
+    
+    try {
+        tcom = getobj();
+    } catch(e) {
+        alert(e);
+        return false;
+    }
+    //æ•°æ®æœ‰æ•ˆæ€§åˆ¤æ–­
+    if (isInvaild(commpany, 11) 
+        || isInvaild(merchantCode, 15)
+        || isInvaild(terminal, 8)
+        || isInvaild(totalFee, 12) ) {
+        return false;
+    }
+
+	//é€šè®¯å‚æ•°ï¼ˆ100ï¼‰
+	str = comNo + "|"
+    str += baudrate + "|172.17.253.197|28000|"
+    str += timeout  + "|172.17.253.197|29000";
+    buf = str + space.substr(0, 100 - str.length);
+    //str = document.all.COM.value + "|"
+    //str += document.all.BAUDRATE.value + "|172.17.253.197|28000|"
+    //str += document.all.TIMEOUT.value  + "|172.17.253.197|29000";
+    buf = str + space.substr(0, 100 - str.length);
+	//äº¤æ˜“æŒ‡ä»¤ï¼ˆ2ï¼‰
+    buf += cmd;
+	//äº¤æ˜“æ•°æ®ï¼ˆ11+15+8+40+30+12+40+80
+	
+	buf += commpany;
+	buf += merchantCode;
+	buf += terminal;
+    str = orderId;
+	buf += str + space.substr(0, 40 - str.length);
+    str = payId;
+	buf += str + space.substr(0, 30 - str.length);
+	buf += totalFee;
+    str = "";
+	buf += str + space.substr(0, 40 - str.length);
+    str = "";
+	buf += str + space.substr(0, 80 - str.length);
+    try{
+        tcom.Req = buf;	
+        errMsg = tcom.POSPChang();
+        bufr = tcom.GetResponData();
+    } catch(e) {
+        document.getElementById("result").innerHTML = "æ§ä»¶è¿è¡Œå¤±è´¥, " + e;
+        return false;
+    }
+    
+    document.getElementById("result").innerHTML = errMsg;
+    setValue(document.all.RETURNCODE, bufr, 2);
+    document.getElementById("inputForm").submit();
+    return true;
 }
 
 var curBufPos = 0;
@@ -58,190 +141,21 @@ function setValue(control, buf, len, reset) {
     curBufPos += len;
     control.value = tmp;
 }
-
-function isInvaild(obj, len) {
-    if(obj.value.length != len) {
-        document.getElementById("result").innerHTML = obj.name + " ÊäÈë³¤¶È²»¶Ô!";
-        obj.focus();
-        return true;
-    }
-    return false;
-}
-
-function DoTrans(cmd) {
-    var space = "                                                                                                    ";
-	var buf="", bufr="", i, str;
-    var errMsg = "ÕıÔÚ½»Ò×ÖĞ ÇëÀµĞÄµÈ´ı... ..."
-    var tcom;
-    
-    try {
-        tcom = getobj();
-    } catch(e) {
-        alert(e);
-        return false;
-    }
-    
-    //Êı¾İÓĞĞ§ĞÔÅĞ¶Ï
-    if (isInvaild(document.all.COMMPANYID, 11) 
-        || isInvaild(document.all.MERCHANTID, 15)
-        || isInvaild(document.all.TERMINALID, 8)
-        || isInvaild(document.all.AMOUNT, 12) ) {
-        return false;
-    }
-
-	//Í¨Ñ¶²ÎÊı£¨100£©
-    str = document.all.COM.value + "|"
-    str += document.all.BAUDRATE.value + "|172.17.253.197|28000|"
-    str += document.all.TIMEOUT.value  + "|172.17.253.197|29000";
-    buf = str + space.substr(0, 100 - str.length);
-	//½»Ò×Ö¸Áî£¨2£©
-    buf += cmd;
-	//½»Ò×Êı¾İ£¨11+15+8+40+30+12+40+80
-	buf += document.all.COMMPANYID.value;
-	buf += document.all.MERCHANTID.value;
-	buf += document.all.TERMINALID.value;
-    str = document.all.TRANSCODE.value;
-	buf += str + space.substr(0, 40 - str.length);
-    str = document.all.YIBAOORDER.value;
-	buf += str + space.substr(0, 30 - str.length);
-	buf += document.all.AMOUNT.value;
-    str = document.all.SENDDATA.value;
-	buf += str + space.substr(0, 40 - str.length);
-    str = document.all.ADDDATA.value;
-	buf += str + space.substr(0, 80 - str.length);
-
-    try{
-        tcom.Req = buf;	
-        errMsg = tcom.POSPChang();
-        bufr = tcom.GetResponData();
-    } catch(e) {
-        document.getElementById("result").innerHTML = "¿Ø¼şÔËĞĞÊ§°Ü, " + e;
-        return false;
-    }
-    
-    document.getElementById("result").innerHTML = errMsg;
-
-    setValue(document.all.COMMPANYIDR, bufr, 11, true);
-    setValue(document.all.MERCHANTIDR, bufr, 15);
-    setValue(document.all.TERMINALIDR, bufr, 8);
-    setValue(document.all.TRANSCODER, bufr, 40);
-    setValue(document.all.YIBAOORDERR, bufr, 30);
-    setValue(document.all.AMOUNTR, bufr, 12);
-    setValue(document.all.RETURNCODE, bufr, 2);
-    setValue(document.all.PAN, bufr, 19);
-    setValue(document.all.DATE, bufr, 8);
-    setValue(document.all.TIME, bufr, 6);
-    setValue(document.all.TRACE, bufr, 6);
-    setValue(document.all.REFERENCENO, bufr, 12);
-    setValue(document.all.PAYWAY, bufr, 1);
-    setValue(document.all.SENDDATAR, bufr, 40);
-    setValue(document.all.ADDDATAR, bufr, 80);
-    setValue(document.all.REFUNDINF, bufr, 500);
-
-    return true;
-}
-</SCRIPT>
+</script>
 </head>
   <body onLoad="install()">
-    <div id="result" style="color:#F00;">ÔÚ´Ë´¦ÏÔÊ¾Ã¿´ÎÖ´ĞĞ¹ı³ÌÖĞ·µ»ØµÄ´íÎóĞÅÏ¢</div><br>
-    <form>
+    <div id="result" style="color:#F00;">åœ¨æ­¤å¤„æ˜¾ç¤ºæ¯æ¬¡æ‰§è¡Œè¿‡ç¨‹ä¸­è¿”å›çš„é”™è¯¯ä¿¡æ¯</div><br>
+    <form id="inputForm" action="${pageContext.request.contextPath}/yeepay/pos/request" method="post">
      	<table >
-        <tr><td>Ñ¡Ôñ´®¿Ú:</td>
-    		<td><select name="COM">
-                <option value="1" selected>COM1</option>
-                <option value="2">COM2</option>
-                <option value="3">COM3</option>
-                <option value="4">COM4</option>
-                <option value="5">COM5</option>
-                <option value="6">COM6</option>
-                <option value="7">COM7</option>
-                <option value="8">COM8</option>
-                <option value="9">COM9</option>
-                <option value="10">COM10</option>
-                </select>
-                Ñ¡Ôñ²¨ÌØÂÊ:
-                <select name="BAUDRATE">
-                <option value="9600">9600</option>
-                <option value="115200" selected>115200</option>
-                </select>
-                ³¬Ê±Ê±¼ä:<input type="text" name="TIMEOUT" value="120" size=5>
+     	<tr><td>
+            <input type="button" class="btn" value="ç­¾åˆ°" onClick=DoTrans("00")>
+            <input type="button" class="btn" value="ç¼´è´¹" onClick=DoTrans("01")>
+            <input type="button" class="btn" value="è¡¥ç™»" onClick=DoTrans("02")>
             </td></tr>
-   		<tr><td>¹«Ë¾´úÂë:</td>
-    		<td><input type="text" name="COMMPANYID" value="000000     " size=50 maxlength="11"> ¶¨³¤11Î»£¬²»×ãĞèÊÖ¶¯ºó²¹¿Õ¸ñ</td></tr>
-   		<tr><td>ÉÌ»§±àºÅ:</td>
-    		<td><input type="text" name="MERCHANTID" value="000000000000000" size=50 maxlength="15"> ¶¨³¤15Î»£¬²»×ãĞèÊÖ¶¯ºó²¹¿Õ¸ñ</td></tr>
-   		<tr><td>ÖÕ¶Ë±àºÅ:</td>
-    		<td><input type="text" name="TERMINALID" value="00000000" size=50 maxlength="8"> ¶¨³¤ 8Î»£¬²»×ãĞèÊÖ¶¯ºó²¹¿Õ¸ñ</td></tr>
-   		<tr><td>¶©µ¥ºÅ:</td>
-    		<td><input type="text" name="TRANSCODE" value="000000000001" size=50 maxlength="40"> ×î³¤40Î»</td></tr>
-        <tr><td>Ò×±¦¶©µ¥:</td>
-    		<td><input type="text" name="YIBAOORDER" value="00000000002" size=50 maxlength="30"> ×î³¤30Î»</td></tr>
-   		<tr><td>½ğ¶î:</td>
-    		<td><input type="text" name="AMOUNT" value="000000000001" size=50 maxlength="12"> ¶¨³¤12Î»£¬²»×ãĞèÊÖ¶¯ºó²¹¿Õ¸ñ</td></tr>
-    	<tr><td> Ô­Êı¾İ:</td>
-    		<td><input type="text" name="SENDDATA" value="" size=50 maxlength="40"> ×î³¤40Î»£¬²»Ö§³ÖÖĞÎÄÊı¾İ</td></tr>
-   		<tr><td>¸½¼ÓÊı¾İ:</td>
-    		<td><input type="text" name="ADDDATA" value="" size=50  maxlength="80"> ×î³¤80Î»£¬Ö§³ÖÖĞÎÄÊı¾İ</td></tr>
- 		<tr><td></td><td>
-            <input type="button" class="btn" value="Ç©µ½" onClick=DoTrans("00")>
-            <input type="button" class="btn" value="½É·Ñ" onClick=DoTrans("01")>
-            <input type="button" class="btn" value="²¹µÇ" onClick=DoTrans("02")>
-            <input type="button" class="btn" value="½áËã" onClick=DoTrans("03")>
-            <input type="button" class="btn" value="Óà¶î" onClick=DoTrans("04")></td></tr>
-        <tr><td></td><td>
-            <input type="button" class="btn" value="TMS" onClick=DoTrans("TS")>
-            <input type="button" class="btn" value="¶©µ¥³·Ïú" onClick=DoTrans("31")>
-            <input type="button" class="btn" value="¶©µ¥²éÑ¯" onClick=DoTrans("35")>
-            <input type="button" class="btn" value="ÍË»õ" onClick=DoTrans("10")>
-            <input type="button" class="btn" value="ÉÌ¼ÒÉ¨ÂëÖ§¸¶" onClick=DoTrans("11")></td></tr>
-        <tr><td></td><td>
-            <input type="button" class="btn" value="ÓÃ»§É¨ÂëÖ§¸¶" onClick=DoTrans("12")>
-            <input type="button" class="btn" value="ÒøÁªÉ¨Âë" onClick=DoTrans("13")>
-            <input type="button" class="btn" value="É¨Âë¶©µ¥²éÑ¯" onClick=DoTrans("14")>
-            <input type="button" class="btn" value="É¨Âë¶©µ¥ÍË»õ" onClick=DoTrans("15")>
-            <input type="button" class="btn" value="É¨ÂëÍË»õ²éÑ¯" onClick=DoTrans("16")></td></tr>
- 	</table> 
- 
- 	<table><tr><td>--------------------------------------------------------------------------</td></table>
+ 	   </table> 
 
- 	<table>
-   		<tr><td>¹«Ë¾´úÂë:</td>
-    		<td><input type="text" name="COMMPANYIDR" value="" size=50></td></tr>
-   		<tr><td>ÉÌ»§±àºÅ:</td>
-    		<td><input type="text" name="MERCHANTIDR" value="" size=50></td></tr>
-   		<tr><td>ÖÕ¶Ë±àºÅ:</td>
-    		<td><input type="text" name="TERMINALIDR" value="" size=50></td></tr>
-   		<tr><td>¶©µ¥ºÅ:</td>
-    		<td><input type="text" name="TRANSCODER" value="" size=50></td></tr>
-        <tr><td>Ò×±¦¶©µ¥:</td>
-    		<td><input type="text" name="YIBAOORDERR" value="" size=50></td></tr>
-   		<tr><td>½ğ¶î:</td>
-    		<td><input type="text" name="AMOUNTR" value="" size=50></td></tr>
-    		<tr><td>·µ»ØÂë:</td>
-    		<td><input type="text" name="RETURNCODE" value="" size=50></td></tr>
-   		<tr><td>¿¨ºÅ:</td>
-    		<td><input type="text" name="PAN" value="" size=50></td></tr>
-   		<tr><td>½»Ò×ÈÕÆÚ:</td>
-    		<td><input type="text" name="DATE" value="" size=50></td></tr>
-    		<tr><td>½»Ò×Ê±¼ä:</td>
-    		<td><input type="text" name="TIME" value="" size=50></td></tr>
-   		<tr><td>Á÷Ë®ºÅ:</td>
-    		<td><input type="text" name="TRACE" value="" size=50></td></tr>
-   		<tr><td>²Î¿¼ºÅ:</td>
-    		<td><input type="text" name="REFERENCENO" value="" size=50></td></tr>
-        <tr><td>Ö§¸¶ÇşµÀ:</td>
-    		<td><input type="text" name="PAYWAY" value="" size=50></td>
-            <td>¡°1¡±Î¢ĞÅ£¬¡°2¡±Ö§¸¶±¦£¬¡°3¡±ÒøÁª£¬¡°4¡±ÆäËû</td></tr>
-     	<tr><td>Ô­Êı¾İ:</td>
-    		<td><input type="text" name="SENDDATAR" value="" size=50></td></tr>
-   		<tr><td>¸½¼ÓÊı¾İ:</td>
-    		<td><input type="text" name="ADDDATAR" value="" size=50></td></tr>
-        <tr><td>ÍË»õĞÅÏ¢:</td>
-    		<td><textarea style="width:100%;" name="REFUNDINF" value="" clos="100" rows=3></textarea></td>
-            <td>×î³¤500×Ö½Ú£¬¸ñÊ½£ºlen(3) + data1 + "|" + ... + "|" + dataN<br>
-            data: ½ø¶È(1) + Ê±¼ä(14£¬yyyyMMddHHmmss) + ½ğ¶î(12£¬000000000001)<br>
-            ½ø¶È: 1(Ìá½»ÍË¿îÖĞ)¡¢2(ÍË¿î´¦ÀíÖĞ)¡¢3(ÍË¿î³É¹¦)¡¢4(ÍË¿îÒÑÈ¡Ïû)</td></tr>
-    	</table>
+ 	<input type="hidden" name="RETURNCODE" value="" size=50>
+ 	<input type="hidden" name="orderId" value="${orderId}" size=50>
 	 </form>
   </body>
 </html>
