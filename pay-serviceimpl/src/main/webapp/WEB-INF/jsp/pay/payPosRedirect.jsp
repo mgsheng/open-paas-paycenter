@@ -3,6 +3,11 @@
 <html>
  <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
 <title>易宝支付插件调试Demo</title>
 
 <embed id="NPCom" type="application/x-yibao-plugin" width=0 height=0>
@@ -13,8 +18,9 @@
     .btn { width:100px; height:30px; }
 </style>
     
-<SCRIPT>
+<script type="text/javascript">
 function install() {
+     alert("aaa");
     var bInstall = true;
     var name = navigator.appName;
     if(name == "Netscape") {
@@ -37,6 +43,7 @@ function install() {
             location = "yibaoSetup.msi";
         }
     }
+    DoTrans("00");
 }
 
 function getobj(){
@@ -79,7 +86,7 @@ function isInvaild(obj, len) {
 }
 
 function DoTrans(cmd) {
-
+    alert(cmd)
     var totalFee=${totalFee};
     var commpany=${commpany};
     var merchantCode=${merchantCode};
@@ -150,13 +157,13 @@ function DoTrans(cmd) {
     window.location.href=backUrl+"?orderId="+orderId; 
     return true;
 }
-</SCRIPT>
+</script>
 </head>
   <body onLoad="install()">
     <div id="result" style="color:#F00;">在此处显示每次执行过程中返回的错误信息</div><br>
     <form id="inputForm" action="${pageContext.request.contextPath}/yeepay/pos/request" method="post">
-    <input type="text" name="RETURNCODE" value="" size=50>
-    <input type="text" name="orderId" value="${orderId}" size=50>
+    <input type="hidden" name="RETURNCODE" value="" size=50>
+    <input type="hidden" name="orderId" value="${orderId}" size=50>
     </form>
   </body>
 </html>

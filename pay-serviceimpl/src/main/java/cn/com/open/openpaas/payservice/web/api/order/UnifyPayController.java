@@ -1240,6 +1240,7 @@ public class UnifyPayController extends BaseControllerUtil{
 							 String baudrate=others.get("baudrate");
 							 String timeout=others.get("timeout");
 							 model.addAttribute("totalFee", totalFee);
+							 model.addAttribute("orderAmount", merchantOrderInfo.getOrderAmount());
 				    		 model.addAttribute("commpany", commpany);
 				    		 model.addAttribute("merchantCode", merchantCode);
 				    		 model.addAttribute("terminal", terminal);
@@ -1251,7 +1252,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				    		 payServiceLog.setLogName(PayLogName.PAY_END);
 				             UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 			         		 //return "pay/payPosRedirect"; 
-				             return "pay/NLHostcomm3";
+				             return "pay/NLHostcomm5";
 					  }else{
 				    		 payServiceLog.setErrorCode("9");
 				 			 payServiceLog.setStatus("error");

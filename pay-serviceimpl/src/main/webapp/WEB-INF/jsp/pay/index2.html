@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>易宝-pos支付</title>
+    <style>
+        html,body{
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background: #e5e5e5;
+        }
+        .full-height{
+            height: 100px;
+            width: 100%;
+        }
+        .header{
+            background: #ffffff;
+            position: absolute;
+            top: 0px;
+            z-index: 10;
+        }
+        .header img{
+            margin-left: 13%;
+        }
+        .footer{
+            background: #282828;
+            position: absolute;
+            bottom: 0px;
+            display: table;
+        }
+        .footer p{
+            margin: 0;
+            padding: 0;
+            color: #fff;
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .content{
+            height: 100%;
+            width: 100%;
+        }
+        .top{
+            height: 550px;
+            background: #eff7f9;
+            background:-webkit-gradient(linear, 0 0, 0 bottom, from(#eff7f9), to(#ffffff));
+            background:-moz-linear-gradient(top, #eff7f9, #ffffff);
+            width: 100%;
+        }
+        .center{
+            position: absolute;
+            width: 76%;
+            background: #fff;
+            left: 12%;
+            height: 100%;
+            top: 0;
+        }
+        .center form{
+            position: relative;
+            top: 200px;
+        }
+        .center form table{
+            margin: auto;
+        }
+        .bottom-button{
+            text-align: center;
+            margin-top: 60px;
+        }
+        .input{
+            height: 30px;
+            width: 330px;
+            padding-left: 10px!important;
+            font-size: 18px;
+        }
+        .sure{
+            background: #2eb6aa;
+        }
+        .pay{
+            background: #069bf7;
+        }
+        .input-button{
+            border: none;
+            padding: 10px 40px;
+            color: #fff;
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <div class="full-height header">
+            <img src="${pageContext.request.contextPath}/images/pay.jpg" alt="jpg"/>
+            <!-- <img src="pay.jpg" alt="pay"> -->
+        </div>
+        <div class="content" style="position: relative;">
+            <div class="top"></div>
+            <div class="center">
+                <form action="#">
+                    <div>
+                        <table cellspacing="10">
+                            <tr >
+                                <td align="right" style="font-size: 16px;">订单号：</td>
+                                <td><input class="input" type="text" value="999999"></td>
+                            </tr>
+                            <tr>
+                                <td align="right" style="font-size: 16px;">金额：</td>
+                                <td><input class="input" type="text" value="555645648"></td>
+                            </tr>
+                        </table>
+                        <div class="bottom-button">
+                            <input type="button" value="确认交易" class="input-button sure">
+                            <input type="button" value="提交支付" class="input-button pay">
+                        </div>
+                        <div class="bottom-button">
+                            <p>
+                                <span style="color: #2eb6aa;">确认交易：</span>当刷卡成功扣费后，返回信息提示“缴费不成功”时，
+                                <br>可以点击此按钮进行缴费状态查询。
+                            </p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="full-height footer">
+            <p>版权所有：奥鹏教育Copyright ©2013-2015 open.com.cn All rights reserved</p>
+        </div>
+    </div>
+</body>
+</html>
