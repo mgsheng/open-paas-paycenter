@@ -1,58 +1,5 @@
 package cn.com.open.openpaas.payservice.app.channel.paymax.model;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.lang.reflect.Field;
-import java.net.UnknownHostException;
-import java.nio.charset.Charset;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLHandshakeException;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
-import org.apache.http.NoHttpResponseException;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.config.SocketConfig;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.alibaba.fastjson.JSON;
-
 import cn.com.open.openpaas.payservice.app.channel.paymax.config.PaymaxConfig;
 import cn.com.open.openpaas.payservice.app.channel.paymax.config.SignConfig;
 import cn.com.open.openpaas.payservice.app.channel.paymax.exception.AuthorizationException;
@@ -62,10 +9,47 @@ import cn.com.open.openpaas.payservice.app.channel.paymax.sign.HttpRequestWrappe
 import cn.com.open.openpaas.payservice.app.channel.paymax.sign.RSA;
 import cn.com.open.openpaas.payservice.app.channel.paymax.sign.Request;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.params.CoreConnectionPNames;
+import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLContext;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.*;
+
 /**
  * Created by xiaowei.wang on 2016/4/26.
  */
-public abstract class Paymax extends PaymaxBase {
+public abstract class Paymax2 extends PaymaxBase {
 
     private static String HEADER_KEY_NONCE = "nonce";
     private static String HEADER_KEY_TIMESTAMP = "timestamp";
@@ -74,17 +58,9 @@ public abstract class Paymax extends PaymaxBase {
     private static String RESPONSE_CODE = "code";
     private static String RESPONSE_DATA = "data";
     private static int VALID_RESPONSE_TTL=2*60*1000;//合法响应时间:2分钟内
-    private static Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
-	private final static int CONNECT_TIMEOUT = 4000;// 连接超时毫秒
-	private final static int SOCKET_TIMEOUT = 10000;// 传输超时毫秒
-	private final static int REQUESTCONNECT_TIMEOUT = 3000;// 获取请求超时毫秒
-	private final static int CONNECT_TOTAL = 200;// 最大连接数
-	private final static int CONNECT_ROUTE = 20;// 每个路由基础的连接数
-	private final static String ENCODE_CHARSET = "utf-8";// 响应报文解码字符集
-	private final static String RESP_CONTENT = "通信失败";
-	private static PoolingHttpClientConnectionManager connManager = null;
-	private static CloseableHttpClient httpClient = null;
 
+
+    private static CloseableHttpClient httpsClient = null;
 
     static class AnyTrustStrategy implements TrustStrategy {
 
@@ -97,60 +73,25 @@ public abstract class Paymax extends PaymaxBase {
 
     static {
         try {
-    		ConnectionSocketFactory plainsf = PlainConnectionSocketFactory.getSocketFactory();
-    		LayeredConnectionSocketFactory sslsf = createSSLConnSocketFactory();
-    		Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
-    				.register("http", plainsf).register("https", sslsf).build();
-    		connManager = new PoolingHttpClientConnectionManager(registry);
-    		// 将最大连接数增加到200
-    		connManager.setMaxTotal(CONNECT_TOTAL);
-    		// 将每个路由基础的连接增加到20
-    		connManager.setDefaultMaxPerRoute(CONNECT_ROUTE);
-    		// 可用空闲连接过期时间,重用空闲连接时会先检查是否空闲时间超过这个时间，如果超过，释放socket重新建立
-    		connManager.setValidateAfterInactivity(30000);
-    		// 设置socket超时时间
-    		SocketConfig socketConfig = SocketConfig.custom().setSoTimeout(SOCKET_TIMEOUT).build();
-    		connManager.setDefaultSocketConfig(socketConfig);
-    		RequestConfig requestConfig = RequestConfig.custom().setConnectionRequestTimeout(REQUESTCONNECT_TIMEOUT)
-    				.setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
-    		HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
-    			public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
-    				if (executionCount >= 3) {// 如果已经重试了3次，就放弃
-    					return false;
-    				}
-    				if (exception instanceof NoHttpResponseException) {// 如果服务器丢掉了连接，那么就重试
-    					return true;
-    				}
-    				if (exception instanceof SSLHandshakeException) {// 不要重试SSL握手异常
-    					return false;
-    				}
-    				if (exception instanceof InterruptedIOException) {// 超时
-    					return true;
-    				}
-    				if (exception instanceof UnknownHostException) {// 目标服务器不可达
-    					return false;
-    				}
-    				if (exception instanceof ConnectTimeoutException) {// 连接被拒绝
-    					return false;
-    				}
-    				if (exception instanceof SSLException) {// ssl握手异常
-    					return false;
-    				}
-    				HttpClientContext clientContext = HttpClientContext.adapt(context);
-    				HttpRequest request = clientContext.getRequest();
-    				// 如果请求是幂等的，就再次尝试
-    				if (!(request instanceof HttpEntityEnclosingRequest)) {
-    					return true;
-    				}
-    				return false;
-    			}
-    		};
-    		httpClient = HttpClients.custom().setConnectionManager(connManager).setDefaultRequestConfig(requestConfig)
-    				.setRetryHandler(httpRequestRetryHandler).build();
-    		if (connManager != null && connManager.getTotalStats() != null) {
-    			logger.info("now client pool " + connManager.getTotalStats().toString());
-    		}
-    	} catch (Exception e) {
+            RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.create();
+            ConnectionSocketFactory plainSF = new PlainConnectionSocketFactory();
+            registryBuilder.register("http", plainSF);
+
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            SSLContext sslContext =
+                    SSLContexts.custom().useTLS().loadTrustMaterial(trustStore, new AnyTrustStrategy()).build();
+            LayeredConnectionSocketFactory sslSF =
+                    new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+            registryBuilder.register("https", sslSF);
+
+            Registry<ConnectionSocketFactory> registry = registryBuilder.build();
+
+            PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(registry);
+            connManager.setMaxTotal(500);
+            httpsClient = HttpClientBuilder.create().setConnectionManager(connManager).build();
+        
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -246,12 +187,13 @@ public abstract class Paymax extends PaymaxBase {
         httpPost.addHeader(PaymaxConfig.SIGN,sign);
         CloseableHttpResponse response =null;
         try {
-        	response= httpClient.execute(httpPost);
+        	response= httpsClient.execute(httpPost);
        
          result = verifyData(response,paymax_public_key);
         } finally {
             response.close();
             httpPost.releaseConnection();
+            httpsClient.getConnectionManager().shutdown();
         }
 
         return result;
@@ -345,12 +287,13 @@ public abstract class Paymax extends PaymaxBase {
 
         httpGet.addHeader(PaymaxConfig.SIGN,sign);
 
-        CloseableHttpResponse response = httpClient.execute(httpGet);
+        CloseableHttpResponse response = httpsClient.execute(httpGet);
         try {
             result = verifyData(response,paymax_public_key);
         } finally {
             response.close();
             httpGet.releaseConnection();
+            httpsClient.getConnectionManager().shutdown();
         }
 
         return result;
@@ -424,37 +367,5 @@ public abstract class Paymax extends PaymaxBase {
        // return RSA.sign(toSignString, SignConfig.PRIVATE_KEY);
         return RSA.sign(toSignString, private_key);
     }
- // SSL的socket工厂创建
- 	private static SSLConnectionSocketFactory createSSLConnSocketFactory() {
- 		SSLConnectionSocketFactory sslsf = null;
- 		// 创建TrustManager() 用于解决javax.net.ssl.SSLPeerUnverifiedException: peer
- 		// not authenticated
- 		X509TrustManager trustManager = new X509TrustManager() {
- 			@Override
- 			public X509Certificate[] getAcceptedIssuers() {
- 				return null;
- 			}
 
- 			@Override
- 			public void checkClientTrusted(X509Certificate[] arg0, String authType) throws CertificateException {
- 				// TODO Auto-generated method stub
- 			}
-
- 			@Override
- 			public void checkServerTrusted(X509Certificate[] arg0, String authType) throws CertificateException {
- 				// TODO Auto-generated method stub
- 			}
- 		};
- 		SSLContext sslContext;
- 		try {
- 			sslContext = SSLContext.getInstance(SSLConnectionSocketFactory.TLS);
- 			sslContext.init(null, new TrustManager[] { (TrustManager) trustManager }, null);
- 			// 创建SSLSocketFactory , // 不校验域名 ,取代以前验证规则
- 			sslsf = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
- 		} catch (Exception e) {
- 			// TODO Auto-generated catch block
- 			e.printStackTrace();
- 		}
- 		return sslsf;
- 	}
 }

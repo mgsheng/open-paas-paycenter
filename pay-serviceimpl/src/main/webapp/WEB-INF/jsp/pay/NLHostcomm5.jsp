@@ -95,6 +95,7 @@ window.onload = install();
 function install() {
     var bInstall = true;
     var name = navigator.appName;
+    var returnCode="";
     if(name == "Netscape") {
         var plugin = navigator.plugins["npyibao plugin"];
         if(plugin) {
@@ -148,7 +149,7 @@ function DoTrans(cmd) {
     var comNo='${comNo}';
     var baudrate='${baudrate}';
     var timeout='${timeout}';
-    var orderId='${orderId}';
+    var orderId='${payOrderId}';
     var space = "                                                                                                    ";
 	var buf="", bufr="", i, str;
     var errMsg = "正在交易中 请赖心等待... ..."
@@ -193,6 +194,7 @@ function DoTrans(cmd) {
 	buf += str + space.substr(0, 40 - str.length);
     str = "";
 	buf += str + space.substr(0, 80 - str.length);
+	alert(buf);
     try{
         tcom.Req = buf;	
         errMsg = tcom.POSPChang();
@@ -201,14 +203,16 @@ function DoTrans(cmd) {
         document.getElementById("result").innerHTML = "控件运行失败, " + e;
         return false;
     }
-    
     document.getElementById("result").innerHTML = errMsg;
     setValue(document.all.RETURNCODE, bufr, 2);
+    setValue(document.all.TRACE, bufr, 6);
+    setValue(document.all.TRANSCODER, bufr, 40);
     document.getElementById("inputForm").submit();
     return true;
 }
 
 var curBufPos = 0;
+
 function setValue(control, buf, len, reset) {
     if(reset) {
         curBufPos = 0;
@@ -217,6 +221,7 @@ function setValue(control, buf, len, reset) {
     if(end > buf.length) end = buf.length;
     var tmp = buf.substring(curBufPos, end);
     curBufPos += len;
+    returnCode=tmp;
     control.value = tmp;
 }
 </script>
@@ -232,11 +237,18 @@ function setValue(control, buf, len, reset) {
             <div class="center">
                 <form id="inputForm" action="${pageContext.request.contextPath}/yeepay/pos/request" method="post">
                     <div>
+                    
                         <table cellspacing="10">
+                        <tr> <td colspan="2">
+                        <div id="result" style="color:#F00;"></div><br>
+                        
+                        </td></tr>
                             <tr height="40px">
                                 <td align="right" style="font-size: 16px;">订单号：</td>
                                 <td ><input class="input" name="orderId" type="text" value="${orderId}" readonly= "true" >
                                 <input type="hidden" name="RETURNCODE" value="" size=50>
+                                 <input type="hidden" name="TRANSCODER" value="" size=50>
+                                 <input type="hidden" name="TRACE" value="" size=50>
                                 </td>
                             </tr>
                             <tr height="40px">

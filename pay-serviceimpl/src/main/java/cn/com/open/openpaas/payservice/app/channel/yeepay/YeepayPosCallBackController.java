@@ -72,16 +72,17 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
 		//商户订单号
 		long startTime = System.currentTimeMillis();
 		String out_trade_no = request.getParameter("orderId");
+		String trace = request.getParameter("TRACE");
+		String TRANSCODER = request.getParameter("TRANSCODER");
 		String backMsg="";
 		//交易状态
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
-		
 		log.info("ali callback out_trade_no========="+out_trade_no);
 		
 		 PayServiceLog payServiceLog=new PayServiceLog();
 		 payServiceLog.setOrderId(out_trade_no);
 		 
-		if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()!=1){
+		if(merchantOrderInfo!=null){
 		//添加日志
 		 payServiceLog.setAmount(String.valueOf(merchantOrderInfo.getOrderAmount()*100));
 		 payServiceLog.setAppId(merchantOrderInfo.getAppId());
@@ -100,16 +101,14 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
         String returnUrl=merchantOrderInfo.getReturnUrl();
 		MerchantInfo merchantInfo = null;
 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
-		if(nullEmptyBlankJudge(returnUrl)&&merchantInfo!=null){
-			returnUrl=merchantInfo.getReturnUrl();
-       	    Double payCharge=0.0;
-	        payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
-			String buf="";
-			SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
+		if(nullEmptyBlankJudge(returnUrl)&&merchantInfo!=null&&nullEmptyBlankJudge(TRANSCODER)&&TRANSCODER.equals("00")){
+		    String buf="";
+		    returnUrl=merchantInfo.getReturnUrl();
+		    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
 			sParaTemp.put("orderId", merchantOrderInfo.getId());
-			sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
-			sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
-			sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
+	        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
+	        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
+	        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
 			sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
 			sParaTemp.put("feeType", "CNY");
 			sParaTemp.put("guid", merchantOrderInfo.getGuid());
@@ -120,81 +119,46 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
 			sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
 			sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
 			sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
-			sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf(payCharge));
+			sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf(merchantOrderInfo.getPayCharge()));
 			sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
-			String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
-			sParaTemp.put("secret", mySign);
-			buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
-			model.addAttribute("res", buf);
-			payServiceLog.setLogName(PayLogName.ALIPAY_RETURN_END);
-			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-     		return "pay/payMaxRedirect"; 
-		
-		}
+		    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
+		    sParaTemp.put("secret", mySign);
+		    //异步通知接口
+				int notifyStatus=merchantOrderInfo.getNotifyStatus();
+				int payStatus=merchantOrderInfo.getPayStatus();
+				Double payCharge=0.0;
+				payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
+				if(payStatus!=1){
+				log.info("-----------------------callBack  update-start-----------------------------------------");
+					merchantOrderInfo.setPayStatus(1);
+					merchantOrderInfo.setPayAmount(merchantOrderInfo.getOrderAmount()-payCharge);
+					merchantOrderInfo.setAmount(merchantOrderInfo.getOrderAmount());
+					merchantOrderInfo.setPayCharge(payCharge);
+					merchantOrderInfo.setDealDate(new Date());
+					merchantOrderInfo.setPayOrderId(trace);
+					merchantOrderInfoService.updateOrder(merchantOrderInfo);
+					log.info("-----------------------callBack  update-end-----------------------------------------");
+				}
+				if(notifyStatus!=1){
+					log.info("-----------------------callBack  thread-start-----------------------------------------");
+					 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
+					   thread.run();
+					 log.info("-----------------------callBack  thread-end-----------------------------------------");
+				}
+		    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
+		    model.addAttribute("res", buf);
+			return "pay/payMaxRedirect"; 
 		}else{
 			  payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
 	          backMsg="error";
-	          if(merchantOrderInfo!=null&&merchantOrderInfo.getPayStatus()==1)
-				 {
-	        	String returnUrl=merchantOrderInfo.getReturnUrl();
-	       		MerchantInfo merchantInfo = null;
-	       		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
-				//判断该笔订单是否在商户网站中已经做过处理
-				//如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
-				 if(!nullEmptyBlankJudge(returnUrl)){
-					    String buf="";
-					    returnUrl=merchantInfo.getReturnUrl();
-					    
-					    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
-						sParaTemp.put("orderId", merchantOrderInfo.getId());
-				        sParaTemp.put("outTradeNo", merchantOrderInfo.getMerchantOrderId());
-				        sParaTemp.put("merchantId", String.valueOf(merchantOrderInfo.getMerchantId()));
-				        sParaTemp.put("paymentType", String.valueOf(merchantOrderInfo.getPaymentId()));
-						sParaTemp.put("paymentChannel", String.valueOf(merchantOrderInfo.getChannelId()));
-						sParaTemp.put("feeType", "CNY");
-						sParaTemp.put("guid", merchantOrderInfo.getGuid());
-						sParaTemp.put("appUid",String.valueOf(merchantOrderInfo.getSourceUid()));
-						//sParaTemp.put("exter_invoke_ip",exter_invoke_ip);
-						sParaTemp.put("timeEnd", DateTools.dateToString(new Date(), "yyyyMMddHHmmss"));
-						sParaTemp.put("totalFee", String.valueOf((int)(merchantOrderInfo.getOrderAmount()*100)));
-						sParaTemp.put("goodsId", merchantOrderInfo.getMerchantProductId());
-						sParaTemp.put("goodsName",merchantOrderInfo.getMerchantProductName());
-						sParaTemp.put("goodsDesc", merchantOrderInfo.getMerchantProductDesc());
-						sParaTemp.put("parameter", merchantOrderInfo.getParameter1()+"payCharge="+String.valueOf(merchantOrderInfo.getPayCharge()));
-						sParaTemp.put("userName", merchantOrderInfo.getSourceUserName());
-					    String mySign = PayUtil.callBackCreateSign(AlipayConfig.input_charset,sParaTemp,merchantInfo.getPayKey());
-					    sParaTemp.put("secret", mySign);
-					    //异步通知接口
-	 					int notifyStatus=merchantOrderInfo.getNotifyStatus();
-	 					int payStatus=merchantOrderInfo.getPayStatus();
-	 					Double payCharge=0.0;
-	 					payCharge=UnifyPayUtil.getPayCharge(merchantOrderInfo,channelRateService);
-	 					if(payStatus!=1){
-	 					log.info("-----------------------callBack  update-start-----------------------------------------");
-	 						merchantOrderInfo.setPayStatus(1);
-	 						merchantOrderInfo.setPayAmount(merchantOrderInfo.getOrderAmount()-payCharge);
-	 						merchantOrderInfo.setAmount(merchantOrderInfo.getOrderAmount());
-	 						merchantOrderInfo.setPayCharge(payCharge);
-	 						merchantOrderInfo.setDealDate(new Date());
-	 						//merchantOrderInfo.setPayOrderId(serialNumber);
-	 						merchantOrderInfoService.updateOrder(merchantOrderInfo);
-	 						log.info("-----------------------callBack  update-end-----------------------------------------");
-	 					}
-	 					if(notifyStatus!=1){
-	 						log.info("-----------------------callBack  thread-start-----------------------------------------");
-	 						 Thread thread = new Thread(new AliOrderProThread(merchantOrderInfo, merchantOrderInfoService,merchantInfoService,payserviceDev));
-	 						   thread.run();
-	 						 log.info("-----------------------callBack  thread-end-----------------------------------------");
-	 					}
-					    buf =SendPostMethod.buildRequest(sParaTemp, "post", "ok", returnUrl);
-					    model.addAttribute("res", buf);
-	     			    return "pay/payMaxRedirect"; 
-				   }
-				  backMsg="success";
-	        	  payServiceLog.setStatus("already processed");
-				 }
-	          payServiceLog.setLogName(PayLogName.YPOS_RETURN_END);
+	          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),TRANSCODER);
+	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
+		}
+		}else{
+			  payServiceLog.setErrorCode("3");
+	          payServiceLog.setStatus("error");
+	          backMsg="error";
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		 } 
 		 model.addAttribute("backMsg", backMsg);

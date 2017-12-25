@@ -1245,6 +1245,7 @@ public class UnifyPayController extends BaseControllerUtil{
 				    		 model.addAttribute("merchantCode", merchantCode);
 				    		 model.addAttribute("terminal", terminal);
 				    		 model.addAttribute("orderId", newId);
+				    		 model.addAttribute("payOrderId", outTradeNo);
 				    		 model.addAttribute("payId", others.get("yeepay_orderId"));
 				    		 model.addAttribute("comNo", comNo);
 				    		 model.addAttribute("baudrate", baudrate);
