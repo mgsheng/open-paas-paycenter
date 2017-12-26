@@ -794,4 +794,5 @@ public class UnifyPayRedirectController extends BaseControllerUtil{
     	   writeSuccessJson(response,map);
     	 // WebUtils.writeJson(response, urlCode);
     }
+   
 }
