@@ -193,7 +193,7 @@ public class ZxptThirdController extends BaseControllerUtil{
 			String paket = "";
 			String sign = "";
 			Request<ThirdScoreRequest> zxptrequest = new Request<ThirdScoreRequest>();
-			RequestHead head = initHead("1006",DateUtil.getDateTime(new Date()));
+			RequestHead head = initHead("1006",DateUtil.getDateTime(new Date()),payserviceDev);
 			zxptrequest.setHead(head);
 			List<ThirdScoreRequest> list = new ArrayList<ThirdScoreRequest>();
 			ThirdScoreRequest rquestdetail = initThirdScoreRequest(payZxptInfo);

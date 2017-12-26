@@ -1593,60 +1593,23 @@ public class BaseControllerUtil {
 			return sParaTemp;
 			}
 		}
-	    public static RequestHead initHead(String tranCode,String tranId) {
-			//请求消息头
-			RequestHead rh = new RequestHead();
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-			SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
-			//初始化报文头
-			rh.setVersion("V1.0");
-			rh.setCharSet("utf-8");
-			rh.setSource("奥鹏教育学生平台");
-			rh.setDes("zxpt");
-			rh.setApp("奥鹏App");
-			rh.setTranCode(tranCode);
-			rh.setTranId(tranId);
-			rh.setTranRef("奥鹏商户");
-			rh.setReserve("奥鹏商户测试");
-			rh.setTranTime(df2.format(new Date()));
-			rh.setTimeStamp(df.format(new Date()));
-			return rh;
-		}
 		
-		public static ThirdScoreRequest initThirdScoreRequest(PayZxptInfo payZxptInfo) {
-			
-		/*	ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-			thirdScoreRequest.setOrderId(DateUtil.getCurrentDateTime());
-			
-			thirdScoreRequest.setCertNo("420922198509103814");
-			thirdScoreRequest.setCertType("0");
-			thirdScoreRequest.setName("张四");
-			thirdScoreRequest.setReserve("第三方评分测试");
-			thirdScoreRequest.setScoreChannel("2");
-			thirdScoreRequest.setScoreMethod("1");
-			thirdScoreRequest.setMobile("13535413805");
-			thirdScoreRequest.setCardNo("62222744552211111112");
-			thirdScoreRequest.setReasonNo("01");
-			thirdScoreRequest.setEntityAuthCode("02aa19bc");
-			thirdScoreRequest.setAuthDate("2016-10-12 12:01:01");*/
-			//请求消息体
-		    ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-			thirdScoreRequest.setOrderId(payZxptInfo.getId());
-			
-			thirdScoreRequest.setCertNo(payZxptInfo.getCertNo());
-			thirdScoreRequest.setCertType(payZxptInfo.getCertType());
-			thirdScoreRequest.setName(payZxptInfo.getUserName());
-			thirdScoreRequest.setReserve(payZxptInfo.getReserve());
-			thirdScoreRequest.setScoreChannel(payZxptInfo.getScoreChannel());
-			thirdScoreRequest.setScoreMethod(payZxptInfo.getScoreMethod());
-			thirdScoreRequest.setMobile(payZxptInfo.getPhone());
-			thirdScoreRequest.setCardNo(payZxptInfo.getCardNo());
-			thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
-			thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
-			thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
-			return thirdScoreRequest;
-		}
-		
+	 	public static ThirdScoreRequest initThirdScoreRequest(PayZxptInfo payZxptInfo) {
+	 	    ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
+	 		thirdScoreRequest.setOrderId(payZxptInfo.getId());
+	 		thirdScoreRequest.setCertNo(payZxptInfo.getCertNo());
+	 		thirdScoreRequest.setCertType(payZxptInfo.getCertType());
+	 		thirdScoreRequest.setName(payZxptInfo.getUserName());
+	 		thirdScoreRequest.setReserve(payZxptInfo.getReserve());
+	 		thirdScoreRequest.setCardNo(payZxptInfo.getCardNo());
+	 		thirdScoreRequest.setScoreChannel("2");
+	 		thirdScoreRequest.setScoreMethod("1");
+	 		thirdScoreRequest.setMobile(payZxptInfo.getPhone());
+	 		thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
+	 		thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
+	 		thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
+	 		return thirdScoreRequest;
+	 	}
 		public static BqsFraudlistRequest init1301Request(PayZxptInfo payZxptInfo) {
 			
 			/*//请求消息体
@@ -1670,35 +1633,6 @@ public class BaseControllerUtil {
 			bRequest.setOrderId(payZxptInfo.getId());
 			return bRequest;
 			
-		}
-	    public static RequestHead initHead(String tranCode,String tranId,PayserviceDev payserviceDev) {
-			//请求消息头
-			RequestHead rh = new RequestHead();
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-			SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
-			//初始化报文头
-			rh.setVersion(payserviceDev.getZxpt_version());
-			rh.setCharSet(payserviceDev.getZxpt_charset());
-			rh.setSource(payserviceDev.getZxpt_source());
-			rh.setDes(payserviceDev.getZxpt_des());
-			rh.setApp(payserviceDev.getZxpt_app());
-			rh.setTranCode(tranCode);
-			rh.setTranId(tranId);
-			rh.setTranRef(payserviceDev.getZxpt_tranref());
-			rh.setReserve(payserviceDev.getZxpt_tranref());
-			
-			/*rh.setVersion("V1.0");
-			rh.setCharSet("utf-8");
-			rh.setSource("奥鹏教育学生平台");
-			rh.setDes("zxpt");
-			rh.setApp("奥鹏App");
-			rh.setTranCode(tranCode);
-			rh.setTranId(tranId);
-			rh.setTranRef("奥鹏商户");
-			rh.setReserve("奥鹏商户");*/
-			rh.setTranTime(df2.format(new Date()));
-			rh.setTimeStamp(df.format(new Date()));
-			return rh;
 		}
 		
 	    /**
@@ -1785,6 +1719,24 @@ public class BaseControllerUtil {
 		  }
 		  return score;
 	    }
-	  	
+	    public static RequestHead initHead(String tranCode,String tranId,PayserviceDev payserviceDev) {
+	 		//请求消息头
+	 		RequestHead rh = new RequestHead();
+	 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+	 		SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+	 		//初始化报文头
+	 		rh.setVersion(payserviceDev.getZxpt_version());
+	 		rh.setCharSet(payserviceDev.getZxpt_charset());
+	 		rh.setSource(payserviceDev.getZxpt_source());
+	 		rh.setDes(payserviceDev.getZxpt_des());
+	 		rh.setApp(payserviceDev.getZxpt_app());
+	 		rh.setTranCode(tranCode);
+	 		rh.setTranId(tranId);
+	 		rh.setTranRef(payserviceDev.getZxpt_tranref());
+	 		rh.setReserve(payserviceDev.getZxpt_tranref());
+	 		rh.setTranTime(df2.format(new Date()));
+	 		rh.setTimeStamp(df.format(new Date()));
+	 		return rh;
+	 	}  	
 		
 }

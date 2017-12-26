@@ -187,7 +187,7 @@ public class ZxptBqsController extends BaseControllerUtil{
 			String sign="";
 			Request<BqsFraudlistRequest> bqsrequest=new Request<BqsFraudlistRequest>();
 			//白骑士交易码1301
-			RequestHead head=initHead("1301", DateUtil.getDateTime(new Date()));
+			RequestHead head=initHead("1301", DateUtil.getDateTime(new Date()),payserviceDev);
 			bqsrequest.setHead(head);
 			List<BqsFraudlistRequest> list=new ArrayList<BqsFraudlistRequest>();
 			BqsFraudlistRequest bRequest=init1301Request(payZxptInfo);
