@@ -6,8 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +26,10 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaySwitch;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
@@ -29,12 +37,23 @@ import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
 import cn.com.open.openpaas.payservice.app.channel.yeepay.HmacUtils;
 import cn.com.open.openpaas.payservice.app.channel.yeepay.paymobile.utils.PaymobileUtils;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.http.HttpClientUtil;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.rsa.RSACoderUtil;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.sign.MD5;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.xml.XOUtil;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.zx.BqsFraudlistRequest;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.zx.DateUtil;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.zx.Request;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.zx.RequestHead;
+import cn.com.open.openpaas.payservice.app.channel.zxpt.zx.ThirdScoreRequest;
 import cn.com.open.openpaas.payservice.app.kafka.KafkaProducer;
 import cn.com.open.openpaas.payservice.app.merchant.model.MerchantInfo;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.thread.PaySendSmsThread;
+import cn.com.open.openpaas.payservice.app.tools.DateTools;
 import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.WebUtils;
+import cn.com.open.openpaas.payservice.app.zxpt.model.PayZxptInfo;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import net.sf.json.JSONObject;
 
@@ -1507,4 +1526,265 @@ public class BaseControllerUtil {
 		 String res =SendPostMethod.buildRequest(dataMap, "post", "ok",payserviceDev.getYeepayCommonReqURL());
 		return res;
 	}	
+	/**
+	 * 获取渠道参数信息
+	 * @param merchantOrderInfo 订单
+	 * @return
+	 */
+	public Map<String, String> getOtherInfo(DictTradeChannelService dictTradeChannelService, MerchantOrderInfo merchantOrderInfo) {
+		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TZT.getValue());
+         String other= dictTradeChannels.getOther();
+     	 Map<String, String> others = new HashMap<String, String>();
+     	  others=getPartner(other);
+     	 return others;
+	}
+	  public static Map<String, String> getResult(String other){
+			if(other==null&&"".equals(other)){
+				return null;
+			}else{
+			String others []=other.split("&");
+			Map<String, String> sParaTemp = new HashMap<String, String>();
+			String values="";
+			String charset="";
+			String version="";
+			for (int i=0;i<others.length;i++){
+			   values=others[i];
+			   int j=values.indexOf("=");
+			   if(values.substring(0, j).equals("charset")){
+				  charset=values.substring(j+1,values.length());  
+			   }
+			   if(values.substring(0, j).equals("version")){
+				   version=values.substring(j+1,values.length());  
+			   }
+			}
+			sParaTemp.put("charset", charset);
+			sParaTemp.put("version", version);
+			return sParaTemp;
+			}
+		}
+	  
+	    
+	    public static Map<String, String> getDownlond(String other){
+			if(other==null&&"".equals(other)){
+				return null;
+			}else{
+			String others []=other.split("&");
+			Map<String, String> sParaTemp = new HashMap<String, String>();
+			String values="";
+			String charset="";
+			String version="";
+			String download_url="";
+			for (int i=0;i<others.length;i++){
+			   values=others[i];
+			   int j=values.indexOf("=");
+			   if(values.substring(0, j).equals("charset")){
+				  charset=values.substring(j+1,values.length());  
+			   }
+			   if(values.substring(0, j).equals("version")){
+				   version=values.substring(j+1,values.length());  
+			   }
+			   if(values.substring(0, j).equals("download_url")){
+				   download_url=values.substring(j+1,values.length());  
+			   }
+			}
+			sParaTemp.put("charset", charset);
+			sParaTemp.put("version", version);
+			sParaTemp.put("download_url", download_url);
+			return sParaTemp;
+			}
+		}
+	    public static RequestHead initHead(String tranCode,String tranId) {
+			//请求消息头
+			RequestHead rh = new RequestHead();
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+			//初始化报文头
+			rh.setVersion("V1.0");
+			rh.setCharSet("utf-8");
+			rh.setSource("奥鹏教育学生平台");
+			rh.setDes("zxpt");
+			rh.setApp("奥鹏App");
+			rh.setTranCode(tranCode);
+			rh.setTranId(tranId);
+			rh.setTranRef("奥鹏商户");
+			rh.setReserve("奥鹏商户测试");
+			rh.setTranTime(df2.format(new Date()));
+			rh.setTimeStamp(df.format(new Date()));
+			return rh;
+		}
+		
+		public static ThirdScoreRequest initThirdScoreRequest(PayZxptInfo payZxptInfo) {
+			
+		/*	ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
+			thirdScoreRequest.setOrderId(DateUtil.getCurrentDateTime());
+			
+			thirdScoreRequest.setCertNo("420922198509103814");
+			thirdScoreRequest.setCertType("0");
+			thirdScoreRequest.setName("张四");
+			thirdScoreRequest.setReserve("第三方评分测试");
+			thirdScoreRequest.setScoreChannel("2");
+			thirdScoreRequest.setScoreMethod("1");
+			thirdScoreRequest.setMobile("13535413805");
+			thirdScoreRequest.setCardNo("62222744552211111112");
+			thirdScoreRequest.setReasonNo("01");
+			thirdScoreRequest.setEntityAuthCode("02aa19bc");
+			thirdScoreRequest.setAuthDate("2016-10-12 12:01:01");*/
+			//请求消息体
+		    ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
+			thirdScoreRequest.setOrderId(payZxptInfo.getId());
+			
+			thirdScoreRequest.setCertNo(payZxptInfo.getCertNo());
+			thirdScoreRequest.setCertType(payZxptInfo.getCertType());
+			thirdScoreRequest.setName(payZxptInfo.getUserName());
+			thirdScoreRequest.setReserve(payZxptInfo.getReserve());
+			thirdScoreRequest.setScoreChannel(payZxptInfo.getScoreChannel());
+			thirdScoreRequest.setScoreMethod(payZxptInfo.getScoreMethod());
+			thirdScoreRequest.setMobile(payZxptInfo.getPhone());
+			thirdScoreRequest.setCardNo(payZxptInfo.getCardNo());
+			thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
+			thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
+			thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
+			return thirdScoreRequest;
+		}
+		
+		public static BqsFraudlistRequest init1301Request(PayZxptInfo payZxptInfo) {
+			
+			/*//请求消息体
+			BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
+			bRequest.setChannelNo("1");
+			bRequest.setCertNo("522528199303153636");
+			bRequest.setName("朱怀龙a");
+			bRequest.setMobile("18798897113");
+			bRequest.setEntityAuthCode("abcdef");
+			bRequest.setEntityAuthDate("2017-04-21 08:37:00");
+			bRequest.setOrderId(DateUtil.getCurrentDateTime());*/
+			
+			//请求消息体
+			BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
+			bRequest.setChannelNo(payZxptInfo.getScoreChannel());
+			bRequest.setCertNo(payZxptInfo.getCertNo());
+			bRequest.setName(payZxptInfo.getUserName());
+			bRequest.setMobile(payZxptInfo.getPhone());
+			bRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
+			bRequest.setEntityAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
+			bRequest.setOrderId(payZxptInfo.getId());
+			return bRequest;
+			
+		}
+	    public static RequestHead initHead(String tranCode,String tranId,PayserviceDev payserviceDev) {
+			//请求消息头
+			RequestHead rh = new RequestHead();
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
+			//初始化报文头
+			rh.setVersion(payserviceDev.getZxpt_version());
+			rh.setCharSet(payserviceDev.getZxpt_charset());
+			rh.setSource(payserviceDev.getZxpt_source());
+			rh.setDes(payserviceDev.getZxpt_des());
+			rh.setApp(payserviceDev.getZxpt_app());
+			rh.setTranCode(tranCode);
+			rh.setTranId(tranId);
+			rh.setTranRef(payserviceDev.getZxpt_tranref());
+			rh.setReserve(payserviceDev.getZxpt_tranref());
+			
+			/*rh.setVersion("V1.0");
+			rh.setCharSet("utf-8");
+			rh.setSource("奥鹏教育学生平台");
+			rh.setDes("zxpt");
+			rh.setApp("奥鹏App");
+			rh.setTranCode(tranCode);
+			rh.setTranId(tranId);
+			rh.setTranRef("奥鹏商户");
+			rh.setReserve("奥鹏商户");*/
+			rh.setTranTime(df2.format(new Date()));
+			rh.setTimeStamp(df.format(new Date()));
+			return rh;
+		}
+		
+	    /**
+	     * 第三方征信评分
+	     * @param payZxptInfo
+	     * @return
+	     */
+	    public String getThirdScore(PayZxptInfo payZxptInfo,PayserviceDev payserviceDev){
+	    	//第三方评分交易码1006
+			String paket = "";
+			String sign = "";
+			String score="";
+			Request<ThirdScoreRequest> zxptrequest = new Request<ThirdScoreRequest>();
+			RequestHead head = initHead("1006",DateUtil.getDateTime(new Date()),payserviceDev);
+			zxptrequest.setHead(head);
+			List<ThirdScoreRequest> list = new ArrayList<ThirdScoreRequest>();
+			ThirdScoreRequest rquestdetail = initThirdScoreRequest(payZxptInfo);
+			list.add(rquestdetail);
+			zxptrequest.setBody(list);
+			String requestXml = XOUtil.objectToXml(zxptrequest, Request.class, RequestHead.class, ThirdScoreRequest.class);
+//			XStream xstream=XMLUtil.fromXML(requestXml);
+			//System.out.println(requestXml);
+			try {
+				paket = RSACoderUtil.encrypt(requestXml.getBytes(payserviceDev.getZxpt_charset()), payserviceDev.getZxpt_charset(), payserviceDev.getZxpt_public_key());
+			    sign = MD5.sign(paket, "123456", "utf-8");
+			//http请求参数
+			Map<String, String> zxptParams = new HashMap<String, String>();
+			//参数加密串
+			zxptParams.put("packet", paket);
+			//MD5签名
+			zxptParams.put("checkValue", sign);
+			//交易码
+			zxptParams.put("tranCode", "1006");
+			//商户号 奥鹏
+			zxptParams.put("sender", payserviceDev.getZxpt_sender());
+			//SIT环境
+			String url = payserviceDev.getZxpt_third_url();
+			//http请求
+			String responsexml = HttpClientUtil.httpPost(url, zxptParams);
+			//解密
+			String decode = new String(RSACoderUtil.decrypt(responsexml, payserviceDev.getZxpt_key(), payserviceDev.getZxpt_charset()), payserviceDev.getZxpt_charset());
+			String decodexml = URLDecoder.decode(decode, payserviceDev.getZxpt_charset());
+			    Document doc = null;    
+		        doc = DocumentHelper.parseText(decodexml);    
+		        Element root = doc.getRootElement();// 指向根节点    
+		        // normal解析    
+		        Element body1 = root.element("body");
+		        Element thirdscoreresponse1 = body1.element("thirdscoreresponse"); 
+		        if(thirdscoreresponse1==null){
+		        	score="0";
+		        }else{
+			        Element map1= thirdscoreresponse1.element("map");
+			            List lstTime = map1.elements("entry");// 所有的Item节点    
+			            for (int i = 0; i < lstTime.size(); i++) {    
+			                Element etime = (Element) lstTime.get(i);    
+			                Element start = etime.element("string"); 
+			                if(start.getTextTrim().equals("records")){
+			                	Element end = etime.element("list");
+			                	 Element listmap = end.element("map"); 
+			                	 List listentry = listmap.elements("entry");
+			                	 for(int j=0;j<listentry.size();j++){
+			                		 Element etime1 = (Element) listentry.get(j);
+			                		 List aa = etime1.elements("string");
+			                		 for(int k=0;k<aa.size();k++){
+			                			 Element credooScores = (Element) aa.get(k); 
+			                			// Element credooScore=credooScores.element("string");
+			                			 if( credooScores.getTextTrim().equals("credooScore")){
+			                				 System.out.println("start1.getTextTrim()=" + credooScores.getTextTrim()); 
+			                				 Element Scores = (Element) aa.get(k+1);
+			                				 score=Scores.getTextTrim();
+			                				 System.out.println("score.getTextTrim()=" + Scores.getTextTrim()); 
+			                				 break;
+			                			 }
+			                			 break;
+			                		 }
+			                	}
+			                 }
+			            }    
+		        }
+		    
+			}catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+		  }
+		  return score;
+	    }
+	  	
+		
 }

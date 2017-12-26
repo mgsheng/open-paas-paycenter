@@ -192,78 +192,7 @@ public class UserOrderQueryController extends BaseControllerUtil{
     			}
     }
     
-    public static Map<String, String> getResult(String other){
-		if(other==null&&"".equals(other)){
-			return null;
-		}else{
-		String others []=other.split("&");
-		Map<String, String> sParaTemp = new HashMap<String, String>();
-		String values="";
-		String charset="";
-		String version="";
-		for (int i=0;i<others.length;i++){
-		   values=others[i];
-		   int j=values.indexOf("=");
-		   if(values.substring(0, j).equals("charset")){
-			  charset=values.substring(j+1,values.length());  
-		   }
-		   if(values.substring(0, j).equals("version")){
-			   version=values.substring(j+1,values.length());  
-		   }
-		}
-		sParaTemp.put("charset", charset);
-		sParaTemp.put("version", version);
-		return sParaTemp;
-		}
-	}
-    
-    
-    
-    public static Map<String, String> getDownlond(String other){
-		if(other==null&&"".equals(other)){
-			return null;
-		}else{
-		String others []=other.split("&");
-		Map<String, String> sParaTemp = new HashMap<String, String>();
-		String values="";
-		String charset="";
-		String version="";
-		String download_url="";
-		for (int i=0;i<others.length;i++){
-		   values=others[i];
-		   int j=values.indexOf("=");
-		   if(values.substring(0, j).equals("charset")){
-			  charset=values.substring(j+1,values.length());  
-		   }
-		   if(values.substring(0, j).equals("version")){
-			   version=values.substring(j+1,values.length());  
-		   }
-		   if(values.substring(0, j).equals("download_url")){
-			   download_url=values.substring(j+1,values.length());  
-		   }
-		}
-		sParaTemp.put("charset", charset);
-		sParaTemp.put("version", version);
-		sParaTemp.put("download_url", download_url);
-		return sParaTemp;
-		}
-	}
-    
-  //sign_type:MD5#payment_type:1#input_charset:utf-8#service:create_direct_pay_by_user#partner:2088801478647757
-  		public static Map<String, String> getPartner(String other){
-  			if(other==null&&"".equals(other)){
-  				return null;
-  			}else{
-  			String others []=other.split("#");
-  			Map<String, String> sParaTemp = new HashMap<String, String>();
-  			for (int i=0;i<others.length;i++){
-  				String values []=others[i].split(":");
-  				   sParaTemp.put(values[0], values[1]);  
-  			}
-  			
-  			return sParaTemp;
-  			}
-  		}
+
   		
   		
   		/**fileDownlond

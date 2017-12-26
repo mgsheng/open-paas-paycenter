@@ -497,5 +497,301 @@ public class UnifyPayRedirectController extends BaseControllerUtil{
 		 String res =SendPostMethod.buildRequest(dataMap, "post", "ok",payserviceDev.getYeepayCommonReqURL());
 		return res;
 	}	
-
+	 
+    /**
+     * 跳转到wxpay页面
+     */
+    @RequestMapping(value = "tzt/errorPayChannel", method = RequestMethod.GET)
+    public void bindError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    		String errorMsg="";
+    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="订单号重复";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="绑卡请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="渠道未开通！";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="订单不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="绑卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="绑卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}
+    	   map.put("status", "error");
+    	   map.put("requestno", outTradeNo);
+    	   map.put("errorCode", errorCode);
+    	   map.put("errMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
+    /**
+     * 返回绑卡成功参数
+     */
+    @RequestMapping(value = "tzt/back", method = RequestMethod.GET)
+    public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
+    	String requestno=request.getParameter("requestno");
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    	 map.put("status", "ok");
+    	 map.put("requestno", requestno);
+    	 map.put("errorCode", "");
+  	     map.put("errMsg", "");
+    	 writeSuccessJson(response,map);
+    }
+    /**
+     * 返回错误信息
+     */
+    @RequestMapping(value = "tzt/bind/errorPayChannel", method = RequestMethod.GET)
+    public void payError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    		String errorMsg="";
+    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="所选支付渠道与支付类型不匹配";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="金额格式不对";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="订单号重复";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="用户未绑定卡号";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="无短充值失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="无短充值验签失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="用户不存在";
+        	}
+        	else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
+        		errorMsg="渠道未开通！";
+        	}
+    	   map.put("status", "error");
+    	   map.put("requestno", outTradeNo);
+    	   map.put("errorCode", errorCode);
+    	   map.put("errMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
+    /**
+     * 跳转到wxpay页面
+     */
+    @RequestMapping(value = "tzt/changeCard/errorPayChannel", method = RequestMethod.GET)
+    public void changeCard(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	String urlCode=request.getParameter("urlCode");
+    	model.addAttribute("urlCode", urlCode);
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    	
+    		String errorMsg="";
+        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="统一支付验签失败";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="用户不存在";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="订单号已存在";
+        	}
+        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="换卡验签失败";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="换卡请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="渠道未开通";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="换卡订单不存在";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
+        		errorMsg="换卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("11")){
+        		errorMsg="换卡重发失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}
+    	   map.put("status", "error");
+    	   map.put("outTradeNo", outTradeNo);
+    	   map.put("errorCode", errorCode);
+    	   
+    	   map.put("errorMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    }
+    /**
+     * 返回错误信息
+     */
+    @RequestMapping(value = "tzt/unBind/errorPayChannel", method = RequestMethod.GET)
+    public void unBind(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	String urlCode=request.getParameter("urlCode");
+    	model.addAttribute("urlCode", urlCode);
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    	
+    		String errorMsg="";
+        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="统一支付验签失败";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="用户卡号不存在";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="订单号已存在";
+        	}
+        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="解绑验签失败";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="解绑请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="渠道未开通";
+        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="系统异常";
+        	}
+    	   map.put("status", "error");
+    	   map.put("outTradeNo", outTradeNo);
+    	   map.put("errorMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
+    
+    /**
+     * 返回错误信息
+     */
+    @RequestMapping(value = "zxpt/bqs/errorPayChannel", method = RequestMethod.GET)
+    public void bqs(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    		String errorMsg="";
+    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="订单信息查询失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="订单号已经存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="白骑士风险结果为空";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="白骑士返回错误:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="白骑士XML结果为空";
+        	}
+    	   map.put("status", "error");
+    	   map.put("errorCode", errorCode);
+    	   map.put("errMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
+    /**
+     * 返回绑卡成功参数
+     */
+    @RequestMapping(value = "zxpt/bqs/bqsBack", method = RequestMethod.GET)
+    public void bqsBack(HttpServletRequest request,HttpServletResponse response, Model model){
+    	String decision=request.getParameter("decision");
+    	 Map<String, Object> map=new HashMap<String,Object>();
+     	map.put("status", "ok");
+     	map.put("errMsg", "");
+     	map.put("errorCode", "");
+     	map.put("decision",decision);   
+    	writeSuccessJson(response,map);
+    }
+    /**
+     * 返回错误信息
+     */
+    @RequestMapping(value = "zxpt/errorPayChannel", method = RequestMethod.GET)
+    public void zxptError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    		String errorMsg="";
+    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="订单信息查询失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="订单号已经存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="白骑士风险结果为空";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="白骑士返回错误:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="白骑士XML结果为空";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="该用户为黑名单用户";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
+        		errorMsg="该用户信用分不够";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("11")){
+        		errorMsg="该用户信用分不够";
+        	}
+    	   map.put("status", "error");
+    	   map.put("errorCode", errorCode);
+    	   map.put("errMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    	   
+    }
+    /**
+     * 返回绑卡成功参数
+     */
+    @RequestMapping(value = "zxpt/back", method = RequestMethod.GET)
+    public void zxptBack(HttpServletRequest request,HttpServletResponse response, Model model){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+     	map.put("status", "ok");
+     	map.put("errMsg", "");
+     	map.put("errorCode", "");
+    	writeSuccessJson(response,map);
+    }
+    /**
+     * 返回错误信息
+     */
+    @RequestMapping(value = "thirdScore/errorPayChannel", method = RequestMethod.GET)
+    public void thirdScoreError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
+    	 Map<String, Object> map=new HashMap<String,Object>();
+    		String errorMsg="";
+    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
+        		errorMsg="必传参数中有空值";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
+        		errorMsg="验证失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="所选支付渠道与支付类型不匹配";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
+        		errorMsg="商户ID不存在";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
+        		errorMsg="金额格式不对";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
+        		errorMsg="订单号重复";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
+        		errorMsg="用户未绑定卡号";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
+        		errorMsg="无短充值失败！错误码:"+failureCode+"--错误原因："+failureMsg;
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
+        		errorMsg="无短充值验签失败";
+        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
+        		errorMsg="用户不存在";
+        	}
+        	else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
+        		errorMsg="渠道未开通！";
+        	}
+    	   map.put("status", "error");
+    	   map.put("requestno", outTradeNo);
+    	   map.put("errorCode", errorCode);
+    	   map.put("errMsg", errorMsg);
+    	   writeSuccessJson(response,map);
+    	 // WebUtils.writeJson(response, urlCode);
+    }
 }

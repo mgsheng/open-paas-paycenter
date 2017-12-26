@@ -72,7 +72,8 @@ public class TztChangeCardController extends BaseControllerUtil{
     @RequestMapping("request")
     public String request(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/changeCard/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"tzt/changeCard/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/changeCard/errorPayChannel";
     	String identityId=request.getParameter("identityId");
     	String identityType=request.getParameter("identityType");
         String cardNo = request.getParameter("cardNo");
@@ -253,7 +254,7 @@ public class TztChangeCardController extends BaseControllerUtil{
 					merchantOrderInfo.setPayStatus(3);
 					merchantOrderInfo.setDealDate(new Date());
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
-			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+			     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?requestno="+requestnoback;
 	       	     payServiceLog.setLogName(PayLogName.CHANGE_CARD_END);
 			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 	       	     return "redirect:" + fullUri;
@@ -273,7 +274,7 @@ public class TztChangeCardController extends BaseControllerUtil{
 					payServiceLog.setStatus("error");
 					payServiceLog.setLogName(PayLogName.CHANGE_CARD_END);
 					UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
-					return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"7"+"&failureCode="+errorcode+"&failureMsg="+errormsg;
+					return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"7"+"&failureCode="+errorcode+"&failureMsg="+errormsg;
 		    }	
 		}else{
 			    payServiceLog.setErrorCode("8");
@@ -295,7 +296,8 @@ public class TztChangeCardController extends BaseControllerUtil{
     @RequestMapping("confirm")
     public String confirm(HttpServletRequest request,HttpServletResponse response,Model model){
     	long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/changeCard/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"tzt/changeCard/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/changeCard/errorPayChannel";
     	String requestno=request.getParameter("requestNo");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String signature=request.getParameter("signature");
@@ -358,7 +360,7 @@ public class TztChangeCardController extends BaseControllerUtil{
  			Map<String, String> confirmParams 	= new HashMap<String, String>();
  			confirmParams.put("requestno", 		requestno);
  			confirmParams.put("validatecode", 		validatecode);
- 		    Map<String, String> others = getOtherInfo(merchantOrderInfo);
+ 		    Map<String, String> others = getOtherInfo(dictTradeChannelService,merchantOrderInfo);
  			String merchantno= others.get("merchantAccount");
  			String merchantPrivateKey=others.get("merchantPrivateKey");
  			String merchantAESKey= TZTService.getMerchantAESKey();
@@ -375,7 +377,7 @@ public class TztChangeCardController extends BaseControllerUtil{
  				  merchantOrderInfo.setDealDate(new Date());
  				  merchantOrderInfo.setPayOrderId(yborderid);
  				  merchantOrderInfoService.updateOrder(merchantOrderInfo);
- 			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+ 			     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?requestno="+requestnoback;
  	       	     payServiceLog.setLogName(PayLogName.CHANGE_CARD_END);
  			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
  	       	     return "redirect:" + fullUri;
@@ -414,7 +416,8 @@ public class TztChangeCardController extends BaseControllerUtil{
     @RequestMapping("resendsms")
     public String resendsms(HttpServletRequest request,HttpServletResponse response,Model model){
     	long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/changeCard/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"tzt/changeCard/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/changeCard/errorPayChannel";
     	String requestno=request.getParameter("requestNo");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String signature=request.getParameter("signature");
@@ -472,7 +475,7 @@ public class TztChangeCardController extends BaseControllerUtil{
  		if(merchantOrderInfo!=null){
  			//有短验绑卡请求短验确认
  			Map<String, String> resendParams 	= new HashMap<String, String>();
- 			Map<String, String> others = getOtherInfo(merchantOrderInfo);
+ 			Map<String, String> others = getOtherInfo(dictTradeChannelService,merchantOrderInfo);
  			resendParams.put("requestno", 		requestno);
  			String merchantno= others.get("merchantAccount");
  			String merchantPrivateKey=others.get("merchantPrivateKey");
@@ -491,7 +494,7 @@ public class TztChangeCardController extends BaseControllerUtil{
  					merchantOrderInfo.setDealDate(new Date());
  					merchantOrderInfo.setPayOrderId(yborderid);
  					merchantOrderInfoService.updateOrder(merchantOrderInfo);
- 			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+ 			     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?requestno="+requestnoback;
  	       	     payServiceLog.setLogName(PayLogName.CHANGE_CARD_END);
  			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
  	       	     return "redirect:" + fullUri;
@@ -519,75 +522,8 @@ public class TztChangeCardController extends BaseControllerUtil{
 	        return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"9";
  		}
     }
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "back", method = RequestMethod.GET)
-    public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String requestno=request.getParameter("requestno");
-    	 model.addAttribute("requestno", requestno);
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	 map.put("status", "ok");
-    	 map.put("requestno", requestno);
-    	 map.put("errorCode", "");
-  	     map.put("errorMsg", "");
-    	 writeSuccessJson(response,map);
-    }
-	/**
-	 * 获取渠道参数信息
-	 * @param merchantOrderInfo 订单
-	 * @return
-	 */
-	public Map<String, String> getOtherInfo(MerchantOrderInfo merchantOrderInfo) {
-		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TZT.getValue());
-         String other= dictTradeChannels.getOther();
-     	 Map<String, String> others = new HashMap<String, String>();
-     	  others=getPartner(other);
-     	 return others;
-	}
 
-    /**
-     * 跳转到wxpay页面
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void wxErrorPayChannel(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	String urlCode=request.getParameter("urlCode");
-    	model.addAttribute("urlCode", urlCode);
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	
-    		String errorMsg="";
-        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="统一支付验签失败";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="用户不存在";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="订单号已存在";
-        	}
-        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="换卡验签失败";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="换卡请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="渠道未开通";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-        		errorMsg="换卡订单不存在";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-        		errorMsg="换卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("11")){
-        		errorMsg="换卡重发失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}
-    	   map.put("status", "error");
-    	   map.put("outTradeNo", outTradeNo);
-    	   map.put("errorCode", errorCode);
-    	   
-    	   map.put("errorMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    }
+  
 
 
 

@@ -83,7 +83,8 @@ public class ZxptBqsController extends BaseControllerUtil{
     @RequestMapping("request")
     public String bqsRequest(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"zxpt/bqs/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"zxpt/bqs/errorPayChannel";
+        String fullUri=payserviceDev.getServer_host()+"pay/redirect/zxpt/bqs/errorPayChannel";
         String appId = request.getParameter("appId");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String certNo=request.getParameter("certNo");
@@ -242,7 +243,7 @@ public class ZxptBqsController extends BaseControllerUtil{
 			     	    		newpayZxptInfo.setDecision(decision);
 			     	    		newpayZxptInfo.setZxptRequestStatus("1");
 			     	    		payZxptInfoService.updateZxptInfo(newpayZxptInfo);
-			     		    	fullUri=payserviceDev.getServer_host()+"zxpt/bqs/bqsBack?decision="+decision;
+			     		    	fullUri=payserviceDev.getServer_host()+"pay/redirect/zxpt/bqs/bqsBack?decision="+decision;
 			     	    	    payServiceLog.setLogName(PayLogName.THIRD_REQUEST_END);
 			     			    UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
 			     			    return "redirect:"+fullUri;
@@ -355,128 +356,7 @@ public class ZxptBqsController extends BaseControllerUtil{
 		  return "redirect:" + fullUri;
     }
   
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "bqsBack", method = RequestMethod.GET)
-    public void bqsBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String decision=request.getParameter("decision");
-    	 Map<String, Object> map=new HashMap<String,Object>();
-     	map.put("status", "ok");
-     	map.put("errMsg", "");
-     	map.put("errorCode", "");
-     	map.put("decision",decision);   
-    	writeSuccessJson(response,map);
-    }
-    /**
-     * 返回错误信息
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void payError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    		String errorMsg="";
-    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="验证失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="订单信息查询失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="订单号已经存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="白骑士风险结果为空";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="白骑士返回错误:"+failureCode+"--错误原因："+failureMsg;
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="白骑士XML结果为空";
-        	}
-    	   map.put("status", "error");
-    	   map.put("errorCode", errorCode);
-    	   map.put("errMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
-    }
-    public static RequestHead initHead(String tranCode,String tranId) {
-		//请求消息头
-		RequestHead rh = new RequestHead();
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
-		//初始化报文头
-		rh.setVersion("V1.0");
-		rh.setCharSet("utf-8");
-		rh.setSource("奥鹏教育学生平台");
-		rh.setDes("zxpt");
-		rh.setApp("奥鹏App");
-		rh.setTranCode(tranCode);
-		rh.setTranId(tranId);
-		rh.setTranRef("奥鹏商户");
-		rh.setReserve("奥鹏商户测试");
-		rh.setTranTime(df2.format(new Date()));
-		rh.setTimeStamp(df.format(new Date()));
-		return rh;
-	}
-	
-	public static ThirdScoreRequest initThirdScoreRequest(PayZxptInfo payZxptInfo) {
-		
-	/*	ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-		thirdScoreRequest.setOrderId(DateUtil.getCurrentDateTime());
-		
-		thirdScoreRequest.setCertNo("420922198509103814");
-		thirdScoreRequest.setCertType("0");
-		thirdScoreRequest.setName("张四");
-		thirdScoreRequest.setReserve("第三方评分测试");
-		thirdScoreRequest.setScoreChannel("2");
-		thirdScoreRequest.setScoreMethod("1");
-		thirdScoreRequest.setMobile("13535413805");
-		thirdScoreRequest.setCardNo("62222744552211111112");
-		thirdScoreRequest.setReasonNo("01");
-		thirdScoreRequest.setEntityAuthCode("02aa19bc");
-		thirdScoreRequest.setAuthDate("2016-10-12 12:01:01");*/
-		//请求消息体
-	    ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-		thirdScoreRequest.setOrderId(payZxptInfo.getId());
-		
-		thirdScoreRequest.setCertNo(payZxptInfo.getCertNo());
-		thirdScoreRequest.setCertType(payZxptInfo.getCertType());
-		thirdScoreRequest.setName(payZxptInfo.getUserName());
-		thirdScoreRequest.setReserve(payZxptInfo.getReserve());
-		thirdScoreRequest.setScoreChannel(payZxptInfo.getScoreChannel());
-		thirdScoreRequest.setScoreMethod(payZxptInfo.getScoreMethod());
-		thirdScoreRequest.setMobile(payZxptInfo.getPhone());
-		thirdScoreRequest.setCardNo(payZxptInfo.getCardNo());
-		thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
-		thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
-		thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
-		return thirdScoreRequest;
-	}
-	
-	public static BqsFraudlistRequest init1301Request(PayZxptInfo payZxptInfo) {
-		
-		/*//请求消息体
-		BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
-		bRequest.setChannelNo("1");
-		bRequest.setCertNo("522528199303153636");
-		bRequest.setName("朱怀龙a");
-		bRequest.setMobile("18798897113");
-		bRequest.setEntityAuthCode("abcdef");
-		bRequest.setEntityAuthDate("2017-04-21 08:37:00");
-		bRequest.setOrderId(DateUtil.getCurrentDateTime());*/
-		
-		//请求消息体
-		BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
-		bRequest.setChannelNo(payZxptInfo.getScoreChannel());
-		bRequest.setCertNo(payZxptInfo.getCertNo());
-		bRequest.setName(payZxptInfo.getUserName());
-		bRequest.setMobile(payZxptInfo.getPhone());
-		bRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
-		bRequest.setEntityAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
-		bRequest.setOrderId(payZxptInfo.getId());
-		return bRequest;
-		
-	}
-	
+
+
 
 }

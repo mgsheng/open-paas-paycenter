@@ -68,8 +68,6 @@ public class ZxptThirdController extends BaseControllerUtil{
 	 @Autowired
 	 private MerchantInfoService merchantInfoService;
 	 @Autowired
-	 private DictTradeChannelService dictTradeChannelService;
-	 @Autowired
 	 private PayserviceDev payserviceDev;
 	 
 
@@ -85,7 +83,8 @@ public class ZxptThirdController extends BaseControllerUtil{
     @RequestMapping("request")
     public String thirdScoreRequest(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"zxpt/thirdScore/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"zxpt/thirdScore/errorPayChannel";
+        String fullUri=payserviceDev.getServer_host()+"pay/redirect/thirdScore/errorPayChannel";
         String appId = request.getParameter("appId");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String certNo=request.getParameter("certNo");
@@ -223,206 +222,69 @@ public class ZxptThirdController extends BaseControllerUtil{
 			//解密
 			String decode = new String(RSACoderUtil.decrypt(responsexml, payserviceDev.getZxpt_key(), payserviceDev.getZxpt_charset()), payserviceDev.getZxpt_charset());
 			String decodexml = URLDecoder.decode(decode, payserviceDev.getZxpt_charset());
-			
-			JSONObject xmlJSONObj = XML.toJSONObject(decodexml);
-    		com.alibaba.fastjson.JSONObject jsonObject = null;
-    		jsonObject = JSON.parseObject(xmlJSONObj.toString());
-    		String zxpt=jsonObject.getString("zxpt");
-    		com.alibaba.fastjson.JSONObject zxptjson=JSON.parseObject(zxpt);
-    		String body=zxptjson.getString("body");
-    		com.alibaba.fastjson.JSONObject bodyjson=JSON.parseObject(body);
-    		String bqsfraudlistresponse=bodyjson.getString("bqsfraudlistresponse");
-    		com.alibaba.fastjson.JSONObject bqsresponsejson=JSON.parseObject(bqsfraudlistresponse);
-    		String orderId=bqsresponsejson.getString("orderId");
-    		String orderNo=bqsresponsejson.getString("orderNo");
-    		String errorCode=bqsresponsejson.getString("errorCode");
-			
-			fullUri=payserviceDev.getServer_host()+"/zxpt/thirdScore/thirdScoreBack?decodexml="+decodexml;
+			Response<ThirdScoreResponse>packet=new Response<ThirdScoreResponse>();
+	    	 Map<String, Object> map=new HashMap<String,Object>();
+	    	try {
+	    		//将xml转成对象
+				XOUtil.xmlToObject(decodexml,packet,payserviceDev.getZxpt_charset(),Response.class, ResponseHead.class, ThirdScoreResponse.class);
+			    if(packet.getBody()==null||packet.getBody().size()==0){
+		    	 map.put("status", "error");
+		    	 map.put("errMsg", "获取body失败");
+		    	 map.put("errorCode","T10001");
+			    }else{
+			    	//获取返回信息的body内容
+			    	List<ThirdScoreResponse>list1=packet.getBody();
+			    	ThirdScoreResponse thirdScoreResponse=null;
+			    	if(list!=null && list1.size()>0){
+			    		thirdScoreResponse=list1.get(0);
+			    	}
+			    //业务方请求流水号
+			    String orderId=thirdScoreResponse.getOrderId();
+			    //第三方征信平台流水号
+			    String orderNo=thirdScoreResponse.getOrderNo();
+			    String credooScore="";
+			    Map<String ,Object> reponsemap=thirdScoreResponse.getMap();
+			    //获取明细数据
+			    List<Map<String ,String>>recordsList=(List<Map<String, String>>) reponsemap.get("records");
+			    if(recordsList!=null&&recordsList.size()>0){
+			    	Map<String ,String> recordsMap=recordsList.get(0);
+			    	credooScore=recordsMap.get("credooScore");
+			    	map.clear();
+			    	map.put("status", "ok");
+			    	map.put("errMsg", "");
+			    	map.put("credooScore",credooScore);
+			    	map.put("errorCode", "");
+			    	//更新订单征信平台流水号以及订单状态
+			    	PayZxptInfo payZxptInfo1= payZxptInfoService.findById(orderId);
+			    	if(payZxptInfo1!=null){
+			    		payZxptInfo1.setZxptOrderNo(orderNo);
+			    		payZxptInfo1.setZxptRequestStatus("1");
+			    		payZxptInfoService.updateZxptInfo(payZxptInfo1);
+			    	}else{
+			    		 map.clear();
+				    	 map.put("status", "error");
+				    	 map.put("errMsg", "订单信息查询失败");
+				    	 map.put("errorCode", "N10002");	
+			    	}
+			    }else{
+			    	 map.clear();
+			    	 map.put("status", "error");
+			    	 map.put("errMsg", "获取明细数据失败");
+			    	 map.put("errorCode", "N10001");
+			      }
+			    }
+	    	} catch (Exception e) {
+	    		 map.clear();
+		    	 map.put("status", "error");
+		    	 map.put("errMsg", "获取明细数据失败");
+		    	 map.put("errorCode", "N10001");
+		    	 e.printStackTrace();
+			}
+	    	 writeSuccessJson(response,map);
     	    payServiceLog.setLogName(PayLogName.THIRD_REQUEST_END);
 		    UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 		  }
 		  return "redirect:" + fullUri;
     }
   
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "thirdScoreBack", method = RequestMethod.GET)
-    public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String decodexml=request.getParameter("decodexml");
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	
-    	Response<ThirdScoreResponse>packet=new Response<ThirdScoreResponse>();
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	try {
-    		//将xml转成对象
-			XOUtil.xmlToObject(decodexml,packet,payserviceDev.getZxpt_charset(),Response.class, ResponseHead.class, ThirdScoreResponse.class);
-		    if(packet.getBody()==null||packet.getBody().size()==0){
-	    	 map.put("status", "error");
-	    	 map.put("errMsg", "获取body失败");
-	    	 map.put("errorCode","T10001");
-		    }else{
-		    	//获取返回信息的body内容
-		    	List<ThirdScoreResponse>list=packet.getBody();
-		    	ThirdScoreResponse thirdScoreResponse=null;
-		    	if(list!=null && list.size()>0){
-		    		thirdScoreResponse=list.get(0);
-		    	}
-		    //业务方请求流水号
-		    String orderId=thirdScoreResponse.getOrderId();
-		    //第三方征信平台流水号
-		    String orderNo=thirdScoreResponse.getOrderNo();
-		    String credooScore="";
-		    Map<String ,Object> reponsemap=thirdScoreResponse.getMap();
-		    //获取明细数据
-		    List<Map<String ,String>>recordsList=(List<Map<String, String>>) reponsemap.get("records");
-		    if(recordsList!=null&&recordsList.size()>0){
-		    	Map<String ,String> recordsMap=recordsList.get(0);
-		    	credooScore=recordsMap.get("credooScore");
-		    	map.clear();
-		    	map.put("status", "ok");
-		    	map.put("errMsg", "");
-		    	map.put("credooScore",credooScore);
-		    	map.put("errorCode", "");
-		    	//更新订单征信平台流水号以及订单状态
-		    	PayZxptInfo payZxptInfo= payZxptInfoService.findById(orderId);
-		    	if(payZxptInfo!=null){
-		    		payZxptInfo.setZxptOrderNo(orderNo);
-		    		payZxptInfo.setZxptRequestStatus("1");
-		    		payZxptInfoService.updateZxptInfo(payZxptInfo);
-		    	}else{
-		    		 map.clear();
-			    	 map.put("status", "error");
-			    	 map.put("errMsg", "订单信息查询失败");
-			    	 map.put("errorCode", "N10002");	
-		    	}
-		    }else{
-		    	 map.clear();
-		    	 map.put("status", "error");
-		    	 map.put("errMsg", "获取明细数据失败");
-		    	 map.put("errorCode", "N10001");
-		      }
-		    }
-    	} catch (Exception e) {
-    		 map.clear();
-	    	 map.put("status", "error");
-	    	 map.put("errMsg", "获取明细数据失败");
-	    	 map.put("errorCode", "N10001");
-	    	 e.printStackTrace();
-		}
-    	 writeSuccessJson(response,map);
-    }
-    /**
-     * 返回错误信息
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void payError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    		String errorMsg="";
-    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="验证失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="所选支付渠道与支付类型不匹配";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="金额格式不对";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="订单号重复";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="用户未绑定卡号";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="无短充值失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="无短充值验签失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-        		errorMsg="用户不存在";
-        	}
-        	else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-        		errorMsg="渠道未开通！";
-        	}
-    	   map.put("status", "error");
-    	   map.put("requestno", outTradeNo);
-    	   map.put("errorCode", errorCode);
-    	   map.put("errMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
-    	   
-    }
-    public static RequestHead initHead(String tranCode,String tranId) {
-		//请求消息头
-		RequestHead rh = new RequestHead();
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
-		//初始化报文头
-		rh.setVersion("V1.0");
-		rh.setCharSet("utf-8");
-		rh.setSource("奥鹏教育学生平台");
-		rh.setDes("zxpt");
-		rh.setApp("奥鹏App");
-		rh.setTranCode(tranCode);
-		rh.setTranId(tranId);
-		rh.setTranRef("奥鹏商户");
-		rh.setReserve("奥鹏商户测试");
-		rh.setTranTime(df2.format(new Date()));
-		rh.setTimeStamp(df.format(new Date()));
-		return rh;
-	}
-	
-	public static ThirdScoreRequest initThirdScoreRequest(PayZxptInfo payZxptInfo) {
-		
-		ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-		thirdScoreRequest.setOrderId(DateUtil.getCurrentDateTime());
-		
-		thirdScoreRequest.setCertNo("420922198509103814");
-		thirdScoreRequest.setCertType("0");
-		thirdScoreRequest.setName("张四");
-		thirdScoreRequest.setReserve("第三方评分测试");
-		thirdScoreRequest.setScoreChannel("2");
-		thirdScoreRequest.setScoreMethod("1");
-		thirdScoreRequest.setMobile("13535413805");
-		thirdScoreRequest.setCardNo("62222744552211111112");
-		thirdScoreRequest.setReasonNo("01");
-		thirdScoreRequest.setEntityAuthCode("02aa19bc");
-		thirdScoreRequest.setAuthDate("2016-10-12 12:01:01");
-		//请求消息体
-	/*	ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-		thirdScoreRequest.setOrderId(payZxptInfo.getId());
-		
-		thirdScoreRequest.setCertNo(payZxptInfo.getCertNo());
-		thirdScoreRequest.setCertType(payZxptInfo.getCertType());
-		thirdScoreRequest.setName(payZxptInfo.getUserName());
-		thirdScoreRequest.setReserve(payZxptInfo.getReserve());
-		thirdScoreRequest.setScoreChannel(payZxptInfo.getScoreChannel());
-		thirdScoreRequest.setScoreMethod(payZxptInfo.getScoreMethod());
-		thirdScoreRequest.setMobile(payZxptInfo.getPhone());
-		thirdScoreRequest.setCardNo(payZxptInfo.getCardNo());
-		thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
-		thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
-		thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));*/
-		return thirdScoreRequest;
-	}
-	
-
 }

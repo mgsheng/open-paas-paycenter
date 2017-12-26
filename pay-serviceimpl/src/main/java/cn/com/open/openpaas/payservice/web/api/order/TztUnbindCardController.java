@@ -69,7 +69,8 @@ public class TztUnbindCardController extends BaseControllerUtil{
     @RequestMapping("request")
     public String request(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/unbind/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"tzt/unbind/errorPayChannel";
+        String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/unbind/errorPayChannel";
     	String identityId=request.getParameter("identityId");
     	String identityType=request.getParameter("identityType");
         String cardNo = request.getParameter("cardNo");
@@ -198,7 +199,7 @@ public class TztUnbindCardController extends BaseControllerUtil{
 					     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	
 					     return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode=9";
 					}
-			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?status="+status;
+			     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?status="+status;
 	       	     payServiceLog.setLogName(PayLogName.UNBIND_CARD_END);
 			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 	       	     return "redirect:" + fullUri;
@@ -225,66 +226,6 @@ public class TztUnbindCardController extends BaseControllerUtil{
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 				return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode=8";
 		}
-    }
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "back", method = RequestMethod.GET)
-    public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	 map.put("status", "ok");
-    	 map.put("errMsg", "");
-         map.put("errorCode", "");
-    	 writeSuccessJson(response,map);
-    }
-	/**
-	 * 获取渠道参数信息
-	 * @param merchantOrderInfo 订单
-	 * @return
-	 */
-	public Map<String, String> getOtherInfo(MerchantOrderInfo merchantOrderInfo) {
-		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TZT.getValue());
-         String other= dictTradeChannels.getOther();
-     	 Map<String, String> others = new HashMap<String, String>();
-     	  others=getPartner(other);
-     	 return others;
-	}
-    /**
-     * 返回错误信息
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void wxErrorPayChannel(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	String urlCode=request.getParameter("urlCode");
-    	model.addAttribute("urlCode", urlCode);
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	
-    		String errorMsg="";
-        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="统一支付验签失败";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="用户卡号不存在";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="订单号已存在";
-        	}
-        	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="解绑验签失败";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="解绑请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="渠道未开通";
-        	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-        		errorMsg="系统异常";
-        	}
-    	   map.put("status", "error");
-    	   map.put("outTradeNo", outTradeNo);
-    	   map.put("errorMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
     }
 
 }

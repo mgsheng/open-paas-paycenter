@@ -82,7 +82,8 @@ public class ZxptController extends BaseControllerUtil{
     @RequestMapping("request")
     public String thirdScoreRequest(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"zxpt/errorPayChannel";
+    	//String fullUri=payserviceDev.getServer_host()+"zxpt/errorPayChannel";
+        String fullUri=payserviceDev.getServer_host()+"pay/redirect/zxpt/errorPayChannel";
         String appId = request.getParameter("appId");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String certNo=request.getParameter("certNo");
@@ -241,7 +242,7 @@ public class ZxptController extends BaseControllerUtil{
 			   		    	 //Accept 通过 Reject 拒绝 review 审核，低风险黑名单
 			   		    	 if(decision.equals("Accept")){
 			   		    	//白骑士验证通过验证第三方评分
-			   		    		String	score=getThirdScore(payZxptInfo);
+			   		    		String	score=getThirdScore(payZxptInfo,payserviceDev);
 			   		    		System.out.println("score=="+score);
 			   		    		PayZxptInfo newpayZxptInfo= payZxptInfoService.findById(orderId);
 			   		    		if(!nullEmptyBlankJudge(score)&&Integer.parseInt(score)>=550){
@@ -253,7 +254,7 @@ public class ZxptController extends BaseControllerUtil{
 					     	    		newpayZxptInfo.setCredooScore(score);
 					     	    		newpayZxptInfo.setZxptRequestStatus("1");
 					     	    		payZxptInfoService.updateZxptInfo(newpayZxptInfo);
-					     		    	fullUri=payserviceDev.getServer_host()+"zxpt/back";
+					     		    	fullUri=payserviceDev.getServer_host()+"pay/redirect/zxpt/back";
 					     	    	    payServiceLog.setLogName(PayLogName.THIRD_REQUEST_END);
 					     			    UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
 					     			    return "redirect:"+fullUri;
@@ -277,7 +278,7 @@ public class ZxptController extends BaseControllerUtil{
 					     	    		newpayZxptInfo.setCredooScore(score);
 					     	    		newpayZxptInfo.setZxptRequestStatus("1");
 					     	    		payZxptInfoService.updateZxptInfo(newpayZxptInfo);
-					     		    	fullUri=payserviceDev.getServer_host()+"zxpt/back";
+					     		    	fullUri=payserviceDev.getServer_host()+"pay/redirect/zxpt/back";
 					     	    	    payServiceLog.setLogName(PayLogName.THIRD_REQUEST_END);
 					     			    UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	
 					     			    return "redirect:"+fullUri;
@@ -328,197 +329,5 @@ public class ZxptController extends BaseControllerUtil{
 		} 	   
 		  return "redirect:" + fullUri;
     }
-    /**
-     * 第三方征信评分
-     * @param payZxptInfo
-     * @return
-     */
-    public String getThirdScore(PayZxptInfo payZxptInfo){
-    	//第三方评分交易码1006
-		String paket = "";
-		String sign = "";
-		String score="";
-		Request<ThirdScoreRequest> zxptrequest = new Request<ThirdScoreRequest>();
-		RequestHead head = initHead("1006",DateUtil.getDateTime(new Date()),payserviceDev);
-		zxptrequest.setHead(head);
-		List<ThirdScoreRequest> list = new ArrayList<ThirdScoreRequest>();
-		ThirdScoreRequest rquestdetail = initThirdScoreRequest(payZxptInfo);
-		list.add(rquestdetail);
-		zxptrequest.setBody(list);
-		String requestXml = XOUtil.objectToXml(zxptrequest, Request.class, RequestHead.class, ThirdScoreRequest.class);
-//		XStream xstream=XMLUtil.fromXML(requestXml);
-		//System.out.println(requestXml);
-		try {
-			paket = RSACoderUtil.encrypt(requestXml.getBytes(payserviceDev.getZxpt_charset()), payserviceDev.getZxpt_charset(), payserviceDev.getZxpt_public_key());
-		    sign = MD5.sign(paket, "123456", "utf-8");
-		//http请求参数
-		Map<String, String> zxptParams = new HashMap<String, String>();
-		//参数加密串
-		zxptParams.put("packet", paket);
-		//MD5签名
-		zxptParams.put("checkValue", sign);
-		//交易码
-		zxptParams.put("tranCode", "1006");
-		//商户号 奥鹏
-		zxptParams.put("sender", payserviceDev.getZxpt_sender());
-		//SIT环境
-		String url = payserviceDev.getZxpt_third_url();
-		//http请求
-		String responsexml = HttpClientUtil.httpPost(url, zxptParams);
-		//解密
-		String decode = new String(RSACoderUtil.decrypt(responsexml, payserviceDev.getZxpt_key(), payserviceDev.getZxpt_charset()), payserviceDev.getZxpt_charset());
-		String decodexml = URLDecoder.decode(decode, payserviceDev.getZxpt_charset());
-		    Document doc = null;    
-	        doc = DocumentHelper.parseText(decodexml);    
-	        Element root = doc.getRootElement();// 指向根节点    
-	        // normal解析    
-	        Element body1 = root.element("body");
-	        Element thirdscoreresponse1 = body1.element("thirdscoreresponse"); 
-	        if(thirdscoreresponse1==null){
-	        	score="0";
-	        }else{
-		        Element map1= thirdscoreresponse1.element("map");
-		            List lstTime = map1.elements("entry");// 所有的Item节点    
-		            for (int i = 0; i < lstTime.size(); i++) {    
-		                Element etime = (Element) lstTime.get(i);    
-		                Element start = etime.element("string"); 
-		                if(start.getTextTrim().equals("records")){
-		                	Element end = etime.element("list");
-		                	 Element listmap = end.element("map"); 
-		                	 List listentry = listmap.elements("entry");
-		                	 for(int j=0;j<listentry.size();j++){
-		                		 Element etime1 = (Element) listentry.get(j);
-		                		 List aa = etime1.elements("string");
-		                		 for(int k=0;k<aa.size();k++){
-		                			 Element credooScores = (Element) aa.get(k); 
-		                			// Element credooScore=credooScores.element("string");
-		                			 if( credooScores.getTextTrim().equals("credooScore")){
-		                				 System.out.println("start1.getTextTrim()=" + credooScores.getTextTrim()); 
-		                				 Element Scores = (Element) aa.get(k+1);
-		                				 score=Scores.getTextTrim();
-		                				 System.out.println("score.getTextTrim()=" + Scores.getTextTrim()); 
-		                				 break;
-		                			 }
-		                			 break;
-		                		 }
-		                	}
-		                 }
-		            }    
-	        }
-	    
-		}catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-	  }
-	  return score;
-    }
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "back", method = RequestMethod.GET)
-    public void bqsBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-     	map.put("status", "ok");
-     	map.put("errMsg", "");
-     	map.put("errorCode", "");
-    	writeSuccessJson(response,map);
-    }
-    /**
-     * 返回错误信息
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void payError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    		String errorMsg="";
-    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="验证失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="订单信息查询失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="订单号已经存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="白骑士风险结果为空";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="白骑士返回错误:"+failureCode+"--错误原因："+failureMsg;
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="白骑士XML结果为空";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-        		errorMsg="该用户为黑名单用户";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-        		errorMsg="该用户信用分不够";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("11")){
-        		errorMsg="该用户信用分不够";
-        	}
-    	   map.put("status", "error");
-    	   map.put("errorCode", errorCode);
-    	   map.put("errMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
-    }
-    public static RequestHead initHead(String tranCode,String tranId,PayserviceDev payserviceDev) {
-		//请求消息头
-		RequestHead rh = new RequestHead();
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-		SimpleDateFormat df2 = new SimpleDateFormat("yyyyMMdd");
-		//初始化报文头
-		rh.setVersion(payserviceDev.getZxpt_version());
-		rh.setCharSet(payserviceDev.getZxpt_charset());
-		rh.setSource(payserviceDev.getZxpt_source());
-		rh.setDes(payserviceDev.getZxpt_des());
-		rh.setApp(payserviceDev.getZxpt_app());
-		rh.setTranCode(tranCode);
-		rh.setTranId(tranId);
-		rh.setTranRef(payserviceDev.getZxpt_tranref());
-		rh.setReserve(payserviceDev.getZxpt_tranref());
-		
-		/*rh.setVersion("V1.0");
-		rh.setCharSet("utf-8");
-		rh.setSource("奥鹏教育学生平台");
-		rh.setDes("zxpt");
-		rh.setApp("奥鹏App");
-		rh.setTranCode(tranCode);
-		rh.setTranId(tranId);
-		rh.setTranRef("奥鹏商户");
-		rh.setReserve("奥鹏商户");*/
-		rh.setTranTime(df2.format(new Date()));
-		rh.setTimeStamp(df.format(new Date()));
-		return rh;
-	}
-	
-	public static ThirdScoreRequest initThirdScoreRequest(PayZxptInfo payZxptInfo) {
-	    ThirdScoreRequest thirdScoreRequest = new ThirdScoreRequest();
-		thirdScoreRequest.setOrderId(payZxptInfo.getId());
-		thirdScoreRequest.setCertNo(payZxptInfo.getCertNo());
-		thirdScoreRequest.setCertType(payZxptInfo.getCertType());
-		thirdScoreRequest.setName(payZxptInfo.getUserName());
-		thirdScoreRequest.setReserve(payZxptInfo.getReserve());
-		thirdScoreRequest.setScoreChannel("2");
-		thirdScoreRequest.setScoreMethod("1");
-		thirdScoreRequest.setMobile(payZxptInfo.getPhone());
-		thirdScoreRequest.setReasonNo(payZxptInfo.getReasonNo());
-		thirdScoreRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
-		thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
-		return thirdScoreRequest;
-	}
-	
-	public static BqsFraudlistRequest init1301Request(PayZxptInfo payZxptInfo) {
-			
-			//请求消息体
-			BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
-			bRequest.setChannelNo("1");
-			bRequest.setCertNo(payZxptInfo.getCertNo());
-			bRequest.setName(payZxptInfo.getUserName());
-			bRequest.setMobile(payZxptInfo.getPhone());
-			bRequest.setEntityAuthCode(payZxptInfo.getEntityAuthCode());
-			bRequest.setEntityAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
-			bRequest.setOrderId(payZxptInfo.getId());
-			return bRequest;
-			
-		}
 	
 }

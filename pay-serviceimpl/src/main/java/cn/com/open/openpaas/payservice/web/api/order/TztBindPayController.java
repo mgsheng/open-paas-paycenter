@@ -73,7 +73,7 @@ public class TztBindPayController extends BaseControllerUtil{
     @RequestMapping("direct")
     public String direct(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/bindPay/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/bind/errorPayChannel";
         String appId = request.getParameter("appId");
     	String userId=request.getParameter("userId");
     	String amount=request.getParameter("amount");
@@ -239,7 +239,7 @@ public class TztBindPayController extends BaseControllerUtil{
 //								merchantOrderInfo.setDealDate(new Date());
 //								merchantOrderInfo.setPayOrderId(yborderid);
 //								merchantOrderInfoService.updateOrder(merchantOrderInfo);
-						     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+						     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?requestno="+requestnoback;
 				       	     payServiceLog.setLogName(PayLogName.BIND_PAY_END);
 						     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 				       	     return "redirect:" + fullUri;
@@ -276,77 +276,5 @@ public class TztBindPayController extends BaseControllerUtil{
 				UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 	        	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
 		}
-	
-		
-      
-    }
-  
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "back", method = RequestMethod.GET)
-    public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String requestno=request.getParameter("requestno");
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	 map.put("status", "ok");
-    	 map.put("requestno", requestno);
-    	 map.put("errorCode", "");
-  	     map.put("errMsg","");
-    	 writeSuccessJson(response,map);
-    }
-	/**
-	 * 获取渠道参数信息
-	 * @param merchantOrderInfo 订单
-	 * @return
-	 */
-	public Map<String, String> getOtherInfo(MerchantOrderInfo merchantOrderInfo) {
-		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TZT.getValue());
-         String other= dictTradeChannels.getOther();
-     	 Map<String, String> others = new HashMap<String, String>();
-     	  others=getPartner(other);
-     	 return others;
-	}
-    
-  
-    /**
-     * 返回错误信息
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void payError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    		String errorMsg="";
-    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="验证失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="所选支付渠道与支付类型不匹配";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="金额格式不对";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="订单号重复";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="用户未绑定卡号";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="无短充值失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="无短充值验签失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-        		errorMsg="用户不存在";
-        	}
-        	else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-        		errorMsg="渠道未开通！";
-        	}
-    	   map.put("status", "error");
-    	   map.put("requestno", outTradeNo);
-    	   map.put("errorCode", errorCode);
-    	   map.put("errMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
-    }
-
-
+     }
 }

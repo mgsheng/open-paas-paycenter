@@ -9,13 +9,9 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.json.JSONObject;
-
-import org.apache.commons.lang.StringUtils;
 import org.dom4j.DocumentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +21,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.alipay.demo.trade.service.AlipayTradeService;
+
 import cn.com.open.openpaas.payservice.app.balance.model.UserAccountBalance;
 import cn.com.open.openpaas.payservice.app.balance.service.UserAccountBalanceService;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AlifafUtil;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayController;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayPropetyFactory;
-import cn.com.open.openpaas.payservice.app.channel.alipay.AlipayUtil;
 import cn.com.open.openpaas.payservice.app.channel.alipay.BusinessType;
 import cn.com.open.openpaas.payservice.app.channel.alipay.Channel;
 import cn.com.open.openpaas.payservice.app.channel.alipay.PaySwitch;
@@ -38,16 +32,7 @@ import cn.com.open.openpaas.payservice.app.channel.alipay.PaymentType;
 import cn.com.open.openpaas.payservice.app.channel.model.DictTradeChannel;
 import cn.com.open.openpaas.payservice.app.channel.paymax.example.ChargeUtil;
 import cn.com.open.openpaas.payservice.app.channel.service.DictTradeChannelService;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.data.OrderQryData;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.data.ScanCodeOrderData;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.service.OrderQryService;
-import cn.com.open.openpaas.payservice.app.channel.tclpay.service.ScanCodeOrderService;
-import cn.com.open.openpaas.payservice.app.channel.unionpay.sdk.AcpService;
-import cn.com.open.openpaas.payservice.app.channel.unionpay.sdk.SDKConfig;
-import cn.com.open.openpaas.payservice.app.channel.wxpay.WxPayCommonUtil;
-import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayController;
-import cn.com.open.openpaas.payservice.app.channel.wxpay.WxpayInfo;
-import cn.com.open.openpaas.payservice.app.channel.yeepay.HmacUtils;
+import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.log.UnifyPayControllerLog;
 import cn.com.open.openpaas.payservice.app.log.model.PayLogName;
 import cn.com.open.openpaas.payservice.app.log.model.PayServiceLog;
@@ -56,29 +41,14 @@ import cn.com.open.openpaas.payservice.app.merchant.service.MerchantInfoService;
 import cn.com.open.openpaas.payservice.app.order.model.MerchantOrderInfo;
 import cn.com.open.openpaas.payservice.app.order.service.MerchantOrderInfoService;
 import cn.com.open.openpaas.payservice.app.tools.AmountUtil;
-import cn.com.open.openpaas.payservice.app.common.BaseControllerUtil;
 import cn.com.open.openpaas.payservice.app.tools.DateTools;
-import cn.com.open.openpaas.payservice.app.tools.DateUtils;
 import cn.com.open.openpaas.payservice.app.tools.HMacSha1;
-import cn.com.open.openpaas.payservice.app.tools.PropertiesTool;
 import cn.com.open.openpaas.payservice.app.tools.QRCodeEncoderHandler;
-import cn.com.open.openpaas.payservice.app.tools.SendPostMethod;
 import cn.com.open.openpaas.payservice.app.tools.StringTool;
 import cn.com.open.openpaas.payservice.app.tools.SysUtil;
-import cn.com.open.openpaas.payservice.app.tools.WebUtils;
 import cn.com.open.openpaas.payservice.dev.PayserviceDev;
 import cn.com.open.openpaas.payservice.web.api.oauth.OauthSignatureValidateHandler;
-
-import com.alipay.api.AlipayResponse;
-import com.alipay.api.response.AlipayTradePrecreateResponse;
-import com.alipay.demo.trade.config.Configs;
-import com.alipay.demo.trade.model.builder.AlipayTradePrecreateRequestBuilder;
-import com.alipay.demo.trade.model.result.AlipayF2FPrecreateResult;
-import com.alipay.demo.trade.service.AlipayMonitorService;
-import com.alipay.demo.trade.service.AlipayTradeService;
-import com.alipay.demo.trade.service.impl.AlipayMonitorServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeServiceImpl;
-import com.alipay.demo.trade.service.impl.AlipayTradeWithHBServiceImpl;
+import net.sf.json.JSONObject;
 
 /**
  * tcl支付
@@ -122,7 +92,7 @@ public class TclPayController extends BaseControllerUtil{
     	String payTcl = paySwitch[2];
     	String payEbank = paySwitch[3];
     	String wechat_wap= paySwitch[4];
-    	String fullUri=payserviceDev.getServer_host()+"tcl/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"/pay/redirect/errorPayChannel";
     	String userName=request.getParameter("userName");
         String userId = request.getParameter("userId");
         String merchantId = request.getParameter("merchantId");
@@ -188,7 +158,7 @@ public class TclPayController extends BaseControllerUtil{
         if(!paraMandatoryCheck(Arrays.asList(outTradeNo,userId,merchantId,goodsName,totalFee))){
         	//paraMandaChkAndReturn(1, response,"必传参数中有空值");
         	if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
+        		return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"1";
         	}
         	payServiceLog.setErrorCode("1");
         	payServiceLog.setStatus("error");
@@ -209,7 +179,7 @@ public class TclPayController extends BaseControllerUtil{
     		payServiceLog.setLogName(PayLogName.PAY_END);
     		UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     		if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
+        		return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
         	}
         	return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"2";
         }
@@ -249,7 +219,7 @@ public class TclPayController extends BaseControllerUtil{
 		if(!hmacSHA1Verification){
 			//paraMandaChkAndReturn(3, response,"认证失败");
 			if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
+        		return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"3";
         	}
 			payServiceLog.setErrorCode("3");
 			payServiceLog.setStatus("error");
@@ -260,7 +230,7 @@ public class TclPayController extends BaseControllerUtil{
     	
         if(!StringTool.isNumeric(totalFee)){
         	if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
+        		return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
         	}
         	payServiceLog.setErrorCode("4");
         	payServiceLog.setStatus("error");
@@ -279,7 +249,7 @@ public class TclPayController extends BaseControllerUtil{
         if(!payType){
         	//paraMandaChkAndReturn(4, response,"所选支付渠道与支付类型不匹配");
         	if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
+        		return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"5";
         	}
         	payServiceLog.setErrorCode("5");
         	payServiceLog.setStatus("error");
@@ -291,7 +261,7 @@ public class TclPayController extends BaseControllerUtil{
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findByMerchantOrderId(outTradeNo,appId);
 		if(merchantOrderInfo!=null){
 			if(!nullEmptyBlankJudge(paymentChannel)&&paymentChannel.equals(String.valueOf(Channel.WECHAT_WAP.getValue()))){
-        		return "redirect:"+payserviceDev.getServer_host()+"alipay/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
+        		return "redirect:"+payserviceDev.getServer_host()+"pay/redirect/wxpay/errorPayChannel"+"?outTradeNo="+outTradeNo+"&errorCode="+"10";
         	}
 				payServiceLog.setErrorCode("10");
 				payServiceLog.setStatus("error");
@@ -414,7 +384,7 @@ public class TclPayController extends BaseControllerUtil{
 				  payServiceLog.setLogName(PayLogName.PAY_END);
     		      UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
     		     return "redirect:" +payserviceDev.getPayIndex_url(); 
-    		     //"http://localhost:8080/pay-service/alipay/skipPayIndex";
+    		     //"http://localhost:8080/pay-service/pay/redirect/skipPayIndex";
 		        }else{
 		        	
 		      //payZhifubao     payWx	 payTcl
@@ -553,136 +523,8 @@ public class TclPayController extends BaseControllerUtil{
        	  return "redirect:" + fullUri;
     }
     
-    public Boolean validatePayType(String paymentChannel,String paymentType){
-    	Boolean returnValue=false;
-    	if(nullEmptyBlankJudge(paymentChannel)&&nullEmptyBlankJudge(paymentType)){
-    		 returnValue=true;	
-    	}
-    	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX_WECHAT_CSB.getValue()))){
-    		if(paymentType!=null&&PaymentType.PAYMAX_WECHAT_CSB.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-          }
-       	else if(paymentChannel!=null&&paymentChannel.equals(String.valueOf(Channel.PAYMAX.getValue()))){
-    		 if(paymentType!=null&&PaymentType.PAYMAX.getValue().equals(paymentType)){
-         		 returnValue=true;
-         	 }else{
-         		 returnValue=false; 
-         	 }
-      	}
-    	return returnValue;
-    }
- 
-    /**
-     * 跳转到错误页面
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public String errorPayChannel(HttpServletRequest request, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	String errorMsg="";
-    	if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-    		errorMsg="必传参数中有空值";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-    		errorMsg="验证失败";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-    		errorMsg="所选支付渠道与支付类型不匹配";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-    		errorMsg="商户ID不存在";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-    		errorMsg="订单金额格式有误";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-    		errorMsg="订单处理失败，请重新提交！";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-    		errorMsg="订单已处理，请勿重复提交！";
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-    		errorMsg="拉卡拉下单失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-    	}if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("10")){
-    		errorMsg="您好：订单号重复,请检查后重新下单！";
-    	}
-    	model.addAttribute("outTradeNo", outTradeNo);
-    	model.addAttribute("errorMsg", errorMsg);
-    	return "pay/errorPayChannel";
-    }	
-    
-    /**
-     * 跳转到wxpay页面
-     */
-    @RequestMapping(value = "wxpay", method = RequestMethod.GET)
-    public void wxpay(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String urlCode=request.getParameter("urlCode");
-    	model.addAttribute("urlCode", urlCode);
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	
-    	//encoderQRCoder(urlCode,response);
-//    	  QRCodeEncoderHandler handler = new QRCodeEncoderHandler();   
-//    	   handler.encoderQRCode(urlCode, response);
-    	   map.put("status", "ok");
-    	   map.put("urlCode", payserviceDev.getServer_host()+"tcl/getCode?urlCode="+urlCode);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
-    }
-    public Integer getPaymentId(String areaCode){
-    	int returnValue=0;
-    	if(PaymentType.CMB.getValue().equals(areaCode)){
-    		returnValue=PaymentType.CMB.getType();
-    	}
-		else if(PaymentType.ICBC.getValue().equals(areaCode)){
-			returnValue=PaymentType.ICBC.getType();
-    	}
-		else if(PaymentType.CCB.getValue().equals(areaCode)){
-			returnValue=PaymentType.CCB.getType();
-    	}
-		else if(PaymentType.ABC.getValue().equals(areaCode)){
-			returnValue=PaymentType.ABC.getType();
-    	}
-		else if(PaymentType.BOC.getValue().equals(areaCode)){
-			returnValue=PaymentType.BOC.getType();
-    	}
-		else if(PaymentType.BCOM.getValue().equals(areaCode)){
-			returnValue=PaymentType.BCOM.getType();
-    	}
-		else if(PaymentType.PSBC.getValue().equals(areaCode)){
-			returnValue=PaymentType.PSBC.getType();
-    	}
-		else if(PaymentType.CGB.getValue().equals(areaCode)){
-			returnValue=PaymentType.CGB.getType();
-    	}
-		else if(PaymentType.SPDB.getValue().equals(areaCode)){
-			returnValue=PaymentType.SPDB.getType();
-    	}
-		else if(PaymentType.CEB.getValue().equals(areaCode)){
-			returnValue=PaymentType.CEB.getType();
-    	}
-		else if(PaymentType.PAB.getValue().equals(areaCode)){
-			returnValue=PaymentType.PAB.getType();
-    	}else if(PaymentType.ALIPAY.getValue().equals(areaCode)){
-			returnValue=PaymentType.ALIPAY.getType();
-    	}else if(PaymentType.UPOP.getValue().equals(areaCode)){
-			returnValue=PaymentType.UPOP.getType();
-    	}
-    	return returnValue;
-    	
-    }
-    /**
-     * 跳转到wxpay页面
-     */
-    @RequestMapping(value = "getCode", method = RequestMethod.GET)
-    public void getCode(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String urlCode=request.getParameter("urlCode");
-    	//model.addAttribute("urlCode", urlCode);
-    	
-    	//encoderQRCoder(urlCode,response);
-    	  QRCodeEncoderHandler handler = new QRCodeEncoderHandler();   
-    	   handler.encoderQRCode(urlCode, response);
-      return ;    	   
-    }	
 
   
-    
    
 
 }

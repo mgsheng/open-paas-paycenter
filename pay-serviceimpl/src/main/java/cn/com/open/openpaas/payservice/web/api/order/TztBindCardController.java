@@ -74,7 +74,7 @@ public class TztBindCardController extends BaseControllerUtil{
     @RequestMapping("request")
     public String request(HttpServletRequest request,HttpServletResponse response,Model model) throws Exception  {
         long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/bindCard/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/errorPayChannel/errorPayChannel";
     	String identityId=request.getParameter("identityId");
     	String identityType=request.getParameter("identityType");
         String cardNo = request.getParameter("cardNo");
@@ -256,7 +256,7 @@ public class TztBindCardController extends BaseControllerUtil{
 					merchantOrderInfo.setDealDate(new Date());
 					merchantOrderInfo.setPayOrderId(yborderid);
 					merchantOrderInfoService.updateOrder(merchantOrderInfo);
-			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+			     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?requestno="+requestnoback;
 	       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
 			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
 	       	     return "redirect:" + fullUri;
@@ -290,7 +290,7 @@ public class TztBindCardController extends BaseControllerUtil{
     @RequestMapping("confirm")
     public String confirm(HttpServletRequest request,HttpServletResponse response,Model model){
     	long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/bindCard/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/errorPayChannel/errorPayChannel";
     	String requestno=request.getParameter("requestNo");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String signature=request.getParameter("signature");
@@ -354,7 +354,7 @@ public class TztBindCardController extends BaseControllerUtil{
  			Map<String, String> confirmParams 	= new HashMap<String, String>();
  			confirmParams.put("requestno", 		requestno);
  			confirmParams.put("validatecode", 		validatecode);
- 		    Map<String, String> others = getOtherInfo(merchantOrderInfo);
+ 		    Map<String, String> others = getOtherInfo(dictTradeChannelService,merchantOrderInfo);
  			String merchantno= others.get("merchantAccount");
  			String merchantPrivateKey=others.get("merchantPrivateKey");
  			String merchantAESKey= TZTService.getMerchantAESKey();
@@ -372,7 +372,7 @@ public class TztBindCardController extends BaseControllerUtil{
  				  merchantOrderInfo.setDealDate(new Date());
  				  merchantOrderInfo.setPayOrderId(yborderid);
  				  merchantOrderInfoService.updateOrder(merchantOrderInfo);
- 			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+ 			     fullUri=payserviceDev.getServer_host()+"/pay/redirect/tzt/back?requestno="+requestnoback;
  	       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
  			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
  	       	     return "redirect:" + fullUri;
@@ -404,7 +404,7 @@ public class TztBindCardController extends BaseControllerUtil{
     @RequestMapping("resendsms")
     public String resendsms(HttpServletRequest request,HttpServletResponse response,Model model){
     	long startTime = System.currentTimeMillis();
-    	String fullUri=payserviceDev.getServer_host()+"tzt/bindCard/errorPayChannel";
+    	String fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/errorPayChannel/errorPayChannel";
     	String requestno=request.getParameter("requestNo");
     	String outTradeNo=request.getParameter("outTradeNo");
     	String signature=request.getParameter("signature");
@@ -462,7 +462,7 @@ public class TztBindCardController extends BaseControllerUtil{
  		if(merchantOrderInfo!=null){
  			//换卡请求短验重发
  			Map<String, String> resendParams 	= new HashMap<String, String>();
- 			Map<String, String> others = getOtherInfo(merchantOrderInfo);
+ 			Map<String, String> others = getOtherInfo(dictTradeChannelService,merchantOrderInfo);
  			resendParams.put("requestno", 		requestno);
  			String merchantno= others.get("merchantAccount");
  			String merchantPrivateKey=others.get("merchantPrivateKey");
@@ -480,7 +480,7 @@ public class TztBindCardController extends BaseControllerUtil{
  					merchantOrderInfo.setDealDate(new Date());
  					merchantOrderInfo.setPayOrderId(yborderid);
  					merchantOrderInfoService.updateOrder(merchantOrderInfo);
- 			     fullUri=payserviceDev.getServer_host()+"/tzt/bindCard/back?requestno="+requestnoback;
+ 			     fullUri=payserviceDev.getServer_host()+"pay/redirect/tzt/back?requestno="+requestnoback;
  	       	     payServiceLog.setLogName(PayLogName.BIND_CARD_END);
  			     UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);	 	   
  	       	     return "redirect:" + fullUri;
@@ -500,67 +500,6 @@ public class TztBindCardController extends BaseControllerUtil{
 			UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 	        return "redirect:" + fullUri+"?outTradeNo="+outTradeNo+"&errorCode="+"4";
  		}
-    }
-    /**
-     * 返回绑卡成功参数
-     */
-    @RequestMapping(value = "back", method = RequestMethod.GET)
-    public void bindBack(HttpServletRequest request,HttpServletResponse response, Model model){
-    	String requestno=request.getParameter("requestno");
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    	 map.put("status", "ok");
-    	 map.put("requestno", requestno);
-    	 map.put("errorCode", "");
-  	     map.put("errMsg", "");
-    	 writeSuccessJson(response,map);
-    }
-	/**
-	 * 获取渠道参数信息
-	 * @param merchantOrderInfo 订单
-	 * @return
-	 */
-	public Map<String, String> getOtherInfo(MerchantOrderInfo merchantOrderInfo) {
-		DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.TZT.getValue());
-         String other= dictTradeChannels.getOther();
-     	 Map<String, String> others = new HashMap<String, String>();
-     	  others=getPartner(other);
-     	 return others;
-	}
-    
-  
-    /**
-     * 跳转到wxpay页面
-     */
-    @RequestMapping(value = "errorPayChannel", method = RequestMethod.GET)
-    public void bindError(HttpServletRequest request,HttpServletResponse response, Model model,String errorCode,String outTradeNo,String failureCode,String failureMsg){
-    	 Map<String, Object> map=new HashMap<String,Object>();
-    		String errorMsg="";
-    		if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("1")){
-        		errorMsg="必传参数中有空值";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("3")){
-        		errorMsg="验证失败";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("2")){
-        		errorMsg="商户ID不存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("4")){
-        		errorMsg="订单号重复";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("5")){
-        		errorMsg="绑卡请求失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("6")){
-        		errorMsg="渠道未开通！";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("7")){
-        		errorMsg="订单不存在";
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("8")){
-        		errorMsg="绑卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}else if(!nullEmptyBlankJudge(errorCode)&&errorCode.equals("9")){
-        		errorMsg="绑卡确认失败！错误码:"+failureCode+"--错误原因："+failureMsg;
-        	}
-    	   map.put("status", "error");
-    	   map.put("requestno", outTradeNo);
-    	   map.put("errorCode", errorCode);
-    	   map.put("errMsg", errorMsg);
-    	   writeSuccessJson(response,map);
-    	 // WebUtils.writeJson(response, urlCode);
-    	   
     }
 
 
