@@ -113,7 +113,7 @@ function install() {
     }
     if(bInstall) {
         if (confirm("您还没有安装插件\n\n现在下载安装吗？")) {
-            location = "${pageContext.request.contextPath}/download/yeepay/plug";
+            location = "${pageContext.request.contextPath}/yeepayPos/download/yeepay/plug";
         }
     }
 }
