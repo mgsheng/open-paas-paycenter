@@ -1610,21 +1610,11 @@ public class BaseControllerUtil {
 	 		thirdScoreRequest.setAuthDate(DateTools.dateToString(payZxptInfo.getAuthDate(), DateTools.FORMAT_ONE));
 	 		return thirdScoreRequest;
 	 	}
-		public static BqsFraudlistRequest init1301Request(PayZxptInfo payZxptInfo) {
-			
-			/*//请求消息体
-			BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
-			bRequest.setChannelNo("1");
-			bRequest.setCertNo("522528199303153636");
-			bRequest.setName("朱怀龙a");
-			bRequest.setMobile("18798897113");
-			bRequest.setEntityAuthCode("abcdef");
-			bRequest.setEntityAuthDate("2017-04-21 08:37:00");
-			bRequest.setOrderId(DateUtil.getCurrentDateTime());*/
+public static BqsFraudlistRequest init1301Request(PayZxptInfo payZxptInfo) {
 			
 			//请求消息体
 			BqsFraudlistRequest bRequest=new BqsFraudlistRequest();
-			bRequest.setChannelNo(payZxptInfo.getScoreChannel());
+			bRequest.setChannelNo("1");
 			bRequest.setCertNo(payZxptInfo.getCertNo());
 			bRequest.setName(payZxptInfo.getUserName());
 			bRequest.setMobile(payZxptInfo.getPhone());
