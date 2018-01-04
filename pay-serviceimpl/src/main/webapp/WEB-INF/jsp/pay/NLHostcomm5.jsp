@@ -96,6 +96,7 @@ function install() {
     var bInstall = true;
     var name = navigator.appName;
     var returnCode="";
+    
     if(name == "Netscape") {
         var plugin = navigator.plugins["npyibao plugin"];
         if(plugin) {
@@ -209,7 +210,72 @@ function DoTrans(cmd) {
     document.getElementById("inputForm").submit();
     return true;
 }
+ function singIn(cmd) {
+   alert(cmd);
+   var totalFee='${totalFee}';
+    var commpany='${commpany}';
+    var merchantCode='${merchantCode}';
+    var terminal='${terminal}';
+    var payId='${payId}';
+    var comNo='${comNo}';
+    var baudrate='${baudrate}';
+    var timeout='${timeout}';
+    var orderId='${payOrderId}';
+    var space = "                                                                                                    ";
+	var buf="", bufr="", i, str;
+    var errMsg = "正在交易中 请赖心等待... ..."
+    var tcom;
+    
+    try {
+        tcom = getobj();
+    } catch(e) {
+        alert(e);
+        return false;
+    }
+    //数据有效性判断
+    if (isInvaild(commpany, 11) 
+        || isInvaild(merchantCode, 15)
+        || isInvaild(terminal, 8)
+        || isInvaild(totalFee, 12) ) {
+        return false;
+    }
 
+	//通讯参数（100）
+	str = comNo + "|"
+    str += baudrate + "|172.17.253.197|28000|"
+    str += timeout  + "|172.17.253.197|29000";
+    buf = str + space.substr(0, 100 - str.length);
+    //str = document.all.COM.value + "|"
+    //str += document.all.BAUDRATE.value + "|172.17.253.197|28000|"
+    //str += document.all.TIMEOUT.value  + "|172.17.253.197|29000";
+    buf = str + space.substr(0, 100 - str.length);
+	//交易指令（2）
+    buf += cmd;
+	//交易数据（11+15+8+40+30+12+40+80
+	
+	buf += commpany;
+	buf += merchantCode;
+	buf += terminal;
+    str = orderId;
+	buf += str + space.substr(0, 40 - str.length);
+    str = payId;
+	buf += str + space.substr(0, 30 - str.length);
+	buf += totalFee;
+    str = "";
+	buf += str + space.substr(0, 40 - str.length);
+    str = "";
+	buf += str + space.substr(0, 80 - str.length);
+    try{
+        tcom.Req = buf;	
+        errMsg = tcom.POSPChang();
+        bufr = tcom.GetResponData();
+    } catch(e) {
+        document.getElementById("result").innerHTML = "控件运行失败, " + e;
+        return false;
+    }
+    document.getElementById("result").innerHTML = errMsg;
+    return true;
+}
 var curBufPos = 0;
 
 function setValue(control, buf, len, reset) {
@@ -222,6 +288,10 @@ function setValue(control, buf, len, reset) {
     curBufPos += len;
     returnCode=tmp;
     control.value = tmp;
+}
+function pay(){
+  singIn("00");
+  DoTrans("01");
 }
 </script>
 </head>

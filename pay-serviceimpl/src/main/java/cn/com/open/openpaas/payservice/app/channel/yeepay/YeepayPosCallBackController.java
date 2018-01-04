@@ -101,7 +101,7 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
         String returnUrl=merchantOrderInfo.getReturnUrl();
 		MerchantInfo merchantInfo = null;
 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
-		if(nullEmptyBlankJudge(returnUrl)&&merchantInfo!=null&&nullEmptyBlankJudge(RETURNCODE)&&RETURNCODE.equals("00")){
+		if(merchantInfo!=null&&!nullEmptyBlankJudge(RETURNCODE)&&RETURNCODE.equals("00")){
 		    String buf="";
 		    returnUrl=merchantInfo.getReturnUrl();
 		    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
