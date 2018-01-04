@@ -211,7 +211,6 @@ function DoTrans(cmd) {
     return true;
 }
  function singIn(cmd) {
-   alert(cmd);
    var totalFee='${totalFee}';
     var commpany='${commpany}';
     var merchantCode='${merchantCode}';
