@@ -194,7 +194,6 @@ function DoTrans(cmd) {
 	buf += str + space.substr(0, 40 - str.length);
     str = "";
 	buf += str + space.substr(0, 80 - str.length);
-	alert(buf);
     try{
         tcom.Req = buf;	
         errMsg = tcom.POSPChang();

@@ -73,7 +73,7 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
 		long startTime = System.currentTimeMillis();
 		String out_trade_no = request.getParameter("orderId");
 		String trace = request.getParameter("TRACE");
-		String TRANSCODER = request.getParameter("TRANSCODER");
+		String RETURNCODE = request.getParameter("RETURNCODE");
 		String backMsg="";
 		//交易状态
 		MerchantOrderInfo merchantOrderInfo=merchantOrderInfoService.findById(out_trade_no);
@@ -101,7 +101,7 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
         String returnUrl=merchantOrderInfo.getReturnUrl();
 		MerchantInfo merchantInfo = null;
 		merchantInfo=merchantInfoService.findById(merchantOrderInfo.getMerchantId());
-		if(nullEmptyBlankJudge(returnUrl)&&merchantInfo!=null&&nullEmptyBlankJudge(TRANSCODER)&&TRANSCODER.equals("00")){
+		if(nullEmptyBlankJudge(returnUrl)&&merchantInfo!=null&&nullEmptyBlankJudge(RETURNCODE)&&RETURNCODE.equals("00")){
 		    String buf="";
 		    returnUrl=merchantInfo.getReturnUrl();
 		    SortedMap<String,String> sParaTemp = new TreeMap<String,String>();
@@ -152,7 +152,7 @@ public class YeepayPosCallBackController extends BaseControllerUtil {
 			  payServiceLog.setErrorCode("2");
 	          payServiceLog.setStatus("error");
 	          backMsg="error";
-	          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),TRANSCODER);
+	          merchantOrderInfoService.updatePayInfo(2,String.valueOf(merchantOrderInfo.getId()),RETURNCODE);
 	          UnifyPayControllerLog.log(startTime,payServiceLog,payserviceDev);
 		}
 		}else{
