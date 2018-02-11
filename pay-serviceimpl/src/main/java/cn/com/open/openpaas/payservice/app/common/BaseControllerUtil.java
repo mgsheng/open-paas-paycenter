@@ -1336,6 +1336,10 @@ public class BaseControllerUtil {
 				returnValue = "PINGANBANK-NET";
 			} else if (PaymentType.BOB.getValue().equals(paymentType)) {
 				returnValue = "BCCB-NET-B2C";
+			}else if (PaymentType.CMBC.getValue().equals(paymentType)) {
+				returnValue = "CMBC-NET-B2C";
+			}else if (PaymentType.CIB.getValue().equals(paymentType)) {
+				returnValue = "CIB-NET-B2C";
 			}
 		}
 		return returnValue;
@@ -1384,6 +1388,8 @@ public class BaseControllerUtil {
 			sourceType=PaySwitch.EHKING.getValue();	
 		}else if(String.valueOf(Channel.EHK_INSTALLMENT_LOAN.getValue()).equals(paymentChannel)){
 			sourceType=PaySwitch.EHKING.getValue();	
+		}else if(String.valueOf(Channel.YEEPAY_POS.getValue()).equals(paymentChannel)){
+			sourceType=PaySwitch.YEEPAY.getValue();	
 		}
 		return sourceType;
 	}

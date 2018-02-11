@@ -309,6 +309,9 @@ public class UnifyPayController extends BaseControllerUtil{
 			merchantOrderInfo.setBuyerCertNo(buyerCertNo);
 			int paymentTypeId=PaymentType.getTypeByValue(paymentType).getType();
 			merchantOrderInfo.setPaymentId(paymentTypeId);
+			if(String.valueOf(Channel.EBANK.getValue()).equals(paymentChannel)){
+				payEbank=bank_map.get(paymentType);
+			}
 			if(!nullEmptyBlankJudge(paymentChannel)){
 				merchantOrderInfo.setChannelId(Integer.parseInt(paymentChannel));
 				int sourceType=getSourceType(bank_map, payZhifubao, payWx, payTcl, payEbank, wechat_wap, alifaf,
@@ -1228,6 +1231,8 @@ public class UnifyPayController extends BaseControllerUtil{
 					  DictTradeChannel dictTradeChannels=dictTradeChannelService.findByMAI(String.valueOf(merchantOrderInfo.getMerchantId()),Channel.YEEPAY_POS.getValue());
 					   
 					  if(dictTradeChannels!=null){
+						  //merchant_length:15#amount_length:12#commpany_length:11#terminal_length:8#orderId_length:30#p1_MerId:874112182492472#commpany:000000#merchantId:10012080614#terminal:00000000#comNo:1#baudrate:115200#timeout:120
+						//merchant_length:15#amount_length:12#commpany_length:11#terminal_length:8#orderId_length:30#p1_MerId:874112182492472#commpany:10012080614#merchantId:000000000000000#terminal:00000000#comNo:1#baudrate:115200#timeout:120
 						//merchant_length:15#amount_length:12#commpany_length:11#terminal_length:8#yeepay_orderId:00000000002#p1_MerId:10011578619#commpany:000000#merchantId:000000000000000#terminal:00000000#comNo:1#baudrate:115200#timeout:120
 						  String other= dictTradeChannels.getOther();
 						  Map<String, String> others = new HashMap<String, String>();
@@ -1242,7 +1247,7 @@ public class UnifyPayController extends BaseControllerUtil{
 							 model.addAttribute("totalFee", totalFee);
 							 model.addAttribute("orderAmount", merchantOrderInfo.getOrderAmount());
 				    		 model.addAttribute("commpany", commpany);
-				    		 model.addAttribute("merchantCode", merchantCode);
+				    		 model.addAttribute("merchantCode","");
 				    		 model.addAttribute("terminal", terminal);
 				    		 model.addAttribute("orderId", newId);
 				    		 model.addAttribute("payOrderId", outTradeNo);

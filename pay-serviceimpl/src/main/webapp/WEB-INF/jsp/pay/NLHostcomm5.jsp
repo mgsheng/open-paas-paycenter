@@ -164,7 +164,6 @@ function DoTrans(cmd) {
     }
     //数据有效性判断
     if (isInvaild(commpany, 11) 
-        || isInvaild(merchantCode, 15)
         || isInvaild(terminal, 8)
         || isInvaild(totalFee, 12) ) {
         return false;
@@ -233,7 +232,6 @@ function DoTrans(cmd) {
     }
     //数据有效性判断
     if (isInvaild(commpany, 11) 
-        || isInvaild(merchantCode, 15)
         || isInvaild(terminal, 8)
         || isInvaild(totalFee, 12) ) {
         return false;
@@ -264,6 +262,7 @@ function DoTrans(cmd) {
 	buf += str + space.substr(0, 40 - str.length);
     str = "";
 	buf += str + space.substr(0, 80 - str.length);
+	alert(buf);
     try{
         tcom.Req = buf;	
         errMsg = tcom.POSPChang();
@@ -289,7 +288,7 @@ function setValue(control, buf, len, reset) {
     control.value = tmp;
 }
 function pay(){
-  singIn("00");
+  //singIn("00");
   DoTrans("01");
 }
 </script>
@@ -325,7 +324,7 @@ function pay(){
                             </tr>
                         </table>
                         <div class="bottom-button">
-                            <input type="button" value="确认交易" class="input-button sure" onClick=DoTrans("02")>
+                            <input type="button" value="签到" class="input-button sure" onClick=singIn("00")>
                             <input type="button" value="提交支付" class="input-button pay" onClick=DoTrans("01")>
                         </div>
                         <div class="bottom-button">
